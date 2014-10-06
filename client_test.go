@@ -2,9 +2,9 @@ package hdfs
 
 import (
 	"github.com/stretchr/testify/assert"
+	"log"
 	"os"
 	"testing"
-	"log"
 )
 
 func getClient(t *testing.T) *Client {

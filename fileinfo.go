@@ -9,7 +9,7 @@ import (
 // FileInfo implements os.FileInfo, and provides information about a file or
 // directory in HDFS.
 type FileInfo struct {
-	name string
+	name   string
 	status *hdfs.HdfsFileStatusProto
 }
 
@@ -26,7 +26,7 @@ func (fi *FileInfo) Mode() os.FileMode {
 }
 
 func (fi *FileInfo) ModTime() time.Time {
-	return time.Unix(int64(fi.status.GetModificationTime()) / 1000, 0)
+	return time.Unix(int64(fi.status.GetModificationTime())/1000, 0)
 }
 
 func (fi *FileInfo) IsDir() bool {

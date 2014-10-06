@@ -10,7 +10,7 @@ import (
 
 // A Client represents a connection to an HDFS cluster
 type Client struct {
-	namenode *rpc.Connection
+	namenode *rpc.NamenodeConnection
 }
 
 // New returns a connected Client, or an error if it can't connect
@@ -20,7 +20,7 @@ func New(address string) (*Client, error) {
 		return nil, err
 	}
 
-	namenode, err := rpc.NewConnection(address, currentUser.Username)
+	namenode, err := rpc.NewNamenodeConnection(address, currentUser.Username)
 	if err != nil {
 		return nil, err
 	}

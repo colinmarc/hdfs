@@ -1,0 +1,213 @@
+package rpc
+
+import (
+	"code.google.com/p/goprotobuf/proto"
+	"crypto/rand"
+	"encoding/binary"
+	"errors"
+	"fmt"
+	hadoop "github.com/colinmarc/hdfs/protocol/hadoop_common"
+	"net"
+	"sync"
+	"time"
+)
+
+const (
+	rpcVersion           = 0x09
+	serviceClass         = 0x0
+	authProtocol         = 0x0
+	protocolClass        = "org.apache.hadoop.hdfs.protocol.ClientProtocol"
+	protocolClassVersion = 1
+	handshakeCallId      = -3
+
+	connectionTimeout = 5 * time.Second
+)
+
+var clientId = randomClientId()
+
+type NamenodeConnection struct {
+	currentRequestId int
+	user      string
+	conn      net.Conn
+	reqLock   sync.Mutex
+}
+
+// NewNamenodeConnection creates a new connection to a Namenode, and preforms an initial
+// handshake.
+//
+// You probably want to use hdfs.New instead, which provides a higher-level
+// interface.
+func NewNamenodeConnection(address, user string) (*NamenodeConnection, error) {
+	conn, err := net.DialTimeout("tcp", address, connectionTimeout)
+	if err != nil {
+		return nil, err
+	}
+
+	return WrapNamenodeConnection(conn, user)
+}
+
+// WrapNamenodeConnection wraps an existing net.Conn to a Namenode, and preforms an
+// initial handshake.
+//
+// You probably want to use hdfs.New instead, which provides a higher-level
+// interface.
+func WrapNamenodeConnection(conn net.Conn, user string) (*NamenodeConnection, error) {
+	c := &NamenodeConnection{
+		user: user,
+		conn: conn,
+	}
+
+	err := c.writeNamenodeHandshake()
+	if err != nil {
+		conn.Close()
+		return nil, fmt.Errorf("Error performing handshake: %s", err)
+	}
+
+	return c, nil
+}
+
+// Execute performs an rpc call. It does this by sending req over the wire and
+// unmarshaling the result into resp.
+func (c *NamenodeConnection) Execute(method string, req proto.Message, resp proto.Message) error {
+	c.reqLock.Lock()
+	defer c.reqLock.Unlock()
+
+	c.currentRequestId = (c.currentRequestId + 1) % 9
+	err := c.writeRequest(method, req)
+	if err != nil {
+		c.conn.Close()
+		return err
+	}
+
+	err = c.readResponse(resp)
+	if err != nil {
+		c.conn.Close() // TODO don't close on RPC failure
+		return err
+	}
+
+	return nil
+}
+
+// RPC definitions
+
+// A request packet:
+// +-----------------------------------------------------------+
+// |  uint32 length of the next three parts                    |
+// +-----------------------------------------------------------+
+// |  varint length + RpcRequestHeaderProto                    |
+// +-----------------------------------------------------------+
+// |  varint length + RequestHeaderProto                       |
+// +-----------------------------------------------------------+
+// |  varint length + Request                                  |
+// +-----------------------------------------------------------+
+func (c *NamenodeConnection) writeRequest(method string, req proto.Message) error {
+	rrh := newRpcRequestHeader(c.currentRequestId)
+	rh := newRequestHeader(method)
+
+	reqBytes, err := makePacket(rrh, rh, req)
+	if err != nil {
+		return err
+	}
+
+	_, err = c.conn.Write(reqBytes)
+	return err
+}
+
+// A response from the namenode:
+// +-----------------------------------------------------------+
+// |  uint32 length of the next two parts                      |
+// +-----------------------------------------------------------+
+// |  varint length + RpcResponseHeaderProto                   |
+// +-----------------------------------------------------------+
+// |  varint length + Response                                 |
+// +-----------------------------------------------------------+
+func (c *NamenodeConnection) readResponse(resp proto.Message) error {
+	var packetLength uint32
+	err := binary.Read(c.conn, binary.BigEndian, &packetLength)
+	if err != nil {
+		return err
+	}
+
+	packet := make([]byte, packetLength)
+	_, err = c.conn.Read(packet)
+	if err != nil {
+		return err
+	}
+
+	rrh := &hadoop.RpcResponseHeaderProto{}
+	err = parsePacket(packet, rrh, resp)
+
+	if rrh.GetStatus() != hadoop.RpcResponseHeaderProto_SUCCESS {
+		return errors.New("TODO failed rpc call")
+	} else if int(rrh.GetCallId()) != c.currentRequestId {
+		return errors.New("Error reading response: unexpected sequence number")
+	}
+
+	return nil
+}
+
+// A handshake packet:
+// +-----------------------------------------------------------+
+// |  Header, 4 bytes ("hrpc")                                 |
+// +-----------------------------------------------------------+
+// |  Version, 1 byte (default verion 0x09)                    |
+// +-----------------------------------------------------------+
+// |  RPC service class, 1 byte (0x00)                         |
+// +-----------------------------------------------------------+
+// |  Auth protocol, 1 byte (Auth method None = 0x00)          |
+// +-----------------------------------------------------------+
+// |  uint32 length of the next two parts                      |
+// +-----------------------------------------------------------+
+// |  varint length + RpcRequestHeaderProto                    |
+// +-----------------------------------------------------------+
+// |  varint length + IpcConnectionContextProto                |
+// +-----------------------------------------------------------+
+func (c *NamenodeConnection) writeNamenodeHandshake() error {
+	rpcHeader := []byte{
+		0x68, 0x72, 0x70, 0x63, // "hrpc"
+		rpcVersion, serviceClass, authProtocol,
+	}
+
+	rrh := newRpcRequestHeader(handshakeCallId)
+	cc := newConnectionContext(c.user)
+	packet, err := makePacket(rrh, cc)
+	if err != nil {
+		return err
+	}
+
+	_, err = c.conn.Write(append(rpcHeader, packet...))
+	return err
+}
+
+func newRpcRequestHeader(id int) *hadoop.RpcRequestHeaderProto {
+	return &hadoop.RpcRequestHeaderProto{
+		RpcKind:  hadoop.RpcKindProto_RPC_PROTOCOL_BUFFER.Enum(),
+		RpcOp:    hadoop.RpcRequestHeaderProto_RPC_FINAL_PACKET.Enum(),
+		CallId:   proto.Int32(int32(id)),
+		ClientId: clientId,
+	}
+}
+
+func newRequestHeader(methodName string) *hadoop.RequestHeaderProto {
+	return &hadoop.RequestHeaderProto{
+		MethodName:                 proto.String(methodName),
+		DeclaringClassProtocolName: proto.String(protocolClass),
+		ClientProtocolVersion:      proto.Uint64(uint64(protocolClassVersion)),
+	}
+}
+
+func newConnectionContext(user string) *hadoop.IpcConnectionContextProto {
+	return &hadoop.IpcConnectionContextProto{
+		UserInfo: &hadoop.UserInformationProto{
+			EffectiveUser: proto.String(user),
+		},
+		Protocol: proto.String(protocolClass),
+	}
+}
+
+func randomClientId() []byte {
+	uuid := make([]byte, 16)
+	rand.Read(uuid)
+
+	return uuid
+}

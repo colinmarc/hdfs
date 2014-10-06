@@ -1,15 +1,31 @@
 package hdfs
 
-import "os"
+import (
+	"code.google.com/p/goprotobuf/proto"
+	hdfs "github.com/colinmarc/hdfs/protocol/hadoop_hdfs"
+	"github.com/colinmarc/hdfs/rpc"
+	"os"
+	"os/user"
+)
 
-// Represents a connection to an HDFS Namenode
+// A Client represents a connection to an HDFS cluster
 type Client struct {
-	namenode string
+	namenode *rpc.Connection
 }
 
 // New returns a connected Client, or an error if it can't connect
-func New(namenode string) (*Client, error) {
-	return &Client{namenode}, nil
+func New(address string) (*Client, error) {
+	currentUser, err := user.Current()
+	if err != nil {
+		return nil, err
+	}
+
+	namenode, err := rpc.NewConnection(address, currentUser.Username)
+	if err != nil {
+		return nil, err
+	}
+
+	return &Client{namenode: namenode}, nil
 }
 
 // Chmod changes the mode of the named file to mode.
@@ -47,7 +63,15 @@ func (c *Client) Rename(oldpath, newpath string) error {
 
 // Stat returns an os.FileInfo describing the named file.
 func (c *Client) Stat(name string) (fi os.FileInfo, err error) {
-	return nil, nil
+	req := &hdfs.GetFileInfoRequestProto{Src: proto.String(name)}
+	resp := &hdfs.GetFileInfoResponseProto{}
+
+	err = c.namenode.Execute("getFileInfo", req, resp)
+	if err != nil {
+		return nil, err
+	}
+
+	return &FileInfo{name, resp.GetFs()}, nil
 }
 
 // ReadDir reads the directory named by dirname and returns a list of sorted

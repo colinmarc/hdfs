@@ -1,0 +1,11 @@
+language: go
+go:
+  - 1.2
+  - 1.3
+install: make get-deps
+env:
+    - HADOOP_DISTRO=cdh
+    - HADOOP_DISTRO=hdp
+before_script:
+ - NN_PORT=9000 ./setup_test_env.sh
+ - export HADOOP_NAMENODE="localhost:9000"

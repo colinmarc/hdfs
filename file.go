@@ -11,8 +11,9 @@ import (
 
 const clientName = "go-hdfs"
 
-// A File represents a file or directory in HDFS. It implements Reader, Writer,
-// ReaderAt, WriterAt, Seeker, and Closer.
+// A File represents an existing file or directory in HDFS. It implements
+// Reader, Seeker, and Closer, and can only be used for reads (and other
+// minor operations like Chmod).
 type File struct {
 	client *Client
 	name   string
@@ -42,17 +43,6 @@ func (c *Client) Open(name string) (file *File, err error) {
 	}, nil
 }
 
-// Create creates the named file, overwriting it if it already exists.
-// The file can then be used for reading and writing.
-func (c *Client) Create(name string, perm os.FileMode) (file *File, err error) {
-	return &File{
-		client:       c,
-		name:         name,
-		closed:       true,
-		allowWriting: true,
-	}, nil
-}
-
 // Name returns the name of the file.
 func (f *File) Name() string {
 	return f.name
@@ -62,6 +52,8 @@ func (f *File) Name() string {
 // according to whence: 0 means relative to the origin of the file, 1 means
 // relative to the current offset, and 2 means relative to the end. Seek returns
 // the new offset and an error, if any.
+//
+// The seek is virtual - it starts a new read operation at the new position.
 func (f *File) Seek(offset int64, whence int) (int64, error) {
 	var off int64
 	if whence == 0 {
@@ -133,21 +125,6 @@ func (f *File) ReadAt(b []byte, off int64) (int, error) {
 	}
 
 	return f.Read(b)
-}
-
-// Write writes len(b) bytes to the File. It returns the number of bytes written
-// and an error, if any. Write returns a non-nil error when n != len(b).
-//
-// Unlike a regular os.File, the contents will be buffered into memory
-func (f *File) Write(b []byte) (n int, err error) {
-	return 0, nil
-}
-
-// WriteAt writes len(b) bytes to the File starting at byte offset off.
-// It returns the number of bytes written and an error, if any. WriteAt returns
-// a non-nil error when n != len(b).
-func (f *File) WriteAt(b []byte, off int64) (n int, err error) {
-	return 0, nil
 }
 
 // Close closes the File.

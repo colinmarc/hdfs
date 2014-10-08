@@ -91,20 +91,8 @@ func (c *Client) ReadFile(filename string) ([]byte, error) {
 	return ioutil.ReadAll(f)
 }
 
-// WriteFile writes data to a file named by filename. If the file already
-// exists, it will be overwritten
-func (c *Client) WriteFile(filename string, data []byte, perm os.FileMode) error {
-	return nil
-}
-
 // CopyToLocal copies the HDFS file specified by src to the local file at dst.
 // If dst already exists, it will be overwritten.
-func (c *Client) CopyToLocal(src string, dst string, perm os.FileMode) error {
-	return nil
-}
-
-// CopyToHdfs copies the local file at src to a new HDFS file at dst. If it
-// already exists, it will be overwritten.
-func (c *Client) CopyToHdfs(src string, dst string, perm os.FileMode) error {
+func (c *Client) CopyToLocal(src string, dst string) error {
 	return nil
 }

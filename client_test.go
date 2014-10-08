@@ -31,3 +31,11 @@ func TestStat(t *testing.T) {
 	log.Println(resp.ModTime())
 	log.Println(resp.Size())
 }
+
+func TestReadFile(t *testing.T) {
+	client := getClient(t)
+
+	bytes, err := client.ReadFile("/foo")
+	assert.Nil(t, err)
+	assert.Equal(t, string(bytes), "bar\n")
+}

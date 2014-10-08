@@ -27,13 +27,13 @@ var clientId = randomClientId()
 
 type NamenodeConnection struct {
 	currentRequestId int
-	user      string
-	conn      net.Conn
-	reqLock   sync.Mutex
+	user             string
+	conn             net.Conn
+	reqLock          sync.Mutex
 }
 
-// NewNamenodeConnection creates a new connection to a Namenode, and preforms an initial
-// handshake.
+// NewNamenodeConnection creates a new connection to a Namenode, and preforms an
+// initial handshake.
 //
 // You probably want to use hdfs.New instead, which provides a higher-level
 // interface.
@@ -46,8 +46,8 @@ func NewNamenodeConnection(address, user string) (*NamenodeConnection, error) {
 	return WrapNamenodeConnection(conn, user)
 }
 
-// WrapNamenodeConnection wraps an existing net.Conn to a Namenode, and preforms an
-// initial handshake.
+// WrapNamenodeConnection wraps an existing net.Conn to a Namenode, and preforms
+// an initial handshake.
 //
 // You probably want to use hdfs.New instead, which provides a higher-level
 // interface.

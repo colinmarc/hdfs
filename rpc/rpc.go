@@ -46,15 +46,17 @@ func parsePacket(b []byte, msgs ...proto.Message) error {
 			return err
 		}
 
-		msgBytes := make([]byte, msgLength)
-		_, err = reader.Read(msgBytes)
-		if err != nil {
-			return err
-		}
+		if msgLength != 0 {
+			msgBytes := make([]byte, msgLength)
+			_, err = reader.Read(msgBytes)
+			if err != nil {
+				return err
+			}
 
-		err = proto.Unmarshal(msgBytes, msg)
-		if err != nil {
-			return err
+			err = proto.Unmarshal(msgBytes, msg)
+			if err != nil {
+				return err
+			}
 		}
 	}
 

@@ -13,8 +13,26 @@ type FileInfo struct {
 	status *hdfs.HdfsFileStatusProto
 }
 
+func newFileInfo(status *hdfs.HdfsFileStatusProto, name, dirname string) *FileInfo {
+	fi := &FileInfo{status: status}
+
+	var fullName string
+	if string(status.GetPath()) != "" {
+		fullName = string(status.GetPath())
+	} else {
+		fullName = name
+	}
+
+	if dirname != "" {
+		fullName = dirname + "/" + fullName
+	}
+
+	fi.name = fullName
+	return fi
+}
+
 func (fi *FileInfo) Name() string {
-	return fi.name // not sure why this doesn't come back
+	return fi.name
 }
 
 func (fi *FileInfo) Size() int64 {

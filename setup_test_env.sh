@@ -29,15 +29,23 @@ if [ ! -f "$MINICLUSTER_JAR" ]; then
   echo "Couldn't find minicluster jar"
   exit 1
 fi
-
 echo "minicluster jar found at $MINICLUSTER_JAR"
+
 
 # start the namenode in the background
 $HADOOP_HOME/bin/hadoop jar $MINICLUSTER_JAR minicluster -nnport $NN_PORT -nomr -format $@ &
 sleep 10
 
 echo "bar" > foo
-$HADOOP_HOME/bin/hadoop fs -Ddfs.block.size=1048576 -put foo "hdfs://$HADOOP_NAMENODE/"
+HADOOP_FS="$HADOOP_HOME/bin/hadoop fs -Ddfs.block.size=1048576"
+$HADOOP_FS -put foo "hdfs://$HADOOP_NAMENODE/"
 
 dd if=/dev/urandom of=longfile bs=1048576 count=10
-$HADOOP_HOME/bin/hadoop fs -Ddfs.block.size=1048576 -put longfile "hdfs://$HADOOP_NAMENODE/"
+$HADOOP_FS -put longfile "hdfs://$HADOOP_NAMENODE/"
+
+$HADOOP_FS -mkdir "hdfs://$HADOOP_NAMENODE/empty"
+$HADOOP_FS -mkdir "hdfs://$HADOOP_NAMENODE/full"
+$HADOOP_FS -mkdir "hdfs://$HADOOP_NAMENODE/full/dir"
+$HADOOP_FS -put foo "hdfs://$HADOOP_NAMENODE/full/1"
+$HADOOP_FS -put foo "hdfs://$HADOOP_NAMENODE/full/2"
+$HADOOP_FS -put foo "hdfs://$HADOOP_NAMENODE/full/3"

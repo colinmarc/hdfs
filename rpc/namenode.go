@@ -32,6 +32,20 @@ type NamenodeConnection struct {
 	reqLock          sync.Mutex
 }
 
+type NamenodeError struct {
+	Method  string
+	Message string
+	Code    int
+}
+
+func (err *NamenodeError) Desc() string {
+	return hadoop.RpcResponseHeaderProto_RpcErrorCodeProto_name[int32(err.Code)]
+}
+
+func (err *NamenodeError) Error() string {
+	return fmt.Sprintf("%s call failed with %s", err.Method, err.Desc())
+}
+
 // NewNamenodeConnection creates a new connection to a Namenode, and preforms an
 // initial handshake.
 //
@@ -79,9 +93,12 @@ func (c *NamenodeConnection) Execute(method string, req proto.Message, resp prot
 		return err
 	}
 
-	err = c.readResponse(resp)
+	err = c.readResponse(method, resp)
 	if err != nil {
-		c.conn.Close() // TODO don't close on RPC failure
+		if _, ok := err.(*NamenodeError); !ok {
+			c.conn.Close() // TODO don't close on RPC failure
+		}
+
 		return err
 	}
 
@@ -121,7 +138,7 @@ func (c *NamenodeConnection) writeRequest(method string, req proto.Message) erro
 // +-----------------------------------------------------------+
 // |  varint length + Response                                 |
 // +-----------------------------------------------------------+
-func (c *NamenodeConnection) readResponse(resp proto.Message) error {
+func (c *NamenodeConnection) readResponse(method string, resp proto.Message) error {
 	var packetLength uint32
 	err := binary.Read(c.conn, binary.BigEndian, &packetLength)
 	if err != nil {
@@ -138,7 +155,11 @@ func (c *NamenodeConnection) readResponse(resp proto.Message) error {
 	err = parsePacket(packet, rrh, resp)
 
 	if rrh.GetStatus() != hadoop.RpcResponseHeaderProto_SUCCESS {
-		return errors.New("TODO failed rpc call")
+		return &NamenodeError{
+			Method:  method,
+			Message: rrh.GetErrorMsg(),
+			Code:    int(rrh.GetErrorDetail()),
+		}
 	} else if int(rrh.GetCallId()) != c.currentRequestId {
 		return errors.New("Error reading response: unexpected sequence number")
 	}

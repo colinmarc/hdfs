@@ -29,7 +29,7 @@ type File struct {
 
 // Open returns an File which can be used for reading.
 func (c *Client) Open(name string) (file *File, err error) {
-	info, err := c.Stat(name)
+	info, err := c.getFileInfo(name)
 	if err != nil {
 		return nil, err
 	}

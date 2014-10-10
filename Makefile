@@ -9,7 +9,8 @@ test: get-deps
 	$(GOCMD) test
 
 get-deps:
-	$(GOCMD) get github.com/stretchr/testify/assert
 	$(GOCMD) get code.google.com/p/goprotobuf/proto
+	$(GOCMD) get github.com/stretchr/testify/assert
+	$(GOCMD) get github.com/stretchr/testify/require
 
 .PHONY: install test get-deps

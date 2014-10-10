@@ -2,9 +2,10 @@ package hdfs
 
 import (
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 	"os"
-	"time"
 	"testing"
+	"time"
 )
 
 func getClient(t *testing.T) *Client {
@@ -24,10 +25,10 @@ func getClient(t *testing.T) *Client {
 func TestStat(t *testing.T) {
 	client := getClient(t)
 
-	resp, err := client.Stat("/foo")
-	assert.Nil(t, err)
+	resp, err := client.Stat("/foo.txt")
+	require.Nil(t, err)
 
-	assert.Equal(t, resp.Name(), "/foo")
+	assert.Equal(t, resp.Name(), "/foo.txt")
 	assert.False(t, resp.IsDir())
 	assert.Equal(t, resp.Size(), 4)
 	assert.Equal(t, resp.ModTime().Year(), time.Now().Year())
@@ -46,7 +47,7 @@ func TestStatDir(t *testing.T) {
 	client := getClient(t)
 
 	resp, err := client.Stat("/full")
-	assert.Nil(t, err)
+	require.Nil(t, err)
 
 	assert.Equal(t, resp.Name(), "/full")
 	assert.True(t, resp.IsDir())
@@ -60,10 +61,7 @@ func TestReadDir(t *testing.T) {
 
 	res, err := client.ReadDir("/full")
 	assert.Nil(t, err)
-	assert.Equal(t, len(res), 4)
-	if len(res) != 4 {
-		t.FailNow()
-	}
+	require.Equal(t, len(res), 4)
 
 	assert.Equal(t, res[0].Name(), "/full/1")
 	assert.False(t, res[0].IsDir())
@@ -85,7 +83,7 @@ func TestReadDir(t *testing.T) {
 func TestReadFile(t *testing.T) {
 	client := getClient(t)
 
-	bytes, err := client.ReadFile("/foo")
+	bytes, err := client.ReadFile("/foo.txt")
 	assert.Nil(t, err)
 	assert.Equal(t, string(bytes), "bar\n")
 }

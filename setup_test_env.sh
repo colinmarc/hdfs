@@ -36,16 +36,16 @@ echo "minicluster jar found at $MINICLUSTER_JAR"
 $HADOOP_HOME/bin/hadoop jar $MINICLUSTER_JAR minicluster -nnport $NN_PORT -nomr -format $@ &
 sleep 10
 
-echo "bar" > foo
+echo "bar" > foo.txt
 HADOOP_FS="$HADOOP_HOME/bin/hadoop fs -Ddfs.block.size=1048576"
-$HADOOP_FS -put foo "hdfs://$HADOOP_NAMENODE/"
+$HADOOP_FS -put foo.txt "hdfs://$HADOOP_NAMENODE/"
 
-dd if=/dev/urandom of=longfile bs=1048576 count=10
-$HADOOP_FS -put longfile "hdfs://$HADOOP_NAMENODE/"
+curl -o mobydick.txt -L http://www.gutenberg.org/cache/epub/2701/pg2701.txt
+$HADOOP_FS -put mobydick.txt "hdfs://$HADOOP_NAMENODE/"
 
 $HADOOP_FS -mkdir "hdfs://$HADOOP_NAMENODE/empty"
 $HADOOP_FS -mkdir "hdfs://$HADOOP_NAMENODE/full"
 $HADOOP_FS -mkdir "hdfs://$HADOOP_NAMENODE/full/dir"
-$HADOOP_FS -put foo "hdfs://$HADOOP_NAMENODE/full/1"
-$HADOOP_FS -put foo "hdfs://$HADOOP_NAMENODE/full/2"
-$HADOOP_FS -put foo "hdfs://$HADOOP_NAMENODE/full/3"
+$HADOOP_FS -put foo.txt "hdfs://$HADOOP_NAMENODE/full/1"
+$HADOOP_FS -put foo.txt "hdfs://$HADOOP_NAMENODE/full/2"
+$HADOOP_FS -put foo.txt "hdfs://$HADOOP_NAMENODE/full/3"

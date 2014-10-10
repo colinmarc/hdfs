@@ -61,7 +61,7 @@ func (f *File) Seek(offset int64, whence int) (int64, error) {
 	} else if whence == 1 {
 		off = f.offset + offset
 	} else if whence == 2 {
-		off = f.info.Size() - offset
+		off = f.info.Size() + offset
 	} else {
 		return f.offset, fmt.Errorf("Invalid whence: %d", whence)
 	}

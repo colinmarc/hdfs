@@ -9,6 +9,7 @@ import (
 	"fmt"
 	hdfs "github.com/colinmarc/hdfs/protocol/hadoop_hdfs"
 	"io"
+	"io/ioutil"
 	"math"
 	"net"
 )
@@ -91,6 +92,14 @@ func (br *BlockReader) connect(datanode string) error {
 
 	br.chunkSize = checksumInfo.GetBytesPerChecksum()
 	br.startNewPacket()
+
+	// The read will start aligned to a chunk boundary, so we need to seek forward
+	// to the requested offset.
+	amountToDiscard := br.offset - br.packet.blockOffset
+	if amountToDiscard > 0 {
+		io.CopyN(ioutil.Discard, br, int64(amountToDiscard))
+	}
+
 	return nil
 }
 
@@ -124,8 +133,6 @@ func (br *BlockReader) Read(b []byte) (int, error) {
 		// chOff := 4 * i
 		// checksum := binary.BigEndian.Uint32(checksumBytes[chOff : chOff+4])
 
-		// TODO check if packet aligns correctly
-
 		remaining := br.packet.length - br.packet.packetOffset
 		chunkLength := int64(math.Min(float64(br.chunkSize), float64(remaining)))
 
@@ -133,6 +140,7 @@ func (br *BlockReader) Read(b []byte) (int, error) {
 		n, err := chunkReader.Read(b[readOffset:])
 		readOffset += n
 		br.packet.packetOffset += uint64(n)
+
 		if err != nil {
 			if err == io.EOF {
 				err = io.ErrUnexpectedEOF
@@ -149,8 +157,12 @@ func (br *BlockReader) Read(b []byte) (int, error) {
 		} else if int64(n) < chunkLength {
 			// save any leftovers
 			br.buf.Reset()
-			br.buf.ReadFrom(chunkReader)
+			leftover, err := br.buf.ReadFrom(chunkReader)
+			if err != nil {
+				return readOffset, err
+			}
 
+			br.packet.packetOffset += uint64(leftover)
 			break
 		}
 	}

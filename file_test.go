@@ -27,7 +27,7 @@ func TestFileRead(t *testing.T) {
 
 	bytes, err := ioutil.ReadAll(file)
 	assert.Nil(t, err)
-	assert.Equal(t, string(bytes), "bar\n")
+	assert.Equal(t, "bar\n", string(bytes))
 }
 
 func TestFileBigRead(t *testing.T) {
@@ -65,7 +65,7 @@ func TestFileReadAt(t *testing.T) {
 		off += n
 	}
 
-	assert.Equal(t, string(buf), testStr2)
+	assert.Equal(t, testStr2, string(buf))
 }
 
 func TestFileSeek(t *testing.T) {
@@ -78,34 +78,34 @@ func TestFileSeek(t *testing.T) {
 
 	off, err := file.Seek(testStrOff, 0)
 	assert.Nil(t, err)
-	assert.Equal(t, off, testStrOff)
+	assert.Equal(t, testStrOff, off)
 
 	n, err := io.CopyN(buf, file, int64(len(testStr)))
 	assert.Nil(t, err)
-	assert.Equal(t, n, len(testStr))
-	assert.Equal(t, string(buf.Bytes()), testStr)
+	assert.Equal(t, len(testStr), n)
+	assert.Equal(t, testStr, string(buf.Bytes()))
 
 	// seek backwards and read it again
 	off, err = file.Seek(-1*int64(len(testStr)), 1)
 	assert.Nil(t, err)
-	assert.Equal(t, off, testStrOff)
+	assert.Equal(t, testStrOff, off)
 
 	buf.Reset()
 	n, err = io.CopyN(buf, file, int64(len(testStr)))
 	assert.Nil(t, err)
-	assert.Equal(t, n, len(testStr))
-	assert.Equal(t, string(buf.Bytes()), testStr)
+	assert.Equal(t, len(testStr), n)
+	assert.Equal(t, testStr, string(buf.Bytes()))
 
 	// now seek forward to another block and read a string
 	off, err = file.Seek(testStr2NegativeOff, 2)
 	assert.Nil(t, err)
-	assert.Equal(t, off, testStr2Off)
+	assert.Equal(t, testStr2Off, off)
 
 	buf.Reset()
 	n, err = io.CopyN(buf, file, int64(len(testStr2)))
 	assert.Nil(t, err)
-	assert.Equal(t, n, len(testStr2))
-	assert.Equal(t, string(buf.Bytes()), testStr2)
+	assert.Equal(t, len(testStr2), n)
+	assert.Equal(t, testStr2, string(buf.Bytes()))
 }
 
 func TestFileReadDir(t *testing.T) {
@@ -115,21 +115,21 @@ func TestFileReadDir(t *testing.T) {
 	require.Nil(t, err)
 
 	res, err := file.Readdir(2)
-	require.Equal(t, len(res), 2)
-	assert.Equal(t, res[0].Name(), "/full/1")
-	assert.Equal(t, res[1].Name(), "/full/2")
+	require.Equal(t, 2, len(res))
+	assert.Equal(t, "/full/1", res[0].Name())
+	assert.Equal(t, "/full/2", res[1].Name())
 
 	res, err = file.Readdir(5)
-	require.Equal(t, len(res), 2)
-	assert.Equal(t, res[0].Name(), "/full/3")
-	assert.Equal(t, res[1].Name(), "/full/dir")
+	require.Equal(t, 2, len(res))
+	assert.Equal(t, "/full/3", res[0].Name())
+	assert.Equal(t, "/full/dir", res[1].Name())
 
 	res, err = file.Readdir(0)
-	require.Equal(t, len(res), 4)
-	assert.Equal(t, res[0].Name(), "/full/1")
-	assert.Equal(t, res[1].Name(), "/full/2")
-	assert.Equal(t, res[2].Name(), "/full/3")
-	assert.Equal(t, res[3].Name(), "/full/dir")
+	require.Equal(t, 4, len(res))
+	assert.Equal(t, "/full/1", res[0].Name())
+	assert.Equal(t, "/full/2", res[1].Name())
+	assert.Equal(t, "/full/3", res[2].Name())
+	assert.Equal(t, "/full/dir", res[3].Name())
 }
 
 func TestFileReadDirnames(t *testing.T) {
@@ -139,6 +139,6 @@ func TestFileReadDirnames(t *testing.T) {
 	require.Nil(t, err)
 
 	res, err := file.Readdirnames(0)
-	require.Equal(t, len(res), 4)
-	assert.Equal(t, res, []string{"/full/1", "/full/2", "/full/3", "/full/dir"})
+	require.Equal(t, 4, len(res))
+	assert.Equal(t, []string{"/full/1", "/full/2", "/full/3", "/full/dir"}, res)
 }

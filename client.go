@@ -51,16 +51,6 @@ func (c *Client) Chown(name string, uid, gid int) error {
 	return f.Chown(uid, gid)
 }
 
-// Remove removes the named file or directory.
-func (c *Client) Remove(name string) error {
-	return nil
-}
-
-// Rename renames (moves) a file.
-func (c *Client) Rename(oldpath, newpath string) error {
-	return nil
-}
-
 // Stat returns an os.FileInfo describing the named file.
 func (c *Client) Stat(name string) (fi os.FileInfo, err error) {
 	return c.getFileInfo(name)
@@ -73,15 +63,25 @@ func (c *Client) ReadDir(dirname string) ([]os.FileInfo, error) {
 }
 
 // Mkdir creates a new directory with the specified name and permission bits.
-func Mkdir(name string, perm os.FileMode) error {
-	return nil
+func (c *Client) Mkdir(name string, perm os.FileMode) error {
+	return c.mkdir(name, perm, false)
 }
 
 // MkdirAll creates a directory named path, along with any necessary parents,
 // and returns nil, or else returns an error. The permission bits perm are used
 // for all directories that MkdirAll creates. If path is already a directory,
 // MkdirAll does nothing and returns nil.
-func MkdirAll(path string, perm os.FileMode) error {
+func (c *Client) MkdirAll(path string, perm os.FileMode) error {
+	return c.mkdir(path, perm, true)
+}
+
+// Remove removes the named file or directory.
+func (c *Client) Remove(name string) error {
+	return nil
+}
+
+// Rename renames (moves) a file.
+func (c *Client) Rename(oldpath, newpath string) error {
 	return nil
 }
 
@@ -173,4 +173,30 @@ func (c *Client) getPartialDirList(dirname string, after string) ([]os.FileInfo,
 
 	remaining := int(resp.GetDirList().GetRemainingEntries())
 	return res, remaining, nil
+}
+
+func (c *Client) mkdir(path string, perm os.FileMode, createParent bool) error {
+	path = strings.TrimSuffix(path, "/")
+
+	req := &hdfs.MkdirsRequestProto{
+		Src: proto.String(path),
+		Masked: &hdfs.FsPermissionProto{Perm: proto.Uint32(uint32(perm))},
+		CreateParent: proto.Bool(createParent),
+	}
+	resp := &hdfs.MkdirsResponseProto{}
+
+	err := c.namenode.Execute("mkdirs", req, resp)
+	if err != nil {
+		// Hadoop makes this unecessarily complicated
+		if nnErr, ok := err.(*rpc.NamenodeError); ok && nnErr.Code == 1 {
+			parts := strings.Split(path, "/")
+			parent := strings.Join(parts[:len(parts)-1], "/")
+			if _, statErr := c.getFileInfo(parent); statErr == os.ErrNotExist {
+				return statErr
+			}
+		}
+		return err
+	}
+
+	return nil
 }

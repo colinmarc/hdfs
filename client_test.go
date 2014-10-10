@@ -119,3 +119,47 @@ func TestReadFile(t *testing.T) {
 	assert.Nil(t, err)
 	assert.Equal(t, "bar\n", string(bytes))
 }
+
+func TestMkdir(t *testing.T) {
+	client := getClient(t)
+
+	err := client.Mkdir("/test", 777)
+	assert.Nil(t, err)
+
+	fi, err := client.Stat("/test")
+	assert.Nil(t, err)
+	assert.True(t, fi.IsDir())
+	assert.Equal(t, 0, fi.Size())
+}
+
+func TestMkdirNested(t *testing.T) {
+	client := getClient(t)
+
+	err := client.Mkdir("/test2/foo", 777)
+	assert.Equal(t, os.ErrNotExist, err)
+
+	fi, err := client.Stat("/test2/foo")
+	assert.Nil(t, fi)
+	assert.Equal(t, os.ErrNotExist, err)
+
+	fi, err = client.Stat("/test2")
+	assert.Nil(t, fi)
+	assert.Equal(t, os.ErrNotExist, err)
+}
+
+func TestMkdirAllNested(t *testing.T) {
+	client := getClient(t)
+
+	err := client.MkdirAll("/test3/foo", 777)
+	assert.Nil(t, err)
+
+	fi, err := client.Stat("/test3/foo")
+	assert.Nil(t, err)
+	assert.True(t, fi.IsDir())
+	assert.Equal(t, 0, fi.Size())
+
+	fi, err = client.Stat("/test3")
+	assert.Nil(t, err)
+	assert.True(t, fi.IsDir())
+	assert.Equal(t, 0, fi.Size())
+}

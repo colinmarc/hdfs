@@ -2,11 +2,13 @@ package hdfs
 
 import (
 	"code.google.com/p/goprotobuf/proto"
+	"errors"
 	"fmt"
 	hdfs "github.com/colinmarc/hdfs/protocol/hadoop_hdfs"
 	"github.com/colinmarc/hdfs/rpc"
 	"io"
 	"os"
+	"strings"
 )
 
 const clientName = "go-hdfs"
@@ -22,6 +24,8 @@ type File struct {
 	blocks             []*hdfs.LocatedBlockProto
 	currentBlockReader *rpc.BlockReader
 	offset             int64
+
+	readdirLast string
 
 	closed       bool
 	allowWriting bool
@@ -79,7 +83,7 @@ func (f *File) Seek(offset int64, whence int) (int64, error) {
 // Read reads up to len(b) bytes from the File. It returns the number of bytes
 // read and an error, if any. EOF is signaled by a zero count with err set to
 // io.EOF.
-func (f *File) Read(b []byte) (n int, err error) {
+func (f *File) Read(b []byte) (int, error) {
 	if f.offset >= f.info.Size() {
 		return 0, io.EOF
 	}
@@ -92,7 +96,7 @@ func (f *File) Read(b []byte) (n int, err error) {
 	}
 
 	if f.currentBlockReader == nil {
-		err = f.getNewBlockReader()
+		err := f.getNewBlockReader()
 		if err != nil {
 			return 0, err
 		}
@@ -156,8 +160,30 @@ func (f *File) Chown(uid, gid int) error {
 // the directory), it returns the slice and a nil error. If it encounters an
 // error before the end of the directory, Readdir returns the os.FileInfo read
 // until that point and a non-nil error.
-func (f *File) Readdir(n int) (fi []os.FileInfo, err error) {
-	return []os.FileInfo{}, nil
+func (f *File) Readdir(n int) ([]os.FileInfo, error) {
+	if !f.info.IsDir() {
+		return nil, errors.New("The file is not a directory.")
+	}
+
+	if n <= 0 {
+		f.readdirLast = ""
+	}
+
+	res, err := f.client.getDirList(f.info.Name(), f.readdirLast, n)
+	if err != nil {
+		return res, err
+	}
+
+	if n > 0 {
+		if len(res) == 0 {
+			err = io.EOF
+		} else {
+			lastPath := res[len(res)-1].Name()
+			f.readdirLast = strings.TrimPrefix(lastPath, f.info.Name()+"/")
+		}
+	}
+
+	return res, err
 }
 
 // Readdirnames reads and returns a slice of names from the directory f.
@@ -171,8 +197,18 @@ func (f *File) Readdir(n int) (fi []os.FileInfo, err error) {
 // of the directory), it returns the slice and a nil error. If it encounters an
 // error before the end of the directory, Readdirnames returns the names read
 // until that point and a non-nil error.
-func (f *File) Readdirnames(n int) (names []string, err error) {
-	return []string{}, nil
+func (f *File) Readdirnames(n int) ([]string, error) {
+	fis, err := f.Readdir(n)
+	if err != nil {
+		return nil, err
+	}
+
+	names := make([]string, 0, len(fis))
+	for _, fi := range fis {
+		names = append(names, fi.Name())
+	}
+
+	return names, nil
 }
 
 func (f *File) getBlocks() error {

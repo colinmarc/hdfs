@@ -107,3 +107,38 @@ func TestFileSeek(t *testing.T) {
 	assert.Equal(t, n, len(testStr2))
 	assert.Equal(t, string(buf.Bytes()), testStr2)
 }
+
+func TestFileReadDir(t *testing.T) {
+	client := getClient(t)
+
+	file, err := client.Open("/full")
+	require.Nil(t, err)
+
+	res, err := file.Readdir(2)
+	require.Equal(t, len(res), 2)
+	assert.Equal(t, res[0].Name(), "/full/1")
+	assert.Equal(t, res[1].Name(), "/full/2")
+
+	res, err = file.Readdir(5)
+	require.Equal(t, len(res), 2)
+	assert.Equal(t, res[0].Name(), "/full/3")
+	assert.Equal(t, res[1].Name(), "/full/dir")
+
+	res, err = file.Readdir(0)
+	require.Equal(t, len(res), 4)
+	assert.Equal(t, res[0].Name(), "/full/1")
+	assert.Equal(t, res[1].Name(), "/full/2")
+	assert.Equal(t, res[2].Name(), "/full/3")
+	assert.Equal(t, res[3].Name(), "/full/dir")
+}
+
+func TestFileReadDirnames(t *testing.T) {
+	client := getClient(t)
+
+	file, err := client.Open("/full")
+	require.Nil(t, err)
+
+	res, err := file.Readdirnames(0)
+	require.Equal(t, len(res), 4)
+	assert.Equal(t, res, []string{"/full/1", "/full/2", "/full/3", "/full/dir"})
+}

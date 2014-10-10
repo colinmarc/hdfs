@@ -8,6 +8,7 @@ import (
 	"io/ioutil"
 	"os"
 	"os/user"
+	"strings"
 )
 
 // A Client represents a connection to an HDFS cluster
@@ -150,6 +151,8 @@ func (c *Client) getDirList(dirname string, after string, max int) ([]os.FileInf
 }
 
 func (c *Client) getPartialDirList(dirname string, after string) ([]os.FileInfo, int, error) {
+	dirname = strings.TrimSuffix(dirname, "/")
+
 	req := &hdfs.GetListingRequestProto{
 		Src:          proto.String(dirname),
 		StartAfter:   []byte(after),

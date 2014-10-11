@@ -163,3 +163,49 @@ func TestMkdirAllNested(t *testing.T) {
 	assert.True(t, fi.IsDir())
 	assert.Equal(t, 0, fi.Size())
 }
+
+func TestRemove(t *testing.T) {
+	client := getClient(t)
+
+	err := client.Remove("/todelete")
+	assert.Nil(t, err)
+
+	fi, err := client.Stat("/todelete")
+	assert.Nil(t, fi)
+	assert.Equal(t, os.ErrNotExist, err)
+}
+
+func TestRemoveNotExistent(t *testing.T) {
+	client := getClient(t)
+
+	err := client.Remove("/nonexistent")
+	assert.Equal(t, os.ErrNotExist, err)
+}
+
+func TestRename(t *testing.T) {
+	client := getClient(t)
+
+	err := client.Rename("/tomove", "/tomovedest")
+	assert.Nil(t, err)
+
+	fi, err := client.Stat("/tomove")
+	assert.Nil(t, fi)
+	assert.Equal(t, os.ErrNotExist, err)
+
+	fi, err = client.Stat("/tomovedest")
+	assert.Nil(t, err)
+}
+
+func TestRenameSrcNotExistent(t *testing.T) {
+	client := getClient(t)
+
+	err := client.Rename("/nonexistent", "/nonexistent2")
+	assert.Equal(t, os.ErrNotExist, err)
+}
+
+func TestRenameDestExists(t *testing.T) {
+	client := getClient(t)
+
+	err := client.Rename("/foo.txt", "/mobydick.txt")
+	assert.Equal(t, os.ErrExist, err)
+}

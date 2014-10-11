@@ -2,6 +2,7 @@ package hdfs
 
 import (
 	"code.google.com/p/goprotobuf/proto"
+	"errors"
 	hdfs "github.com/colinmarc/hdfs/protocol/hadoop_hdfs"
 	"github.com/colinmarc/hdfs/rpc"
 	"io"
@@ -77,11 +78,53 @@ func (c *Client) MkdirAll(path string, perm os.FileMode) error {
 
 // Remove removes the named file or directory.
 func (c *Client) Remove(name string) error {
+	_, err := c.getFileInfo(name)
+	if err != nil {
+		return err
+	}
+
+	req := &hdfs.DeleteRequestProto{
+		Src:       proto.String(name),
+		Recursive: proto.Bool(true),
+	}
+	resp := &hdfs.DeleteResponseProto{}
+
+	err = c.namenode.Execute("delete", req, resp)
+	if err != nil {
+		return err
+	} else if resp.Result == nil {
+		return errors.New("Unexpected empty response to 'delete' rpc call")
+	}
+
 	return nil
 }
 
 // Rename renames (moves) a file.
 func (c *Client) Rename(oldpath, newpath string) error {
+	_, err := c.getFileInfo(oldpath)
+	if err != nil {
+		return err
+	}
+
+	_, err = c.getFileInfo(newpath)
+	if err == nil {
+		return os.ErrExist
+	} else if err != os.ErrNotExist {
+		return err
+	}
+
+	req := &hdfs.Rename2RequestProto{
+		Src:           proto.String(oldpath),
+		Dst:           proto.String(newpath),
+		OverwriteDest: proto.Bool(true),
+	}
+	resp := &hdfs.Rename2ResponseProto{}
+
+	err = c.namenode.Execute("rename2", req, resp)
+	if err != nil {
+		return err
+	}
+
 	return nil
 }
 
@@ -179,8 +222,8 @@ func (c *Client) mkdir(path string, perm os.FileMode, createParent bool) error {
 	path = strings.TrimSuffix(path, "/")
 
 	req := &hdfs.MkdirsRequestProto{
-		Src: proto.String(path),
-		Masked: &hdfs.FsPermissionProto{Perm: proto.Uint32(uint32(perm))},
+		Src:          proto.String(path),
+		Masked:       &hdfs.FsPermissionProto{Perm: proto.Uint32(uint32(perm))},
 		CreateParent: proto.Bool(createParent),
 	}
 	resp := &hdfs.MkdirsResponseProto{}
@@ -195,6 +238,7 @@ func (c *Client) mkdir(path string, perm os.FileMode, createParent bool) error {
 				return statErr
 			}
 		}
+
 		return err
 	}
 

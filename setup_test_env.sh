@@ -49,3 +49,8 @@ $HADOOP_FS -mkdir "hdfs://$HADOOP_NAMENODE/full/dir"
 $HADOOP_FS -put foo.txt "hdfs://$HADOOP_NAMENODE/full/1"
 $HADOOP_FS -put foo.txt "hdfs://$HADOOP_NAMENODE/full/2"
 $HADOOP_FS -put foo.txt "hdfs://$HADOOP_NAMENODE/full/3"
+
+$HADOOP_FS -mkdir "hdfs://$HADOOP_NAMENODE/todeletedir"
+$HADOOP_FS -put foo.txt "hdfs://$HADOOP_NAMENODE/todelete"
+
+$HADOOP_FS -put foo.txt "hdfs://$HADOOP_NAMENODE/tomove"

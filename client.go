@@ -221,6 +221,13 @@ func (c *Client) getPartialDirList(dirname string, after string) ([]os.FileInfo,
 func (c *Client) mkdir(path string, perm os.FileMode, createParent bool) error {
 	path = strings.TrimSuffix(path, "/")
 
+	_, err := c.getFileInfo(path)
+	if err == nil {
+		return os.ErrExist
+	} else if err != os.ErrNotExist {
+		return err
+	}
+
 	req := &hdfs.MkdirsRequestProto{
 		Src:          proto.String(path),
 		Masked:       &hdfs.FsPermissionProto{Perm: proto.Uint32(uint32(perm))},
@@ -228,7 +235,7 @@ func (c *Client) mkdir(path string, perm os.FileMode, createParent bool) error {
 	}
 	resp := &hdfs.MkdirsResponseProto{}
 
-	err := c.namenode.Execute("mkdirs", req, resp)
+	err = c.namenode.Execute("mkdirs", req, resp)
 	if err != nil {
 		// Hadoop makes this unecessarily complicated
 		if nnErr, ok := err.(*rpc.NamenodeError); ok && nnErr.Code == 1 {

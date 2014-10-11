@@ -132,6 +132,13 @@ func TestMkdir(t *testing.T) {
 	assert.Equal(t, 0, fi.Size())
 }
 
+func TestMkdirExists(t *testing.T) {
+	client := getClient(t)
+
+	err := client.Mkdir("/full", 777)
+	assert.Equal(t, os.ErrExist, err)
+}
+
 func TestMkdirNested(t *testing.T) {
 	client := getClient(t)
 

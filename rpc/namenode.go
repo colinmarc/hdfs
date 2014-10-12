@@ -86,7 +86,7 @@ func (c *NamenodeConnection) Execute(method string, req proto.Message, resp prot
 	c.reqLock.Lock()
 	defer c.reqLock.Unlock()
 
-	c.currentRequestId = (c.currentRequestId + 1) % 9
+	c.currentRequestId++
 	err := c.writeRequest(method, req)
 	if err != nil {
 		c.conn.Close()

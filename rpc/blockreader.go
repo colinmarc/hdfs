@@ -296,7 +296,7 @@ func newReadBlockOp(block *hdfs.LocatedBlockProto, offset, length uint64) *hdfs.
 				Block: block.GetB(),
 				Token: block.GetBlockToken(),
 			},
-			ClientName: proto.String(clientName),
+			ClientName: proto.String(ClientName),
 		},
 		Offset: proto.Uint64(offset),
 		Len:    proto.Uint64(length),

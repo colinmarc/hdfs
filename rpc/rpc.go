@@ -6,7 +6,7 @@ import (
 	"encoding/binary"
 )
 
-const clientName = "go-hdfs"
+const ClientName = "go-hdfs"
 
 func makeDelimitedMsg(msg proto.Message) ([]byte, error) {
 	msgBytes, err := proto.Marshal(msg)

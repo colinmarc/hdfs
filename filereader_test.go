@@ -22,7 +22,7 @@ const (
 func TestFileRead(t *testing.T) {
 	client := getClient(t)
 
-	file, err := client.Open("/foo.txt")
+	file, err := client.Open("/_test/foo.txt")
 	require.Nil(t, err)
 
 	bytes, err := ioutil.ReadAll(file)
@@ -33,7 +33,7 @@ func TestFileRead(t *testing.T) {
 func TestFileBigRead(t *testing.T) {
 	client := getClient(t)
 
-	file, err := client.Open("/mobydick.txt")
+	file, err := client.Open("/_test/mobydick.txt")
 	require.Nil(t, err)
 
 	io.Copy(ioutil.Discard, file)
@@ -42,7 +42,7 @@ func TestFileBigRead(t *testing.T) {
 func TestFileReadAt(t *testing.T) {
 	client := getClient(t)
 
-	file, err := client.Open("/mobydick.txt")
+	file, err := client.Open("/_test/mobydick.txt")
 	require.Nil(t, err)
 
 	buf := make([]byte, len(testStr))
@@ -71,7 +71,7 @@ func TestFileReadAt(t *testing.T) {
 func TestFileSeek(t *testing.T) {
 	client := getClient(t)
 
-	file, err := client.Open("/mobydick.txt")
+	file, err := client.Open("/_test/mobydick.txt")
 	require.Nil(t, err)
 
 	buf := new(bytes.Buffer)
@@ -111,34 +111,51 @@ func TestFileSeek(t *testing.T) {
 func TestFileReadDir(t *testing.T) {
 	client := getClient(t)
 
-	file, err := client.Open("/full")
+	mkdirp(t, "/_test/fulldir3")
+	mkdirp(t, "/_test/fulldir3/dir")
+	touch(t, "/_test/fulldir3/1")
+	touch(t, "/_test/fulldir3/2")
+	touch(t, "/_test/fulldir3/3")
+
+	file, err := client.Open("/_test/fulldir3")
 	require.Nil(t, err)
 
 	res, err := file.Readdir(2)
 	require.Equal(t, 2, len(res))
-	assert.Equal(t, "/full/1", res[0].Name())
-	assert.Equal(t, "/full/2", res[1].Name())
+	assert.Equal(t, "/_test/fulldir3/1", res[0].Name())
+	assert.Equal(t, "/_test/fulldir3/2", res[1].Name())
 
 	res, err = file.Readdir(5)
 	require.Equal(t, 2, len(res))
-	assert.Equal(t, "/full/3", res[0].Name())
-	assert.Equal(t, "/full/dir", res[1].Name())
+	assert.Equal(t, "/_test/fulldir3/3", res[0].Name())
+	assert.Equal(t, "/_test/fulldir3/dir", res[1].Name())
 
 	res, err = file.Readdir(0)
 	require.Equal(t, 4, len(res))
-	assert.Equal(t, "/full/1", res[0].Name())
-	assert.Equal(t, "/full/2", res[1].Name())
-	assert.Equal(t, "/full/3", res[2].Name())
-	assert.Equal(t, "/full/dir", res[3].Name())
+	assert.Equal(t, "/_test/fulldir3/1", res[0].Name())
+	assert.Equal(t, "/_test/fulldir3/2", res[1].Name())
+	assert.Equal(t, "/_test/fulldir3/3", res[2].Name())
+	assert.Equal(t, "/_test/fulldir3/dir", res[3].Name())
 }
 
 func TestFileReadDirnames(t *testing.T) {
 	client := getClient(t)
 
-	file, err := client.Open("/full")
+	mkdirp(t, "/_test/fulldir4")
+	mkdirp(t, "/_test/fulldir4/dir")
+	touch(t, "/_test/fulldir4/1")
+	touch(t, "/_test/fulldir4/2")
+	touch(t, "/_test/fulldir4/3")
+
+	file, err := client.Open("/_test/fulldir4")
 	require.Nil(t, err)
 
 	res, err := file.Readdirnames(0)
 	require.Equal(t, 4, len(res))
-	assert.Equal(t, []string{"/full/1", "/full/2", "/full/3", "/full/dir"}, res)
+	assert.Equal(t, []string{
+		"/_test/fulldir4/1",
+		"/_test/fulldir4/2",
+		"/_test/fulldir4/3",
+		"/_test/fulldir4/dir",
+	}, res)
 }

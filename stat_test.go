@@ -11,12 +11,27 @@ import (
 func TestStat(t *testing.T) {
 	client := getClient(t)
 
-	resp, err := client.Stat("/foo.txt")
+	resp, err := client.Stat("/_test/foo.txt")
 	require.Nil(t, err)
 
-	assert.Equal(t, "/foo.txt", resp.Name())
+	assert.Equal(t, "/_test/foo.txt", resp.Name())
 	assert.False(t, resp.IsDir())
 	assert.Equal(t, 4, resp.Size())
+	assert.Equal(t, time.Now().Year(), resp.ModTime().Year())
+	assert.Equal(t, time.Now().Month(), resp.ModTime().Month())
+}
+
+func TestStatEmptyFile(t *testing.T) {
+	client := getClient(t)
+
+	touch(t, "/_test/emptyfile2")
+
+	resp, err := client.Stat("/_test/emptyfile2")
+	require.Nil(t, err)
+
+	assert.Equal(t, "/_test/emptyfile2", resp.Name())
+	assert.False(t, resp.IsDir())
+	assert.Equal(t, 0, resp.Size())
 	assert.Equal(t, time.Now().Year(), resp.ModTime().Year())
 	assert.Equal(t, time.Now().Month(), resp.ModTime().Month())
 }
@@ -24,7 +39,7 @@ func TestStat(t *testing.T) {
 func TestStatNotExists(t *testing.T) {
 	client := getClient(t)
 
-	resp, err := client.Stat("/nonexistent")
+	resp, err := client.Stat("/_test/nonexistent")
 	assert.Equal(t, os.ErrNotExist, err)
 	assert.Nil(t, resp)
 }
@@ -32,10 +47,12 @@ func TestStatNotExists(t *testing.T) {
 func TestStatDir(t *testing.T) {
 	client := getClient(t)
 
-	resp, err := client.Stat("/full")
+	mkdirp(t, "/_test/dir")
+
+	resp, err := client.Stat("/_test/dir")
 	require.Nil(t, err)
 
-	assert.Equal(t, "/full", resp.Name())
+	assert.Equal(t, "/_test/dir", resp.Name())
 	assert.True(t, resp.IsDir())
 	assert.Equal(t, 0, resp.Size(), 0)
 	assert.Equal(t, time.Now().Year(), resp.ModTime().Year())

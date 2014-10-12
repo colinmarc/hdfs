@@ -9,49 +9,53 @@ import (
 func TestMkdir(t *testing.T) {
 	client := getClient(t)
 
-	err := client.Mkdir("/test", 777)
+	baleet(t, "/_test/dir2")
+
+	err := client.Mkdir("/_test/dir2", 777)
 	assert.Nil(t, err)
 
-	fi, err := client.Stat("/test")
+	fi, err := client.Stat("/_test/dir2")
 	assert.Nil(t, err)
 	assert.True(t, fi.IsDir())
-	assert.Equal(t, 0, fi.Size())
 }
 
 func TestMkdirExists(t *testing.T) {
 	client := getClient(t)
 
-	err := client.Mkdir("/full", 777)
+	mkdirp(t, "/_test/existingdir")
+
+	err := client.Mkdir("/_test/existingdir", 777)
 	assert.Equal(t, os.ErrExist, err)
 }
 
-func TestMkdirNested(t *testing.T) {
+func TestMkdirWithoutParent(t *testing.T) {
 	client := getClient(t)
 
-	err := client.Mkdir("/test2/foo", 777)
+	baleet(t, "/_test/nonexistent")
+
+	err := client.Mkdir("/_test/nonexistent/foo", 777)
 	assert.Equal(t, os.ErrNotExist, err)
 
-	fi, err := client.Stat("/test2/foo")
-	assert.Nil(t, fi)
+	_, err = client.Stat("/_test/nonexistent/foo")
 	assert.Equal(t, os.ErrNotExist, err)
 
-	fi, err = client.Stat("/test2")
-	assert.Nil(t, fi)
+	_, err = client.Stat("/_test/nonexistent")
 	assert.Equal(t, os.ErrNotExist, err)
 }
 
-func TestMkdirAllNested(t *testing.T) {
+func TestMkdirAll(t *testing.T) {
 	client := getClient(t)
 
-	err := client.MkdirAll("/test3/foo", 777)
+	baleet(t, "/_test/dir3")
+
+	err := client.MkdirAll("/_test/dir3/foo", 777)
 	assert.Nil(t, err)
 
-	fi, err := client.Stat("/test3/foo")
+	fi, err := client.Stat("/_test/dir3/foo")
 	assert.Nil(t, err)
 	assert.True(t, fi.IsDir())
-	assert.Equal(t, 0, fi.Size())
 
-	fi, err = client.Stat("/test3")
+	fi, err = client.Stat("/_test/dir3")
 	assert.Nil(t, err)
 	assert.True(t, fi.IsDir())
 	assert.Equal(t, 0, fi.Size())

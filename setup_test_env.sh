@@ -36,21 +36,11 @@ echo "minicluster jar found at $MINICLUSTER_JAR"
 $HADOOP_HOME/bin/hadoop jar $MINICLUSTER_JAR minicluster -nnport $NN_PORT -nomr -format $@ &
 sleep 10
 
-echo "bar" > foo.txt
 HADOOP_FS="$HADOOP_HOME/bin/hadoop fs -Ddfs.block.size=1048576"
-$HADOOP_FS -put foo.txt "hdfs://$HADOOP_NAMENODE/"
+$HADOOP_FS -mkdir -p "hdfs://$HADOOP_NAMENODE/_test"
+
+echo "bar" > foo.txt
+$HADOOP_FS -put foo.txt "hdfs://$HADOOP_NAMENODE/_test/foo.txt"
 
 curl -o mobydick.txt -L http://www.gutenberg.org/cache/epub/2701/pg2701.txt
-$HADOOP_FS -put mobydick.txt "hdfs://$HADOOP_NAMENODE/"
-
-$HADOOP_FS -mkdir "hdfs://$HADOOP_NAMENODE/empty"
-$HADOOP_FS -mkdir "hdfs://$HADOOP_NAMENODE/full"
-$HADOOP_FS -mkdir "hdfs://$HADOOP_NAMENODE/full/dir"
-$HADOOP_FS -put foo.txt "hdfs://$HADOOP_NAMENODE/full/1"
-$HADOOP_FS -put foo.txt "hdfs://$HADOOP_NAMENODE/full/2"
-$HADOOP_FS -put foo.txt "hdfs://$HADOOP_NAMENODE/full/3"
-
-$HADOOP_FS -mkdir "hdfs://$HADOOP_NAMENODE/todeletedir"
-$HADOOP_FS -put foo.txt "hdfs://$HADOOP_NAMENODE/todelete"
-
-$HADOOP_FS -put foo.txt "hdfs://$HADOOP_NAMENODE/tomove"
+$HADOOP_FS -put mobydick.txt "hdfs://$HADOOP_NAMENODE/_test/mobydick.txt"

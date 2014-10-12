@@ -8,6 +8,7 @@ import (
 	"errors"
 	"fmt"
 	hdfs "github.com/colinmarc/hdfs/protocol/hadoop_hdfs"
+	"hash/crc32"
 	"io"
 	"io/ioutil"
 	"math"
@@ -28,7 +29,8 @@ type BlockReader struct {
 	conn   net.Conn
 	reader *bufio.Reader
 
-	block *hdfs.LocatedBlockProto
+	block       *hdfs.LocatedBlockProto
+	checksumTab *crc32.Table
 
 	offset    uint64
 	chunkSize uint32
@@ -85,9 +87,12 @@ func (br *BlockReader) connect(datanode string) error {
 
 	checksumInfo := resp.GetReadOpChecksumInfo().GetChecksum()
 	checksumType := checksumInfo.GetType()
-	if checksumType != hdfs.ChecksumTypeProto_CHECKSUM_CRC32 &&
-		checksumType != hdfs.ChecksumTypeProto_CHECKSUM_CRC32C {
-		return fmt.Errorf("Unsupported checksum type: %v", checksumType)
+	if checksumType == hdfs.ChecksumTypeProto_CHECKSUM_CRC32 {
+		br.checksumTab = crc32.IEEETable
+	} else if checksumType == hdfs.ChecksumTypeProto_CHECKSUM_CRC32C {
+		br.checksumTab = crc32.MakeTable(crc32.Castagnoli)
+	} else {
+		return fmt.Errorf("Unsupported checksum type:", checksumType)
 	}
 
 	br.chunkSize = checksumInfo.GetBytesPerChecksum()
@@ -129,17 +134,19 @@ func (br *BlockReader) Read(b []byte) (int, error) {
 	// then, read until we fill up b or we reach the end of the packet
 	readOffset := 0
 	for br.packet.nextChunk < br.packet.numChunks {
-		// TODO
-		// chOff := 4 * i
-		// checksum := binary.BigEndian.Uint32(checksumBytes[chOff : chOff+4])
+		chOff := 4 * br.packet.nextChunk
+		checksum := br.packet.checksumBytes[chOff : chOff+4]
 
 		remaining := br.packet.length - br.packet.packetOffset
 		chunkLength := int64(math.Min(float64(br.chunkSize), float64(remaining)))
 
 		chunkReader := io.LimitReader(br.reader, int64(chunkLength))
-		n, err := chunkReader.Read(b[readOffset:])
+		chunkBytes := b[readOffset:]
+		n, err := chunkReader.Read(chunkBytes)
+
 		readOffset += n
 		br.packet.packetOffset += uint64(n)
+		br.packet.nextChunk++
 
 		if err != nil {
 			if err == io.EOF {
@@ -150,11 +157,9 @@ func (br *BlockReader) Read(b []byte) (int, error) {
 			return readOffset, err
 		}
 
-		br.packet.nextChunk++
+		crc := crc32.Checksum(chunkBytes[:n], br.checksumTab)
 
-		if readOffset == len(b) && int64(n) == chunkLength {
-			break
-		} else if int64(n) < chunkLength {
+		if int64(n) < chunkLength {
 			// save any leftovers
 			br.buf.Reset()
 			leftover, err := br.buf.ReadFrom(chunkReader)
@@ -163,6 +168,16 @@ func (br *BlockReader) Read(b []byte) (int, error) {
 			}
 
 			br.packet.packetOffset += uint64(leftover)
+
+			// update the checksum with the leftovers
+			crc = crc32.Update(crc, br.checksumTab, br.buf.Bytes())
+		}
+
+		if crc != binary.BigEndian.Uint32(checksum) {
+			return readOffset, errors.New("Invalid checksum from the datanode!")
+		}
+
+		if readOffset == len(b) {
 			break
 		}
 	}

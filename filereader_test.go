@@ -30,13 +30,15 @@ func TestFileRead(t *testing.T) {
 	assert.Equal(t, "bar\n", string(bytes))
 }
 
-func TestFileBigRead(t *testing.T) {
+func TestFileBigReadN(t *testing.T) {
 	client := getClient(t)
 
 	file, err := client.Open("/_test/mobydick.txt")
 	require.Nil(t, err)
 
-	io.Copy(ioutil.Discard, file)
+	n, err := io.CopyN(ioutil.Discard, file, 1000000)
+	assert.Nil(t, err)
+	assert.Equal(t, n, 1000000)
 }
 
 func TestFileReadAt(t *testing.T) {

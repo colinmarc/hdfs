@@ -11,12 +11,10 @@ import (
 	"strings"
 )
 
-const clientName = "go-hdfs"
-
-// A File represents an existing file or directory in HDFS. It implements
+// A FileReader represents an existing file or directory in HDFS. It implements
 // Reader, Seeker, and Closer, and can only be used for reads (and other
 // minor operations like Chmod).
-type File struct {
+type FileReader struct {
 	client *Client
 	name   string
 	info   os.FileInfo
@@ -31,14 +29,14 @@ type File struct {
 	allowWriting bool
 }
 
-// Open returns an File which can be used for reading.
-func (c *Client) Open(name string) (file *File, err error) {
+// Open returns an FileReader which can be used for reading.
+func (c *Client) Open(name string) (file *FileReader, err error) {
 	info, err := c.getFileInfo(name)
 	if err != nil {
 		return nil, err
 	}
 
-	return &File{
+	return &FileReader{
 		client:       c,
 		name:         name,
 		info:         info,
@@ -48,7 +46,7 @@ func (c *Client) Open(name string) (file *File, err error) {
 }
 
 // Name returns the name of the file.
-func (f *File) Name() string {
+func (f *FileReader) Name() string {
 	return f.name
 }
 
@@ -58,7 +56,7 @@ func (f *File) Name() string {
 // the new offset and an error, if any.
 //
 // The seek is virtual - it starts a new read operation at the new position.
-func (f *File) Seek(offset int64, whence int) (int64, error) {
+func (f *FileReader) Seek(offset int64, whence int) (int64, error) {
 	var off int64
 	if whence == 0 {
 		off = offset
@@ -80,10 +78,10 @@ func (f *File) Seek(offset int64, whence int) (int64, error) {
 	return f.offset, nil
 }
 
-// Read reads up to len(b) bytes from the File. It returns the number of bytes
-// read and an error, if any. EOF is signaled by a zero count with err set to
-// io.EOF.
-func (f *File) Read(b []byte) (int, error) {
+// Read reads up to len(b) bytes from the FileReader. It returns the number of
+// bytes read and an error, if any. EOF is signaled by a zero count with err set
+// to io.EOF.
+func (f *FileReader) Read(b []byte) (int, error) {
 	if f.offset >= f.info.Size() {
 		return 0, io.EOF
 	}
@@ -119,10 +117,10 @@ func (f *File) Read(b []byte) (int, error) {
 	}
 }
 
-// ReadAt reads len(b) bytes from the File starting at byte offset off. It
+// ReadAt reads len(b) bytes from the FileReader starting at byte offset off. It
 // returns the number of bytes read and the error, if any. ReadAt always returns
 // a non-nil error when n < len(b). At end of file, that error is io.EOF.
-func (f *File) ReadAt(b []byte, off int64) (int, error) {
+func (f *FileReader) ReadAt(b []byte, off int64) (int, error) {
 	_, err := f.Seek(off, 0)
 	if err != nil {
 		return 0, err
@@ -131,18 +129,18 @@ func (f *File) ReadAt(b []byte, off int64) (int, error) {
 	return f.Read(b)
 }
 
-// Close closes the File.
-func (f *File) Close() error {
+// Close closes the FileReader.
+func (f *FileReader) Close() error {
 	return nil
 }
 
 // Chmod changes the mode of the file to mode.
-func (f *File) Chmod(mode os.FileMode) error {
+func (f *FileReader) Chmod(mode os.FileMode) error {
 	return nil
 }
 
 // Chown changes the numeric uid and gid of the named file.
-func (f *File) Chown(uid, gid int) error {
+func (f *FileReader) Chown(uid, gid int) error {
 	return nil
 }
 
@@ -160,7 +158,7 @@ func (f *File) Chown(uid, gid int) error {
 // the directory), it returns the slice and a nil error. If it encounters an
 // error before the end of the directory, Readdir returns the os.FileInfo read
 // until that point and a non-nil error.
-func (f *File) Readdir(n int) ([]os.FileInfo, error) {
+func (f *FileReader) Readdir(n int) ([]os.FileInfo, error) {
 	if !f.info.IsDir() {
 		return nil, errors.New("The file is not a directory.")
 	}
@@ -197,7 +195,7 @@ func (f *File) Readdir(n int) ([]os.FileInfo, error) {
 // of the directory), it returns the slice and a nil error. If it encounters an
 // error before the end of the directory, Readdirnames returns the names read
 // until that point and a non-nil error.
-func (f *File) Readdirnames(n int) ([]string, error) {
+func (f *FileReader) Readdirnames(n int) ([]string, error) {
 	fis, err := f.Readdir(n)
 	if err != nil {
 		return nil, err
@@ -211,7 +209,7 @@ func (f *File) Readdirnames(n int) ([]string, error) {
 	return names, nil
 }
 
-func (f *File) getBlocks() error {
+func (f *FileReader) getBlocks() error {
 	req := &hdfs.GetBlockLocationsRequestProto{
 		Src:    proto.String(f.name),
 		Offset: proto.Uint64(0),
@@ -228,7 +226,7 @@ func (f *File) getBlocks() error {
 	return nil
 }
 
-func (f *File) getNewBlockReader() error {
+func (f *FileReader) getNewBlockReader() error {
 	off := uint64(f.offset)
 	for _, block := range f.blocks {
 		start := block.GetOffset()

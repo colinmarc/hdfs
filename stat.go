@@ -1,6 +1,7 @@
 package hdfs
 
 import (
+	"code.google.com/p/goprotobuf/proto"
 	hdfs "github.com/colinmarc/hdfs/protocol/hadoop_hdfs"
 	"os"
 	"time"
@@ -11,6 +12,11 @@ import (
 type FileInfo struct {
 	name   string
 	status *hdfs.HdfsFileStatusProto
+}
+
+// Stat returns an os.FileInfo describing the named file.
+func (c *Client) Stat(name string) (fi os.FileInfo, err error) {
+	return c.getFileInfo(name)
 }
 
 func newFileInfo(status *hdfs.HdfsFileStatusProto, name, dirname string) *FileInfo {
@@ -53,4 +59,20 @@ func (fi *FileInfo) IsDir() bool {
 
 func (fi *FileInfo) Sys() interface{} {
 	return nil
+}
+
+func (c *Client) getFileInfo(name string) (fi os.FileInfo, err error) {
+	req := &hdfs.GetFileInfoRequestProto{Src: proto.String(name)}
+	resp := &hdfs.GetFileInfoResponseProto{}
+
+	err = c.namenode.Execute("getFileInfo", req, resp)
+	if err != nil {
+		return nil, err
+	}
+
+	if resp.GetFs() == nil {
+		return nil, os.ErrNotExist
+	}
+
+	return newFileInfo(resp.GetFs(), name, ""), nil
 }

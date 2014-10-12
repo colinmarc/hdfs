@@ -184,6 +184,9 @@ func (c *NamenodeConnection) readResponse(method string, resp proto.Message) err
 // |  varint length + IpcConnectionContextProto                |
 // +-----------------------------------------------------------+
 func (c *NamenodeConnection) writeNamenodeHandshake() error {
+	c.reqLock.Lock()
+	defer c.reqLock.Unlock()
+
 	rpcHeader := []byte{
 		0x68, 0x72, 0x70, 0x63, // "hrpc"
 		rpcVersion, serviceClass, authProtocol,

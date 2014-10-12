@@ -12,8 +12,8 @@ import (
 )
 
 // A FileReader represents an existing file or directory in HDFS. It implements
-// Reader, Seeker, and Closer, and can only be used for reads (and other
-// minor operations like Chmod).
+// Reader, ReaderAt, Seeker, and Closer, and can only be used for reads (and
+// other minor operations like Chmod).
 type FileReader struct {
 	client *Client
 	name   string
@@ -50,12 +50,9 @@ func (f *FileReader) Name() string {
 	return f.name
 }
 
-// Seek sets the offset for the next Read or Write to offset, interpreted
-// according to whence: 0 means relative to the origin of the file, 1 means
-// relative to the current offset, and 2 means relative to the end. Seek returns
-// the new offset and an error, if any.
+// Seek implements io.Seeker.
 //
-// The seek is virtual - it starts a new read operation at the new position.
+// The seek is virtual - it starts a new block read at the new position.
 func (f *FileReader) Seek(offset int64, whence int) (int64, error) {
 	var off int64
 	if whence == 0 {
@@ -78,9 +75,7 @@ func (f *FileReader) Seek(offset int64, whence int) (int64, error) {
 	return f.offset, nil
 }
 
-// Read reads up to len(b) bytes from the FileReader. It returns the number of
-// bytes read and an error, if any. EOF is signaled by a zero count with err set
-// to io.EOF.
+// Read implements io.Reader.
 func (f *FileReader) Read(b []byte) (int, error) {
 	if f.offset >= f.info.Size() {
 		return 0, io.EOF
@@ -117,9 +112,7 @@ func (f *FileReader) Read(b []byte) (int, error) {
 	}
 }
 
-// ReadAt reads len(b) bytes from the FileReader starting at byte offset off. It
-// returns the number of bytes read and the error, if any. ReadAt always returns
-// a non-nil error when n < len(b). At end of file, that error is io.EOF.
+// ReadAt implements io.ReaderAt.
 func (f *FileReader) ReadAt(b []byte, off int64) (int, error) {
 	_, err := f.Seek(off, 0)
 	if err != nil {
@@ -129,7 +122,7 @@ func (f *FileReader) ReadAt(b []byte, off int64) (int, error) {
 	return f.Read(b)
 }
 
-// Close closes the FileReader.
+// Close implements io.Closer.
 func (f *FileReader) Close() error {
 	return nil
 }

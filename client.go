@@ -86,8 +86,8 @@ func (c *Client) CreateEmptyFile(filename string) error {
 		ClientName:   proto.String(rpc.ClientName),
 		CreateFlag:   proto.Uint32(1),
 		CreateParent: proto.Bool(false),
-		Replication:  c.defaults.Replication,
-		BlockSize:    c.defaults.BlockSize,
+		Replication:  proto.Uint32(c.defaults.GetReplication()),
+		BlockSize:    proto.Uint64(c.defaults.GetBlockSize()),
 	}
 	createResp := &hdfs.CreateResponseProto{}
 

@@ -33,7 +33,6 @@ func touch(t *testing.T, path string) {
 
 	err := c.CreateEmptyFile(path)
 	if err != nil && err != os.ErrExist {
-		log.Printf("%#v", err)
 		t.Fatal(err)
 	}
 }

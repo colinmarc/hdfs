@@ -8,7 +8,6 @@ import (
 	"io/ioutil"
 	"os"
 	"os/user"
-	"strings"
 )
 
 // A Client represents a connection to an HDFS cluster
@@ -93,12 +92,8 @@ func (c *Client) CreateEmptyFile(filename string) error {
 
 	err = c.namenode.Execute("create", createReq, createResp)
 	if err != nil {
-		if nnErr, ok := err.(*rpc.NamenodeError); ok && nnErr.Code == 1 {
-			parts := strings.Split(filename, "/")
-			parent := strings.Join(parts[:len(parts)-1], "/")
-			if _, statErr := c.getFileInfo(parent); statErr == os.ErrNotExist {
-				return statErr
-			}
+		if nnErr, ok := err.(*rpc.NamenodeError); ok {
+			err = interpretException(nnErr.Exception, err)
 		}
 
 		return err

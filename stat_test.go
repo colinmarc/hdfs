@@ -36,7 +36,7 @@ func TestStatEmptyFile(t *testing.T) {
 	assert.Equal(t, time.Now().Month(), resp.ModTime().Month())
 }
 
-func TestStatNotExists(t *testing.T) {
+func TestStatNotExistent(t *testing.T) {
 	client := getClient(t)
 
 	resp, err := client.Stat("/_test/nonexistent")

@@ -3,6 +3,7 @@ package hdfs
 import (
 	"code.google.com/p/goprotobuf/proto"
 	hdfs "github.com/colinmarc/hdfs/protocol/hadoop_hdfs"
+	"github.com/colinmarc/hdfs/rpc"
 	"os"
 	"time"
 )
@@ -67,6 +68,10 @@ func (c *Client) getFileInfo(name string) (fi os.FileInfo, err error) {
 
 	err = c.namenode.Execute("getFileInfo", req, resp)
 	if err != nil {
+		if nnErr, ok := err.(*rpc.NamenodeError); ok {
+			err = interpretException(nnErr.Exception, err)
+		}
+
 		return nil, err
 	}
 

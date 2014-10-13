@@ -33,9 +33,10 @@ type NamenodeConnection struct {
 }
 
 type NamenodeError struct {
-	Method  string
-	Message string
-	Code    int
+	Method    string
+	Message   string
+	Code      int
+	Exception string
 }
 
 func (err *NamenodeError) Desc() string {
@@ -43,7 +44,12 @@ func (err *NamenodeError) Desc() string {
 }
 
 func (err *NamenodeError) Error() string {
-	return fmt.Sprintf("%s call failed with %s", err.Method, err.Desc())
+	s := fmt.Sprintf("%s call failed with %s", err.Method, err.Desc())
+	if err.Exception != "" {
+		s += fmt.Sprintf(" (%s)", err.Exception)
+	}
+
+	return s
 }
 
 // NewNamenodeConnection creates a new connection to a Namenode, and preforms an
@@ -156,9 +162,10 @@ func (c *NamenodeConnection) readResponse(method string, resp proto.Message) err
 
 	if rrh.GetStatus() != hadoop.RpcResponseHeaderProto_SUCCESS {
 		return &NamenodeError{
-			Method:  method,
-			Message: rrh.GetErrorMsg(),
-			Code:    int(rrh.GetErrorDetail()),
+			Method:    method,
+			Message:   rrh.GetErrorMsg(),
+			Code:      int(rrh.GetErrorDetail()),
+			Exception: rrh.GetExceptionClassName(),
 		}
 	} else if int(rrh.GetCallId()) != c.currentRequestId {
 		return errors.New("Error reading response: unexpected sequence number")

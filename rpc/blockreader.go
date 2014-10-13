@@ -115,7 +115,7 @@ func (br *BlockReader) Close() {
 
 func (br *BlockReader) Read(b []byte) (int, error) {
 	if br.closed {
-		return 0, errors.New("The BlockReader is closed.")
+		return 0, io.ErrClosedPipe
 	} else if br.offset >= br.block.GetB().GetNumBytes() {
 		br.Close()
 		return 0, io.EOF

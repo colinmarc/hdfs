@@ -51,6 +51,10 @@ func (f *FileReader) Name() string {
 //
 // The seek is virtual - it starts a new block read at the new position.
 func (f *FileReader) Seek(offset int64, whence int) (int64, error) {
+	if f.closed {
+		return 0, io.ErrClosedPipe
+	}
+
 	var off int64
 	if whence == 0 {
 		off = offset
@@ -74,6 +78,10 @@ func (f *FileReader) Seek(offset int64, whence int) (int64, error) {
 
 // Read implements io.Reader.
 func (f *FileReader) Read(b []byte) (int, error) {
+	if f.closed {
+		return 0, io.ErrClosedPipe
+	}
+
 	if f.offset >= f.info.Size() {
 		return 0, io.EOF
 	}
@@ -111,6 +119,10 @@ func (f *FileReader) Read(b []byte) (int, error) {
 
 // ReadAt implements io.ReaderAt.
 func (f *FileReader) ReadAt(b []byte, off int64) (int, error) {
+	if f.closed {
+		return 0, io.ErrClosedPipe
+	}
+
 	_, err := f.Seek(off, 0)
 	if err != nil {
 		return 0, err
@@ -134,6 +146,10 @@ func (f *FileReader) ReadAt(b []byte, off int64) (int, error) {
 // error before the end of the directory, Readdir returns the os.FileInfo read
 // until that point and a non-nil error.
 func (f *FileReader) Readdir(n int) ([]os.FileInfo, error) {
+	if f.closed {
+		return nil, io.ErrClosedPipe
+	}
+
 	if !f.info.IsDir() {
 		return nil, errors.New("The file is not a directory.")
 	}
@@ -171,6 +187,10 @@ func (f *FileReader) Readdir(n int) ([]os.FileInfo, error) {
 // error before the end of the directory, Readdirnames returns the names read
 // until that point and a non-nil error.
 func (f *FileReader) Readdirnames(n int) ([]string, error) {
+	if f.closed {
+		return nil, io.ErrClosedPipe
+	}
+
 	fis, err := f.Readdir(n)
 	if err != nil {
 		return nil, err
@@ -186,6 +206,8 @@ func (f *FileReader) Readdirnames(n int) ([]string, error) {
 
 // Close implements io.Closer.
 func (f *FileReader) Close() error {
+	f.closed = true
+	f.currentBlockReader.Close()
 	return nil
 }
 

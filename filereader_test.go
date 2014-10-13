@@ -30,6 +30,19 @@ func TestFileRead(t *testing.T) {
 	assert.Equal(t, "bar\n", string(bytes))
 }
 
+func TestReadEmptyFile(t *testing.T) {
+	client := getClient(t)
+
+	touch(t, "/_test/emptyfile")
+
+	file, err := client.Open("/_test/emptyfile")
+	require.Nil(t, err)
+
+	bytes, err := ioutil.ReadAll(file)
+	assert.Nil(t, err)
+	assert.Equal(t, "", string(bytes))
+}
+
 func TestFileBigReadN(t *testing.T) {
 	client := getClient(t)
 

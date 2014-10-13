@@ -8,7 +8,6 @@ import (
 	"github.com/colinmarc/hdfs/rpc"
 	"io"
 	"os"
-	"strings"
 )
 
 // A FileReader represents an existing file or directory in HDFS. It implements
@@ -158,7 +157,7 @@ func (f *FileReader) Readdir(n int) ([]os.FileInfo, error) {
 		f.readdirLast = ""
 	}
 
-	res, err := f.client.getDirList(f.info.Name(), f.readdirLast, n)
+	res, err := f.client.getDirList(f.name, f.readdirLast, n)
 	if err != nil {
 		return res, err
 	}
@@ -167,8 +166,7 @@ func (f *FileReader) Readdir(n int) ([]os.FileInfo, error) {
 		if len(res) == 0 {
 			err = io.EOF
 		} else {
-			lastPath := res[len(res)-1].Name()
-			f.readdirLast = strings.TrimPrefix(lastPath, f.info.Name()+"/")
+			f.readdirLast = res[len(res)-1].Name()
 		}
 	}
 

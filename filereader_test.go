@@ -138,20 +138,20 @@ func TestFileReadDir(t *testing.T) {
 
 	res, err := file.Readdir(2)
 	require.Equal(t, 2, len(res))
-	assert.Equal(t, "/_test/fulldir3/1", res[0].Name())
-	assert.Equal(t, "/_test/fulldir3/2", res[1].Name())
+	assert.Equal(t, "1", res[0].Name())
+	assert.Equal(t, "2", res[1].Name())
 
 	res, err = file.Readdir(5)
 	require.Equal(t, 2, len(res))
-	assert.Equal(t, "/_test/fulldir3/3", res[0].Name())
-	assert.Equal(t, "/_test/fulldir3/dir", res[1].Name())
+	assert.Equal(t, "3", res[0].Name())
+	assert.Equal(t, "dir", res[1].Name())
 
 	res, err = file.Readdir(0)
 	require.Equal(t, 4, len(res))
-	assert.Equal(t, "/_test/fulldir3/1", res[0].Name())
-	assert.Equal(t, "/_test/fulldir3/2", res[1].Name())
-	assert.Equal(t, "/_test/fulldir3/3", res[2].Name())
-	assert.Equal(t, "/_test/fulldir3/dir", res[3].Name())
+	assert.Equal(t, "1", res[0].Name())
+	assert.Equal(t, "2", res[1].Name())
+	assert.Equal(t, "3", res[2].Name())
+	assert.Equal(t, "dir", res[3].Name())
 }
 
 func TestFileReadDirnames(t *testing.T) {
@@ -168,12 +168,7 @@ func TestFileReadDirnames(t *testing.T) {
 
 	res, err := file.Readdirnames(0)
 	require.Equal(t, 4, len(res))
-	assert.Equal(t, []string{
-		"/_test/fulldir4/1",
-		"/_test/fulldir4/2",
-		"/_test/fulldir4/3",
-		"/_test/fulldir4/dir",
-	}, res)
+	assert.Equal(t, []string{"1", "2", "3", "dir"}, res)
 }
 
 func TestOpenFileWithoutPermission(t *testing.T) {

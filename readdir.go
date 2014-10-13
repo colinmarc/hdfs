@@ -60,7 +60,7 @@ func (c *Client) getPartialDirList(dirname string, after string) ([]os.FileInfo,
 	list := resp.GetDirList().GetPartialListing()
 	res := make([]os.FileInfo, 0, len(list))
 	for _, status := range list {
-		res = append(res, newFileInfo(status, "", dirname))
+		res = append(res, newFileInfo(status, ""))
 	}
 
 	remaining := int(resp.GetDirList().GetRemainingEntries())

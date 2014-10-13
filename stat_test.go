@@ -14,7 +14,7 @@ func TestStat(t *testing.T) {
 	resp, err := client.Stat("/_test/foo.txt")
 	require.Nil(t, err)
 
-	assert.Equal(t, "/_test/foo.txt", resp.Name())
+	assert.Equal(t, "foo.txt", resp.Name())
 	assert.False(t, resp.IsDir())
 	assert.Equal(t, 4, resp.Size())
 	assert.Equal(t, time.Now().Year(), resp.ModTime().Year())
@@ -29,7 +29,7 @@ func TestStatEmptyFile(t *testing.T) {
 	resp, err := client.Stat("/_test/emptyfile2")
 	require.Nil(t, err)
 
-	assert.Equal(t, "/_test/emptyfile2", resp.Name())
+	assert.Equal(t, "emptyfile2", resp.Name())
 	assert.False(t, resp.IsDir())
 	assert.Equal(t, 0, resp.Size())
 	assert.Equal(t, time.Now().Year(), resp.ModTime().Year())
@@ -52,7 +52,7 @@ func TestStatDir(t *testing.T) {
 	resp, err := client.Stat("/_test/dir")
 	require.Nil(t, err)
 
-	assert.Equal(t, "/_test/dir", resp.Name())
+	assert.Equal(t, "dir", resp.Name())
 	assert.True(t, resp.IsDir())
 	assert.Equal(t, 0, resp.Size(), 0)
 	assert.Equal(t, time.Now().Year(), resp.ModTime().Year())

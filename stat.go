@@ -5,6 +5,7 @@ import (
 	hdfs "github.com/colinmarc/hdfs/protocol/hadoop_hdfs"
 	"github.com/colinmarc/hdfs/rpc"
 	"os"
+	"strings"
 	"time"
 )
 
@@ -20,7 +21,7 @@ func (c *Client) Stat(name string) (fi os.FileInfo, err error) {
 	return c.getFileInfo(name)
 }
 
-func newFileInfo(status *hdfs.HdfsFileStatusProto, name, dirname string) *FileInfo {
+func newFileInfo(status *hdfs.HdfsFileStatusProto, name string) *FileInfo {
 	fi := &FileInfo{status: status}
 
 	var fullName string
@@ -30,11 +31,9 @@ func newFileInfo(status *hdfs.HdfsFileStatusProto, name, dirname string) *FileIn
 		fullName = name
 	}
 
-	if dirname != "" {
-		fullName = dirname + "/" + fullName
-	}
-
-	fi.name = fullName
+	fullName = strings.TrimSuffix(fullName, "/")
+	parts := strings.Split(fullName, "/")
+	fi.name = parts[len(parts)-1]
 	return fi
 }
 
@@ -91,5 +90,5 @@ func (c *Client) getFileInfo(name string) (fi os.FileInfo, err error) {
 		return nil, os.ErrNotExist
 	}
 
-	return newFileInfo(resp.GetFs(), name, ""), nil
+	return newFileInfo(resp.GetFs(), name), nil
 }

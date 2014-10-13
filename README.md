@@ -7,9 +7,9 @@ HDFS for Go
 namenode provides. It implements protocol version 9, which means it supports
 Hadoop 2.0.0 and up (including CDH5).
 
-It attempts to be as idiomatic as possible by aping the stdlib `os` package
-where possible. This includes implementing `os.FileInfo` for file status, and
-returning `os.ErrNotExist` for missing files, for example.
+It tries to be idiomatic by aping the stdlib `os` package where possible. This
+includes implementing `os.FileInfo` for file status, and returning
+`os.ErrNotExist` for missing files, for example.
 
 It is heavily indebted to [snakebite](https://github.com/spotify/snakebite).
 

@@ -3,6 +3,7 @@ package hdfs
 import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
+	"os"
 	"testing"
 )
 
@@ -61,9 +62,21 @@ func TestReadDirTrailingSlash(t *testing.T) {
 func TestReadEmptyDir(t *testing.T) {
 	client := getClient(t)
 
-	baleet(t, "/_test/nonexistent")
+	baleet(t, "/_test/emptydir")
+	mkdirp(t, "/_test/emptydir")
 
-	res, err := client.ReadDir("/_test/nonexistent")
+	res, err := client.ReadDir("/_test/emptydir")
 	assert.Nil(t, err)
 	assert.Equal(t, 0, len(res))
 }
+
+func TestReadDirNonexistent(t *testing.T) {
+	client := getClient(t)
+
+	baleet(t, "/_test/nonexistent")
+
+	res, err := client.ReadDir("/_test/nonexistent")
+	assert.Equal(t, os.ErrNotExist, err)
+	assert.Nil(t, res)
+}
+

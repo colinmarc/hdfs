@@ -48,6 +48,8 @@ func (c *Client) getPartialDirList(dirname string, after string) ([]os.FileInfo,
 	err := c.namenode.Execute("getListing", req, resp)
 	if err != nil {
 		return nil, 0, err
+	} else if resp.GetDirList() == nil {
+		return nil, 0, os.ErrNotExist
 	}
 
 	list := resp.GetDirList().GetPartialListing()

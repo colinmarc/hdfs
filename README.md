@@ -11,6 +11,8 @@ It attempts to be as idiomatic as possible by aping the stdlib `os` package
 where possible. This includes implementing `os.FileInfo` for file status, and
 returning `os.ErrNotExist` for missing files, for example.
 
+It is heavily indebted to [snakebite](https://github.com/spotify/snakebite).
+
 The best place to get started is the
 [Godoc](https://godoc.org/github.com/colinmarc/hdfs).
 

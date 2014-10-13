@@ -12,8 +12,7 @@ import (
 )
 
 // A FileReader represents an existing file or directory in HDFS. It implements
-// Reader, ReaderAt, Seeker, and Closer, and can only be used for reads (and
-// other minor operations like Chmod).
+// Reader, ReaderAt, Seeker, and Closer, and can only be used for reads.
 type FileReader struct {
 	client *Client
 	name   string
@@ -120,21 +119,6 @@ func (f *FileReader) ReadAt(b []byte, off int64) (int, error) {
 	return f.Read(b)
 }
 
-// Close implements io.Closer.
-func (f *FileReader) Close() error {
-	return nil
-}
-
-// Chmod changes the mode of the file to mode.
-func (f *FileReader) Chmod(mode os.FileMode) error {
-	return nil
-}
-
-// Chown changes the numeric uid and gid of the named file.
-func (f *FileReader) Chown(uid, gid int) error {
-	return nil
-}
-
 // Readdir reads the contents of the directory associated with file and returns
 // a slice of up to n os.FileInfo values, as would be returned by Stat, in
 // directory order. Subsequent calls on the same file will yield further
@@ -198,6 +182,11 @@ func (f *FileReader) Readdirnames(n int) ([]string, error) {
 	}
 
 	return names, nil
+}
+
+// Close implements io.Closer.
+func (f *FileReader) Close() error {
+	return nil
 }
 
 func (f *FileReader) getBlocks() error {

@@ -3,6 +3,7 @@ package hdfs
 import (
 	"code.google.com/p/goprotobuf/proto"
 	hdfs "github.com/colinmarc/hdfs/protocol/hadoop_hdfs"
+	"github.com/colinmarc/hdfs/rpc"
 	"os"
 	"strings"
 )
@@ -41,12 +42,16 @@ func (c *Client) getPartialDirList(dirname string, after string) ([]os.FileInfo,
 	req := &hdfs.GetListingRequestProto{
 		Src:          proto.String(dirname),
 		StartAfter:   []byte(after),
-		NeedLocation: proto.Bool(false),
+		NeedLocation: proto.Bool(true),
 	}
 	resp := &hdfs.GetListingResponseProto{}
 
 	err := c.namenode.Execute("getListing", req, resp)
 	if err != nil {
+		if nnErr, ok := err.(*rpc.NamenodeError); ok {
+			err = interpretException(nnErr.Exception, err)
+		}
+
 		return nil, 0, err
 	} else if resp.GetDirList() == nil {
 		return nil, 0, os.ErrNotExist

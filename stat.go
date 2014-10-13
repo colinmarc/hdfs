@@ -58,8 +58,20 @@ func (fi *FileInfo) IsDir() bool {
 	return fi.status.GetFileType() == hdfs.HdfsFileStatusProto_IS_DIR
 }
 
+// Sys returns the raw *hadoop_hdfs.HdfsFileStatusProto message from the
+// namenode.
 func (fi *FileInfo) Sys() interface{} {
-	return nil
+	return fi.status
+}
+
+// Owner returns the name of the user that owns the file or directory.
+func (fi *FileInfo) Owner() string {
+	return fi.status.GetOwner()
+}
+
+// OwnerGroup returns the name of the group that owns the file or directory.
+func (fi *FileInfo) OwnerGroup() string {
+	return fi.status.GetGroup()
 }
 
 func (c *Client) getFileInfo(name string) (fi os.FileInfo, err error) {

@@ -60,3 +60,32 @@ func TestMkdirAll(t *testing.T) {
 	assert.True(t, fi.IsDir())
 	assert.Equal(t, 0, fi.Size())
 }
+
+func TestMkdirWIthoutPermission(t *testing.T) {
+	client := getClient(t)
+	otherClient := getClientForUser(t, "other")
+
+	mkdirp(t, "/_test/accessdenied")
+
+	err := otherClient.Mkdir("/_test/accessdenied/dir", 0644)
+	assert.Equal(t, os.ErrPermission, err)
+
+	_, err = client.Stat("/_test/accessdenied/dir")
+	assert.Equal(t, os.ErrNotExist, err)
+}
+
+func TestMkdirAllWIthoutPermission(t *testing.T) {
+	client := getClient(t)
+	otherClient := getClientForUser(t, "other")
+
+	mkdirp(t, "/_test/accessdenied")
+
+	err := otherClient.Mkdir("/_test/accessdenied/dir2/foo", 0644)
+	assert.Equal(t, os.ErrPermission, err)
+
+	_, err = client.Stat("/_test/accessdenied/dir2/foo")
+	assert.Equal(t, os.ErrNotExist, err)
+
+	_, err = client.Stat("/_test/accessdenied/dir2")
+	assert.Equal(t, os.ErrNotExist, err)
+}

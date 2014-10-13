@@ -25,7 +25,7 @@ type FileReader struct {
 
 	readdirLast string
 
-	closed       bool
+	closed bool
 }
 
 // Open returns an FileReader which can be used for reading.
@@ -36,10 +36,10 @@ func (c *Client) Open(name string) (file *FileReader, err error) {
 	}
 
 	return &FileReader{
-		client:       c,
-		name:         name,
-		info:         info,
-		closed:       false,
+		client: c,
+		name:   name,
+		info:   info,
+		closed: false,
 	}, nil
 }
 

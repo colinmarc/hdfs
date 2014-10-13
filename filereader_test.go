@@ -6,6 +6,7 @@ import (
 	"github.com/stretchr/testify/require"
 	"io"
 	"io/ioutil"
+	"os"
 	"testing"
 )
 
@@ -173,4 +174,15 @@ func TestFileReadDirnames(t *testing.T) {
 		"/_test/fulldir4/3",
 		"/_test/fulldir4/dir",
 	}, res)
+}
+
+func TestOpenFileWithoutPermission(t *testing.T) {
+	otherClient := getClientForUser(t, "other")
+
+	mkdirp(t, "/_test/accessdenied")
+	touch(t, "/_test/accessdenied/foo")
+
+	file, err := otherClient.Open("/_test/accessdenied/foo")
+	assert.Nil(t, file)
+	assert.Equal(t, os.ErrPermission, err)
 }

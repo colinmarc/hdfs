@@ -28,3 +28,13 @@ func TestRemoveNotExistent(t *testing.T) {
 	err := client.Remove("/_test/nonexistent")
 	assert.Equal(t, os.ErrNotExist, err)
 }
+
+func TestRemoveWithoutPermission(t *testing.T) {
+	otherClient := getClientForUser(t, "other")
+
+	mkdirp(t, "/_test/accessdenied")
+	touch(t, "/_test/accessdenied/foo")
+
+	err := otherClient.Remove("/_test/accessdenied/foo")
+	assert.Equal(t, os.ErrPermission, err)
+}

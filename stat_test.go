@@ -58,3 +58,17 @@ func TestStatDir(t *testing.T) {
 	assert.Equal(t, time.Now().Year(), resp.ModTime().Year())
 	assert.Equal(t, time.Now().Month(), resp.ModTime().Month())
 }
+
+func TestStatDirWithoutPermission(t *testing.T) {
+	otherClient := getClientForUser(t, "other")
+
+	mkdirp(t, "/_test/accessdenied")
+	touch(t, "/_test/accessdenied/foo")
+
+	resp, err := otherClient.Stat("/_test/accessdenied")
+	assert.Nil(t, err)
+	assert.NotEqual(t, "", resp.(*FileInfo).Owner())
+
+	_, err = otherClient.Stat("/_test/accessdenied/foo")
+	assert.Equal(t, os.ErrPermission, err)
+}

@@ -80,3 +80,13 @@ func TestReadDirNonexistent(t *testing.T) {
 	assert.Nil(t, res)
 }
 
+func TestReadDirWithoutPermission(t *testing.T) {
+	mkdirp(t, "/_test/accessdenied")
+	touch(t, "/_test/accessdenied/foo")
+
+	client := getClientForUser(t, "other")
+
+	res, err := client.ReadDir("/_test/accessdenied")
+	assert.Equal(t, os.ErrPermission, err)
+	assert.Nil(t, res)
+}

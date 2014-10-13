@@ -4,14 +4,20 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	"os"
+	"os/user"
 	"testing"
 )
 
-var cachedClient *Client
+var cachedClients = make(map[string]*Client)
 
 func getClient(t *testing.T) *Client {
-	if cachedClient != nil {
-		return cachedClient
+	currentUser, _ := user.Current()
+	return getClientForUser(t, currentUser.Username)
+}
+
+func getClientForUser(t *testing.T, user string) *Client {
+	if c, ok := cachedClients[user]; ok {
+		return c
 	}
 
 	nn := os.Getenv("HADOOP_NAMENODE")
@@ -19,13 +25,13 @@ func getClient(t *testing.T) *Client {
 		t.Fatal("HADOOP_NAMENODE not set")
 	}
 
-	client, err := New(nn)
+	client, err := NewForUser(nn, user)
 	if err != nil {
 		t.Fatal(err)
 	}
 
-	cachedClient = client
-	return cachedClient
+	cachedClients[user] = client
+	return client
 }
 
 func touch(t *testing.T, path string) {
@@ -81,5 +87,19 @@ func TestCreateEmptyFileWithoutParent(t *testing.T) {
 	assert.Equal(t, os.ErrNotExist, err)
 
 	_, err = client.Stat("/_test/nonexistent/emptyfile")
+	assert.Equal(t, os.ErrNotExist, err)
+}
+
+func TestCreateEmptyFileWithoutPermission(t *testing.T) {
+	client := getClient(t)
+	otherClient := getClientForUser(t, "other")
+
+	mkdirp(t, "/_test/accessdenied")
+	baleet(t, "/_test/accessdenied/emptyfile")
+
+	err := otherClient.CreateEmptyFile("/_test/accessdenied/emptyfile")
+	assert.Equal(t, os.ErrPermission, err)
+
+	_, err = client.Stat("/_test/accessdenied/emptyfile")
 	assert.Equal(t, os.ErrNotExist, err)
 }

@@ -42,3 +42,25 @@ func TestRenameDestExists(t *testing.T) {
 	err := client.Rename("/_test/tomove2", "/_test/tomovedest2")
 	assert.Equal(t, os.ErrExist, err)
 }
+
+func TestRemoveWithoutPermissionForSrc(t *testing.T) {
+	otherClient := getClientForUser(t, "other")
+
+	mkdirp(t, "/_test/accessdenied")
+	touch(t, "/_test/accessdenied/foo")
+
+	err := otherClient.Rename("/_test/accessdenied/foo", "/_test/tomovedest3")
+	assert.Equal(t, os.ErrPermission, err)
+}
+
+func TestRemoveWithoutPermissionForDest(t *testing.T) {
+	otherClient := getClientForUser(t, "other")
+
+	baleet(t, "/_test/ownedbyother")
+
+	err := otherClient.CreateEmptyFile("/_test/ownedbyother")
+	assert.Nil(t, err)
+
+	err = otherClient.Rename("/_test/ownedbyother", "/_test/accessdenied/tomovedest4")
+	assert.Equal(t, os.ErrPermission, err)
+}

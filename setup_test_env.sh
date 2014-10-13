@@ -38,6 +38,7 @@ sleep 10
 
 HADOOP_FS="$HADOOP_HOME/bin/hadoop fs -Ddfs.block.size=1048576"
 $HADOOP_FS -mkdir -p "hdfs://$HADOOP_NAMENODE/_test"
+$HADOOP_FS -chmod 777 "hdfs://$HADOOP_NAMENODE/_test"
 
 echo "bar" > foo.txt
 $HADOOP_FS -put foo.txt "hdfs://$HADOOP_NAMENODE/_test/foo.txt"

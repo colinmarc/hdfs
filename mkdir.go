@@ -5,26 +5,26 @@ import (
 	hdfs "github.com/colinmarc/hdfs/protocol/hadoop_hdfs"
 	"github.com/colinmarc/hdfs/rpc"
 	"os"
-	"strings"
+	"path"
 )
 
 // Mkdir creates a new directory with the specified name and permission bits.
-func (c *Client) Mkdir(name string, perm os.FileMode) error {
-	return c.mkdir(name, perm, false)
+func (c *Client) Mkdir(dirname string, perm os.FileMode) error {
+	return c.mkdir(dirname, perm, false)
 }
 
-// MkdirAll creates a directory named path, along with any necessary parents,
+// MkdirAll creates a directory for dirname, along with any necessary parents,
 // and returns nil, or else returns an error. The permission bits perm are used
-// for all directories that MkdirAll creates. If path is already a directory,
+// for all directories that MkdirAll creates. If dirname is already a directory,
 // MkdirAll does nothing and returns nil.
-func (c *Client) MkdirAll(path string, perm os.FileMode) error {
-	return c.mkdir(path, perm, true)
+func (c *Client) MkdirAll(dirname string, perm os.FileMode) error {
+	return c.mkdir(dirname, perm, true)
 }
 
-func (c *Client) mkdir(path string, perm os.FileMode, createParent bool) error {
-	path = strings.TrimSuffix(path, "/")
+func (c *Client) mkdir(dirname string, perm os.FileMode, createParent bool) error {
+	dirname = path.Clean(dirname)
 
-	_, err := c.getFileInfo(path)
+	_, err := c.getFileInfo(dirname)
 	if err == nil {
 		return os.ErrExist
 	} else if err != os.ErrNotExist {
@@ -32,7 +32,7 @@ func (c *Client) mkdir(path string, perm os.FileMode, createParent bool) error {
 	}
 
 	req := &hdfs.MkdirsRequestProto{
-		Src:          proto.String(path),
+		Src:          proto.String(dirname),
 		Masked:       &hdfs.FsPermissionProto{Perm: proto.Uint32(uint32(perm))},
 		CreateParent: proto.Bool(createParent),
 	}

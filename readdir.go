@@ -5,7 +5,7 @@ import (
 	hdfs "github.com/colinmarc/hdfs/protocol/hadoop_hdfs"
 	"github.com/colinmarc/hdfs/rpc"
 	"os"
-	"strings"
+	"path"
 )
 
 // ReadDir reads the directory named by dirname and returns a list of sorted
@@ -37,7 +37,7 @@ func (c *Client) getDirList(dirname string, after string, max int) ([]os.FileInf
 }
 
 func (c *Client) getPartialDirList(dirname string, after string) ([]os.FileInfo, int, error) {
-	dirname = strings.TrimSuffix(dirname, "/")
+	dirname = path.Clean(dirname)
 
 	req := &hdfs.GetListingRequestProto{
 		Src:          proto.String(dirname),

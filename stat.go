@@ -5,7 +5,7 @@ import (
 	hdfs "github.com/colinmarc/hdfs/protocol/hadoop_hdfs"
 	"github.com/colinmarc/hdfs/rpc"
 	"os"
-	"strings"
+	"path"
 	"time"
 )
 
@@ -31,9 +31,7 @@ func newFileInfo(status *hdfs.HdfsFileStatusProto, name string) *FileInfo {
 		fullName = name
 	}
 
-	fullName = strings.TrimSuffix(fullName, "/")
-	parts := strings.Split(fullName, "/")
-	fi.name = parts[len(parts)-1]
+	fi.name = path.Base(fullName)
 	return fi
 }
 

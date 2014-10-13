@@ -1,3 +1,5 @@
+// Package rpc implements some of the lower-level functionality required to
+// communicate with the namenode and datanodes.
 package rpc
 
 import (

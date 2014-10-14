@@ -25,6 +25,6 @@ file, _ := client.Open("/mobydick.txt")
 buf := make([]byte, 59)
 file.ReadAt(buf, 48847)
 
-log.Println(string(buf))
+fmt.Println(string(buf))
 // => Abominable are the tumblers into which he pours his poison.
 ```

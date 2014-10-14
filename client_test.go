@@ -3,8 +3,10 @@ package hdfs
 import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
+	"io/ioutil"
 	"os"
 	"os/user"
+	"path/filepath"
 	"testing"
 )
 
@@ -59,6 +61,29 @@ func baleet(t *testing.T, path string) {
 	if err != nil && err != os.ErrNotExist {
 		t.Fatal(err)
 	}
+}
+
+func TestReadFile(t *testing.T) {
+	client := getClient(t)
+
+	bytes, err := client.ReadFile("/_test/foo.txt")
+	assert.Nil(t, err)
+	assert.Equal(t, "bar\n", string(bytes))
+}
+
+func TestCopyToLocal(t *testing.T) {
+	client := getClient(t)
+
+	dir, _ := ioutil.TempDir("", "hdfs-test")
+	tmpfile := filepath.Join(dir, "foo.txt")
+	err := client.CopyToLocal("/_test/foo.txt", tmpfile)
+	require.Nil(t, err)
+
+	f, err := os.Open(tmpfile)
+	require.Nil(t, err)
+
+	bytes, _ := ioutil.ReadAll(f)
+	assert.Equal(t, "bar\n", string(bytes))
 }
 
 func TestCreateEmptyFile(t *testing.T) {

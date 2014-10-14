@@ -63,7 +63,7 @@ func (c *Client) CopyToLocal(src string, dst string) error {
 		return err
 	}
 
-	local, err := os.Open(dst)
+	local, err := os.Create(dst)
 	if err != nil {
 		return err
 	}

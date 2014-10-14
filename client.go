@@ -16,7 +16,8 @@ type Client struct {
 	defaults *hdfs.FsServerDefaultsProto
 }
 
-// New returns a connected Client, or an error if it can't connect
+// New returns a connected Client, or an error if it can't connect. The user
+// will be the user the code is running under.
 func New(address string) (*Client, error) {
 	currentUser, err := user.Current()
 	if err != nil {
@@ -26,6 +27,8 @@ func New(address string) (*Client, error) {
 	return NewForUser(address, currentUser.Username)
 }
 
+// NewForUser returns a connected Client with the user specified, or an error if
+// it can't connect.
 func NewForUser(address string, user string) (*Client, error) {
 	namenode, err := rpc.NewNamenodeConnection(address, user)
 	if err != nil {

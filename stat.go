@@ -17,7 +17,7 @@ type FileInfo struct {
 }
 
 // Stat returns an os.FileInfo describing the named file.
-func (c *Client) Stat(name string) (fi os.FileInfo, err error) {
+func (c *Client) Stat(name string) (os.FileInfo, error) {
 	return c.getFileInfo(name)
 }
 

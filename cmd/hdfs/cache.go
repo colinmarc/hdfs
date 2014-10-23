@@ -50,7 +50,7 @@ func stat(client *hdfs.Client, fullPath string) (os.FileInfo, error) {
 	return res, nil
 }
 
-func readDir(client *hdfs.Client, dir string, glob string) ([]os.FileInfo, error) {
+func readDir(client *hdfs.Client, dir string) ([]os.FileInfo, error) {
 	if cachedRes, exists := readDirCache[dir]; exists {
 		return cachedRes, nil
 	}
@@ -66,17 +66,5 @@ func readDir(client *hdfs.Client, dir string, glob string) ([]os.FileInfo, error
 		statCache[childPath] = fi
 	}
 
-	if glob != "" {
-		matched := make([]os.FileInfo, 0, len(res))
-		for _, fi := range res {
-			match, _ := path.Match(glob, fi.Name())
-			if match {
-				matched = append(matched, fi)
-			}
-		}
-
-		return matched, nil
-	} else {
-		return res, nil
-	}
+	return res, nil
 }

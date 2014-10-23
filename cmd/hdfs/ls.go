@@ -47,10 +47,11 @@ func ls(paths []string, long, all bool) {
 		var tw *tabwriter.Writer
 		if long {
 			tw = defaultTabWriter()
-			defer tw.Flush()
+			printFiles(tw, files, true, all)
+			tw.Flush()
+		} else {
+			printFiles(nil, files, false, all)
 		}
-
-		printFiles(tw, files, long, all)
 
 		for _, dir := range dirs {
 			fmt.Printf("\n%s/:\n", dir)
@@ -60,7 +61,7 @@ func ls(paths []string, long, all bool) {
 }
 
 func printDir(client *hdfs.Client, dir string, long, all bool) {
-	files, err := readDir(client, dir, "")
+	files, err := readDir(client, dir)
 	if err != nil {
 		fatal(err)
 	}

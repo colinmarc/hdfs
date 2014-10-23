@@ -65,12 +65,12 @@ func hasGlob(fragment string) bool {
 
 // expandGlobs recursively expands globs in a filepath. It assumes the paths
 // are already cleaned and normalize (ie, absolute).
-func expandGlobs(client *hdfs.Client, p string) ([]string, error) {
-	if !hasGlob(p) {
-		return []string{p}, nil
+func expandGlobs(client *hdfs.Client, globbedPath string) ([]string, error) {
+	if !hasGlob(globbedPath) {
+		return []string{globbedPath}, nil
 	}
 
-	parts := strings.Split(p, "/")[1:]
+	parts := strings.Split(globbedPath, "/")[1:]
 	res := make([]string, 0)
 	splitAt := 0
 	for splitAt, _ = range parts {
@@ -82,12 +82,17 @@ func expandGlobs(client *hdfs.Client, p string) ([]string, error) {
 	base := "/" + path.Join(parts[:splitAt]...)
 	glob := parts[splitAt]
 	remainder := path.Join(parts[splitAt+1:]...)
-	list, err := readDir(client, base, glob)
+	list, err := readDir(client, base)
 	if err != nil {
 		return nil, err
 	}
 
 	for _, fi := range list {
+		match, _ := path.Match(glob, fi.Name())
+		if !match {
+			continue
+		}
+
 		newPath := path.Join(base, fi.Name(), remainder)
 		children, err := expandGlobs(client, newPath)
 		if err != nil {

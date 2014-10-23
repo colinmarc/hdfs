@@ -2,20 +2,13 @@ package main
 
 import (
 	"path"
-	"os"
 	"strings"
 )
 
-func complete(args []string) []string {
-	if len(args) == 0 {
-		return knownCommands
-	} else if len(args) == 1 {
-		for _, cmd := range knownCommands {
-			if args[0] == cmd {
-				return completePath("")
-			}
-		}
+var	knownCommands = []string{"ls", "rm", "mv"}
 
+func complete(args []string) []string {
+	if len(args) <= 1 {
 		return knownCommands
 	} else {
 		return completePath(args[len(args)-1])
@@ -28,8 +21,8 @@ func completePath(fragment string) []string {
 		return nil
 	}
 
-	fragment = paths[0]
-	if hasGlob(fragment) {
+	fullPath := paths[0]
+	if hasGlob(fullPath) {
 		return nil
 	}
 
@@ -39,19 +32,11 @@ func completePath(fragment string) []string {
 	}
 
 	var dir, prefix string
-	info, err := client.Stat(fragment)
-	if err != nil && err != os.ErrNotExist {
-		return nil
-	} else if err == nil {
-		if info.IsDir() {
-			dir = fragment
-			prefix = ""
-		} else {
-			dir = rootPath
-			prefix = ""
-		}
+	if strings.HasSuffix(fragment, "/") {
+		dir = fullPath
+		prefix = ""
 	} else {
-		dir, prefix = path.Split(fragment)
+		dir, prefix = path.Split(fullPath)
 	}
 
 	res, err := client.ReadDir(dir)
@@ -64,12 +49,12 @@ func completePath(fragment string) []string {
 		name := fi.Name()
 
 		if strings.HasPrefix(name, prefix) {
-			fullPath := path.Join(dir, name)
+			p := path.Join(dir, name)
 			if fi.IsDir() {
-				fullPath += "/"
+				p += "/"
 			}
 
-			matches = append(matches, fullPath)
+			matches = append(matches, p)
 		}
 	}
 

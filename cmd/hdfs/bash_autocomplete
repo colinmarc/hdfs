@@ -5,7 +5,8 @@ _hdfs_complete()
     local cur prev opts
     COMPREPLY=()
     cur="${COMP_WORDS[COMP_CWORD]}"
-    opts=$(${COMP_WORDS[0]} complete ${COMP_WORDS[@]:1})
+    words=$(IFS=$' '; echo "${COMP_WORDS[*]}")
+    opts=$(${COMP_WORDS[0]} complete "$words")
     COMPREPLY=( $(compgen -W "${opts}" -- ${cur}) )
 
     if [[ $COMPREPLY != */ && $COMPREPLY != "" ]]

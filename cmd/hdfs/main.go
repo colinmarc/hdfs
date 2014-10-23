@@ -16,8 +16,6 @@ var (
 	lsa    = lsOpts.Bool('a')
 	lsl    = lsOpts.Bool('l')
 
-	knownCommands = []string{"ls", "rm", "mv"}
-
 	usage = fmt.Sprintf(`Usage: %s COMMAND [OPTION]... [FILE]...
 The flags available are a subset of the POSIX ones, but should behave similarly.
 
@@ -37,7 +35,14 @@ func main() {
 		lsOpts.Parse(os.Args[1:])
 		ls(lsOpts.Args(), *lsa, *lsl)
 	case "complete":
-		completions := complete(os.Args[2:])
+		var words []string
+		if len(os.Args) == 3 {
+			words = strings.Split(os.Args[2], " ")[1:]
+		} else {
+			words = make([]string, 0)
+		}
+
+		completions := complete(words)
 		if completions != nil {
 			fmt.Println(strings.Join(completions, " "))
 		}

@@ -4,7 +4,6 @@ import (
 	"errors"
 	"github.com/colinmarc/hdfs"
 	"net/url"
-	"os"
 	"os/user"
 	"path"
 	"regexp"
@@ -14,9 +13,6 @@ import (
 var (
 	multipleNamenodeUrls = errors.New("Multiple namenode URLs specified")
 	rootPath             = userDir()
-
-	statCache    = make(map[string]os.FileInfo)
-	readDirCache = make(map[string][]os.FileInfo)
 )
 
 func userDir() string {
@@ -28,7 +24,9 @@ func userDir() string {
 	}
 }
 
-// returns absolute paths, and an namenode host, if a single one was found
+// normalizePaths parses the hosts out of HDFS URLs, and turns relative paths
+// into absolute ones (by appending /user/<user>). If multiple HDFS urls with
+// differing hosts are passed in, it returns an error.
 func normalizePaths(paths []string) ([]string, string, error) {
 	namenode := ""
 	cleanPaths := make([]string, 0, len(paths))
@@ -58,25 +56,15 @@ func normalizePaths(paths []string) ([]string, string, error) {
 	return cleanPaths, namenode, nil
 }
 
+// TODO: not really sure checking for a leading \ is the way to test for
+// escapedness.
 func hasGlob(fragment string) bool {
 	match, _ := regexp.MatchString(`[^\\][[*?]`, fragment)
 	return match
 }
 
-func filterByGlob(paths []string, fragment string) []string {
-	res := make([]string, 0, len(paths))
-	for _, p := range paths {
-		_, name := path.Split(p)
-		match, _ := path.Match(fragment, name)
-		if match {
-			res = append(res, p)
-		}
-	}
-
-	return res
-}
-
-// recursively expands globs. this assumes the path is already absolute
+// expandGlobs recursively expands globs in a filepath. It assumes the paths
+// are already cleaned and normalize (ie, absolute).
 func expandGlobs(client *hdfs.Client, p string) ([]string, error) {
 	if !hasGlob(p) {
 		return []string{p}, nil
@@ -125,49 +113,4 @@ func expandPaths(client *hdfs.Client, paths []string) ([]string, error) {
 	}
 
 	return res, nil
-}
-
-func stat(client *hdfs.Client, fullPath string) (os.FileInfo, error) {
-	if cachedRes, exists := statCache[fullPath]; exists {
-		return cachedRes, nil
-	}
-
-	res, err := client.Stat(fullPath)
-	if err != nil {
-		return nil, err
-	}
-
-	statCache[fullPath] = res
-	return res, nil
-}
-
-func readDir(client *hdfs.Client, dir string, glob string) ([]os.FileInfo, error) {
-	if cachedRes, exists := readDirCache[dir]; exists {
-		return cachedRes, nil
-	}
-
-	res, err := client.ReadDir(dir)
-	if err != nil {
-		return nil, err
-	}
-
-	readDirCache[dir] = res
-	for _, fi := range res {
-		childPath := path.Join(dir, fi.Name())
-		statCache[childPath] = fi
-	}
-
-	if glob != "" {
-		matched := make([]os.FileInfo, 0, len(res))
-		for _, fi := range res {
-			match, _ := path.Match(glob, fi.Name())
-			if match {
-				matched = append(matched, fi)
-			}
-		}
-
-		return matched, nil
-	} else {
-		return res, nil
-	}
 }

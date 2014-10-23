@@ -5,7 +5,7 @@ import (
 	"strings"
 )
 
-var	knownCommands = []string{"ls", "rm", "mv"}
+var knownCommands = []string{"ls", "rm", "mv"}
 
 func complete(args []string) []string {
 	if len(args) <= 1 {

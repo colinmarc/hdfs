@@ -1,12 +1,15 @@
 GOCMD ?= $(shell which go)
 
-all: test
+all: hdfs
+
+hdfs: get-deps
+	$(GOCMD) build ./...
 
 install: get-deps
-	$(GOCMD) install
+	$(GOCMD) install ./...
 
 test: get-deps
-	$(GOCMD) test
+	$(GOCMD) test ./...
 
 get-deps:
 	$(GOCMD) get code.google.com/p/goprotobuf/proto

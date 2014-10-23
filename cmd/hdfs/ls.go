@@ -4,9 +4,10 @@ import (
 	"fmt"
 	"github.com/colinmarc/hdfs"
 	"os"
+	"strings"
 )
 
-func ls(paths []string, all, long bool) {
+func ls(paths []string, long, all bool) {
 	paths, nn, err := normalizePaths(paths)
 	if err != nil {
 		fatal(err)
@@ -38,28 +39,35 @@ func ls(paths []string, all, long bool) {
 	}
 
 	if len(files) == 0 && len(dirs) == 1 {
-		printDir(client, dirs[0], all, long)
+		printDir(client, dirs[0], long, all)
 	} else {
-		printFiles(files, long)
+		printFiles(files, long, all)
 
 		for _, dir := range dirs {
 			fmt.Printf("\n%s/:\n", dir)
-			printDir(client, dir, all, long)
+			printDir(client, dir, long, all)
 		}
 	}
 }
 
-func printDir(client *hdfs.Client, dir string, all, long bool) {
+func printDir(client *hdfs.Client, dir string, long, all bool) {
 	files, err := readDir(client, dir, "")
 	if err != nil {
 		fatal(err)
 	}
 
-	printFiles(files, long)
+	if all {
+		fmt.Println(".")
+		fmt.Println("..")
+	}
+
+	printFiles(files, long, all)
 }
 
-func printFiles(files []os.FileInfo, long bool) {
+func printFiles(files []os.FileInfo, long, all bool) {
 	for _, file := range files {
-		fmt.Println(file.Name())
+		if all || !strings.HasPrefix(file.Name(), ".") {
+			fmt.Println(file.Name())
+		}
 	}
 }

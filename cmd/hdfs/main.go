@@ -9,8 +9,8 @@ import (
 
 var (
 	lsOpts = getopt.New()
-	lsa    = lsOpts.Bool('a')
 	lsl    = lsOpts.Bool('l')
+	lsa    = lsOpts.Bool('a')
 
 	usage = fmt.Sprintf(`Usage: %s COMMAND [OPTION]... [FILE]...
 The flags available are a subset of the POSIX ones, but should behave similarly.
@@ -29,7 +29,7 @@ func main() {
 	switch command {
 	case "ls":
 		lsOpts.Parse(os.Args[1:])
-		ls(lsOpts.Args(), *lsa, *lsl)
+		ls(lsOpts.Args(), *lsl, *lsa)
 	case "complete":
 		var words []string
 		if len(os.Args) == 3 {

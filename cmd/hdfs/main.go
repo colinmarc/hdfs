@@ -12,8 +12,9 @@ var (
 The flags available are a subset of the POSIX ones, but should behave similarly.
 
 Valid commands:
-	ls [-la]
-	rm [-r]
+  ls [-la]
+  rm [-r]
+  mv [-f]
 `, os.Args[0])
 
 	lsOpts = getopt.New()
@@ -67,6 +68,10 @@ func main() {
 func printHelp() {
 	fmt.Fprintln(os.Stderr, usage)
 	os.Exit(0)
+}
+
+func fileError(name string, err error) error {
+	return fmt.Errorf("%s: %s", name, err)
 }
 
 func fatal(msg ...interface{}) {

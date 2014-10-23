@@ -21,7 +21,7 @@ func ls(paths []string, long, all bool) int {
 	for _, p := range expanded {
 		fi, err := stat(client, p)
 		if err != nil {
-			fatal(err)
+			fatal(fileError(p, err))
 		}
 
 		if fi.IsDir() {
@@ -55,7 +55,7 @@ func ls(paths []string, long, all bool) int {
 func printDir(client *hdfs.Client, dir string, long, all bool) {
 	files, err := readDir(client, dir)
 	if err != nil {
-		fatal(err)
+		fatal(fileError(dir, err))
 	}
 
 	var tw *tabwriter.Writer
@@ -66,18 +66,19 @@ func printDir(client *hdfs.Client, dir string, long, all bool) {
 
 	if all {
 		if long {
-			dot, err := stat(client, dir)
+			dirInfo, err := stat(client, dir)
 			if err != nil {
-				fatal(err)
+				fatal(fileError(dir, err))
 			}
 
-			dotdot, err := stat(client, path.Join(dir, ".."))
+			parentPath := path.Join(dir, "..")
+			parentInfo, err := stat(client, parentPath)
 			if err != nil {
-				fatal(err)
+				fatal(fileError(parentPath, err))
 			}
 
-			printLong(tw, ".", dot)
-			printLong(tw, "..", dotdot)
+			printLong(tw, ".", dirInfo)
+			printLong(tw, "..", parentInfo)
 		} else {
 			fmt.Println(".")
 			fmt.Println("..")

@@ -1,6 +1,7 @@
 package main
 
 import (
+	"errors"
 	"fmt"
 	"os"
 )
@@ -14,16 +15,14 @@ func rm(paths []string, recursive bool) int {
 	status := 0
 	for _, p := range expanded {
 		info, err := stat(client, p)
-		if err == os.ErrNotExist {
-			fmt.Fprintf(os.Stderr, "%s: no such file or directory\n", p)
+		if err != nil {
+			fmt.Fprintln(os.Stderr, fileError(p, err))
 			status = 1
 			continue
-		} else if err != nil {
-			fatal(err)
 		}
 
 		if !recursive && info.IsDir() {
-			fmt.Fprintf(os.Stderr, "%s: is a directory\n", p)
+			fmt.Fprintln(os.Stderr, fileError(p, errors.New("file is a directory")))
 			status = 1
 			continue
 		}

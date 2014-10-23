@@ -8,13 +8,13 @@ import (
 )
 
 var (
-	usage = fmt.Sprintf(`Usage: %s COMMAND [OPTION]... [FILE]...
+	usage = fmt.Sprintf(`Usage: %s COMMAND
 The flags available are a subset of the POSIX ones, but should behave similarly.
 
 Valid commands:
-  ls [-la]
-  rm [-r]
-  mv [-f]
+  ls [-la] [FILE]...
+  rm [-r] [FILE]...
+  mv [-fT] SOURCE... DEST
 `, os.Args[0])
 
 	lsOpts = getopt.New()
@@ -23,11 +23,16 @@ Valid commands:
 
 	rmOpts = getopt.New()
 	rmr    = rmOpts.Bool('r')
+
+	mvOpts = getopt.New()
+	mvf    = mvOpts.Bool('f')
+	mvT    = mvOpts.Bool('T')
 )
 
 func init() {
 	lsOpts.SetUsage(printHelp)
 	rmOpts.SetUsage(printHelp)
+	mvOpts.SetUsage(printHelp)
 }
 
 func main() {
@@ -44,6 +49,9 @@ func main() {
 	case "rm":
 		rmOpts.Parse(os.Args[1:])
 		status = rm(rmOpts.Args(), *rmr)
+	case "mv":
+		mvOpts.Parse(os.Args[1:])
+		status = mv(mvOpts.Args(), *mvf, *mvT)
 	case "complete":
 		var words []string
 		if len(os.Args) == 3 {
@@ -59,7 +67,7 @@ func main() {
 	case "help", "-h", "-help", "--help":
 		printHelp()
 	default:
-		fatal("Unknown command:", command, "\n"+usage)
+		fatalWithUsage("Unknown command:", command)
 	}
 
 	os.Exit(status)
@@ -77,4 +85,9 @@ func fileError(name string, err error) error {
 func fatal(msg ...interface{}) {
 	fmt.Fprintln(os.Stderr, msg...)
 	os.Exit(1)
+}
+
+func fatalWithUsage(msg ...interface{}) {
+	msg = append(msg, "\n"+usage)
+	fatal(msg...)
 }

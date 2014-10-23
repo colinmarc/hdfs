@@ -10,18 +10,8 @@ import (
 	"time"
 )
 
-func ls(paths []string, long, all bool) {
-	paths, nn, err := normalizePaths(paths)
-	if err != nil {
-		fatal(err)
-	}
-
-	client, err := getClient(nn)
-	if err != nil {
-		fatal(err)
-	}
-
-	expanded, err := expandPaths(client, paths)
+func ls(paths []string, long, all bool) int {
+	expanded, client, err := getClientAndExpandedPaths(paths)
 	if err != nil {
 		fatal(err)
 	}
@@ -58,6 +48,8 @@ func ls(paths []string, long, all bool) {
 			printDir(client, dir, long, all)
 		}
 	}
+
+	return 0
 }
 
 func printDir(client *hdfs.Client, dir string, long, all bool) {

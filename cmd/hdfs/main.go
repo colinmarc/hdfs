@@ -13,15 +13,20 @@ The flags available are a subset of the POSIX ones, but should behave similarly.
 
 Valid commands:
 	ls [-la]
+	rm [-r]
 `, os.Args[0])
 
 	lsOpts = getopt.New()
 	lsl    = lsOpts.Bool('l')
 	lsa    = lsOpts.Bool('a')
+
+	rmOpts = getopt.New()
+	rmr    = rmOpts.Bool('r')
 )
 
 func init() {
 	lsOpts.SetUsage(printHelp)
+	rmOpts.SetUsage(printHelp)
 }
 
 func main() {
@@ -30,10 +35,14 @@ func main() {
 	}
 
 	command := os.Args[1]
+	status := 0
 	switch command {
 	case "ls":
 		lsOpts.Parse(os.Args[1:])
-		ls(lsOpts.Args(), *lsl, *lsa)
+		status = ls(lsOpts.Args(), *lsl, *lsa)
+	case "rm":
+		rmOpts.Parse(os.Args[1:])
+		status = rm(rmOpts.Args(), *rmr)
 	case "complete":
 		var words []string
 		if len(os.Args) == 3 {
@@ -52,7 +61,7 @@ func main() {
 		fatal("Unknown command:", command, "\n"+usage)
 	}
 
-	os.Exit(0)
+	os.Exit(status)
 }
 
 func printHelp() {

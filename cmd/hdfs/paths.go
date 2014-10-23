@@ -56,6 +56,25 @@ func normalizePaths(paths []string) ([]string, string, error) {
 	return cleanPaths, namenode, nil
 }
 
+func getClientAndExpandedPaths(paths []string) ([]string, *hdfs.Client, error) {
+	paths, nn, err := normalizePaths(paths)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	client, err := getClient(nn)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	expanded, err := expandPaths(client, paths)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	return expanded, client, nil
+}
+
 // TODO: not really sure checking for a leading \ is the way to test for
 // escapedness.
 func hasGlob(fragment string) bool {

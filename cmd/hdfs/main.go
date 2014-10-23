@@ -8,21 +8,25 @@ import (
 )
 
 var (
-	lsOpts = getopt.New()
-	lsl    = lsOpts.Bool('l')
-	lsa    = lsOpts.Bool('a')
-
 	usage = fmt.Sprintf(`Usage: %s COMMAND [OPTION]... [FILE]...
 The flags available are a subset of the POSIX ones, but should behave similarly.
 
 Valid commands:
 	ls [-la]
 `, os.Args[0])
+
+	lsOpts = getopt.New()
+	lsl    = lsOpts.Bool('l')
+	lsa    = lsOpts.Bool('a')
 )
+
+func init() {
+	lsOpts.SetUsage(printHelp)
+}
 
 func main() {
 	if len(os.Args) < 2 {
-		printHelp(0)
+		printHelp()
 	}
 
 	command := os.Args[1]
@@ -43,7 +47,7 @@ func main() {
 			fmt.Println(strings.Join(completions, " "))
 		}
 	case "help", "-h", "-help", "--help":
-		printHelp(0)
+		printHelp()
 	default:
 		fatal("Unknown command:", command, "\n"+usage)
 	}
@@ -51,9 +55,9 @@ func main() {
 	os.Exit(0)
 }
 
-func printHelp(exit int) {
+func printHelp() {
 	fmt.Fprintln(os.Stderr, usage)
-	os.Exit(exit)
+	os.Exit(0)
 }
 
 func fatal(msg ...interface{}) {

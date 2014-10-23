@@ -22,7 +22,7 @@ func TestChmod(t *testing.T) {
 func TestChmodDir(t *testing.T) {
 	client := getClient(t)
 
-	touch(t, "/_test/dirtochmod")
+	mkdirp(t, "/_test/dirtochmod")
 
 	err := client.Chmod("/_test/dirtochmod", 0777)
 	assert.Nil(t, err)

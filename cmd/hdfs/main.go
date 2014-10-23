@@ -13,8 +13,9 @@ The flags available are a subset of the POSIX ones, but should behave similarly.
 
 Valid commands:
   ls [-la] [FILE]...
-  rm [-r] [FILE]...
+  rm [-r] FILE...
   mv [-fT] SOURCE... DEST
+  mkdir [-p] FILE...
 `, os.Args[0])
 
 	lsOpts = getopt.New()
@@ -27,6 +28,9 @@ Valid commands:
 	mvOpts = getopt.New()
 	mvf    = mvOpts.Bool('f')
 	mvT    = mvOpts.Bool('T')
+
+	mkdirOpts = getopt.New()
+	mkdirp    = mkdirOpts.Bool('p')
 )
 
 func init() {
@@ -52,6 +56,9 @@ func main() {
 	case "mv":
 		mvOpts.Parse(os.Args[1:])
 		status = mv(mvOpts.Args(), *mvf, *mvT)
+	case "mkdir":
+		mkdirOpts.Parse(os.Args[1:])
+		status = mkdir(mkdirOpts.Args(), *mkdirp)
 	case "complete":
 		var words []string
 		if len(os.Args) == 3 {

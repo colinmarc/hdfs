@@ -21,6 +21,9 @@ Valid commands:
   touch [-amc] FILE...
   chmod [-R] OCTAL-MODE FILE...
   chown [-R] OWNER[:GROUP] FILE...
+  cat SOURCE...
+  head [-n LINES | -c BYTES] SOURCE...
+  tail [-n LINES | -c BYTES] SOURCE...
   get SOURCE [DEST]
   getmerge SOURCE DEST
 `, os.Args[0])
@@ -47,6 +50,10 @@ Valid commands:
 
 	chownOpts = getopt.New()
 	chownR    = chownOpts.Bool('R')
+
+	headTailOpts = getopt.New()
+	headtailn    = headTailOpts.Int64('n', -1)
+	headtailc    = headTailOpts.Int64('c', -1)
 
 	getmergeOpts = getopt.New()
 	getmergen    = getmergeOpts.Bool('n')
@@ -91,6 +98,11 @@ func main() {
 	case "chmod":
 		chmodOpts.Parse(argv)
 		status = chmod(chmodOpts.Args(), *chmodR)
+	case "cat":
+		status = cat(argv[1:])
+	case "head", "tail":
+		headTailOpts.Parse(argv)
+		status = printSection(headTailOpts.Args(), *headtailn, *headtailc, (command == "tail"))
 	case "get":
 		status = get(argv[1:])
 	case "getmerge":

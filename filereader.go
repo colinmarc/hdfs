@@ -43,7 +43,11 @@ func (c *Client) Open(name string) (file *FileReader, err error) {
 
 // Name returns the name of the file.
 func (f *FileReader) Name() string {
-	return f.name
+	return f.info.Name()
+}
+
+func (f *FileReader) Stat() os.FileInfo {
+	return f.info
 }
 
 // Seek implements io.Seeker.

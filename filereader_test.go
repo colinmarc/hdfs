@@ -8,6 +8,7 @@ import (
 	"io/ioutil"
 	"os"
 	"testing"
+	"time"
 )
 
 const (
@@ -29,6 +30,12 @@ func TestFileRead(t *testing.T) {
 	bytes, err := ioutil.ReadAll(file)
 	assert.Nil(t, err)
 	assert.Equal(t, "bar\n", string(bytes))
+
+	info := file.Stat()
+	assert.False(t, info.IsDir())
+	assert.Equal(t, 4, info.Size())
+	assert.Equal(t, time.Now().Year(), info.ModTime().Year())
+	assert.Equal(t, time.Now().Month(), info.ModTime().Month())
 }
 
 func TestReadEmptyFile(t *testing.T) {

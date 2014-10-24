@@ -7,6 +7,8 @@ import (
 	"strings"
 )
 
+// TODO: put, du, df, tree, test, trash
+
 var (
 	usage = fmt.Sprintf(`Usage: %s COMMAND
 The flags available are a subset of the POSIX ones, but should behave similarly.
@@ -19,6 +21,8 @@ Valid commands:
   touch [-amc] FILE...
   chmod [-R] OCTAL-MODE FILE...
   chown [-R] OWNER[:GROUP] FILE...
+  get SOURCE [DEST]
+  getmerge SOURCE DEST
 `, os.Args[0])
 
 	lsOpts = getopt.New()
@@ -43,6 +47,9 @@ Valid commands:
 
 	chownOpts = getopt.New()
 	chownR    = chownOpts.Bool('R')
+
+	getmergeOpts = getopt.New()
+	getmergen    = getmergeOpts.Bool('n')
 )
 
 func init() {
@@ -84,6 +91,12 @@ func main() {
 	case "chmod":
 		chmodOpts.Parse(argv)
 		status = chmod(chmodOpts.Args(), *chmodR)
+	case "get":
+		status = get(argv[1:])
+	case "getmerge":
+		getmergeOpts.Parse(argv)
+		status = getmerge(getmergeOpts.Args(), *getmergen)
+	// it's a seeeeecret command
 	case "complete":
 		completions := complete(argv)
 		if completions != nil {

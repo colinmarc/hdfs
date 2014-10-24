@@ -5,7 +5,17 @@ import (
 	"strings"
 )
 
-var knownCommands = []string{"ls", "rm", "mv", "mkdir", "touch", "chmod", "chown"}
+var knownCommands = []string{
+	"ls",
+	"rm",
+	"mv",
+	"mkdir",
+	"touch",
+	"chmod",
+	"chown",
+	"get",
+	"getmerge",
+}
 
 func complete(args []string) []string {
 	if len(args) == 2 {

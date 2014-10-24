@@ -128,6 +128,10 @@ func (br *BlockReader) Read(b []byte) (int, error) {
 	}
 
 	if br.packet.nextChunk >= br.packet.numChunks {
+		if br.packet.last {
+			return 0, io.EOF
+		}
+
 		br.startNewPacket()
 	}
 
@@ -220,7 +224,7 @@ func (br *BlockReader) writeBlockReadRequest() error {
 func (br *BlockReader) readBlockReadResponse() (*hdfs.BlockOpResponseProto, error) {
 	respLength, err := binary.ReadUvarint(br.reader)
 	if err != nil {
-		if err != io.EOF {
+		if err == io.EOF {
 			err = io.ErrUnexpectedEOF
 		}
 
@@ -287,7 +291,7 @@ func (br *BlockReader) readPacketHeader() (*hdfs.PacketHeaderProto, error) {
 	var packetLength uint32
 	err := binary.Read(br.reader, binary.BigEndian, &packetLength)
 	if err != nil {
-		if err != io.EOF {
+		if err == io.EOF {
 			err = io.ErrUnexpectedEOF
 		}
 
@@ -297,7 +301,7 @@ func (br *BlockReader) readPacketHeader() (*hdfs.PacketHeaderProto, error) {
 	var packetHeaderLength uint16
 	err = binary.Read(br.reader, binary.BigEndian, &packetHeaderLength)
 	if err != nil {
-		if err != io.EOF {
+		if err == io.EOF {
 			err = io.ErrUnexpectedEOF
 		}
 

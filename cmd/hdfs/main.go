@@ -17,6 +17,8 @@ Valid commands:
   mv [-fT] SOURCE... DEST
   mkdir [-p] FILE...
   touch [-amc] FILE...
+  chmod [-R] OCTAL-MODE FILE...
+  chown [-R] OWNER[:GROUP] FILE...
 `, os.Args[0])
 
 	lsOpts = getopt.New()
@@ -35,6 +37,12 @@ Valid commands:
 
 	touchOpts = getopt.New()
 	touchc    = touchOpts.Bool('c')
+
+	chmodOpts = getopt.New()
+	chmodR    = chmodOpts.Bool('R')
+
+	chownOpts = getopt.New()
+	chownR    = chownOpts.Bool('R')
 )
 
 func init() {
@@ -42,6 +50,8 @@ func init() {
 	rmOpts.SetUsage(printHelp)
 	mvOpts.SetUsage(printHelp)
 	touchOpts.SetUsage(printHelp)
+	chmodOpts.SetUsage(printHelp)
+	chownOpts.SetUsage(printHelp)
 }
 
 func main() {
@@ -68,6 +78,12 @@ func main() {
 	case "touch":
 		touchOpts.Parse(argv)
 		status = touch(touchOpts.Args(), *touchc)
+	case "chown":
+		chownOpts.Parse(argv)
+		status = chown(chownOpts.Args(), *chownR)
+	case "chmod":
+		chmodOpts.Parse(argv)
+		status = chmod(chmodOpts.Args(), *chmodR)
 	case "complete":
 		completions := complete(argv)
 		if completions != nil {

@@ -4,6 +4,7 @@ import (
 	"errors"
 	"github.com/colinmarc/hdfs"
 	"net/url"
+	"os"
 	"os/user"
 	"path"
 	"regexp"
@@ -137,4 +138,25 @@ func expandPaths(client *hdfs.Client, paths []string) ([]string, error) {
 	}
 
 	return res, nil
+}
+
+// TODO: this leans on the caching a bit too much
+type walkFunc func(string, os.FileInfo, error)
+
+func walk(client *hdfs.Client, root string, visit walkFunc) {
+	rootInfo, err := stat(client, root)
+
+	if err == nil && rootInfo.IsDir() {
+		var children []os.FileInfo
+		children, err = readDir(client, root)
+		visit(root, rootInfo, err)
+
+		if err == nil {
+			for _, child := range children {
+				walk(client, path.Join(root, child.Name()), visit)
+			}
+		}
+	} else {
+		visit(root, rootInfo, err)
+	}
 }

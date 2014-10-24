@@ -146,17 +146,14 @@ func (br *BlockReader) Read(b []byte) (int, error) {
 
 		chunkReader := io.LimitReader(br.reader, int64(chunkLength))
 		chunkBytes := b[readOffset:]
-		n, err := chunkReader.Read(chunkBytes)
+		bytesToRead := int(math.Min(float64(len(chunkBytes)), float64(chunkLength)))
+		n, err := io.ReadAtLeast(chunkReader, chunkBytes, bytesToRead)
 
 		readOffset += n
 		br.packet.packetOffset += uint64(n)
 		br.packet.nextChunk++
 
 		if err != nil {
-			if err == io.EOF {
-				err = io.ErrUnexpectedEOF
-			}
-
 			br.Close()
 			return readOffset, err
 		}

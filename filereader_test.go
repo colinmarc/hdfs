@@ -9,6 +9,7 @@ import (
 	"os"
 	"testing"
 	"time"
+	"hash/crc32"
 )
 
 const (
@@ -49,6 +50,19 @@ func TestReadEmptyFile(t *testing.T) {
 	bytes, err := ioutil.ReadAll(file)
 	assert.Nil(t, err)
 	assert.Equal(t, "", string(bytes))
+}
+
+func TestFileBigRead(t *testing.T) {
+	client := getClient(t)
+
+	file, err := client.Open("/_test/mobydick.txt")
+	require.Nil(t, err)
+
+	hash := crc32.NewIEEE()
+	n, err := io.Copy(hash, file)
+	assert.Nil(t, err)
+	assert.Equal(t, n, 1257276)
+	assert.Equal(t, 0xef026e98, hash.Sum32())
 }
 
 func TestFileBigReadN(t *testing.T) {

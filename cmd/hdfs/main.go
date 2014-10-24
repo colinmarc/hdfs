@@ -69,14 +69,7 @@ func main() {
 		touchOpts.Parse(argv)
 		status = touch(touchOpts.Args(), *touchc)
 	case "complete":
-		var words []string
-		if len(os.Args) == 3 {
-			words = strings.Split(os.Args[2], " ")[1:]
-		} else {
-			words = make([]string, 0)
-		}
-
-		completions := complete(words)
+		completions := complete(argv)
 		if completions != nil {
 			fmt.Println(strings.Join(completions, " "))
 		}

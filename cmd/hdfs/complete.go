@@ -8,10 +8,16 @@ import (
 var knownCommands = []string{"ls", "rm", "mv", "mkdir", "touch"}
 
 func complete(args []string) []string {
-	if len(args) <= 1 {
-		return knownCommands
+	if len(args) == 2 {
+		words := strings.Split(args[1], " ")[1:]
+
+		if len(words) <= 1 {
+			return knownCommands
+		} else {
+			return completePath(words[len(words)-1])
+		}
 	} else {
-		return completePath(args[len(args)-1])
+		return knownCommands
 	}
 }
 

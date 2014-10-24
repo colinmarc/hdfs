@@ -13,6 +13,7 @@ test: get-deps
 
 get-deps:
 	$(GOCMD) get code.google.com/p/goprotobuf/proto
+	$(GOCMD) get code.google.com/p/getopt
 	$(GOCMD) get github.com/stretchr/testify/assert
 	$(GOCMD) get github.com/stretchr/testify/require
 

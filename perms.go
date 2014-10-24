@@ -5,6 +5,7 @@ import (
 	hdfs "github.com/colinmarc/hdfs/protocol/hadoop_hdfs"
 	"github.com/colinmarc/hdfs/rpc"
 	"os"
+	"time"
 )
 
 // Chmod changes the mode of the named file to mode.
@@ -41,6 +42,27 @@ func (c *Client) Chown(name string, user, group string) error {
 	resp := &hdfs.SetOwnerResponseProto{}
 
 	err := c.namenode.Execute("setOwner", req, resp)
+	if err != nil {
+		if nnErr, ok := err.(*rpc.NamenodeError); ok {
+			err = interpretException(nnErr.Exception, err)
+		}
+
+		return err
+	}
+
+	return nil
+}
+
+// Chtimes changes the access and modification times of the named file.
+func (c *Client) Chtimes(name string, atime time.Time, mtime time.Time) error {
+	req := &hdfs.SetTimesRequestProto{
+		Src:   proto.String(name),
+		Mtime: proto.Uint64(uint64(mtime.Unix()) * 1000),
+		Atime: proto.Uint64(uint64(atime.Unix()) * 1000),
+	}
+	resp := &hdfs.SetTimesResponseProto{}
+
+	err := c.namenode.Execute("setTimes", req, resp)
 	if err != nil {
 		if nnErr, ok := err.(*rpc.NamenodeError); ok {
 			err = interpretException(nnErr.Exception, err)

@@ -4,6 +4,7 @@ import (
 	"github.com/stretchr/testify/assert"
 	"os"
 	"testing"
+	"time"
 )
 
 func TestChmod(t *testing.T) {
@@ -94,4 +95,19 @@ func TestChownWithoutPermission(t *testing.T) {
 
 	err := otherClient.Chown("/_test/accessdenied", "owner", "")
 	assert.Equal(t, os.ErrPermission, err)
+}
+
+func TestChtimes(t *testing.T) {
+	client := getClient(t)
+
+	baleet(t, "/_test/tochtime")
+	touch(t, "/_test/tochtime")
+
+	birthday := time.Date(1990, 1, 22, 14, 33, 35, 0, time.UTC)
+	client.Chtimes("/_test/tochtime", birthday, birthday)
+
+	fi, err := client.Stat("/_test/tochtime")
+	assert.Nil(t, err)
+	assert.Equal(t, birthday, fi.ModTime().UTC(), birthday)
+	assert.Equal(t, birthday, fi.(*FileInfo).AccessTime().UTC(), birthday)
 }

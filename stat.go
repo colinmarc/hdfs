@@ -61,14 +61,22 @@ func (fi *FileInfo) Sys() interface{} {
 	return fi.status
 }
 
-// Owner returns the name of the user that owns the file or directory.
+// Owner returns the name of the user that owns the file or directory. It's not
+// part of the os.FileInfo interface.
 func (fi *FileInfo) Owner() string {
 	return fi.status.GetOwner()
 }
 
 // OwnerGroup returns the name of the group that owns the file or directory.
+// It's not part of the os.FileInfo interface.
 func (fi *FileInfo) OwnerGroup() string {
 	return fi.status.GetGroup()
+}
+
+// AccessTime returns the last time the file was accessed. It's not part of the
+// os.FileInfo interface.
+func (fi *FileInfo) AccessTime() time.Time {
+	return time.Unix(int64(fi.status.GetAccessTime())/1000, 0)
 }
 
 func (c *Client) getFileInfo(name string) (fi os.FileInfo, err error) {

@@ -16,6 +16,7 @@ Valid commands:
   rm [-r] FILE...
   mv [-fT] SOURCE... DEST
   mkdir [-p] FILE...
+  touch [-amc] FILE...
 `, os.Args[0])
 
 	lsOpts = getopt.New()
@@ -31,12 +32,16 @@ Valid commands:
 
 	mkdirOpts = getopt.New()
 	mkdirp    = mkdirOpts.Bool('p')
+
+	touchOpts = getopt.New()
+	touchc    = touchOpts.Bool('c')
 )
 
 func init() {
 	lsOpts.SetUsage(printHelp)
 	rmOpts.SetUsage(printHelp)
 	mvOpts.SetUsage(printHelp)
+	touchOpts.SetUsage(printHelp)
 }
 
 func main() {
@@ -45,20 +50,24 @@ func main() {
 	}
 
 	command := os.Args[1]
+	argv := os.Args[1:]
 	status := 0
 	switch command {
 	case "ls":
-		lsOpts.Parse(os.Args[1:])
+		lsOpts.Parse(argv)
 		status = ls(lsOpts.Args(), *lsl, *lsa)
 	case "rm":
-		rmOpts.Parse(os.Args[1:])
+		rmOpts.Parse(argv)
 		status = rm(rmOpts.Args(), *rmr)
 	case "mv":
-		mvOpts.Parse(os.Args[1:])
+		mvOpts.Parse(argv)
 		status = mv(mvOpts.Args(), *mvf, *mvT)
 	case "mkdir":
-		mkdirOpts.Parse(os.Args[1:])
+		mkdirOpts.Parse(argv)
 		status = mkdir(mkdirOpts.Args(), *mkdirp)
+	case "touch":
+		touchOpts.Parse(argv)
+		status = touch(touchOpts.Args(), *touchc)
 	case "complete":
 		var words []string
 		if len(os.Args) == 3 {

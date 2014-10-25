@@ -28,3 +28,39 @@ file.ReadAt(buf, 48847)
 fmt.Println(string(buf))
 // => Abominable are the tumblers into which he pours his poison.
 ```
+
+The `hdfs` Binary
+-----------------
+
+The library also ships with a command line client for hdfs. Like the library,
+its primary aim is to be idiomatic, by enabling your favorite unix verbs:
+
+```
+$ hdfs --help
+Usage: ./hdfs COMMAND
+The flags available are a subset of the POSIX ones, but should behave similarly.
+
+Valid commands:
+  ls [-la] [FILE]...
+  rm [-r] FILE...
+  mv [-fT] SOURCE... DEST
+  mkdir [-p] FILE...
+  touch [-amc] FILE...
+  chmod [-R] OCTAL-MODE FILE...
+  chown [-R] OWNER[:GROUP] FILE...
+  cat SOURCE...
+  head [-n LINES | -c BYTES] SOURCE...
+  tail [-n LINES | -c BYTES] SOURCE...
+  get SOURCE [DEST]
+  getmerge SOURCE DEST
+
+```
+
+It's also pretty fast compared to `hadoop -fs`, and, best of all, comes with
+bash tab completion!
+
+You can install it with `go get`, or by cloning and running `make install`
+(alternatively, running `make` will create a binary in the source directory, so
+you can install it where you want). To enable tab completion, source
+`cmd/hdfs/bash_completion`, or drop it into the bash completion directory for
+platform (on linux, this is usually `/etc/bash_completion.d`).

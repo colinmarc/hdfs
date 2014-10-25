@@ -1,0 +1,20 @@
+#!/bin/bash
+
+_hdfs_complete()
+{
+    local cur prev opts
+    COMPREPLY=()
+    cur="${COMP_WORDS[COMP_CWORD]}"
+    words=$(IFS=$' '; echo "${COMP_WORDS[*]}")
+    opts=$(${COMP_WORDS[0]} complete "$words")
+    COMPREPLY=( $(compgen -W "${opts}" -- ${cur}) )
+
+    if [[ $COMPREPLY != "" && $COMPREPLY != */ ]]
+    then
+      COMPREPLY="$COMPREPLY "
+    fi
+
+    return 0
+}
+
+complete -o nospace -F _hdfs_complete hdfs

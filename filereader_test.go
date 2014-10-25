@@ -4,12 +4,12 @@ import (
 	"bytes"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
+	"hash/crc32"
 	"io"
 	"io/ioutil"
 	"os"
 	"testing"
 	"time"
-	"hash/crc32"
 )
 
 const (

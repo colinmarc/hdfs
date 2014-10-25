@@ -4,6 +4,7 @@ all: hdfs
 
 hdfs: get-deps
 	$(GOCMD) build ./...
+	$(GOCMD) build ./cmd/hdfs
 
 install: get-deps
 	$(GOCMD) install ./...

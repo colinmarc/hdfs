@@ -11,14 +11,18 @@ import (
 )
 
 func ls(paths []string, long, all bool) int {
-	expanded, client, err := getClientAndExpandedPaths(paths)
+	paths, client, err := getClientAndExpandedPaths(paths)
 	if err != nil {
 		fatal(err)
 	}
 
-	files := make([]os.FileInfo, 0, len(expanded))
-	dirs := make([]string, 0, len(expanded))
-	for _, p := range expanded {
+	if len(paths) == 0 {
+		paths = []string{userDir()}
+	}
+
+	files := make([]os.FileInfo, 0, len(paths))
+	dirs := make([]string, 0, len(paths))
+	for _, p := range paths {
 		fi, err := stat(client, p)
 		if err != nil {
 			fatal(fileError(p, err))

@@ -7,6 +7,7 @@ import (
 	"errors"
 	"fmt"
 	hadoop "github.com/colinmarc/hdfs/protocol/hadoop_common"
+	"io"
 	"net"
 	"sync"
 	"time"
@@ -152,7 +153,7 @@ func (c *NamenodeConnection) readResponse(method string, resp proto.Message) err
 	}
 
 	packet := make([]byte, packetLength)
-	_, err = c.conn.Read(packet)
+	_, err = io.ReadFull(c.conn, packet)
 	if err != nil {
 		return err
 	}

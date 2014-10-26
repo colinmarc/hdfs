@@ -105,6 +105,7 @@ func headLines(file *hdfs.FileReader, numLines int64) {
 }
 
 func tailLines(file *hdfs.FileReader, numLines int64) {
+	fileSize := file.Stat().Size()
 	searchPoint := file.Stat().Size() - tailSearchSize
 	if searchPoint < 0 {
 		searchPoint = 0
@@ -118,7 +119,7 @@ func tailLines(file *hdfs.FileReader, numLines int64) {
 
 		b, err := section.ReadByte()
 		for err == nil {
-			if b == '\n' && (off-searchPoint+1 != tailSearchSize) {
+			if b == '\n' && (off+1 != fileSize) {
 				newlines = append(newlines, off)
 			}
 

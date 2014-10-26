@@ -5,6 +5,7 @@ import (
 	"github.com/stretchr/testify/require"
 	"os"
 	"testing"
+	"fmt"
 )
 
 func TestReadDir(t *testing.T) {
@@ -31,6 +32,20 @@ func TestReadDir(t *testing.T) {
 
 	assert.Equal(t, "dir", res[3].Name())
 	assert.True(t, res[3].IsDir())
+}
+
+func TestReadDirMany(t *testing.T) {
+	client := getClient(t)
+
+
+	mkdirp(t, "/_test/hugedir")
+	for i := 1; i <= 1000; i++ {
+		touch(t, fmt.Sprintf("/_test/hugedir/%d", i))
+	}
+
+	res, err := client.ReadDir("/_test/hugedir")
+	assert.Nil(t, err)
+	require.Equal(t, len(res), 1000)
 }
 
 func TestReadDirTrailingSlash(t *testing.T) {

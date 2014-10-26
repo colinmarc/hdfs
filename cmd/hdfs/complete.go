@@ -13,6 +13,9 @@ var knownCommands = []string{
 	"touch",
 	"chmod",
 	"chown",
+	"cat",
+	"head",
+	"tail",
 	"get",
 	"getmerge",
 }

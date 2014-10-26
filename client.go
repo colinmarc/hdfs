@@ -35,14 +35,7 @@ func NewForUser(address string, user string) (*Client, error) {
 		return nil, err
 	}
 
-	client := &Client{namenode: namenode}
-
-	err = client.fetchDefaults()
-	if err != nil {
-		return nil, err
-	}
-
-	return client, nil
+	return &Client{namenode: namenode}, nil
 }
 
 // ReadFile reads the file named by filename and returns the contents.
@@ -82,14 +75,19 @@ func (c *Client) CreateEmptyFile(filename string) error {
 		return err
 	}
 
+	defaults, err := c.fetchDefaults()
+	if err != nil {
+		return err
+	}
+
 	createReq := &hdfs.CreateRequestProto{
 		Src:          proto.String(filename),
 		Masked:       &hdfs.FsPermissionProto{Perm: proto.Uint32(uint32(0644))},
 		ClientName:   proto.String(rpc.ClientName),
 		CreateFlag:   proto.Uint32(1),
 		CreateParent: proto.Bool(false),
-		Replication:  proto.Uint32(c.defaults.GetReplication()),
-		BlockSize:    proto.Uint64(c.defaults.GetBlockSize()),
+		Replication:  proto.Uint32(defaults.GetReplication()),
+		BlockSize:    proto.Uint64(defaults.GetBlockSize()),
 	}
 	createResp := &hdfs.CreateResponseProto{}
 
@@ -116,15 +114,19 @@ func (c *Client) CreateEmptyFile(filename string) error {
 	return nil
 }
 
-func (c *Client) fetchDefaults() error {
+func (c *Client) fetchDefaults() (*hdfs.FsServerDefaultsProto, error) {
+	if c.defaults != nil {
+		return c.defaults, nil
+	}
+
 	req := &hdfs.GetServerDefaultsRequestProto{}
 	resp := &hdfs.GetServerDefaultsResponseProto{}
 
 	err := c.namenode.Execute("getServerDefaults", req, resp)
 	if err != nil {
-		return err
+		return nil, err
 	}
 
 	c.defaults = resp.GetServerDefaults()
-	return nil
+	return c.defaults, nil
 }

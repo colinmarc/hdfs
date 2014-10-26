@@ -1,11 +1,11 @@
 package hdfs
 
 import (
+	"fmt"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	"os"
 	"testing"
-	"fmt"
 )
 
 func TestReadDir(t *testing.T) {
@@ -36,7 +36,6 @@ func TestReadDir(t *testing.T) {
 
 func TestReadDirMany(t *testing.T) {
 	client := getClient(t)
-
 
 	mkdirp(t, "/_test/hugedir")
 	for i := 1; i <= 1000; i++ {

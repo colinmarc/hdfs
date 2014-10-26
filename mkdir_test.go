@@ -2,6 +2,7 @@ package hdfs
 
 import (
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 	"os"
 	"testing"
 )
@@ -15,7 +16,7 @@ func TestMkdir(t *testing.T) {
 	assert.Nil(t, err)
 
 	fi, err := client.Stat("/_test/dir2")
-	assert.Nil(t, err)
+	require.Nil(t, err)
 	assert.True(t, fi.IsDir())
 }
 
@@ -56,7 +57,7 @@ func TestMkdirAll(t *testing.T) {
 	assert.True(t, fi.IsDir())
 
 	fi, err = client.Stat("/_test/dir3")
-	assert.Nil(t, err)
+	require.Nil(t, err)
 	assert.True(t, fi.IsDir())
 	assert.Equal(t, 0, fi.Size())
 }

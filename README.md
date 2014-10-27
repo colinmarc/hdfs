@@ -11,8 +11,6 @@ It tries to be idiomatic by aping the stdlib `os` package where possible. This
 includes implementing `os.FileInfo` for file status, and returning
 `os.ErrNotExist` for missing files, for example.
 
-It is heavily indebted to [snakebite](https://github.com/spotify/snakebite).
-
 The best place to get started is the
 [Godoc](https://godoc.org/github.com/colinmarc/hdfs).
 
@@ -64,3 +62,8 @@ You can install it with `go get`, or by cloning and running `make install`
 you can install it where you want). To enable tab completion, source
 `cmd/hdfs/bash_completion`, or drop it into the bash completion directory for
 platform (on linux, this is usually `/etc/bash_completion.d`).
+
+Acknowledgements
+----------------
+
+This library is heavily indebted to [snakebite](https://github.com/spotify/snakebite).

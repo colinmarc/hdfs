@@ -7,12 +7,14 @@ import (
 	"testing"
 )
 
+var mode os.FileMode = 0777 | os.ModeDir
+
 func TestMkdir(t *testing.T) {
 	client := getClient(t)
 
 	baleet(t, "/_test/dir2")
 
-	err := client.Mkdir("/_test/dir2", 777)
+	err := client.Mkdir("/_test/dir2", mode)
 	assert.Nil(t, err)
 
 	fi, err := client.Stat("/_test/dir2")
@@ -25,7 +27,7 @@ func TestMkdirExists(t *testing.T) {
 
 	mkdirp(t, "/_test/existingdir")
 
-	err := client.Mkdir("/_test/existingdir", 777)
+	err := client.Mkdir("/_test/existingdir", mode)
 	assertPathError(t, err, "mkdir", "/_test/existingdir", os.ErrExist)
 }
 
@@ -34,7 +36,7 @@ func TestMkdirWithoutParent(t *testing.T) {
 
 	baleet(t, "/_test/nonexistent")
 
-	err := client.Mkdir("/_test/nonexistent/foo", 777)
+	err := client.Mkdir("/_test/nonexistent/foo", mode)
 	assertPathError(t, err, "mkdir", "/_test/nonexistent/foo", os.ErrNotExist)
 
 	_, err = client.Stat("/_test/nonexistent/foo")
@@ -49,7 +51,7 @@ func TestMkdirAll(t *testing.T) {
 
 	baleet(t, "/_test/dir3")
 
-	err := client.MkdirAll("/_test/dir3/foo", 777)
+	err := client.MkdirAll("/_test/dir3/foo", mode)
 	assert.Nil(t, err)
 
 	fi, err := client.Stat("/_test/dir3/foo")
@@ -68,7 +70,7 @@ func TestMkdirWIthoutPermission(t *testing.T) {
 
 	mkdirp(t, "/_test/accessdenied")
 
-	err := otherClient.Mkdir("/_test/accessdenied/dir", 0644)
+	err := otherClient.Mkdir("/_test/accessdenied/dir", mode)
 	assertPathError(t, err, "mkdir", "/_test/accessdenied/dir", os.ErrPermission)
 
 	_, err = client.Stat("/_test/accessdenied/dir")
@@ -81,7 +83,7 @@ func TestMkdirAllWIthoutPermission(t *testing.T) {
 
 	mkdirp(t, "/_test/accessdenied")
 
-	err := otherClient.Mkdir("/_test/accessdenied/dir2/foo", 0644)
+	err := otherClient.Mkdir("/_test/accessdenied/dir2/foo", mode)
 	assertPathError(t, err, "mkdir", "/_test/accessdenied/dir2/foo", os.ErrPermission)
 
 	_, err = client.Stat("/_test/accessdenied/dir2/foo")

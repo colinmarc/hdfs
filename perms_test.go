@@ -30,7 +30,7 @@ func TestChmodDir(t *testing.T) {
 
 	fi, err := client.Stat("/_test/dirtochmod")
 	assert.Nil(t, err)
-	assert.Equal(t, 0777, fi.Mode())
+	assert.Equal(t, 0777 | os.ModeDir, fi.Mode())
 }
 
 func TestChmodNonexistent(t *testing.T) {

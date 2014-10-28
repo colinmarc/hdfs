@@ -24,10 +24,11 @@ func mkdir(paths []string, all bool) int {
 			fatal(&os.PathError{"mkdir", p, os.ErrNotExist})
 		}
 
+		var mode os.FileMode = 0755 | os.ModeDir
 		if all {
-			err = client.MkdirAll(p, 0644)
+			err = client.MkdirAll(p, mode)
 		} else {
-			err = client.Mkdir(p, 0644)
+			err = client.Mkdir(p, mode)
 		}
 
 		if err != nil && !(all && os.IsExist(err)) {

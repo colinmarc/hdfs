@@ -49,7 +49,12 @@ func (fi *FileInfo) Size() int64 {
 }
 
 func (fi *FileInfo) Mode() os.FileMode {
-	return os.FileMode(fi.status.GetPermission().GetPerm())
+	mode := os.FileMode(fi.status.GetPermission().GetPerm())
+	if fi.IsDir() {
+		mode |= os.ModeDir
+	}
+
+	return mode
 }
 
 func (fi *FileInfo) ModTime() time.Time {

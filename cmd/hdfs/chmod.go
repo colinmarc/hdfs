@@ -28,7 +28,7 @@ func chmod(args []string, recursive bool) int {
 		}
 
 		if err != nil {
-			fmt.Fprintln(os.Stderr, fileError(p, err))
+			fmt.Fprintln(os.Stderr, err)
 			status = 1
 		}
 	}

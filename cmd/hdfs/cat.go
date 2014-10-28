@@ -21,9 +21,9 @@ func cat(paths []string) int {
 	for _, p := range expanded {
 		file, err := client.Open(p)
 		if err != nil {
-			fatal(fileError(p, err))
+			fatal(err)
 		} else if file.Stat().IsDir() {
-			fatal(fileError(p, errors.New("file is a directory")))
+			fatal(&os.PathError{"cat", p, errors.New("file is a directory")})
 		}
 
 		readers = append(readers, file)
@@ -53,12 +53,11 @@ func printSection(paths []string, numLines, numBytes int64, fromEnd bool) int {
 	for _, p := range expanded {
 		file, err := client.Open(p)
 		if err != nil || file.Stat().IsDir() {
-			if file.Stat().IsDir() {
-				err = errors.New("file is a directory")
+			if err == nil && file.Stat().IsDir() {
+				err = &os.PathError{"open", p, errors.New("file is a directory")}
 			}
 
-			fmt.Fprintln(os.Stderr, fileError(p, err))
-			fmt.Fprintln(os.Stderr)
+			fmt.Fprintln(os.Stderr, err)
 			status = 1
 			continue
 		}
@@ -93,7 +92,7 @@ func headLines(file *hdfs.FileReader, numLines int64) {
 	var i int64
 	for i = 0; i < numLines && scanner.Scan(); i++ {
 		if err := scanner.Err(); err != nil {
-			fatal(fileError(file.Name(), err))
+			fatal(err)
 		}
 
 		_, err := os.Stdout.Write(scanner.Bytes())
@@ -128,7 +127,7 @@ func tailLines(file *hdfs.FileReader, numLines int64) {
 		}
 
 		if err != nil && err != io.EOF {
-			fatal(fileError(file.Name(), err))
+			fatal(err)
 		}
 
 		foundNewlines := int64(len(newlines))

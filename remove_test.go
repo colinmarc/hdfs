@@ -17,7 +17,7 @@ func TestRemove(t *testing.T) {
 
 	fi, err := client.Stat("/_test/todelete")
 	assert.Nil(t, fi)
-	assert.Equal(t, os.ErrNotExist, err)
+	assertPathError(t, err, "stat", "/_test/todelete", os.ErrNotExist)
 }
 
 func TestRemoveNotExistent(t *testing.T) {
@@ -26,7 +26,7 @@ func TestRemoveNotExistent(t *testing.T) {
 	baleet(t, "/_test/nonexistent")
 
 	err := client.Remove("/_test/nonexistent")
-	assert.Equal(t, os.ErrNotExist, err)
+	assertPathError(t, err, "remove", "/_test/nonexistent", os.ErrNotExist)
 }
 
 func TestRemoveWithoutPermission(t *testing.T) {
@@ -36,5 +36,5 @@ func TestRemoveWithoutPermission(t *testing.T) {
 	touch(t, "/_test/accessdenied/foo")
 
 	err := otherClient.Remove("/_test/accessdenied/foo")
-	assert.Equal(t, os.ErrPermission, err)
+	assertPathError(t, err, "remove", "/_test/accessdenied/foo", os.ErrPermission)
 }

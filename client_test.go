@@ -40,7 +40,7 @@ func touch(t *testing.T, path string) {
 	c := getClient(t)
 
 	err := c.CreateEmptyFile(path)
-	if err != nil && err != os.ErrExist {
+	if err != nil && !os.IsExist(err) {
 		t.Fatal(err)
 	}
 }
@@ -49,7 +49,7 @@ func mkdirp(t *testing.T, path string) {
 	c := getClient(t)
 
 	err := c.MkdirAll(path, 0644)
-	if err != nil && err != os.ErrExist {
+	if err != nil && !os.IsExist(err) {
 		t.Fatal(err)
 	}
 }
@@ -58,9 +58,17 @@ func baleet(t *testing.T, path string) {
 	c := getClient(t)
 
 	err := c.Remove(path)
-	if err != nil && err != os.ErrNotExist {
+	if err != nil && !os.IsNotExist(err) {
 		t.Fatal(err)
 	}
+}
+
+func assertPathError(t *testing.T, err error, op, path string, wrappedErr error) {
+	require.NotNil(t, err)
+
+	expected := &os.PathError{op, path, wrappedErr}
+	require.Equal(t, expected.Error(), err.Error())
+	require.Equal(t, expected, err)
 }
 
 func TestReadFile(t *testing.T) {
@@ -100,7 +108,7 @@ func TestCreateEmptyFile(t *testing.T) {
 	assert.Equal(t, 0, fi.Size())
 
 	err = client.CreateEmptyFile("/_test/emptyfile")
-	assert.Equal(t, os.ErrExist, err)
+	assertPathError(t, err, "create", "/_test/emptyfile", os.ErrExist)
 }
 
 func TestCreateEmptyFileWithoutParent(t *testing.T) {
@@ -109,10 +117,10 @@ func TestCreateEmptyFileWithoutParent(t *testing.T) {
 	baleet(t, "/_test/nonexistent")
 
 	err := client.CreateEmptyFile("/_test/nonexistent/emptyfile")
-	assert.Equal(t, os.ErrNotExist, err)
+	assertPathError(t, err, "create", "/_test/nonexistent/emptyfile", os.ErrNotExist)
 
 	_, err = client.Stat("/_test/nonexistent/emptyfile")
-	assert.Equal(t, os.ErrNotExist, err)
+	assertPathError(t, err, "stat", "/_test/nonexistent/emptyfile", os.ErrNotExist)
 }
 
 func TestCreateEmptyFileWithoutPermission(t *testing.T) {
@@ -123,8 +131,8 @@ func TestCreateEmptyFileWithoutPermission(t *testing.T) {
 	baleet(t, "/_test/accessdenied/emptyfile")
 
 	err := otherClient.CreateEmptyFile("/_test/accessdenied/emptyfile")
-	assert.Equal(t, os.ErrPermission, err)
+	assertPathError(t, err, "create", "/_test/accessdenied/emptyfile", os.ErrPermission)
 
 	_, err = client.Stat("/_test/accessdenied/emptyfile")
-	assert.Equal(t, os.ErrNotExist, err)
+	assertPathError(t, err, "stat", "/_test/accessdenied/emptyfile", os.ErrNotExist)
 }

@@ -26,7 +26,7 @@ func TestMkdirExists(t *testing.T) {
 	mkdirp(t, "/_test/existingdir")
 
 	err := client.Mkdir("/_test/existingdir", 777)
-	assert.Equal(t, os.ErrExist, err)
+	assertPathError(t, err, "mkdir", "/_test/existingdir", os.ErrExist)
 }
 
 func TestMkdirWithoutParent(t *testing.T) {
@@ -35,13 +35,13 @@ func TestMkdirWithoutParent(t *testing.T) {
 	baleet(t, "/_test/nonexistent")
 
 	err := client.Mkdir("/_test/nonexistent/foo", 777)
-	assert.Equal(t, os.ErrNotExist, err)
+	assertPathError(t, err, "mkdir", "/_test/nonexistent/foo", os.ErrNotExist)
 
 	_, err = client.Stat("/_test/nonexistent/foo")
-	assert.Equal(t, os.ErrNotExist, err)
+	assertPathError(t, err, "stat", "/_test/nonexistent/foo", os.ErrNotExist)
 
 	_, err = client.Stat("/_test/nonexistent")
-	assert.Equal(t, os.ErrNotExist, err)
+	assertPathError(t, err, "stat", "/_test/nonexistent", os.ErrNotExist)
 }
 
 func TestMkdirAll(t *testing.T) {
@@ -53,7 +53,7 @@ func TestMkdirAll(t *testing.T) {
 	assert.Nil(t, err)
 
 	fi, err := client.Stat("/_test/dir3/foo")
-	assert.Nil(t, err)
+	require.Nil(t, err)
 	assert.True(t, fi.IsDir())
 
 	fi, err = client.Stat("/_test/dir3")
@@ -69,10 +69,10 @@ func TestMkdirWIthoutPermission(t *testing.T) {
 	mkdirp(t, "/_test/accessdenied")
 
 	err := otherClient.Mkdir("/_test/accessdenied/dir", 0644)
-	assert.Equal(t, os.ErrPermission, err)
+	assertPathError(t, err, "mkdir", "/_test/accessdenied/dir", os.ErrPermission)
 
 	_, err = client.Stat("/_test/accessdenied/dir")
-	assert.Equal(t, os.ErrNotExist, err)
+	assertPathError(t, err, "stat", "/_test/accessdenied/dir", os.ErrNotExist)
 }
 
 func TestMkdirAllWIthoutPermission(t *testing.T) {
@@ -82,11 +82,11 @@ func TestMkdirAllWIthoutPermission(t *testing.T) {
 	mkdirp(t, "/_test/accessdenied")
 
 	err := otherClient.Mkdir("/_test/accessdenied/dir2/foo", 0644)
-	assert.Equal(t, os.ErrPermission, err)
+	assertPathError(t, err, "mkdir", "/_test/accessdenied/dir2/foo", os.ErrPermission)
 
 	_, err = client.Stat("/_test/accessdenied/dir2/foo")
-	assert.Equal(t, os.ErrNotExist, err)
+	assertPathError(t, err, "stat", "/_test/accessdenied/dir2/foo", os.ErrNotExist)
 
 	_, err = client.Stat("/_test/accessdenied/dir2")
-	assert.Equal(t, os.ErrNotExist, err)
+	assertPathError(t, err, "stat", "/_test/accessdenied/dir2", os.ErrNotExist)
 }

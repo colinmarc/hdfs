@@ -8,8 +8,8 @@ namenode provides. It implements protocol version 9, which means it supports
 Hadoop 2.0.0 and up (including CDH5).
 
 It tries to be idiomatic by aping the stdlib `os` package where possible. This
-includes implementing `os.FileInfo` for file status, and returning
-`os.ErrNotExist` for missing files, for example.
+includes implementing `os.FileInfo` for file status, and returning errors of
+type `os.PathErrors` for missing files, for example.
 
 The best place to get started is the
 [Godoc][1].

@@ -30,7 +30,7 @@ type FileReader struct {
 func (c *Client) Open(name string) (file *FileReader, err error) {
 	info, err := c.getFileInfo(name)
 	if err != nil {
-		return nil, err
+		return nil, &os.PathError{"open", name, err}
 	}
 
 	return &FileReader{

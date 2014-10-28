@@ -11,9 +11,9 @@ import (
 func (c *Client) Rename(oldpath, newpath string) error {
 	_, err := c.getFileInfo(newpath)
 	if err == nil {
-		return os.ErrExist
-	} else if err != os.ErrNotExist {
-		return err
+		return &os.PathError{"rename", newpath, os.ErrExist}
+	} else if !os.IsNotExist(err) {
+		return &os.PathError{"rename", newpath, err}
 	}
 
 	req := &hdfs.Rename2RequestProto{
@@ -29,7 +29,7 @@ func (c *Client) Rename(oldpath, newpath string) error {
 			err = interpretException(nnErr.Exception, err)
 		}
 
-		return err
+		return &os.PathError{"rename", oldpath, err}
 	}
 
 	return nil

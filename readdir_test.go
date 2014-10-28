@@ -90,7 +90,7 @@ func TestReadDirNonexistent(t *testing.T) {
 	baleet(t, "/_test/nonexistent")
 
 	res, err := client.ReadDir("/_test/nonexistent")
-	assert.Equal(t, os.ErrNotExist, err)
+	assertPathError(t, err, "readdir", "/_test/nonexistent", os.ErrNotExist)
 	assert.Nil(t, res)
 }
 
@@ -101,6 +101,6 @@ func TestReadDirWithoutPermission(t *testing.T) {
 	client := getClientForUser(t, "other")
 
 	res, err := client.ReadDir("/_test/accessdenied")
-	assert.Equal(t, os.ErrPermission, err)
+	assertPathError(t, err, "readdir", "/_test/accessdenied", os.ErrPermission)
 	assert.Nil(t, res)
 }

@@ -4,13 +4,14 @@ import (
 	"code.google.com/p/goprotobuf/proto"
 	"errors"
 	hdfs "github.com/colinmarc/hdfs/protocol/hadoop_hdfs"
+	"os"
 )
 
 // Remove removes the named file or directory.
 func (c *Client) Remove(name string) error {
 	_, err := c.getFileInfo(name)
 	if err != nil {
-		return err
+		return &os.PathError{"remove", name, err}
 	}
 
 	req := &hdfs.DeleteRequestProto{
@@ -21,9 +22,13 @@ func (c *Client) Remove(name string) error {
 
 	err = c.namenode.Execute("delete", req, resp)
 	if err != nil {
-		return err
+		return &os.PathError{"remove", name, err}
 	} else if resp.Result == nil {
-		return errors.New("Unexpected empty response to 'delete' rpc call")
+		return &os.PathError{
+			"remove",
+			name,
+			errors.New("Unexpected empty response to 'delete' rpc call"),
+		}
 	}
 
 	return nil

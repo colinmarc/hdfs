@@ -40,7 +40,7 @@ func TestStatNotExistent(t *testing.T) {
 	client := getClient(t)
 
 	resp, err := client.Stat("/_test/nonexistent")
-	assert.Equal(t, os.ErrNotExist, err)
+	assertPathError(t, err, "stat", "/_test/nonexistent", os.ErrNotExist)
 	assert.Nil(t, resp)
 }
 
@@ -70,5 +70,5 @@ func TestStatDirWithoutPermission(t *testing.T) {
 	assert.NotEqual(t, "", resp.(*FileInfo).Owner())
 
 	_, err = otherClient.Stat("/_test/accessdenied/foo")
-	assert.Equal(t, os.ErrPermission, err)
+	assertPathError(t, err, "stat", "/_test/accessdenied/foo", os.ErrPermission)
 }

@@ -52,9 +52,9 @@ func (c *Client) getPartialDirList(dirname string, after string) ([]os.FileInfo,
 			err = interpretException(nnErr.Exception, err)
 		}
 
-		return nil, 0, err
+		return nil, 0, &os.PathError{"readdir", dirname, err}
 	} else if resp.GetDirList() == nil {
-		return nil, 0, os.ErrNotExist
+		return nil, 0, &os.PathError{"readdir", dirname, os.ErrNotExist}
 	}
 
 	list := resp.GetDirList().GetPartialListing()

@@ -22,7 +22,7 @@ func (c *Client) Chmod(name string, perm os.FileMode) error {
 			err = interpretException(nnErr.Exception, err)
 		}
 
-		return err
+		return &os.PathError{"chmod", name, err}
 	}
 
 	return nil
@@ -47,7 +47,7 @@ func (c *Client) Chown(name string, user, group string) error {
 			err = interpretException(nnErr.Exception, err)
 		}
 
-		return err
+		return &os.PathError{"chown", name, err}
 	}
 
 	return nil
@@ -68,7 +68,7 @@ func (c *Client) Chtimes(name string, atime time.Time, mtime time.Time) error {
 			err = interpretException(nnErr.Exception, err)
 		}
 
-		return err
+		return &os.PathError{"chtimes", name, err}
 	}
 
 	return nil

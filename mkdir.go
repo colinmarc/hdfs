@@ -26,9 +26,9 @@ func (c *Client) mkdir(dirname string, perm os.FileMode, createParent bool) erro
 
 	_, err := c.getFileInfo(dirname)
 	if err == nil {
-		return os.ErrExist
-	} else if err != os.ErrNotExist {
-		return err
+		return &os.PathError{"mkdir", dirname, os.ErrExist}
+	} else if !os.IsNotExist(err) {
+		return &os.PathError{"mkdir", dirname, err}
 	}
 
 	req := &hdfs.MkdirsRequestProto{
@@ -44,7 +44,7 @@ func (c *Client) mkdir(dirname string, perm os.FileMode, createParent bool) erro
 			err = interpretException(nnErr.Exception, err)
 		}
 
-		return err
+		return &os.PathError{"mkdir", dirname, err}
 	}
 
 	return nil

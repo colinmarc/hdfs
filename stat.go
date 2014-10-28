@@ -18,7 +18,12 @@ type FileInfo struct {
 
 // Stat returns an os.FileInfo describing the named file.
 func (c *Client) Stat(name string) (os.FileInfo, error) {
-	return c.getFileInfo(name)
+	fi, err := c.getFileInfo(name)
+	if err != nil {
+		err = &os.PathError{"stat", name, err}
+	}
+
+	return fi, err
 }
 
 func newFileInfo(status *hdfs.HdfsFileStatusProto, name string) *FileInfo {

@@ -66,13 +66,13 @@ func (c *Client) CopyToLocal(src string, dst string) error {
 }
 
 // CreateEmptyFile creates a empty file named by filename, with the permissions
-// 0644. If it already exists, os.ErrExist will be returned.
+// 0644.
 func (c *Client) CreateEmptyFile(filename string) error {
 	_, err := c.getFileInfo(filename)
 	if err == nil {
-		return os.ErrExist
-	} else if err != os.ErrNotExist {
-		return err
+		return &os.PathError{"create", filename, os.ErrExist}
+	} else if !os.IsNotExist(err) {
+		return &os.PathError{"create", filename, err}
 	}
 
 	defaults, err := c.fetchDefaults()
@@ -97,7 +97,7 @@ func (c *Client) CreateEmptyFile(filename string) error {
 			err = interpretException(nnErr.Exception, err)
 		}
 
-		return err
+		return &os.PathError{"create", filename, err}
 	}
 
 	completeReq := &hdfs.CompleteRequestProto{
@@ -108,7 +108,7 @@ func (c *Client) CreateEmptyFile(filename string) error {
 
 	err = c.namenode.Execute("complete", completeReq, completeResp)
 	if err != nil {
-		return err
+		return &os.PathError{"create", filename, err}
 	}
 
 	return nil

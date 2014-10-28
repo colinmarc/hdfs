@@ -200,5 +200,5 @@ func TestOpenFileWithoutPermission(t *testing.T) {
 
 	file, err := otherClient.Open("/_test/accessdenied/foo")
 	assert.Nil(t, file)
-	assert.Equal(t, os.ErrPermission, err)
+	assertPathError(t, err, "open", "/_test/accessdenied/foo", os.ErrPermission)
 }

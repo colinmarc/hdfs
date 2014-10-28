@@ -40,7 +40,7 @@ func get(args []string) int {
 
 	walk(client, source, func(p string, fi os.FileInfo, err error) {
 		if err != nil {
-			fatal(fileError(p, err))
+			fatal(err)
 		}
 
 		fullDest := filepath.Join(dest, strings.TrimPrefix(p, source))
@@ -54,7 +54,7 @@ func get(args []string) int {
 			if pathErr, ok := err.(*os.PathError); ok {
 				fatal(pathErr)
 			} else if err != nil {
-				fatal(fileError(p, err))
+				fatal(err)
 			}
 		}
 	})
@@ -86,7 +86,7 @@ func getmerge(args []string, addNewlines bool) int {
 	source := sources[0]
 	children, err := readDir(client, source)
 	if err != nil {
-		fatal(fileError(source, err))
+		fatal(err)
 	}
 
 	readers := make([]io.Reader, 0, len(children))
@@ -98,7 +98,7 @@ func getmerge(args []string, addNewlines bool) int {
 		childPath := path.Join(source, child.Name())
 		file, err := client.Open(childPath)
 		if err != nil {
-			fatal(fileError(childPath, err))
+			fatal(err)
 		}
 
 		readers = append(readers, file)

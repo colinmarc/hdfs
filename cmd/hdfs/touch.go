@@ -22,13 +22,13 @@ func touch(paths []string, noCreate bool) int {
 
 	for _, p := range paths {
 		if hasGlob(p) {
-			fatal(fileError(p, os.ErrNotExist))
+			fatal(&os.PathError{"mkdir", p, os.ErrNotExist})
 		}
 
 		_, err := client.Stat(p)
-		exists := (err != os.ErrNotExist)
+		exists := !os.IsNotExist(err)
 		if (err != nil && exists) || (!exists && noCreate) {
-			fatal(fileError(p, err))
+			fatal(err)
 		}
 
 		if exists {
@@ -42,7 +42,7 @@ func touch(paths []string, noCreate bool) int {
 		}
 
 		if err != nil {
-			fatal(fileError(p, err))
+			fatal(err)
 		}
 	}
 

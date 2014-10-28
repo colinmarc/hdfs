@@ -21,7 +21,7 @@ func mkdir(paths []string, all bool) int {
 
 	for _, p := range paths {
 		if hasGlob(p) {
-			fatal(fileError(p, os.ErrNotExist))
+			fatal(&os.PathError{"mkdir", p, os.ErrNotExist})
 		}
 
 		if all {
@@ -30,8 +30,8 @@ func mkdir(paths []string, all bool) int {
 			err = client.Mkdir(p, 0644)
 		}
 
-		if err != nil && !(all && err == os.ErrExist) {
-			fatal(fileError(p, err))
+		if err != nil && !(all && os.IsExist(err)) {
+			fatal(err)
 		}
 	}
 

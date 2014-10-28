@@ -128,10 +128,6 @@ func printHelp() {
 	os.Exit(0)
 }
 
-func fileError(name string, err error) error {
-	return fmt.Errorf("%s: %s", name, err)
-}
-
 func fatal(msg ...interface{}) {
 	fmt.Fprintln(os.Stderr, msg...)
 	os.Exit(1)

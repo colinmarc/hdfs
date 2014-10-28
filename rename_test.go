@@ -17,7 +17,7 @@ func TestRename(t *testing.T) {
 
 	fi, err := client.Stat("/_test/tomove")
 	assert.Nil(t, fi)
-	assert.Equal(t, os.ErrNotExist, err)
+	assertPathError(t, err, "stat", "/_test/tomove", os.ErrNotExist)
 
 	fi, err = client.Stat("/_test/tomovedest")
 	assert.Nil(t, err)
@@ -30,7 +30,7 @@ func TestRenameSrcNotExistent(t *testing.T) {
 	baleet(t, "/_test/nonexistent2")
 
 	err := client.Rename("/_test/nonexistent", "/_test/nonexistent2")
-	assert.Equal(t, os.ErrNotExist, err)
+	assertPathError(t, err, "rename", "/_test/nonexistent", os.ErrNotExist)
 }
 
 func TestRenameDestExists(t *testing.T) {
@@ -40,20 +40,20 @@ func TestRenameDestExists(t *testing.T) {
 	touch(t, "/_test/tomovedest2")
 
 	err := client.Rename("/_test/tomove2", "/_test/tomovedest2")
-	assert.Equal(t, os.ErrExist, err)
+	assertPathError(t, err, "rename", "/_test/tomovedest2", os.ErrExist)
 }
 
-func TestRemoveWithoutPermissionForSrc(t *testing.T) {
+func TestRenameWithoutPermissionForSrc(t *testing.T) {
 	otherClient := getClientForUser(t, "other")
 
 	mkdirp(t, "/_test/accessdenied")
 	touch(t, "/_test/accessdenied/foo")
 
 	err := otherClient.Rename("/_test/accessdenied/foo", "/_test/tomovedest3")
-	assert.Equal(t, os.ErrPermission, err)
+	assertPathError(t, err, "rename", "/_test/accessdenied/foo", os.ErrPermission)
 }
 
-func TestRemoveWithoutPermissionForDest(t *testing.T) {
+func TestRenameWithoutPermissionForDest(t *testing.T) {
 	otherClient := getClientForUser(t, "other")
 
 	baleet(t, "/_test/ownedbyother")
@@ -62,5 +62,5 @@ func TestRemoveWithoutPermissionForDest(t *testing.T) {
 	assert.Nil(t, err)
 
 	err = otherClient.Rename("/_test/ownedbyother", "/_test/accessdenied/tomovedest4")
-	assert.Equal(t, os.ErrPermission, err)
+	assertPathError(t, err, "rename", "/_test/accessdenied/tomovedest4", os.ErrPermission)
 }

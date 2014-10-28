@@ -39,7 +39,7 @@ func TestChmodNonexistent(t *testing.T) {
 	baleet(t, "/_test/nonexistent")
 
 	err := client.Chmod("/_test/nonexistent", 0777)
-	assert.Equal(t, os.ErrNotExist, err)
+	assertPathError(t, err, "chmod", "/_test/nonexistent", os.ErrNotExist)
 }
 
 func TestChmodWithoutPermission(t *testing.T) {
@@ -48,7 +48,7 @@ func TestChmodWithoutPermission(t *testing.T) {
 	mkdirp(t, "/_test/accessdenied")
 
 	err := otherClient.Chmod("/_test/accessdenied", 0777)
-	assert.Equal(t, os.ErrPermission, err)
+	assertPathError(t, err, "chmod", "/_test/accessdenied", os.ErrPermission)
 }
 
 func TestChown(t *testing.T) {
@@ -85,7 +85,7 @@ func TestChownNonexistent(t *testing.T) {
 	baleet(t, "/_test/nonexistent")
 
 	err := client.Chown("/_test/nonexistent", "other", "")
-	assert.Equal(t, os.ErrNotExist, err)
+	assertPathError(t, err, "chown", "/_test/nonexistent", os.ErrNotExist)
 }
 
 func TestChownWithoutPermission(t *testing.T) {
@@ -94,7 +94,7 @@ func TestChownWithoutPermission(t *testing.T) {
 	mkdirp(t, "/_test/accessdenied")
 
 	err := otherClient.Chown("/_test/accessdenied", "owner", "")
-	assert.Equal(t, os.ErrPermission, err)
+	assertPathError(t, err, "chown", "/_test/accessdenied", os.ErrPermission)
 }
 
 func TestChtimes(t *testing.T) {

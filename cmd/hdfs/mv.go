@@ -30,11 +30,11 @@ func mv(paths []string, force, treatDestAsFile bool) int {
 	}
 
 	destInfo, err := stat(client, dest)
-	if err != nil && err != os.ErrNotExist {
-		fatal(fileError(dest, err))
+	if err != nil && !os.IsNotExist(err) {
+		fatal(err)
 	}
 
-	exists := (err != os.ErrNotExist)
+	exists := !os.IsNotExist(err)
 	if exists && !treatDestAsFile && destInfo.IsDir() {
 		moveInto(client, sources, dest, force)
 	} else {
@@ -60,8 +60,8 @@ func moveInto(client *hdfs.Client, sources []string, dest string, force bool) {
 func moveTo(client *hdfs.Client, source, dest string, force bool) {
 	if force {
 		err := client.Remove(dest)
-		if err != nil && err != os.ErrNotExist {
-			fatal(fileError(dest, err))
+		if err != nil && !os.IsNotExist(err) {
+			fatal(err)
 		}
 	}
 

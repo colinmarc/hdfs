@@ -19,6 +19,7 @@ func chown(args []string, recursive bool) int {
 		fatal("invalid owner string:", args[0])
 	} else if len(parts) == 1 {
 		owner = parts[0]
+		group = owner
 	} else {
 		owner = parts[0]
 		group = parts[1]

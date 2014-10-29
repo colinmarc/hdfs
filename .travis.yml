@@ -9,3 +9,4 @@ env:
 before_script:
  - NN_PORT=9000 ./setup_test_env.sh
  - export HADOOP_NAMENODE="localhost:9000"
+script: make test

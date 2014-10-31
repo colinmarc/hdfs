@@ -9,8 +9,9 @@ hdfs: get-deps
 install: get-deps
 	$(GOCMD) install ./...
 
-test: get-deps
+test: hdfs
 	$(GOCMD) test ./...
+	bats ./cmd/hdfs/test/*.bats
 
 get-deps:
 	$(GOCMD) get code.google.com/p/goprotobuf/proto

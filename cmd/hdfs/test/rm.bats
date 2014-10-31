@@ -30,15 +30,15 @@ setup() {
 @test "rm dir without -r" {
   run $HDFS rm /_test_cmd/rm/dir
   assert_failure
-  assert_output "rm /_test_cmd/rm/dir: file is a directory"
+  assert_output "remove /_test_cmd/rm/dir: file is a directory"
 }
 
 @test "rm nonexistent" {
   run $HDFS rm /_test_cmd/nonexistent /_test_cmd/nonexistent2
   assert_failure
   assert_output <<OUT
-rm /_test_cmd/nonexistent: file does not exist
-rm /_test_cmd/nonexistent2: file does not exist
+remove /_test_cmd/nonexistent: file does not exist
+remove /_test_cmd/nonexistent2: file does not exist
 OUT
 }
 

@@ -47,8 +47,12 @@ func ls(paths []string, long, all bool) int {
 			printFiles(nil, files, false, all)
 		}
 
-		for _, dir := range dirs {
-			fmt.Printf("\n%s/:\n", dir)
+		for i, dir := range dirs {
+			if i > 0 {
+				fmt.Println()
+			}
+
+			fmt.Printf("%s/:\n", dir)
 			printDir(client, dir, long, all)
 		}
 	}

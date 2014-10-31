@@ -2,9 +2,10 @@ package main
 
 import (
 	"code.google.com/p/getopt"
+	"errors"
 	"fmt"
+	"github.com/colinmarc/hdfs"
 	"os"
-	"strings"
 )
 
 // TODO: put, du, df, tree, test, trash
@@ -57,6 +58,8 @@ Valid commands:
 
 	getmergeOpts = getopt.New()
 	getmergen    = getmergeOpts.Bool('n')
+
+	cachedClient *hdfs.Client
 )
 
 func init() {
@@ -110,10 +113,7 @@ func main() {
 		status = getmerge(getmergeOpts.Args(), *getmergen)
 	// it's a seeeeecret command
 	case "complete":
-		completions := complete(argv)
-		if completions != nil {
-			fmt.Println(strings.Join(completions, " "))
-		}
+		complete(argv)
 	case "help", "-h", "-help", "--help":
 		printHelp()
 	default:
@@ -136,4 +136,26 @@ func fatal(msg ...interface{}) {
 func fatalWithUsage(msg ...interface{}) {
 	msg = append(msg, "\n"+usage)
 	fatal(msg...)
+}
+
+func getClient(namenode string) (*hdfs.Client, error) {
+	if cachedClient != nil {
+		return cachedClient, nil
+	}
+
+	if namenode == "" {
+		namenode = os.Getenv("HADOOP_NAMENODE")
+	}
+
+	if namenode == "" {
+		return nil, errors.New("Couldn't find a namenode to connect to. You should specify hdfs://<namenode>:<port> in your paths, or set HADOOP_NAMENODE in your environment.")
+	}
+
+	c, err := hdfs.New(namenode)
+	if err != nil {
+		return nil, err
+	}
+
+	cachedClient = c
+	return cachedClient, nil
 }

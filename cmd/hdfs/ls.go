@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"github.com/colinmarc/hdfs"
+	"io"
 	"os"
 	"path"
 	"strings"
@@ -23,7 +24,7 @@ func ls(paths []string, long, all bool) int {
 	files := make([]os.FileInfo, 0, len(paths))
 	dirs := make([]string, 0, len(paths))
 	for _, p := range paths {
-		fi, err := stat(client, p)
+		fi, err := client.Stat(p)
 		if err != nil {
 			fatal(err)
 		}
@@ -61,7 +62,7 @@ func ls(paths []string, long, all bool) int {
 }
 
 func printDir(client *hdfs.Client, dir string, long, all bool) {
-	files, err := readDir(client, dir)
+	dirReader, err := client.Open(dir)
 	if err != nil {
 		fatal(err)
 	}
@@ -74,13 +75,13 @@ func printDir(client *hdfs.Client, dir string, long, all bool) {
 
 	if all {
 		if long {
-			dirInfo, err := stat(client, dir)
+			dirInfo, err := client.Stat(dir)
 			if err != nil {
 				fatal(err)
 			}
 
 			parentPath := path.Join(dir, "..")
-			parentInfo, err := stat(client, parentPath)
+			parentInfo, err := client.Stat(parentPath)
 			if err != nil {
 				fatal(err)
 			}
@@ -93,7 +94,18 @@ func printDir(client *hdfs.Client, dir string, long, all bool) {
 		}
 	}
 
-	printFiles(tw, files, long, all)
+	var partial []os.FileInfo
+	for ; err != io.EOF; partial, err = dirReader.Readdir(100) {
+		if err != nil {
+			fatal(err)
+		}
+
+		printFiles(tw, partial, long, all)
+
+		if long {
+			tw.Flush()
+		}
+	}
 }
 
 func printFiles(tw *tabwriter.Writer, files []os.FileInfo, long, all bool) {

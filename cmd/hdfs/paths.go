@@ -3,6 +3,7 @@ package main
 import (
 	"errors"
 	"github.com/colinmarc/hdfs"
+	"io"
 	"net/url"
 	"os"
 	"os/user"
@@ -102,7 +103,7 @@ func expandGlobs(client *hdfs.Client, globbedPath string) ([]string, error) {
 	base := "/" + path.Join(parts[:splitAt]...)
 	glob := parts[splitAt]
 	remainder := path.Join(parts[splitAt+1:]...)
-	list, err := readDir(client, base)
+	list, err := client.ReadDir(base)
 	if err != nil {
 		return nil, err
 	}
@@ -140,23 +141,49 @@ func expandPaths(client *hdfs.Client, paths []string) ([]string, error) {
 	return res, nil
 }
 
-// TODO: this leans on the caching a bit too much
-type walkFunc func(string, os.FileInfo, error)
+type walkFunc func(string, os.FileInfo)
 
-func walk(client *hdfs.Client, root string, visit walkFunc) {
-	rootInfo, err := stat(client, root)
+func walk(client *hdfs.Client, root string, visit walkFunc) error {
+	rootInfo, err := client.Stat(root)
+	if err != nil {
+		return err
+	}
 
-	if err == nil && rootInfo.IsDir() {
-		var children []os.FileInfo
-		children, err = readDir(client, root)
-		visit(root, rootInfo, err)
+	visit(root, rootInfo)
+	if rootInfo.IsDir() {
+		err = walkDir(client, root, visit)
+		if err != nil {
+			return err
+		}
+	}
 
-		if err == nil {
-			for _, child := range children {
-				walk(client, path.Join(root, child.Name()), visit)
+	return nil
+}
+
+func walkDir(client *hdfs.Client, dir string, visit walkFunc) error {
+	dirReader, err := client.Open(dir)
+	if err != nil {
+		return err
+	}
+
+	var partial []os.FileInfo
+	for ; err != io.EOF; partial, err = dirReader.Readdir(100) {
+		if err != nil {
+			return err
+		}
+
+		for _, child := range partial {
+			childPath := path.Join(dir, child.Name())
+			visit(childPath, child)
+
+			if child.IsDir() {
+				err = walkDir(client, childPath, visit)
+				if err != nil {
+					return err
+				}
 			}
 		}
-	} else {
-		visit(root, rootInfo, err)
 	}
+
+	return nil
 }

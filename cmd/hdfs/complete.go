@@ -1,6 +1,9 @@
 package main
 
 import (
+	"fmt"
+	"io"
+	"os"
 	"path"
 	"strings"
 )
@@ -20,34 +23,34 @@ var knownCommands = []string{
 	"getmerge",
 }
 
-func complete(args []string) []string {
+func complete(args []string) {
 	if len(args) == 2 {
 		words := strings.Split(args[1], " ")[1:]
 
 		if len(words) <= 1 {
-			return knownCommands
+			fmt.Println(strings.Join(knownCommands, " "))
 		} else {
-			return completePath(words[len(words)-1])
+			completePath(words[len(words)-1])
 		}
 	} else {
-		return knownCommands
+		fmt.Println(strings.Join(knownCommands, " "))
 	}
 }
 
-func completePath(fragment string) []string {
+func completePath(fragment string) {
 	paths, namenode, err := normalizePaths([]string{fragment})
 	if err != nil {
-		return nil
+		return
 	}
 
 	fullPath := paths[0]
 	if hasGlob(fullPath) {
-		return nil
+		return
 	}
 
 	client, err := getClient(namenode)
 	if err != nil {
-		return nil
+		return
 	}
 
 	var dir, prefix string
@@ -58,24 +61,30 @@ func completePath(fragment string) []string {
 		dir, prefix = path.Split(fullPath)
 	}
 
-	res, err := client.ReadDir(dir)
+	dirReader, err := client.Open(dir)
 	if err != nil {
-		return nil
+		return
 	}
 
-	matches := make([]string, len(res))
-	for _, fi := range res {
-		name := fi.Name()
+	var partial []os.FileInfo
+	for ; err != io.EOF; partial, err = dirReader.Readdir(100) {
+		if err != nil {
+			return
+		}
 
-		if strings.HasPrefix(name, prefix) {
-			p := path.Join(dir, name)
-			if fi.IsDir() {
-				p += "/"
+		for _, fi := range partial {
+			name := fi.Name()
+
+			if strings.HasPrefix(name, prefix) {
+				p := path.Join(dir, name)
+				if fi.IsDir() {
+					p += "/"
+				}
+
+				fmt.Print(" " + p)
 			}
-
-			matches = append(matches, p)
 		}
 	}
 
-	return matches
+	fmt.Println()
 }

@@ -22,10 +22,8 @@ func chmod(args []string, recursive bool) int {
 	}
 
 	status := 0
-	visit := func(p string, fi os.FileInfo, err error) {
-		if err == nil {
-			err = client.Chmod(p, os.FileMode(mode))
-		}
+	visit := func(p string, fi os.FileInfo) {
+		err := client.Chmod(p, os.FileMode(mode))
 
 		if err != nil {
 			fmt.Fprintln(os.Stderr, err)
@@ -35,10 +33,18 @@ func chmod(args []string, recursive bool) int {
 
 	for _, p := range expanded {
 		if recursive {
-			walk(client, p, visit)
+			err = walk(client, p, visit)
+			if err != nil {
+				fmt.Fprintln(os.Stderr, err)
+				status = 1
+			}
 		} else {
-			info, err := stat(client, p)
-			visit(p, info, err)
+			info, err := client.Stat(p)
+			if err != nil {
+				fatal(err)
+			}
+
+			visit(p, info)
 		}
 	}
 

@@ -154,7 +154,11 @@ func (f *FileReader) Readdir(n int) ([]os.FileInfo, error) {
 	}
 
 	if !f.info.IsDir() {
-		return nil, errors.New("The file is not a directory.")
+		return nil, &os.PathError{
+			"readdir",
+			f.name,
+			errors.New("the file is not a directory."),
+		}
 	}
 
 	if n <= 0 {

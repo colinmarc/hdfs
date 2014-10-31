@@ -31,10 +31,8 @@ func chown(args []string, recursive bool) int {
 	}
 
 	status := 0
-	visit := func(p string, fi os.FileInfo, err error) {
-		if err == nil {
-			err = client.Chown(p, owner, group)
-		}
+	visit := func(p string, fi os.FileInfo) {
+		err := client.Chown(p, owner, group)
 
 		if err != nil {
 			fmt.Fprintln(os.Stderr, err)
@@ -44,10 +42,18 @@ func chown(args []string, recursive bool) int {
 
 	for _, p := range expanded {
 		if recursive {
-			walk(client, p, visit)
+			err = walk(client, p, visit)
+			if err != nil {
+				fmt.Fprintln(os.Stderr, err)
+				status = 1
+			}
 		} else {
-			info, err := stat(client, p)
-			visit(p, info, err)
+			info, err := client.Stat(p)
+			if err != nil {
+				fatal(err)
+			}
+
+			visit(p, info)
 		}
 	}
 

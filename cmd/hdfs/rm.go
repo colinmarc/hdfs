@@ -14,7 +14,7 @@ func rm(paths []string, recursive bool) int {
 
 	status := 0
 	for _, p := range expanded {
-		info, err := stat(client, p)
+		info, err := client.Stat(p)
 		if err != nil {
 			fmt.Fprintln(os.Stderr, err)
 			status = 1

@@ -38,12 +38,9 @@ func get(args []string) int {
 		fatal(err)
 	}
 
-	walk(client, source, func(p string, fi os.FileInfo, err error) {
-		if err != nil {
-			fatal(err)
-		}
-
+	err = walk(client, source, func(p string, fi os.FileInfo) {
 		fullDest := filepath.Join(dest, strings.TrimPrefix(p, source))
+
 		if fi.IsDir() {
 			err = os.Mkdir(fullDest, 0644)
 			if err != nil {
@@ -58,6 +55,10 @@ func get(args []string) int {
 			}
 		}
 	})
+
+	if err != nil {
+		fatal(err)
+	}
 
 	return 0
 }
@@ -84,7 +85,7 @@ func getmerge(args []string, addNewlines bool) int {
 	}
 
 	source := sources[0]
-	children, err := readDir(client, source)
+	children, err := client.ReadDir(source)
 	if err != nil {
 		fatal(err)
 	}

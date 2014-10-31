@@ -29,7 +29,7 @@ func mv(paths []string, force, treatDestAsFile bool) int {
 		fatal(err)
 	}
 
-	destInfo, err := stat(client, dest)
+	destInfo, err := client.Stat(dest)
 	if err != nil && !os.IsNotExist(err) {
 		fatal(err)
 	}

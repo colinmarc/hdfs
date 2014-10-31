@@ -79,7 +79,7 @@ func getClientAndExpandedPaths(paths []string) ([]string, *hdfs.Client, error) {
 // TODO: not really sure checking for a leading \ is the way to test for
 // escapedness.
 func hasGlob(fragment string) bool {
-	match, _ := regexp.MatchString(`[^\\][[*?]`, fragment)
+	match, _ := regexp.MatchString(`([^\\]|^)[[*?]`, fragment)
 	return match
 }
 

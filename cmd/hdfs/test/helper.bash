@@ -1,7 +1,8 @@
 #!/bin/bash
 
 export HADOOP_FS="$HADOOP_HOME/bin/hadoop fs -Ddfs.block.size=1048576"
-export HDFS="$BATS_TEST_DIRNAME/../../../hdfs"
+export ROOT_TEST_DIR="$BATS_TEST_DIRNAME/../../.."
+export HDFS="$ROOT_TEST_DIR/hdfs"
 
 # stolen from https://github.com/sstephenson/rbenv/blob/master/test/test_helper.bash
 

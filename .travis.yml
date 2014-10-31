@@ -11,6 +11,8 @@ env:
   - HADOOP_DISTRO=cdh
   - HADOOP_DISTRO=hdp
 before_script:
-  - NN_PORT=9000 ./setup_test_env.sh
-  - export HADOOP_NAMENODE="localhost:9000"
+  - export NN_PORT=9000
+  - export HADOOP_NAMENODE="localhost:$NN_PORT"
+  - export HADOOP_HOME="hadoop-$HADOOP_DISTRO"
+  - ./setup_test_env.sh
 script: make test

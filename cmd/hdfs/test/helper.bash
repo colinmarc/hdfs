@@ -1,9 +1,5 @@
 #!/bin/bash
 
-if [ ! -d "$HADOOP_HOME" ]; then
-  flunk "HADOOP_HOME not set"
-fi
-
 export HADOOP_FS="$HADOOP_HOME/bin/hadoop fs -Ddfs.block.size=1048576"
 export HDFS="$BATS_TEST_DIRNAME/../../../hdfs"
 

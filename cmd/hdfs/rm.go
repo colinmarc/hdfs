@@ -16,13 +16,17 @@ func rm(paths []string, recursive bool) int {
 	for _, p := range expanded {
 		info, err := client.Stat(p)
 		if err != nil {
+			if pathErr, ok := err.(*os.PathError); ok {
+				pathErr.Op = "remove"
+			}
+
 			fmt.Fprintln(os.Stderr, err)
 			status = 1
 			continue
 		}
 
 		if !recursive && info.IsDir() {
-			fmt.Fprintln(os.Stderr, &os.PathError{"rm", p, errors.New("file is a directory")})
+			fmt.Fprintln(os.Stderr, &os.PathError{"remove", p, errors.New("file is a directory")})
 			status = 1
 			continue
 		}

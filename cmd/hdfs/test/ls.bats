@@ -12,7 +12,7 @@ setup() {
   $HDFS touch /_test_cmd/ls/dir2/d
 }
 
-@test "simple ls" {
+@test "ls" {
   run $HDFS ls /_test_cmd/ls/dir1
   assert_success
   assert_output <<OUT

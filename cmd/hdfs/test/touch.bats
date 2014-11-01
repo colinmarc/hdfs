@@ -3,7 +3,8 @@
 load helper
 
 setup() {
-  $HDFS touch -p /_test_cmd/touch/existing
+  $HDFS mkdir -p /_test_cmd/touch
+  $HDFS touch /_test_cmd/touch/existing
 }
 
 @test "touch" {

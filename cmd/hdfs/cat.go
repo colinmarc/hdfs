@@ -2,6 +2,7 @@ package main
 
 import (
 	"bufio"
+	"bytes"
 	"errors"
 	"fmt"
 	"github.com/colinmarc/hdfs"
@@ -87,19 +88,34 @@ func printSection(paths []string, numLines, numBytes int64, fromEnd bool) int {
 }
 
 func headLines(file *hdfs.FileReader, numLines int64) {
-	scanner := bufio.NewScanner(file)
+	reader := bufio.NewReader(file)
 
-	var i int64
-	for i = 0; i < numLines && scanner.Scan(); i++ {
-		if err := scanner.Err(); err != nil {
+	var newlines, offset int64
+	for newlines < numLines {
+		b, err := reader.ReadByte()
+		if err == io.EOF {
+			offset = -1
+			break
+		} else if err != nil {
 			fatal(err)
 		}
 
-		_, err := os.Stdout.Write(scanner.Bytes())
-		fmt.Println()
-		if err != nil {
-			fatal(err)
+		if b == '\n' {
+			newlines++
 		}
+
+		offset++
+	}
+
+	_, err := file.Seek(0, 0)
+	if err != nil {
+		fatal(err)
+	}
+
+	if offset < 0 {
+		io.Copy(os.Stdout, file)
+	} else {
+		io.CopyN(os.Stdout, file, offset)
 	}
 }
 

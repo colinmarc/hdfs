@@ -6,7 +6,7 @@ import (
 	"os"
 )
 
-func rm(paths []string, recursive bool) int {
+func rm(paths []string, recursive bool, force bool) int {
 	expanded, client, err := getClientAndExpandedPaths(paths)
 	if err != nil {
 		fatal(err)
@@ -16,6 +16,10 @@ func rm(paths []string, recursive bool) int {
 	for _, p := range expanded {
 		info, err := client.Stat(p)
 		if err != nil {
+			if force && os.IsNotExist(err) {
+				continue
+			}
+
 			if pathErr, ok := err.(*os.PathError); ok {
 				pathErr.Op = "remove"
 			}

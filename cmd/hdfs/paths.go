@@ -94,7 +94,7 @@ func expandGlobs(client *hdfs.Client, globbedPath string) ([]string, error) {
 	parts := strings.Split(globbedPath, "/")[1:]
 	res := make([]string, 0)
 	splitAt := 0
-	for splitAt, _ = range parts {
+	for splitAt = range parts {
 		if hasGlob(parts[splitAt]) {
 			break
 		}

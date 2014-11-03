@@ -35,6 +35,7 @@ Valid commands:
 
 	rmOpts = getopt.New()
 	rmr    = rmOpts.Bool('r')
+	rmf    = rmOpts.Bool('f')
 
 	mvOpts = getopt.New()
 	mvf    = mvOpts.Bool('f')
@@ -85,7 +86,7 @@ func main() {
 		status = ls(lsOpts.Args(), *lsl, *lsa)
 	case "rm":
 		rmOpts.Parse(argv)
-		status = rm(rmOpts.Args(), *rmr)
+		status = rm(rmOpts.Args(), *rmr, *rmf)
 	case "mv":
 		mvOpts.Parse(argv)
 		status = mv(mvOpts.Args(), *mvf, *mvT)

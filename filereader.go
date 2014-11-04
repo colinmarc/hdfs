@@ -242,10 +242,7 @@ func (f *FileReader) getNewBlockReader() error {
 		end := start + block.GetB().GetNumBytes()
 
 		if start <= off && off < end {
-			br, err := rpc.NewBlockReader(block, off-start)
-			if err != nil {
-				return err
-			}
+			br := rpc.NewBlockReader(block, off-start)
 
 			f.currentBlockReader = br
 			return nil

@@ -92,7 +92,7 @@ func (br *BlockReader) connect(datanode string) error {
 	} else if checksumType == hdfs.ChecksumTypeProto_CHECKSUM_CRC32C {
 		br.checksumTab = crc32.MakeTable(crc32.Castagnoli)
 	} else {
-		return fmt.Errorf("Unsupported checksum type:", checksumType)
+		return fmt.Errorf("Unsupported checksum type: %s", checksumType)
 	}
 
 	br.chunkSize = checksumInfo.GetBytesPerChecksum()

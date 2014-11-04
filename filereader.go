@@ -46,6 +46,7 @@ func (f *FileReader) Name() string {
 	return f.info.Name()
 }
 
+// Stat returns the FileInfo structure describing file.
 func (f *FileReader) Stat() os.FileInfo {
 	return f.info
 }
@@ -157,7 +158,7 @@ func (f *FileReader) Readdir(n int) ([]os.FileInfo, error) {
 		return nil, &os.PathError{
 			"readdir",
 			f.name,
-			errors.New("the file is not a directory."),
+			errors.New("the file is not a directory"),
 		}
 	}
 

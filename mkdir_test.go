@@ -7,7 +7,7 @@ import (
 	"testing"
 )
 
-var mode os.FileMode = 0777 | os.ModeDir
+var mode = 0777 | os.ModeDir
 
 func TestMkdir(t *testing.T) {
 	client := getClient(t)

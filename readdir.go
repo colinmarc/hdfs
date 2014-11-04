@@ -15,7 +15,7 @@ func (c *Client) ReadDir(dirname string) ([]os.FileInfo, error) {
 }
 
 func (c *Client) getDirList(dirname string, after string, max int) ([]os.FileInfo, error) {
-	res := make([]os.FileInfo, 0)
+	var res []os.FileInfo
 	last := after
 	for max <= 0 || len(res) < max {
 		partial, remaining, err := c.getPartialDirList(dirname, last)

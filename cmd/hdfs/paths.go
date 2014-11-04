@@ -87,10 +87,6 @@ func hasGlob(fragment string) bool {
 // expandGlobs recursively expands globs in a filepath. It assumes the paths
 // are already cleaned and normalize (ie, absolute).
 func expandGlobs(client *hdfs.Client, globbedPath string) ([]string, error) {
-	if !hasGlob(globbedPath) {
-		return []string{globbedPath}, nil
-	}
-
 	parts := strings.Split(globbedPath, "/")[1:]
 	res := make([]string, 0)
 	splitAt := 0
@@ -100,9 +96,18 @@ func expandGlobs(client *hdfs.Client, globbedPath string) ([]string, error) {
 		}
 	}
 
-	base := "/" + path.Join(parts[:splitAt]...)
-	glob := parts[splitAt]
-	remainder := path.Join(parts[splitAt+1:]...)
+	var base, glob, next, remainder string
+	base = "/" + path.Join(parts[:splitAt]...)
+	glob = parts[splitAt]
+
+	if len(parts) > splitAt+1 {
+		next = parts[splitAt+1]
+		remainder = path.Join(parts[splitAt+2:]...)
+	} else {
+		next = ""
+		remainder = ""
+	}
+
 	list, err := client.ReadDir(base)
 	if err != nil {
 		return nil, err
@@ -114,13 +119,26 @@ func expandGlobs(client *hdfs.Client, globbedPath string) ([]string, error) {
 			continue
 		}
 
-		newPath := path.Join(base, fi.Name(), remainder)
-		children, err := expandGlobs(client, newPath)
-		if err != nil {
-			return nil, err
+		if !hasGlob(next) {
+			_, err := client.Stat(path.Join(base, fi.Name(), next))
+			if err != nil && !os.IsNotExist(err) {
+				return nil, err
+			} else if os.IsNotExist(err) {
+				continue
+			}
 		}
 
-		res = append(res, children...)
+		newPath := path.Join(base, fi.Name(), next, remainder)
+		if hasGlob(newPath) {
+			children, err := expandGlobs(client, newPath)
+			if err != nil {
+				return nil, err
+			}
+
+			res = append(res, children...)
+		} else {
+			res = append(res, newPath)
+		}
 	}
 
 	return res, nil
@@ -130,12 +148,16 @@ func expandPaths(client *hdfs.Client, paths []string) ([]string, error) {
 	res := make([]string, 0)
 
 	for _, p := range paths {
-		expanded, err := expandGlobs(client, p)
-		if err != nil {
-			return nil, err
-		}
+		if hasGlob(p) {
+			expanded, err := expandGlobs(client, p)
+			if err != nil {
+				return nil, err
+			}
 
-		res = append(res, expanded...)
+			res = append(res, expanded...)
+		} else {
+			res = append(res, p)
+		}
 	}
 
 	return res, nil

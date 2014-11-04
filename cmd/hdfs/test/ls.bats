@@ -30,44 +30,6 @@ stat /_test_cmd/nonexistent: file does not exist
 OUT
 }
 
-@test "ls with glob" {
-  run $HDFS ls /_test_cmd/ls/dir*
-  assert_success
-  assert_output <<OUT
-/_test_cmd/ls/dir1/:
-a
-b
-c
-
-/_test_cmd/ls/dir2/:
-d
-
-/_test_cmd/ls/dir3/:
-OUT
-}
-
-@test "ls with two globs, one of which is qualified" {
-  run $HDFS ls /_test_cmd/ls/dir*/*
-  assert_success
-  assert_output <<OUT
-a
-b
-c
-d
-OUT
-}
-
-@test "ls with two globs" {
-  run $HDFS ls /_test_cmd/ls/*/*
-  assert_success
-  assert_output <<OUT
-a
-b
-c
-d
-OUT
-}
-
 teardown() {
   $HDFS rm -r /_test_cmd/ls
 }

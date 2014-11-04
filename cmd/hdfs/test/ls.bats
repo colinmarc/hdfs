@@ -22,6 +22,15 @@ c
 OUT
 }
 
+@test "ls single files" {
+  run $HDFS ls /_test_cmd/ls/dir1/a /_test_cmd/ls/dir1/b
+  assert_success
+  assert_output <<OUT
+/_test_cmd/ls/dir1/a
+/_test_cmd/ls/dir1/b
+OUT
+}
+
 @test "ls nonexistent" {
   run $HDFS ls /_test_cmd/nonexistent
   assert_failure

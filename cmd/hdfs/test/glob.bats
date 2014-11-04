@@ -58,10 +58,10 @@ OUT
   run $HDFS ls /_test_cmd/glob/*/*/*
   assert_success
   assert_output <<OUT
-a
-b
-c
-d
+/_test_cmd/glob/dir1/dir/a
+/_test_cmd/glob/dir1/dir/b
+/_test_cmd/glob/dir1/dir/c
+/_test_cmd/glob/dir2/dir/d
 OUT
 }
 
@@ -71,10 +71,10 @@ OUT
   run $HDFS ls /_test_cmd/glob/dir*/*/*
   assert_success
   assert_output <<OUT
-a
-b
-c
-d
+/_test_cmd/glob/dir1/dir/a
+/_test_cmd/glob/dir1/dir/b
+/_test_cmd/glob/dir1/dir/c
+/_test_cmd/glob/dir2/dir/d
 OUT
 }
 

@@ -21,7 +21,8 @@ func ls(paths []string, long, all bool) int {
 		paths = []string{userDir()}
 	}
 
-	files := make([]os.FileInfo, 0, len(paths))
+	files := make([]string, 0, len(paths))
+	fileInfos := make([]os.FileInfo, 0, len(paths))
 	dirs := make([]string, 0, len(paths))
 	for _, p := range paths {
 		fi, err := client.Stat(p)
@@ -32,20 +33,25 @@ func ls(paths []string, long, all bool) int {
 		if fi.IsDir() {
 			dirs = append(dirs, p)
 		} else {
-			files = append(files, fi)
+			files = append(files, p)
+			fileInfos = append(fileInfos, fi)
 		}
 	}
 
 	if len(files) == 0 && len(dirs) == 1 {
 		printDir(client, dirs[0], long, all)
 	} else {
-		var tw *tabwriter.Writer
 		if long {
-			tw = defaultTabWriter()
-			printFiles(tw, files, true, all)
+			tw := defaultTabWriter()
+			for i, p := range files {
+				printLong(tw, p, fileInfos[i])
+			}
+
 			tw.Flush()
 		} else {
-			printFiles(nil, files, false, all)
+			for _, p := range files {
+				fmt.Println(p)
+			}
 		}
 
 		for i, dir := range dirs {
@@ -110,12 +116,14 @@ func printDir(client *hdfs.Client, dir string, long, all bool) {
 
 func printFiles(tw *tabwriter.Writer, files []os.FileInfo, long, all bool) {
 	for _, file := range files {
-		if all || !strings.HasPrefix(file.Name(), ".") {
-			if long {
-				printLong(tw, file.Name(), file)
-			} else {
-				fmt.Println(file.Name())
-			}
+		if !all && strings.HasPrefix(file.Name(), ".") {
+			continue
+		}
+
+		if long {
+			printLong(tw, file.Name(), file)
+		} else {
+			fmt.Println(file.Name())
 		}
 	}
 }

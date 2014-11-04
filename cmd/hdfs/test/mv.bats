@@ -103,7 +103,7 @@ OUT
 
   run $HDFS ls /_test_cmd/mv/dir
   assert_success
-  assert_output "dir"
+  assert_output "/_test_cmd/mv/dir"
 }
 
 teardown() {

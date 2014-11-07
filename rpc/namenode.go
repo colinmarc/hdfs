@@ -19,20 +19,23 @@ const (
 	authProtocol         = 0x0
 	protocolClass        = "org.apache.hadoop.hdfs.protocol.ClientProtocol"
 	protocolClassVersion = 1
-	handshakeCallId      = -3
+	handshakeCallID      = -3
 
 	connectionTimeout = 5 * time.Second
 )
 
-var clientId = randomClientId()
+var clientID = randomClientID()
 
+// NamenodeConnection represents an open connection to a namenode.
 type NamenodeConnection struct {
-	currentRequestId int
+	currentRequestID int
 	user             string
 	conn             net.Conn
 	reqLock          sync.Mutex
 }
 
+// NamenodeError represents an interepreted error from the Namenode, including
+// the error code and the java backtrace.
 type NamenodeError struct {
 	Method    string
 	Message   string
@@ -40,6 +43,8 @@ type NamenodeError struct {
 	Exception string
 }
 
+// Desc returns the long form of the error code, as defined in the
+// RpcErrorCodeProto in RpcHeader.proto
 func (err *NamenodeError) Desc() string {
 	return hadoop.RpcResponseHeaderProto_RpcErrorCodeProto_name[int32(err.Code)]
 }
@@ -93,7 +98,7 @@ func (c *NamenodeConnection) Execute(method string, req proto.Message, resp prot
 	c.reqLock.Lock()
 	defer c.reqLock.Unlock()
 
-	c.currentRequestId++
+	c.currentRequestID++
 	err := c.writeRequest(method, req)
 	if err != nil {
 		c.conn.Close()
@@ -125,7 +130,7 @@ func (c *NamenodeConnection) Execute(method string, req proto.Message, resp prot
 // |  varint length + Request                                  |
 // +-----------------------------------------------------------+
 func (c *NamenodeConnection) writeRequest(method string, req proto.Message) error {
-	rrh := newRpcRequestHeader(c.currentRequestId)
+	rrh := newRPCRequestHeader(c.currentRequestID)
 	rh := newRequestHeader(method)
 
 	reqBytes, err := makePacket(rrh, rh, req)
@@ -168,7 +173,7 @@ func (c *NamenodeConnection) readResponse(method string, resp proto.Message) err
 			Code:      int(rrh.GetErrorDetail()),
 			Exception: rrh.GetExceptionClassName(),
 		}
-	} else if int(rrh.GetCallId()) != c.currentRequestId {
+	} else if int(rrh.GetCallId()) != c.currentRequestID {
 		return errors.New("Error reading response: unexpected sequence number")
 	}
 
@@ -200,7 +205,7 @@ func (c *NamenodeConnection) writeNamenodeHandshake() error {
 		rpcVersion, serviceClass, authProtocol,
 	}
 
-	rrh := newRpcRequestHeader(handshakeCallId)
+	rrh := newRPCRequestHeader(handshakeCallID)
 	cc := newConnectionContext(c.user)
 	packet, err := makePacket(rrh, cc)
 	if err != nil {
@@ -211,12 +216,12 @@ func (c *NamenodeConnection) writeNamenodeHandshake() error {
 	return err
 }
 
-func newRpcRequestHeader(id int) *hadoop.RpcRequestHeaderProto {
+func newRPCRequestHeader(id int) *hadoop.RpcRequestHeaderProto {
 	return &hadoop.RpcRequestHeaderProto{
 		RpcKind:  hadoop.RpcKindProto_RPC_PROTOCOL_BUFFER.Enum(),
 		RpcOp:    hadoop.RpcRequestHeaderProto_RPC_FINAL_PACKET.Enum(),
 		CallId:   proto.Int32(int32(id)),
-		ClientId: clientId,
+		ClientId: clientID,
 	}
 }
 
@@ -237,7 +242,7 @@ func newConnectionContext(user string) *hadoop.IpcConnectionContextProto {
 	}
 }
 
-func randomClientId() []byte {
+func randomClientID() []byte {
 	uuid := make([]byte, 16)
 	rand.Read(uuid)
 

@@ -8,6 +8,8 @@ import (
 	"encoding/binary"
 )
 
+// ClientName is passed into the namenode on requests, and identifies this
+// client to the namenode.
 const ClientName = "go-hdfs"
 
 func makeDelimitedMsg(msg proto.Message) ([]byte, error) {

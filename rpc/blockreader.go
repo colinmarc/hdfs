@@ -55,7 +55,7 @@ func (br *BlockReader) connectNext() error {
 }
 
 func (br *BlockReader) nextDatanode() string {
-	var picked int = -1
+	var picked = -1
 	var oldestFailure time.Time
 
 	for i, address := range br.datanodes {
@@ -115,9 +115,9 @@ func (br *BlockReader) Read(b []byte) (int, error) {
 			if n > 0 {
 				br.offset += uint64(n)
 				return n, nil
-			} else {
-				continue
 			}
+
+			continue
 		}
 
 		return n, err

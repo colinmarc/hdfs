@@ -13,7 +13,7 @@ import (
 )
 
 var (
-	multipleNamenodeUrls = errors.New("Multiple namenode URLs specified")
+	errMultipleNamenodeUrls = errors.New("Multiple namenode URLs specified")
 	rootPath             = userDir()
 )
 
@@ -21,9 +21,9 @@ func userDir() string {
 	currentUser, err := user.Current()
 	if err != nil || currentUser.Username == "" {
 		return "/"
-	} else {
-		return path.Join("/user", currentUser.Username)
 	}
+
+	return path.Join("/user", currentUser.Username)
 }
 
 // normalizePaths parses the hosts out of HDFS URLs, and turns relative paths
@@ -41,10 +41,10 @@ func normalizePaths(paths []string) ([]string, string, error) {
 
 		if url.Host != "" {
 			if namenode != "" && namenode != url.Host {
-				return nil, "", multipleNamenodeUrls
-			} else {
-				namenode = url.Host
+				return nil, "", errMultipleNamenodeUrls
 			}
+
+			namenode = url.Host
 		}
 
 		p := path.Clean(url.Path)
@@ -88,8 +88,9 @@ func hasGlob(fragment string) bool {
 // are already cleaned and normalize (ie, absolute).
 func expandGlobs(client *hdfs.Client, globbedPath string) ([]string, error) {
 	parts := strings.Split(globbedPath, "/")[1:]
-	res := make([]string, 0)
-	splitAt := 0
+	var res []string
+	var splitAt int
+
 	for splitAt = range parts {
 		if hasGlob(parts[splitAt]) {
 			break
@@ -145,7 +146,7 @@ func expandGlobs(client *hdfs.Client, globbedPath string) ([]string, error) {
 }
 
 func expandPaths(client *hdfs.Client, paths []string) ([]string, error) {
-	res := make([]string, 0)
+	var res []string
 
 	for _, p := range paths {
 		if hasGlob(p) {

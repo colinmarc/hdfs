@@ -9,11 +9,11 @@ load helper
 }
 
 @test "cat long" {
-  run bash -c "$HDFS cat /_test/mobydick.txt > $BATS_TMPDIR/mobydick.txt"
+  run bash -c "$HDFS cat /_test/mobydick.txt > $BATS_TMPDIR/mobydick_test.txt"
   assert_success
 
   SHA=`shasum < mobydick.txt | awk '{ print $1 }'`
-  assert_equal $SHA `shasum < $BATS_TMPDIR/mobydick.txt | awk '{ print $1 }'`
+  assert_equal $SHA `shasum < $BATS_TMPDIR/mobydick_test.txt | awk '{ print $1 }'`
 }
 
 @test "cat nonexistent" {

@@ -40,8 +40,5 @@ HADOOP_FS="$HADOOP_HOME/bin/hadoop fs -Ddfs.block.size=1048576"
 $HADOOP_FS -mkdir -p "hdfs://$HADOOP_NAMENODE/_test"
 $HADOOP_FS -chmod 777 "hdfs://$HADOOP_NAMENODE/_test"
 
-echo "bar" > foo.txt
-$HADOOP_FS -put foo.txt "hdfs://$HADOOP_NAMENODE/_test/foo.txt"
-
-curl -o mobydick.txt -L http://www.gutenberg.org/cache/epub/2701/pg2701.txt
-$HADOOP_FS -put mobydick.txt "hdfs://$HADOOP_NAMENODE/_test/mobydick.txt"
+$HADOOP_FS -put ./test/foo.txt "hdfs://$HADOOP_NAMENODE/_test/foo.txt"
+$HADOOP_FS -put ./test/mobydick.txt "hdfs://$HADOOP_NAMENODE/_test/mobydick.txt"

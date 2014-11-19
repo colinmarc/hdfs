@@ -153,25 +153,30 @@ func (s *blockStream) Read(b []byte) (int, error) {
 
 		crc := crc32.Checksum(chunkBytes[:n], s.checksumTab)
 
-		if int64(n) < chunkLength {
-			// save any leftovers
-			s.buf.Reset()
-			leftover, err := s.buf.ReadFrom(chunkReader)
-			if err != nil {
-				return readOffset, err
+		done := false
+		if readOffset == len(b) {
+			done = true
+
+			if int64(n) < chunkLength {
+				// save any leftovers
+				s.buf.Reset()
+				leftover, err := s.buf.ReadFrom(chunkReader)
+				if err != nil {
+					return readOffset, err
+				}
+
+				s.packet.packetOffset += uint64(leftover)
+
+				// update the checksum with the leftovers
+				crc = crc32.Update(crc, s.checksumTab, s.buf.Bytes())
 			}
-
-			s.packet.packetOffset += uint64(leftover)
-
-			// update the checksum with the leftovers
-			crc = crc32.Update(crc, s.checksumTab, s.buf.Bytes())
 		}
 
 		if crc != binary.BigEndian.Uint32(checksum) {
 			return readOffset, errors.New("Invalid checksum from the datanode!")
 		}
 
-		if readOffset == len(b) {
+		if done {
 			break
 		}
 	}

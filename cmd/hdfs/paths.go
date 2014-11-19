@@ -14,7 +14,7 @@ import (
 
 var (
 	errMultipleNamenodeUrls = errors.New("Multiple namenode URLs specified")
-	rootPath             = userDir()
+	rootPath                = userDir()
 )
 
 func userDir() string {

@@ -1,18 +1,18 @@
 package rpc
 
 import (
+	"bufio"
 	"code.google.com/p/goprotobuf/proto"
-	"testing"
-	"testing/iotest"
+	hdfs "github.com/colinmarc/hdfs/protocol/hadoop_hdfs"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	hdfs "github.com/colinmarc/hdfs/protocol/hadoop_hdfs"
-	"os"
-	"os/user"
-	"bufio"
+	"hash/crc32"
 	"io"
 	"io/ioutil"
-	"hash/crc32"
+	"os"
+	"os/user"
+	"testing"
+	"testing/iotest"
 	"time"
 )
 
@@ -111,4 +111,3 @@ func TestFailsOverAndThenDies(t *testing.T) {
 	_, err = io.Copy(ioutil.Discard, br)
 	assert.Equal(t, iotest.ErrTimeout, err)
 }
-

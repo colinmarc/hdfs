@@ -24,11 +24,11 @@ const (
 // from a single datanode.
 type blockStream struct {
 	address string
-	block       *hdfs.LocatedBlockProto
+	block   *hdfs.LocatedBlockProto
 
-	closed bool
-	conn   net.Conn
-	reader *bufio.Reader
+	closed      bool
+	conn        net.Conn
+	reader      *bufio.Reader
 	checksumTab *crc32.Table
 
 	startOffset uint64
@@ -50,7 +50,7 @@ type openPacket struct {
 // newBlockStream returns a new connected blockStream.
 func newBlockStream(address string, block *hdfs.LocatedBlockProto, offset uint64) (*blockStream, error) {
 	s := &blockStream{
-		address: address,
+		address:     address,
 		block:       block,
 		startOffset: offset,
 	}

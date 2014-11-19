@@ -15,8 +15,8 @@ var datanodeFailures = make(map[string]time.Time)
 type BlockReader struct {
 	block *hdfs.LocatedBlockProto
 
-	datanodes       []string
-	lastError       error
+	datanodes []string
+	lastError error
 
 	stream *blockStream
 	offset uint64

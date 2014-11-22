@@ -71,7 +71,7 @@ Best of all, it comes with bash tab completion!
 Installing
 ----------
 
-To install the library, once you have Go set up:
+To install the library, once you have Go [all set up][2]:
 
     $ go get github.com/colinmarc/hdfs
 
@@ -98,7 +98,8 @@ Or, to install tab completion globally on linux:
 Acknowledgements
 ----------------
 
-This library is heavily indebted to [snakebite][2].
+This library is heavily indebted to [snakebite][3].
 
 [1]: https://godoc.org/github.com/colinmarc/hdfs
-[2]: https://github.com/spotify/snakebite
+[2]: https://golang.org/doc/install
+[3]: https://github.com/spotify/snakebite

@@ -19,6 +19,7 @@ var knownCommands = []string{
 	"cat",
 	"head",
 	"tail",
+	"checksum",
 	"get",
 	"getmerge",
 }

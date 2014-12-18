@@ -2,6 +2,7 @@ package hdfs
 
 import (
 	"code.google.com/p/goprotobuf/proto"
+	"crypto/md5"
 	"errors"
 	"fmt"
 	hdfs "github.com/colinmarc/hdfs/protocol/hadoop_hdfs"
@@ -51,6 +52,54 @@ func (f *FileReader) Stat() os.FileInfo {
 	return f.info
 }
 
+// Checksum returns HDFS's internal "MD5MD5CRC32C" checksum for a given file.
+//
+// Internally to HDFS, it works by calculating the MD5 of all the CRCs (which
+// are stored alongside the data) for each block, and then calculating the MD5
+// of all of those.
+func (f *FileReader) Checksum() ([]byte, error) {
+	if f.info.IsDir() {
+		return nil, &os.PathError{
+			"checksum",
+			f.name,
+			errors.New("is a directory"),
+		}
+	}
+
+	if f.blocks == nil {
+		err := f.getBlocks()
+		if err != nil {
+			return nil, err
+		}
+	}
+
+	// The way the hadoop code calculates this, it writes all the checksums out to
+	// a byte array, which is automatically padded with zeroes out to the next
+	// power of 2 (with a minimum of 32)... and then takes the MD5 of that array,
+	// including the zeroes. This is pretty shady business, but we want to track
+	// the 'hadoop fs -checksum' behavior if possible.
+	paddedLength := 32
+	totalLength := 0
+	checksum := md5.New()
+	for _, block := range f.blocks {
+		cr := rpc.NewChecksumReader(block)
+
+		blockChecksum, err := cr.ReadChecksum()
+		if err != nil {
+			return nil, err
+		}
+
+		checksum.Write(blockChecksum)
+		totalLength += len(blockChecksum)
+		if paddedLength < totalLength {
+			paddedLength *= 2
+		}
+	}
+
+	checksum.Write(make([]byte, paddedLength-totalLength))
+	return checksum.Sum(nil), nil
+}
+
 // Seek implements io.Seeker.
 //
 // The seek is virtual - it starts a new block read at the new position.
@@ -84,6 +133,14 @@ func (f *FileReader) Seek(offset int64, whence int) (int64, error) {
 func (f *FileReader) Read(b []byte) (int, error) {
 	if f.closed {
 		return 0, io.ErrClosedPipe
+	}
+
+	if f.info.IsDir() {
+		return 0, &os.PathError{
+			"read",
+			f.name,
+			errors.New("is a directory"),
+		}
 	}
 
 	if f.offset >= f.info.Size() {

@@ -13,7 +13,6 @@ import (
 	"os/user"
 	"testing"
 	"testing/iotest"
-	"time"
 )
 
 func getNamenode(t *testing.T) *NamenodeConnection {
@@ -31,11 +30,11 @@ func getNamenode(t *testing.T) *NamenodeConnection {
 	return conn
 }
 
-func setupFailover(t *testing.T) *BlockReader {
+func getBlocks(t *testing.T, name string) []*hdfs.LocatedBlockProto {
 	namenode := getNamenode(t)
 
 	req := &hdfs.GetBlockLocationsRequestProto{
-		Src:    proto.String("/_test/mobydick.txt"),
+		Src:    proto.String(name),
 		Offset: proto.Uint64(0),
 		Length: proto.Uint64(1257276),
 	}
@@ -47,11 +46,15 @@ func setupFailover(t *testing.T) *BlockReader {
 	}
 
 	// add a duplicate location to failover to
-	block := resp.GetLocations().GetBlocks()[0]
+	return resp.GetLocations().GetBlocks()
+}
+
+func setupFailover(t *testing.T) *BlockReader {
+	block := getBlocks(t, "/_test/mobydick.txt")[0]
 	block.Locs = append(block.GetLocs(), block.GetLocs()...)
 
 	br := NewBlockReader(block, 0)
-	err = br.connectNext()
+	err := br.connectNext()
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -59,32 +62,9 @@ func setupFailover(t *testing.T) *BlockReader {
 	return br
 }
 
-func TestPicksFirstDatanode(t *testing.T) {
-	br := setupFailover(t)
-	br.datanodes = []string{"foo:6000", "bar:6000"}
-	assert.Equal(t, br.nextDatanode(), "foo:6000")
-}
-
-func TestPicksDatanodesWithoutFailures(t *testing.T) {
-	br := setupFailover(t)
-	br.datanodes = []string{"foo:6000", "foo:7000", "bar:6000"}
-	datanodeFailures["foo:6000"] = time.Now()
-
-	assert.Equal(t, br.nextDatanode(), "foo:7000")
-}
-
-func TestPicksDatanodesWithOldestFailures(t *testing.T) {
-	br := setupFailover(t)
-	br.datanodes = []string{"foo:6000", "bar:6000"}
-	datanodeFailures["foo:6000"] = time.Now().Add(-10 * time.Minute)
-	datanodeFailures["bar:6000"] = time.Now()
-
-	assert.Equal(t, br.nextDatanode(), "foo:6000")
-}
-
 func TestFailsOver(t *testing.T) {
 	br := setupFailover(t)
-	dn := br.datanodes[0]
+	dn := br.datanodes.datanodes[0]
 	br.stream.reader = bufio.NewReaderSize(iotest.TimeoutReader(br.stream.reader), 0)
 
 	hash := crc32.NewIEEE()
@@ -92,7 +72,7 @@ func TestFailsOver(t *testing.T) {
 	require.Nil(t, err)
 	assert.Equal(t, 1048576, n)
 	assert.Equal(t, 0xb35a6a0e, hash.Sum32())
-	assert.Equal(t, 0, len(br.datanodes))
+	assert.Equal(t, 0, br.datanodes.numRemaining())
 
 	_, exist := datanodeFailures[dn]
 	assert.True(t, exist)
@@ -105,7 +85,7 @@ func TestFailsOverAndThenDies(t *testing.T) {
 
 	_, err := io.CopyN(ioutil.Discard, br, 10000)
 	require.Nil(t, err)
-	assert.Equal(t, 0, len(br.datanodes))
+	assert.Equal(t, 0, br.datanodes.numRemaining())
 
 	br.stream.reader = bufio.NewReaderSize(iotest.TimeoutReader(br.stream.reader), 0)
 	_, err = io.Copy(ioutil.Discard, br)

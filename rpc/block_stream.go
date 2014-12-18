@@ -15,11 +15,6 @@ import (
 	"net"
 )
 
-const (
-	dataTransferVersion = 0x1c
-	readBlockOp         = 0x51
-)
-
 // blockStream implements io.ReaderCloser for reading a single block from HDFS,
 // from a single datanode.
 type blockStream struct {
@@ -196,7 +191,7 @@ func (s *blockStream) writeBlockReadRequest() error {
 	header := []byte{0x00, dataTransferVersion, readBlockOp}
 
 	needed := (s.block.GetB().GetNumBytes() - s.startOffset)
-	op := newReadBlockOp(s.block, s.startOffset, needed)
+	op := newBlockReadOp(s.block, s.startOffset, needed)
 	opBytes, err := makeDelimitedMsg(op)
 	if err != nil {
 		return err
@@ -314,7 +309,7 @@ func (s *blockStream) readPacketHeader() (*hdfs.PacketHeaderProto, error) {
 	return packetHeader, nil
 }
 
-func newReadBlockOp(block *hdfs.LocatedBlockProto, offset, length uint64) *hdfs.OpReadBlockProto {
+func newBlockReadOp(block *hdfs.LocatedBlockProto, offset, length uint64) *hdfs.OpReadBlockProto {
 	return &hdfs.OpReadBlockProto{
 		Header: &hdfs.ClientOperationHeaderProto{
 			BaseHeader: &hdfs.BaseHeaderProto{

@@ -15,7 +15,7 @@ var (
 The flags available are a subset of the POSIX ones, but should behave similarly.
 
 Valid commands:
-  ls [-la] [FILE]...
+  ls [-lah] [FILE]...
   rm [-rf] FILE...
   mv [-fT] SOURCE... DEST
   mkdir [-p] FILE...
@@ -33,6 +33,7 @@ Valid commands:
 	lsOpts = getopt.New()
 	lsl    = lsOpts.Bool('l')
 	lsa    = lsOpts.Bool('a')
+	lsh    = lsOpts.Bool('h')
 
 	rmOpts = getopt.New()
 	rmr    = rmOpts.Bool('r')
@@ -84,7 +85,7 @@ func main() {
 	switch command {
 	case "ls":
 		lsOpts.Parse(argv)
-		status = ls(lsOpts.Args(), *lsl, *lsa)
+		status = ls(lsOpts.Args(), *lsl, *lsa, *lsh)
 	case "rm":
 		rmOpts.Parse(argv)
 		status = rm(rmOpts.Args(), *rmr, *rmf)

@@ -7,11 +7,12 @@ import (
 	"os"
 	"path"
 	"strings"
+	"strconv"
 	"text/tabwriter"
 	"time"
 )
 
-func ls(paths []string, long, all bool) int {
+func ls(paths []string, long, all, humanReadable bool) int {
 	paths, client, err := getClientAndExpandedPaths(paths)
 	if err != nil {
 		fatal(err)
@@ -39,12 +40,12 @@ func ls(paths []string, long, all bool) int {
 	}
 
 	if len(files) == 0 && len(dirs) == 1 {
-		printDir(client, dirs[0], long, all)
+		printDir(client, dirs[0], long, all, humanReadable)
 	} else {
 		if long {
 			tw := defaultTabWriter()
 			for i, p := range files {
-				printLong(tw, p, fileInfos[i])
+				printLong(tw, p, fileInfos[i], humanReadable)
 			}
 
 			tw.Flush()
@@ -60,14 +61,14 @@ func ls(paths []string, long, all bool) int {
 			}
 
 			fmt.Printf("%s/:\n", dir)
-			printDir(client, dir, long, all)
+			printDir(client, dir, long, all, humanReadable)
 		}
 	}
 
 	return 0
 }
 
-func printDir(client *hdfs.Client, dir string, long, all bool) {
+func printDir(client *hdfs.Client, dir string, long, all, humanReadable bool) {
 	dirReader, err := client.Open(dir)
 	if err != nil {
 		fatal(err)
@@ -92,8 +93,8 @@ func printDir(client *hdfs.Client, dir string, long, all bool) {
 				fatal(err)
 			}
 
-			printLong(tw, ".", dirInfo)
-			printLong(tw, "..", parentInfo)
+			printLong(tw, ".", dirInfo, humanReadable)
+			printLong(tw, "..", parentInfo, humanReadable)
 		} else {
 			fmt.Println(".")
 			fmt.Println("..")
@@ -106,7 +107,7 @@ func printDir(client *hdfs.Client, dir string, long, all bool) {
 			fatal(err)
 		}
 
-		printFiles(tw, partial, long, all)
+		printFiles(tw, partial, long, all, humanReadable)
 
 		if long {
 			tw.Flush()
@@ -114,27 +115,30 @@ func printDir(client *hdfs.Client, dir string, long, all bool) {
 	}
 }
 
-func printFiles(tw *tabwriter.Writer, files []os.FileInfo, long, all bool) {
+func printFiles(tw *tabwriter.Writer, files []os.FileInfo, long, all, humanReadable bool) {
 	for _, file := range files {
 		if !all && strings.HasPrefix(file.Name(), ".") {
 			continue
 		}
 
 		if long {
-			printLong(tw, file.Name(), file)
+			printLong(tw, file.Name(), file, humanReadable)
 		} else {
 			fmt.Println(file.Name())
 		}
 	}
 }
 
-func printLong(tw *tabwriter.Writer, name string, info os.FileInfo) {
+func printLong(tw *tabwriter.Writer, name string, info os.FileInfo, humanReadable bool) {
 	fi := info.(*hdfs.FileInfo)
 	// mode owner group size date(\w tab) time/year name
 	mode := fi.Mode().String()
 	owner := fi.Owner()
 	group := fi.OwnerGroup()
-	size := fi.Size()
+	size := strconv.FormatInt(fi.Size(), 10)
+	if humanReadable {
+		size = formatBytes(fi.Size())
+	}
 
 	modtime := fi.ModTime()
 	date := modtime.Format("Jan\t2")
@@ -145,10 +149,25 @@ func printLong(tw *tabwriter.Writer, name string, info os.FileInfo) {
 		timeOrYear = string(modtime.Year())
 	}
 
-	fmt.Fprintf(tw, "%s \t%s \t %s \t %d \t%s \t%s \t%s\n",
+	fmt.Fprintf(tw, "%s \t%s \t %s \t %s \t%s \t%s \t%s\n",
 		mode, owner, group, size, date, timeOrYear, name)
 }
 
 func defaultTabWriter() *tabwriter.Writer {
 	return tabwriter.NewWriter(os.Stdout, 3, 0, 0, ' ', tabwriter.AlignRight|tabwriter.TabIndent)
+}
+
+func formatBytes(i int64) string {
+	switch {
+	case i > (1024 * 1024 * 1024 * 1024):
+		return fmt.Sprintf("%#.1fT", float64(i)/1024/1024/1024/1024)
+	case i > (1024 * 1024 * 1024):
+		return fmt.Sprintf("%#.1fG", float64(i)/1024/1024/1024)
+	case i > (1024 * 1024):
+		return fmt.Sprintf("%#.1fM", float64(i)/1024/1024)
+	case i > 1024:
+		return fmt.Sprintf("%#.1fK", float64(i)/1024)
+	default:
+		return fmt.Sprintf("%dB", i)
+	}
 }

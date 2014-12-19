@@ -10,7 +10,12 @@ import (
 
 // ClientName is passed into the namenode on requests, and identifies this
 // client to the namenode.
-const ClientName = "go-hdfs"
+const (
+	ClientName          = "go-hdfs"
+	dataTransferVersion = 0x1c
+	readBlockOp         = 0x51
+	checksumBlockOp     = 0x55
+)
 
 func makeDelimitedMsg(msg proto.Message) ([]byte, error) {
 	msgBytes, err := proto.Marshal(msg)

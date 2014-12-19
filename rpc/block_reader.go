@@ -1,26 +1,20 @@
 package rpc
 
 import (
+	"errors"
 	"fmt"
 	hdfs "github.com/colinmarc/hdfs/protocol/hadoop_hdfs"
 	"io"
-	"time"
 )
-
-// a global map of address -> last failure
-var datanodeFailures = make(map[string]time.Time)
 
 // BlockReader implements io.ReadCloser, for reading a block. It abstracts over
 // reading from multiple datanodes, in order to be robust to failures.
 type BlockReader struct {
-	block *hdfs.LocatedBlockProto
-
-	datanodes []string
-	lastError error
-
-	stream *blockStream
-	offset uint64
-	closed bool
+	block     *hdfs.LocatedBlockProto
+	datanodes *datanodeFailover
+	stream    *blockStream
+	offset    uint64
+	closed    bool
 }
 
 // NewBlockReader returns a new BlockReader, given the block information and
@@ -36,7 +30,7 @@ func NewBlockReader(block *hdfs.LocatedBlockProto, offset uint64) *BlockReader {
 
 	return &BlockReader{
 		block:     block,
-		datanodes: datanodes,
+		datanodes: newDatanodeFailover(datanodes),
 		offset:    offset,
 	}
 }
@@ -44,7 +38,7 @@ func NewBlockReader(block *hdfs.LocatedBlockProto, offset uint64) *BlockReader {
 // connectNext pops a datanode from the list based on previous failures, and
 // connects to it.
 func (br *BlockReader) connectNext() error {
-	address := br.nextDatanode()
+	address := br.datanodes.next()
 	stream, err := newBlockStream(address, br.block, br.offset)
 	if err != nil {
 		return err
@@ -52,34 +46,6 @@ func (br *BlockReader) connectNext() error {
 
 	br.stream = stream
 	return nil
-}
-
-func (br *BlockReader) nextDatanode() string {
-	var picked = -1
-	var oldestFailure time.Time
-
-	for i, address := range br.datanodes {
-		failedAt, hasFailed := datanodeFailures[address]
-
-		if !hasFailed {
-			picked = i
-			break
-		} else if oldestFailure.IsZero() || failedAt.Before(oldestFailure) {
-			picked = i
-			oldestFailure = failedAt
-		}
-	}
-
-	address := br.datanodes[picked]
-	br.datanodes = append(br.datanodes[:picked], br.datanodes[picked+1:]...)
-
-	return address
-}
-
-func (br *BlockReader) recordFailure(err error) {
-	datanodeFailures[br.stream.address] = time.Now()
-	br.lastError = err
-	br.stream = nil
 }
 
 // Read implements io.Reader.
@@ -100,18 +66,19 @@ func (br *BlockReader) Read(b []byte) (int, error) {
 	}
 
 	// the main retry loop
-	for br.stream != nil || len(br.datanodes) > 0 {
+	for br.stream != nil || br.datanodes.numRemaining() > 0 {
 		if br.stream == nil {
 			err := br.connectNext()
 			if err != nil {
-				br.recordFailure(err)
+				br.datanodes.recordFailure(err)
 				continue
 			}
 		}
 
 		n, err := br.stream.Read(b)
 		if err != nil && err != io.EOF {
-			br.recordFailure(err)
+			br.stream = nil
+			br.datanodes.recordFailure(err)
 			if n > 0 {
 				br.offset += uint64(n)
 				return n, nil
@@ -123,7 +90,12 @@ func (br *BlockReader) Read(b []byte) (int, error) {
 		return n, err
 	}
 
-	return 0, br.lastError
+	err := br.datanodes.lastError()
+	if err == nil {
+		err = errors.New("No available datanodes for block.")
+	}
+
+	return 0, err
 }
 
 // Close implements io.Closer.

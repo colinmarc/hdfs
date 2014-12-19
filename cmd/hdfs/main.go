@@ -25,6 +25,7 @@ Valid commands:
   cat SOURCE...
   head [-n LINES | -c BYTES] SOURCE...
   tail [-n LINES | -c BYTES] SOURCE...
+  checksum FILE...
   get SOURCE [DEST]
   getmerge SOURCE DEST
 `, os.Args[0])
@@ -107,6 +108,8 @@ func main() {
 	case "head", "tail":
 		headTailOpts.Parse(argv)
 		status = printSection(headTailOpts.Args(), *headtailn, *headtailc, (command == "tail"))
+	case "checksum":
+		status = checksum(argv[1:])
 	case "get":
 		status = get(argv[1:])
 	case "getmerge":

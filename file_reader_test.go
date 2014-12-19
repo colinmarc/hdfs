@@ -2,6 +2,7 @@ package hdfs
 
 import (
 	"bytes"
+	"encoding/hex"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	"hash/crc32"
@@ -20,6 +21,8 @@ const (
 	testStr2            = "http://www.gutenberg.org"
 	testStr2Off         = 1256988
 	testStr2NegativeOff = -288
+
+	testChecksum = "27c076e4987344253650d3335a5d08ce"
 )
 
 func TestFileRead(t *testing.T) {
@@ -201,4 +204,16 @@ func TestOpenFileWithoutPermission(t *testing.T) {
 	file, err := otherClient.Open("/_test/accessdenied/foo")
 	assert.Nil(t, file)
 	assertPathError(t, err, "open", "/_test/accessdenied/foo", os.ErrPermission)
+}
+
+func TestFileChecksum(t *testing.T) {
+	client := getClient(t)
+
+	file, err := client.Open("/_test/foo.txt")
+	require.Nil(t, err)
+
+	checksum, err := file.Checksum()
+	require.Nil(t, err)
+
+	assert.Equal(t, testChecksum, hex.EncodeToString(checksum))
 }

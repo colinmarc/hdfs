@@ -25,6 +25,7 @@ Valid commands:
   cat SOURCE...
   head [-n LINES | -c BYTES] SOURCE...
   tail [-n LINES | -c BYTES] SOURCE...
+  du [-sh] FILE...
   checksum FILE...
   get SOURCE [DEST]
   getmerge SOURCE DEST
@@ -59,6 +60,10 @@ Valid commands:
 	headtailn    = headTailOpts.Int64('n', -1)
 	headtailc    = headTailOpts.Int64('c', -1)
 
+	duOpts = getopt.New()
+	dus    = duOpts.Bool('s')
+	duh    = duOpts.Bool('h')
+
 	getmergeOpts = getopt.New()
 	getmergen    = getmergeOpts.Bool('n')
 
@@ -73,6 +78,9 @@ func init() {
 	touchOpts.SetUsage(printHelp)
 	chmodOpts.SetUsage(printHelp)
 	chownOpts.SetUsage(printHelp)
+	headTailOpts.SetUsage(printHelp)
+	duOpts.SetUsage(printHelp)
+	getmergeOpts.SetUsage(printHelp)
 }
 
 func main() {
@@ -109,6 +117,9 @@ func main() {
 	case "head", "tail":
 		headTailOpts.Parse(argv)
 		printSection(headTailOpts.Args(), *headtailn, *headtailc, (command == "tail"))
+	case "du":
+		duOpts.Parse(argv)
+		du(duOpts.Args(), *dus, *duh)
 	case "checksum":
 		checksum(argv[1:])
 	case "get":

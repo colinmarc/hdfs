@@ -38,13 +38,13 @@ func TestReadDirMany(t *testing.T) {
 	client := getClient(t)
 
 	mkdirp(t, "/_test/hugedir")
-	for i := 1; i <= 1000; i++ {
+	for i := 1; i <= 10000; i++ {
 		touch(t, fmt.Sprintf("/_test/hugedir/%d", i))
 	}
 
 	res, err := client.ReadDir("/_test/hugedir")
 	assert.Nil(t, err)
-	require.Equal(t, len(res), 1000)
+	require.Equal(t, len(res), 10000)
 }
 
 func TestReadDirTrailingSlash(t *testing.T) {

@@ -26,6 +26,8 @@ func (c *Client) getDirList(dirname string, after string, max int) ([]os.FileInf
 		res = append(res, partial...)
 		if remaining == 0 {
 			break
+		} else if len(partial) > 0 {
+			last = partial[len(partial)-1].Name()
 		}
 	}
 

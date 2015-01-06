@@ -6,13 +6,13 @@ import (
 	"io"
 	"os"
 	"path"
-	"strings"
 	"strconv"
+	"strings"
 	"text/tabwriter"
 	"time"
 )
 
-func ls(paths []string, long, all, humanReadable bool) int {
+func ls(paths []string, long, all, humanReadable bool) {
 	paths, client, err := getClientAndExpandedPaths(paths)
 	if err != nil {
 		fatal(err)
@@ -64,8 +64,6 @@ func ls(paths []string, long, all, humanReadable bool) int {
 			printDir(client, dir, long, all, humanReadable)
 		}
 	}
-
-	return 0
 }
 
 func printDir(client *hdfs.Client, dir string, long, all, humanReadable bool) {

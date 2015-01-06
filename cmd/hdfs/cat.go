@@ -11,7 +11,7 @@ import (
 
 var tailSearchSize int64 = 16384
 
-func cat(paths []string) int {
+func cat(paths []string) {
 	expanded, client, err := getClientAndExpandedPaths(paths)
 	if err != nil {
 		fatal(err)
@@ -33,11 +33,9 @@ func cat(paths []string) int {
 	if err != nil {
 		fatal(err)
 	}
-
-	return 0
 }
 
-func printSection(paths []string, numLines, numBytes int64, fromEnd bool) int {
+func printSection(paths []string, numLines, numBytes int64, fromEnd bool) {
 	if numLines != -1 && numBytes != -1 {
 		fatal("You can't specify both -n and -c.")
 	} else if numLines == -1 && numBytes == -1 {
@@ -49,7 +47,6 @@ func printSection(paths []string, numLines, numBytes int64, fromEnd bool) int {
 		fatal(err)
 	}
 
-	status := 0
 	for _, p := range expanded {
 		file, err := client.Open(p)
 		if err != nil || file.Stat().IsDir() {
@@ -82,8 +79,6 @@ func printSection(paths []string, numLines, numBytes int64, fromEnd bool) int {
 			io.Copy(os.Stdout, reader)
 		}
 	}
-
-	return status
 }
 
 func headLines(file *hdfs.FileReader, numLines int64) {

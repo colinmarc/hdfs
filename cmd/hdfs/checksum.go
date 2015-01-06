@@ -5,7 +5,7 @@ import (
 	"fmt"
 )
 
-func checksum(paths []string) int {
+func checksum(paths []string) {
 	expanded, client, err := getClientAndExpandedPaths(paths)
 	if err != nil {
 		fatal(err)
@@ -24,6 +24,4 @@ func checksum(paths []string) int {
 
 		fmt.Println(hex.EncodeToString(checksum), p)
 	}
-
-	return 0
 }

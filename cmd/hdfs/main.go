@@ -63,6 +63,7 @@ Valid commands:
 	getmergen    = getmergeOpts.Bool('n')
 
 	cachedClient *hdfs.Client
+	status = 0
 )
 
 func init() {
@@ -81,41 +82,40 @@ func main() {
 
 	command := os.Args[1]
 	argv := os.Args[1:]
-	status := 0
 	switch command {
 	case "ls":
 		lsOpts.Parse(argv)
-		status = ls(lsOpts.Args(), *lsl, *lsa, *lsh)
+		ls(lsOpts.Args(), *lsl, *lsa, *lsh)
 	case "rm":
 		rmOpts.Parse(argv)
-		status = rm(rmOpts.Args(), *rmr, *rmf)
+		rm(rmOpts.Args(), *rmr, *rmf)
 	case "mv":
 		mvOpts.Parse(argv)
-		status = mv(mvOpts.Args(), *mvf, *mvT)
+		mv(mvOpts.Args(), *mvf, *mvT)
 	case "mkdir":
 		mkdirOpts.Parse(argv)
-		status = mkdir(mkdirOpts.Args(), *mkdirp)
+		mkdir(mkdirOpts.Args(), *mkdirp)
 	case "touch":
 		touchOpts.Parse(argv)
-		status = touch(touchOpts.Args(), *touchc)
+		touch(touchOpts.Args(), *touchc)
 	case "chown":
 		chownOpts.Parse(argv)
-		status = chown(chownOpts.Args(), *chownR)
+		chown(chownOpts.Args(), *chownR)
 	case "chmod":
 		chmodOpts.Parse(argv)
-		status = chmod(chmodOpts.Args(), *chmodR)
+		chmod(chmodOpts.Args(), *chmodR)
 	case "cat":
-		status = cat(argv[1:])
+		cat(argv[1:])
 	case "head", "tail":
 		headTailOpts.Parse(argv)
-		status = printSection(headTailOpts.Args(), *headtailn, *headtailc, (command == "tail"))
+		printSection(headTailOpts.Args(), *headtailn, *headtailc, (command == "tail"))
 	case "checksum":
-		status = checksum(argv[1:])
+		checksum(argv[1:])
 	case "get":
-		status = get(argv[1:])
+		get(argv[1:])
 	case "getmerge":
 		getmergeOpts.Parse(argv)
-		status = getmerge(getmergeOpts.Args(), *getmergen)
+		getmerge(getmergeOpts.Args(), *getmergen)
 	// it's a seeeeecret command
 	case "complete":
 		complete(argv)

@@ -6,7 +6,7 @@ import (
 	"strings"
 )
 
-func chown(args []string, recursive bool) int {
+func chown(args []string, recursive bool) {
 	if len(args) < 2 {
 		printHelp()
 	}
@@ -30,7 +30,6 @@ func chown(args []string, recursive bool) int {
 		fatal(err)
 	}
 
-	status := 0
 	visit := func(p string, fi os.FileInfo) {
 		err := client.Chown(p, owner, group)
 
@@ -56,6 +55,4 @@ func chown(args []string, recursive bool) int {
 			visit(p, info)
 		}
 	}
-
-	return status
 }

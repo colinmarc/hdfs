@@ -6,7 +6,7 @@ import (
 	"path"
 )
 
-func mv(paths []string, force, treatDestAsFile bool) int {
+func mv(paths []string, force, treatDestAsFile bool) {
 	paths, nn, err := normalizePaths(paths)
 	if err != nil {
 		fatal(err)
@@ -44,8 +44,6 @@ func mv(paths []string, force, treatDestAsFile bool) int {
 
 		moveTo(client, sources[0], dest, force)
 	}
-
-	return 0
 }
 
 func moveInto(client *hdfs.Client, sources []string, dest string, force bool) {

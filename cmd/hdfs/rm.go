@@ -6,13 +6,12 @@ import (
 	"os"
 )
 
-func rm(paths []string, recursive bool, force bool) int {
+func rm(paths []string, recursive bool, force bool) {
 	expanded, client, err := getClientAndExpandedPaths(paths)
 	if err != nil {
 		fatal(err)
 	}
 
-	status := 0
 	for _, p := range expanded {
 		info, err := client.Stat(p)
 		if err != nil {
@@ -40,6 +39,4 @@ func rm(paths []string, recursive bool, force bool) int {
 			fatal(err)
 		}
 	}
-
-	return status
 }

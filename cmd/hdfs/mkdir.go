@@ -4,7 +4,7 @@ import (
 	"os"
 )
 
-func mkdir(paths []string, all bool) int {
+func mkdir(paths []string, all bool) {
 	paths, nn, err := normalizePaths(paths)
 	if err != nil {
 		fatal(err)
@@ -35,6 +35,4 @@ func mkdir(paths []string, all bool) int {
 			fatal(err)
 		}
 	}
-
-	return 0
 }

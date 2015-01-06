@@ -6,7 +6,7 @@ import (
 	"strconv"
 )
 
-func chmod(args []string, recursive bool) int {
+func chmod(args []string, recursive bool) {
 	if len(args) < 2 {
 		printHelp()
 	}
@@ -21,7 +21,6 @@ func chmod(args []string, recursive bool) int {
 		fatal(err)
 	}
 
-	status := 0
 	visit := func(p string, fi os.FileInfo) {
 		err := client.Chmod(p, os.FileMode(mode))
 
@@ -47,6 +46,4 @@ func chmod(args []string, recursive bool) int {
 			visit(p, info)
 		}
 	}
-
-	return status
 }

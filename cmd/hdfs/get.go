@@ -9,7 +9,7 @@ import (
 	"strings"
 )
 
-func get(args []string) int {
+func get(args []string) {
 	if len(args) == 0 || len(args) > 2 {
 		printHelp()
 	}
@@ -59,11 +59,9 @@ func get(args []string) int {
 	if err != nil {
 		fatal(err)
 	}
-
-	return 0
 }
 
-func getmerge(args []string, addNewlines bool) int {
+func getmerge(args []string, addNewlines bool) {
 	if len(args) != 2 {
 		printHelp()
 	}
@@ -112,6 +110,4 @@ func getmerge(args []string, addNewlines bool) int {
 	if err != nil {
 		fatal(err)
 	}
-
-	return 0
 }

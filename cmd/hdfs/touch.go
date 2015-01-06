@@ -5,7 +5,7 @@ import (
 	"time"
 )
 
-func touch(paths []string, noCreate bool) int {
+func touch(paths []string, noCreate bool) {
 	paths, nn, err := normalizePaths(paths)
 	if err != nil {
 		fatal(err)
@@ -45,6 +45,4 @@ func touch(paths []string, noCreate bool) int {
 			fatal(err)
 		}
 	}
-
-	return 0
 }

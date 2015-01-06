@@ -1,7 +1,6 @@
 all: hdfs
 
 hdfs: get-deps clean
-	go build ./...
 	go build ./cmd/hdfs
 
 install: get-deps

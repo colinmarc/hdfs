@@ -63,7 +63,7 @@ Valid commands:
 	getmergen    = getmergeOpts.Bool('n')
 
 	cachedClient *hdfs.Client
-	status = 0
+	status       = 0
 )
 
 func init() {

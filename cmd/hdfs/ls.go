@@ -43,7 +43,7 @@ func ls(paths []string, long, all, humanReadable bool) {
 		printDir(client, dirs[0], long, all, humanReadable)
 	} else {
 		if long {
-			tw := defaultTabWriter()
+			tw := lsTabWriter()
 			for i, p := range files {
 				printLong(tw, p, fileInfos[i], humanReadable)
 			}
@@ -74,7 +74,7 @@ func printDir(client *hdfs.Client, dir string, long, all, humanReadable bool) {
 
 	var tw *tabwriter.Writer
 	if long {
-		tw = defaultTabWriter()
+		tw = lsTabWriter()
 		defer tw.Flush()
 	}
 
@@ -106,10 +106,10 @@ func printDir(client *hdfs.Client, dir string, long, all, humanReadable bool) {
 		}
 
 		printFiles(tw, partial, long, all, humanReadable)
+	}
 
-		if long {
-			tw.Flush()
-		}
+	if long {
+		tw.Flush()
 	}
 }
 
@@ -151,21 +151,6 @@ func printLong(tw *tabwriter.Writer, name string, info os.FileInfo, humanReadabl
 		mode, owner, group, size, date, timeOrYear, name)
 }
 
-func defaultTabWriter() *tabwriter.Writer {
-	return tabwriter.NewWriter(os.Stdout, 3, 0, 0, ' ', tabwriter.AlignRight|tabwriter.TabIndent)
-}
-
-func formatBytes(i int64) string {
-	switch {
-	case i > (1024 * 1024 * 1024 * 1024):
-		return fmt.Sprintf("%#.1fT", float64(i)/1024/1024/1024/1024)
-	case i > (1024 * 1024 * 1024):
-		return fmt.Sprintf("%#.1fG", float64(i)/1024/1024/1024)
-	case i > (1024 * 1024):
-		return fmt.Sprintf("%#.1fM", float64(i)/1024/1024)
-	case i > 1024:
-		return fmt.Sprintf("%#.1fK", float64(i)/1024)
-	default:
-		return fmt.Sprintf("%dB", i)
-	}
+func lsTabWriter() *tabwriter.Writer {
+	return tabwriter.NewWriter(os.Stdout, 3, 8, 0, ' ', tabwriter.AlignRight|tabwriter.TabIndent)
 }

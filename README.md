@@ -1,7 +1,7 @@
 HDFS for Go
 ===========
 
-[![build](https://travis-ci.org/colinmarc/hdfs.svg?branch=master)](https://travis-ci.org/colinmarc/hdfs)
+[![GoDoc](https://godoc.org/github.com/colinmarc/hdfs/web?status.svg)](https://godoc.org/github.com/colinmarc/hdfs/web) [![build](https://travis-ci.org/colinmarc/hdfs.svg?branch=master)](https://travis-ci.org/colinmarc/hdfs)
 
 `hdfs` is a native go client for hdfs, using the protocol buffers interface the
 namenode provides. It implements protocol version 9, which means it supports

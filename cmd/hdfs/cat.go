@@ -155,5 +155,5 @@ func tailLines(file *hdfs.FileReader, numLines int64) {
 		fatal(err)
 	}
 
-	io.Copy(os.Stderr, file)
+	io.Copy(os.Stdout, file)
 }

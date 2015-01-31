@@ -6,9 +6,8 @@ HDFS for Go
 This is a native go client for hdfs. It connects directly to the namenode using
 the protocol buffers API.
 
-It tries to be idiomatic by aping the stdlib `os` package. Also, where possible,
-it implements interfaces from the stdlib package, including `os.FileInfo` and
-`os.PathError`.
+It tries to be idiomatic by aping the stdlib `os` package, where possible, and
+implements the interfaces from it, including `os.FileInfo` and `os.PathError`.
 
 Here's what it looks like in action:
 
@@ -39,8 +38,8 @@ verbs:
     The flags available are a subset of the POSIX ones, but should behave similarly.
 
     Valid commands:
-      ls [-la] [FILE]...
-      rm [-r] FILE...
+      ls [-lah] [FILE]...
+      rm [-rf] FILE...
       mv [-fT] SOURCE... DEST
       mkdir [-p] FILE...
       touch [-amc] FILE...
@@ -49,10 +48,12 @@ verbs:
       cat SOURCE...
       head [-n LINES | -c BYTES] SOURCE...
       tail [-n LINES | -c BYTES] SOURCE...
+      du [-sh] FILE...
+      checksum FILE...
       get SOURCE [DEST]
       getmerge SOURCE DEST
 
-It's also pretty fast compared to `hadoop -fs`. How much faster, you ask?
+Without any JVM startup time, it's also a lot faster `hadoop -fs`:
 
     $ time hadoop fs -ls / > /dev/null
 

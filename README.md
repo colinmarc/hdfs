@@ -53,7 +53,8 @@ verbs:
       get SOURCE [DEST]
       getmerge SOURCE DEST
 
-Without any JVM startup time, it's also a lot faster `hadoop -fs`:
+Since it doesn't have to wait for the JVM to start up, it's also a lot faster
+`hadoop -fs`:
 
     $ time hadoop fs -ls / > /dev/null
 
@@ -67,7 +68,7 @@ Without any JVM startup time, it's also a lot faster `hadoop -fs`:
     user  0m0.004s
     sys 0m0.004s
 
-Best of all, it comes with bash tab completion!
+Best of all, it comes with bash tab completion for paths!
 
 Installing
 ----------

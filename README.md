@@ -3,19 +3,16 @@ HDFS for Go
 
 [![GoDoc](https://godoc.org/github.com/colinmarc/hdfs/web?status.svg)](https://godoc.org/github.com/colinmarc/hdfs/web) [![build](https://travis-ci.org/colinmarc/hdfs.svg?branch=master)](https://travis-ci.org/colinmarc/hdfs)
 
-`hdfs` is a native go client for hdfs, using the protocol buffers interface the
-namenode provides. It implements protocol version 9, which means it supports
-Hadoop 2.0.0 and up (including CDH5).
+This is a native go client for hdfs. It connects directly to the namenode using
+the protocol buffers API.
 
-It tries to be idiomatic by aping the stdlib `os` package where possible. This
-includes implementing `os.FileInfo` for file status, and returning errors of
-type `os.PathErrors` for missing files, for example.
+It tries to be idiomatic by aping the stdlib `os` package. Also, where possible,
+it implements interfaces from the stdlib package, including `os.FileInfo` and
+`os.PathError`.
 
-The best place to get started is the
-[Godoc][1].
+Here's what it looks like in action:
 
 ```go
-
 client, _ := hdfs.New("namenode:8020")
 
 file, _ := client.Open("/mobydick.txt")
@@ -27,11 +24,14 @@ fmt.Println(string(buf))
 // => Abominable are the tumblers into which he pours his poison.
 ```
 
+For complete documentation, check out the [Godoc][1].
+
 The `hdfs` Binary
 -----------------
 
-The library also ships with a command line client for hdfs. Like the library,
-its primary aim is to be idiomatic, by enabling your favorite unix verbs:
+Along with the library, this repo contains a commandline client for HDFS. Like
+the library, its primary aim is to be idiomatic, by enabling your favorite unix
+verbs:
 
 
     $ hdfs --help
@@ -75,18 +75,12 @@ To install the library, once you have Go [all set up][2]:
 
     $ go get github.com/colinmarc/hdfs
 
-And to install the commandline client:
+Or, to install just the commandline client:
 
     $ go get github.com/colinmarc/hdfs/cmd/hdfs
 
-Alternatively, to create an `hdfs` binary that you can install wherever you
-want:
 
-    $ git clone https://github.com/colinmarc/hdfs
-    $ cd hdfs
-    $ make
-
-Finally, you'll want to add two lines to your `.bashrc` or `.profile`:
+You'll also want to add two lines to your `.bashrc` or `.profile`:
 
     source $GOPATH/src/github.com/colinmarc/hdfs/cmd/hdfs/bash_completion
     HADOOP_NAMENODE="namenode:8020"

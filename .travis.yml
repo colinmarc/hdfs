@@ -15,4 +15,6 @@ before_script:
   - export HADOOP_NAMENODE="localhost:$NN_PORT"
   - export HADOOP_HOME="hadoop-$HADOOP_DISTRO"
   - ./setup_test_env.sh
-script: make test
+script:
+  - make test
+  - cat minicluster.log

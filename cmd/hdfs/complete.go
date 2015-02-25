@@ -26,6 +26,7 @@ var knownCommands = []string{
 }
 
 func complete(args []string) {
+	fmt.Fprintln(os.Stderr, args)
 	if len(args) == 2 {
 		words := strings.Split(args[1], " ")[1:]
 

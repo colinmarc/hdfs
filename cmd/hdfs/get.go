@@ -42,7 +42,7 @@ func get(args []string) {
 		fullDest := filepath.Join(dest, strings.TrimPrefix(p, source))
 
 		if fi.IsDir() {
-			err = os.Mkdir(fullDest, 0644)
+			err = os.Mkdir(fullDest, 0755)
 			if err != nil {
 				fatal(err)
 			}

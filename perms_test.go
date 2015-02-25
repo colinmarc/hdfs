@@ -17,7 +17,7 @@ func TestChmod(t *testing.T) {
 
 	fi, err := client.Stat("/_test/tochmod")
 	assert.Nil(t, err)
-	assert.Equal(t, 0777, fi.Mode())
+	assert.EqualValues(t, 0777, fi.Mode())
 }
 
 func TestChmodDir(t *testing.T) {

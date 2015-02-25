@@ -65,7 +65,7 @@ func TestFileBigRead(t *testing.T) {
 	n, err := io.Copy(hash, file)
 	assert.Nil(t, err)
 	assert.Equal(t, n, 1257276)
-	assert.Equal(t, 0x199d1ae6, hash.Sum32())
+	assert.EqualValues(t, 0x199d1ae6, hash.Sum32())
 }
 
 func TestFileBigReadN(t *testing.T) {

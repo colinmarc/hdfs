@@ -71,7 +71,7 @@ func TestFailsOver(t *testing.T) {
 	n, err := io.Copy(hash, br)
 	require.Nil(t, err)
 	assert.Equal(t, 1048576, n)
-	assert.Equal(t, 0xb35a6a0e, hash.Sum32())
+	assert.EqualValues(t, 0xb35a6a0e, hash.Sum32())
 	assert.Equal(t, 0, br.datanodes.numRemaining())
 
 	_, exist := datanodeFailures[dn]

@@ -32,7 +32,18 @@ func du(args []string, summarize, humanReadable bool) {
 
 		var size int64
 		if info.IsDir() {
-			size = duDir(client, tw, p, !summarize, humanReadable)
+			if summarize {
+				cs, err := client.GetContentSummary(p)
+				if err != nil {
+					fmt.Fprintln(os.Stderr, err)
+					status = 1
+					continue
+				}
+
+				size = cs.Size()
+			} else {
+				size = duDir(client, tw, p, humanReadable)
+			}
 		} else {
 			size = info.Size()
 		}
@@ -41,7 +52,7 @@ func du(args []string, summarize, humanReadable bool) {
 	}
 }
 
-func duDir(client *hdfs.Client, tw *tabwriter.Writer, dir string, printChildren, humanReadable bool) int64 {
+func duDir(client *hdfs.Client, tw *tabwriter.Writer, dir string, humanReadable bool) int64 {
 	dirReader, err := client.Open(dir)
 	if err != nil {
 		fmt.Fprintln(os.Stderr, err)
@@ -66,15 +77,12 @@ func duDir(client *hdfs.Client, tw *tabwriter.Writer, dir string, printChildren,
 
 			var size int64
 			if info.IsDir() {
-				size = duDir(client, tw, childPath, printChildren, humanReadable)
+				size = duDir(client, tw, childPath, humanReadable)
 			} else {
 				size = info.Size()
 			}
 
-			if printChildren {
-				printSize(tw, size, childPath, humanReadable)
-			}
-
+			printSize(tw, size, childPath, humanReadable)
 			dirSize += size
 		}
 	}

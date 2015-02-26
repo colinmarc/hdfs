@@ -16,7 +16,7 @@ type FileInfo struct {
 	status *hdfs.HdfsFileStatusProto
 }
 
-// Stat returns an os.FileInfo describing the named file.
+// Stat returns an os.FileInfo describing the named file or directory.
 func (c *Client) Stat(name string) (os.FileInfo, error) {
 	fi, err := c.getFileInfo(name)
 	if err != nil {
@@ -24,6 +24,26 @@ func (c *Client) Stat(name string) (os.FileInfo, error) {
 	}
 
 	return fi, err
+}
+
+func (c *Client) getFileInfo(name string) (os.FileInfo, error) {
+	req := &hdfs.GetFileInfoRequestProto{Src: proto.String(name)}
+	resp := &hdfs.GetFileInfoResponseProto{}
+
+	err := c.namenode.Execute("getFileInfo", req, resp)
+	if err != nil {
+		if nnErr, ok := err.(*rpc.NamenodeError); ok {
+			err = interpretException(nnErr.Exception, err)
+		}
+
+		return nil, err
+	}
+
+	if resp.GetFs() == nil {
+		return nil, os.ErrNotExist
+	}
+
+	return newFileInfo(resp.GetFs(), name), nil
 }
 
 func newFileInfo(status *hdfs.HdfsFileStatusProto, name string) *FileInfo {
@@ -87,24 +107,4 @@ func (fi *FileInfo) OwnerGroup() string {
 // os.FileInfo interface.
 func (fi *FileInfo) AccessTime() time.Time {
 	return time.Unix(int64(fi.status.GetAccessTime())/1000, 0)
-}
-
-func (c *Client) getFileInfo(name string) (fi os.FileInfo, err error) {
-	req := &hdfs.GetFileInfoRequestProto{Src: proto.String(name)}
-	resp := &hdfs.GetFileInfoResponseProto{}
-
-	err = c.namenode.Execute("getFileInfo", req, resp)
-	if err != nil {
-		if nnErr, ok := err.(*rpc.NamenodeError); ok {
-			err = interpretException(nnErr.Exception, err)
-		}
-
-		return nil, err
-	}
-
-	if resp.GetFs() == nil {
-		return nil, os.ErrNotExist
-	}
-
-	return newFileInfo(resp.GetFs(), name), nil
 }

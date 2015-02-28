@@ -10,7 +10,6 @@ import (
 	"io"
 	"net"
 	"sync"
-	"time"
 )
 
 const (
@@ -20,8 +19,6 @@ const (
 	protocolClass        = "org.apache.hadoop.hdfs.protocol.ClientProtocol"
 	protocolClassVersion = 1
 	handshakeCallID      = -3
-
-	connectionTimeout = 5 * time.Second
 )
 
 var clientID = randomClientID()
@@ -64,7 +61,7 @@ func (err *NamenodeError) Error() string {
 // You probably want to use hdfs.New instead, which provides a higher-level
 // interface.
 func NewNamenodeConnection(address, user string) (*NamenodeConnection, error) {
-	conn, err := net.DialTimeout("tcp", address, connectionTimeout)
+	conn, err := net.DialTimeout("tcp", address, connectTimeout)
 	if err != nil {
 		return nil, err
 	}
@@ -133,7 +130,7 @@ func (c *NamenodeConnection) writeRequest(method string, req proto.Message) erro
 	rrh := newRPCRequestHeader(c.currentRequestID)
 	rh := newRequestHeader(method)
 
-	reqBytes, err := makePacket(rrh, rh, req)
+	reqBytes, err := makeRPCPacket(rrh, rh, req)
 	if err != nil {
 		return err
 	}
@@ -164,7 +161,7 @@ func (c *NamenodeConnection) readResponse(method string, resp proto.Message) err
 	}
 
 	rrh := &hadoop.RpcResponseHeaderProto{}
-	err = parsePacket(packet, rrh, resp)
+	err = readRPCPacket(packet, rrh, resp)
 
 	if rrh.GetStatus() != hadoop.RpcResponseHeaderProto_SUCCESS {
 		return &NamenodeError{
@@ -207,7 +204,7 @@ func (c *NamenodeConnection) writeNamenodeHandshake() error {
 
 	rrh := newRPCRequestHeader(handshakeCallID)
 	cc := newConnectionContext(c.user)
-	packet, err := makePacket(rrh, cc)
+	packet, err := makeRPCPacket(rrh, cc)
 	if err != nil {
 		return err
 	}

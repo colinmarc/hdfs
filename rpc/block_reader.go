@@ -1,7 +1,6 @@
 package rpc
 
 import (
-	"encoding/binary"
 	"errors"
 	"fmt"
 	hdfs "github.com/colinmarc/hdfs/protocol/hadoop_hdfs"
@@ -120,7 +119,7 @@ func (br *BlockReader) connectNext() error {
 		return err
 	}
 
-	resp, err := br.readBlockReadResponse(conn)
+	resp, err := readBlockOpResponse(conn)
 	if err != nil {
 		return err
 	}
@@ -171,10 +170,7 @@ func (br *BlockReader) connectNext() error {
 // |  varint length + OpReadBlockProto                         |
 // +-----------------------------------------------------------+
 func (br *BlockReader) writeBlockReadRequest(w io.Writer) error {
-	header := []byte{0x00, dataTransferVersion, readBlockOp}
-
 	needed := br.block.GetB().GetNumBytes() - uint64(br.offset)
-
 	op := &hdfs.OpReadBlockProto{
 		Header: &hdfs.ClientOperationHeaderProto{
 			BaseHeader: &hdfs.BaseHeaderProto{
@@ -187,49 +183,5 @@ func (br *BlockReader) writeBlockReadRequest(w io.Writer) error {
 		Len:    proto.Uint64(needed),
 	}
 
-	opBytes, err := makeDelimitedMsg(op)
-	if err != nil {
-		return err
-	}
-
-	req := append(header, opBytes...)
-	_, err = w.Write(req)
-	if err != nil {
-		return err
-	}
-
-	return nil
-}
-
-// The initial response from the datanode:
-// +-----------------------------------------------------------+
-// |  varint length + BlockOpResponseProto                     |
-// +-----------------------------------------------------------+
-func (br *BlockReader) readBlockReadResponse(r io.Reader) (*hdfs.BlockOpResponseProto, error) {
-	varintBytes := make([]byte, binary.MaxVarintLen32)
-	_, err := io.ReadFull(r, varintBytes)
-	if err != nil {
-		return nil, err
-	}
-
-	respLength, varintLength := binary.Uvarint(varintBytes)
-	if varintLength < 1 {
-		return nil, io.ErrUnexpectedEOF
-	}
-
-	// We may have grabbed too many bytes when reading the varint.
-	respBytes := make([]byte, respLength)
-	extraLength := copy(respBytes, varintBytes[varintLength:])
-	_, err = io.ReadFull(r, respBytes[extraLength:])
-	if err != nil {
-		return nil, err
-	}
-
-	resp := &hdfs.BlockOpResponseProto{}
-	err = proto.Unmarshal(respBytes, resp)
-	if err != nil {
-		return nil, err
-	}
-
-	return resp, nil
+	return writeBlockOpRequest(w, readBlockOp, op)
 }

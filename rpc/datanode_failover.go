@@ -7,7 +7,7 @@ import (
 // datanodeFailures is a global map of address to the last recorded failure
 var datanodeFailures = make(map[string]time.Time)
 
-// datanodeFailover provides some common code for trying multiple datanodes
+// a datanodeFailover provides some common code for trying multiple datanodes
 // in the context of a single operation on a single block.
 type datanodeFailover struct {
 	datanodes       []string

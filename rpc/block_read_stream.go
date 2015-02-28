@@ -1,32 +1,22 @@
 package rpc
 
 import (
-	"bufio"
 	"bytes"
 	"code.google.com/p/goprotobuf/proto"
 	"encoding/binary"
 	"errors"
-	"fmt"
 	hdfs "github.com/colinmarc/hdfs/protocol/hadoop_hdfs"
 	"hash/crc32"
 	"io"
-	"io/ioutil"
 	"math"
-	"net"
 )
 
-// blockReadStream implements io.ReaderCloser for reading a single block from HDFS,
-// from a single datanode.
+// blockReadStream implements io.Reader for reading a packet stream for a single
+// block from a single datanode. It uses packetReadStream to read individual
+// packets.
 type blockReadStream struct {
-	address string
-	block   *hdfs.LocatedBlockProto
-
-	closed      bool
-	conn        net.Conn
-	reader      *bufio.Reader
+	reader      io.Reader
 	checksumTab *crc32.Table
-
-	startOffset uint64
 	chunkSize   uint32
 	packet      openPacket
 	buf         bytes.Buffer
@@ -42,73 +32,15 @@ type openPacket struct {
 	last          bool
 }
 
-// newblockReadStream returns a new connected blockReadStream.
-func newblockReadStream(address string, block *hdfs.LocatedBlockProto, offset uint64) (*blockReadStream, error) {
-	s := &blockReadStream{
-		address:     address,
-		block:       block,
-		startOffset: offset,
+func newBlockReadStream(reader io.Reader, chunkSize uint32, checksumTab *crc32.Table) *blockReadStream {
+	return &blockReadStream{
+		reader:      reader,
+		chunkSize:   chunkSize,
+		checksumTab: checksumTab,
 	}
-
-	err := s.connect()
-	if err != nil {
-		return nil, err
-	}
-
-	return s, nil
-}
-
-func (s *blockReadStream) connect() error {
-	conn, err := net.DialTimeout("tcp", s.address, connectionTimeout)
-	if err != nil {
-		return err
-	}
-
-	s.conn = conn
-	err = s.writeBlockReadRequest()
-	if err != nil {
-		return err
-	}
-
-	s.reader = bufio.NewReader(s.conn)
-	resp, err := s.readBlockReadResponse()
-	if err != nil {
-		return err
-	}
-
-	checksumInfo := resp.GetReadOpChecksumInfo().GetChecksum()
-	checksumType := checksumInfo.GetType()
-	if checksumType == hdfs.ChecksumTypeProto_CHECKSUM_CRC32 {
-		s.checksumTab = crc32.IEEETable
-	} else if checksumType == hdfs.ChecksumTypeProto_CHECKSUM_CRC32C {
-		s.checksumTab = crc32.MakeTable(crc32.Castagnoli)
-	} else {
-		return fmt.Errorf("Unsupported checksum type: %d", checksumType)
-	}
-
-	s.chunkSize = checksumInfo.GetBytesPerChecksum()
-	s.startNewPacket()
-
-	// The read will start aligned to a chunk boundary, so we need to seek forward
-	// to the requested offset.
-	amountToDiscard := s.startOffset - s.packet.blockOffset
-	if amountToDiscard > 0 {
-		io.CopyN(ioutil.Discard, s, int64(amountToDiscard))
-	}
-
-	return nil
-}
-
-func (s *blockReadStream) Close() {
-	s.conn.Close()
-	s.closed = true
 }
 
 func (s *blockReadStream) Read(b []byte) (int, error) {
-	if s.closed {
-		return 0, io.ErrClosedPipe
-	}
-
 	// first, read any leftover data from buf
 	if s.buf.Len() > 0 {
 		n, _ := s.buf.Read(b)
@@ -142,7 +74,6 @@ func (s *blockReadStream) Read(b []byte) (int, error) {
 		s.packet.nextChunk++
 
 		if err != nil {
-			s.Close()
 			return readOffset, err
 		}
 
@@ -177,62 +108,6 @@ func (s *blockReadStream) Read(b []byte) (int, error) {
 	}
 
 	return readOffset, nil
-}
-
-// A read request to a datanode:
-// +-----------------------------------------------------------+
-// |  Data Transfer Protocol Version, int16                    |
-// +-----------------------------------------------------------+
-// |  Op code, 1 byte (READ_BLOCK = 0x51)                      |
-// +-----------------------------------------------------------+
-// |  varint length + OpReadBlockProto                         |
-// +-----------------------------------------------------------+
-func (s *blockReadStream) writeBlockReadRequest() error {
-	header := []byte{0x00, dataTransferVersion, readBlockOp}
-
-	needed := (s.block.GetB().GetNumBytes() - s.startOffset)
-	op := newBlockReadOp(s.block, s.startOffset, needed)
-	opBytes, err := makeDelimitedMsg(op)
-	if err != nil {
-		return err
-	}
-
-	req := append(header, opBytes...)
-	_, err = s.conn.Write(req)
-	if err != nil {
-		return err
-	}
-
-	return nil
-}
-
-// The initial response from the datanode:
-// +-----------------------------------------------------------+
-// |  varint length + BlockOpResponseProto                     |
-// +-----------------------------------------------------------+
-func (s *blockReadStream) readBlockReadResponse() (*hdfs.BlockOpResponseProto, error) {
-	respLength, err := binary.ReadUvarint(s.reader)
-	if err != nil {
-		if err == io.EOF {
-			err = io.ErrUnexpectedEOF
-		}
-
-		return nil, err
-	}
-
-	respBytes := make([]byte, respLength)
-	_, err = io.ReadFull(s.reader, respBytes)
-	if err != nil {
-		return nil, err
-	}
-
-	resp := &hdfs.BlockOpResponseProto{}
-	err = proto.Unmarshal(respBytes, resp)
-	if err != nil {
-		return nil, err
-	}
-
-	return resp, nil
 }
 
 // A packet from the datanode:
@@ -307,18 +182,4 @@ func (s *blockReadStream) readPacketHeader() (*hdfs.PacketHeaderProto, error) {
 	err = proto.Unmarshal(packetHeaderBytes, packetHeader)
 
 	return packetHeader, nil
-}
-
-func newBlockReadOp(block *hdfs.LocatedBlockProto, offset, length uint64) *hdfs.OpReadBlockProto {
-	return &hdfs.OpReadBlockProto{
-		Header: &hdfs.ClientOperationHeaderProto{
-			BaseHeader: &hdfs.BaseHeaderProto{
-				Block: block.GetB(),
-				Token: block.GetBlockToken(),
-			},
-			ClientName: proto.String(ClientName),
-		},
-		Offset: proto.Uint64(offset),
-		Len:    proto.Uint64(length),
-	}
 }

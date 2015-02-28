@@ -1,7 +1,6 @@
 package rpc
 
 import (
-	"bufio"
 	"code.google.com/p/goprotobuf/proto"
 	hdfs "github.com/colinmarc/hdfs/protocol/hadoop_hdfs"
 	"github.com/stretchr/testify/assert"
@@ -65,7 +64,7 @@ func setupFailover(t *testing.T) *BlockReader {
 func TestFailsOver(t *testing.T) {
 	br := setupFailover(t)
 	dn := br.datanodes.datanodes[0]
-	br.stream.reader = bufio.NewReaderSize(iotest.TimeoutReader(br.stream.reader), 0)
+	br.stream.reader = iotest.TimeoutReader(br.stream.reader)
 
 	hash := crc32.NewIEEE()
 	n, err := io.Copy(hash, br)
@@ -78,16 +77,36 @@ func TestFailsOver(t *testing.T) {
 	assert.True(t, exist)
 }
 
+func TestFailsOverMidRead(t *testing.T) {
+	br := setupFailover(t)
+	dn := br.datanodes.datanodes[0]
+
+	hash := crc32.NewIEEE()
+	_, err := io.CopyN(hash, br, 10000)
+	require.Nil(t, err)
+
+	br.stream.reader = iotest.TimeoutReader(br.stream.reader)
+
+	n, err := io.Copy(hash, br)
+	require.Nil(t, err)
+	assert.Equal(t, 1048576-10000, n)
+	assert.EqualValues(t, 0xb35a6a0e, hash.Sum32())
+	assert.Equal(t, 0, br.datanodes.numRemaining())
+
+	_, exist := datanodeFailures[dn]
+	assert.True(t, exist)
+}
+
 func TestFailsOverAndThenDies(t *testing.T) {
 	br := setupFailover(t)
 
-	br.stream.reader = bufio.NewReaderSize(iotest.TimeoutReader(br.stream.reader), 0)
+	br.stream.reader = iotest.TimeoutReader(br.stream.reader)
 
 	_, err := io.CopyN(ioutil.Discard, br, 10000)
 	require.Nil(t, err)
 	assert.Equal(t, 0, br.datanodes.numRemaining())
 
-	br.stream.reader = bufio.NewReaderSize(iotest.TimeoutReader(br.stream.reader), 0)
+	br.stream.reader = iotest.TimeoutReader(br.stream.reader)
 	_, err = io.Copy(ioutil.Discard, br)
 	assert.Equal(t, iotest.ErrTimeout, err)
 }

@@ -15,9 +15,9 @@ import (
 	"net"
 )
 
-// blockStream implements io.ReaderCloser for reading a single block from HDFS,
+// blockReadStream implements io.ReaderCloser for reading a single block from HDFS,
 // from a single datanode.
-type blockStream struct {
+type blockReadStream struct {
 	address string
 	block   *hdfs.LocatedBlockProto
 
@@ -42,9 +42,9 @@ type openPacket struct {
 	last          bool
 }
 
-// newBlockStream returns a new connected blockStream.
-func newBlockStream(address string, block *hdfs.LocatedBlockProto, offset uint64) (*blockStream, error) {
-	s := &blockStream{
+// newblockReadStream returns a new connected blockReadStream.
+func newblockReadStream(address string, block *hdfs.LocatedBlockProto, offset uint64) (*blockReadStream, error) {
+	s := &blockReadStream{
 		address:     address,
 		block:       block,
 		startOffset: offset,
@@ -58,7 +58,7 @@ func newBlockStream(address string, block *hdfs.LocatedBlockProto, offset uint64
 	return s, nil
 }
 
-func (s *blockStream) connect() error {
+func (s *blockReadStream) connect() error {
 	conn, err := net.DialTimeout("tcp", s.address, connectionTimeout)
 	if err != nil {
 		return err
@@ -99,12 +99,12 @@ func (s *blockStream) connect() error {
 	return nil
 }
 
-func (s *blockStream) Close() {
+func (s *blockReadStream) Close() {
 	s.conn.Close()
 	s.closed = true
 }
 
-func (s *blockStream) Read(b []byte) (int, error) {
+func (s *blockReadStream) Read(b []byte) (int, error) {
 	if s.closed {
 		return 0, io.ErrClosedPipe
 	}
@@ -187,7 +187,7 @@ func (s *blockStream) Read(b []byte) (int, error) {
 // +-----------------------------------------------------------+
 // |  varint length + OpReadBlockProto                         |
 // +-----------------------------------------------------------+
-func (s *blockStream) writeBlockReadRequest() error {
+func (s *blockReadStream) writeBlockReadRequest() error {
 	header := []byte{0x00, dataTransferVersion, readBlockOp}
 
 	needed := (s.block.GetB().GetNumBytes() - s.startOffset)
@@ -210,7 +210,7 @@ func (s *blockStream) writeBlockReadRequest() error {
 // +-----------------------------------------------------------+
 // |  varint length + BlockOpResponseProto                     |
 // +-----------------------------------------------------------+
-func (s *blockStream) readBlockReadResponse() (*hdfs.BlockOpResponseProto, error) {
+func (s *blockReadStream) readBlockReadResponse() (*hdfs.BlockOpResponseProto, error) {
 	respLength, err := binary.ReadUvarint(s.reader)
 	if err != nil {
 		if err == io.EOF {
@@ -247,7 +247,7 @@ func (s *blockStream) readBlockReadResponse() (*hdfs.BlockOpResponseProto, error
 // +-----------------------------------------------------------+
 // |  N chunks of payload data                                 |
 // +-----------------------------------------------------------+
-func (s *blockStream) startNewPacket() error {
+func (s *blockReadStream) startNewPacket() error {
 	header, err := s.readPacketHeader()
 	if err != nil {
 		return err
@@ -276,7 +276,7 @@ func (s *blockStream) startNewPacket() error {
 	return nil
 }
 
-func (s *blockStream) readPacketHeader() (*hdfs.PacketHeaderProto, error) {
+func (s *blockReadStream) readPacketHeader() (*hdfs.PacketHeaderProto, error) {
 	var packetLength uint32
 	err := binary.Read(s.reader, binary.BigEndian, &packetLength)
 	if err != nil {

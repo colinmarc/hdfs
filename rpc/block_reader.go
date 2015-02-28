@@ -12,7 +12,7 @@ import (
 type BlockReader struct {
 	block     *hdfs.LocatedBlockProto
 	datanodes *datanodeFailover
-	stream    *blockStream
+	stream    *blockReadStream
 	offset    uint64
 	closed    bool
 }

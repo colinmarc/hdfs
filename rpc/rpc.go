@@ -8,6 +8,7 @@ import (
 	"encoding/binary"
 	"fmt"
 	hdfs "github.com/colinmarc/hdfs/protocol/hadoop_hdfs"
+	"io"
 	"time"
 )
 
@@ -85,4 +86,61 @@ func readRPCPacket(b []byte, msgs ...proto.Message) error {
 func getDatanodeAddress(datanode *hdfs.DatanodeInfoProto) string {
 	id := datanode.GetId()
 	return fmt.Sprintf("%s:%d", id.GetIpAddr(), id.GetXferPort())
+}
+
+// A op request to a datanode:
+// +-----------------------------------------------------------+
+// |  Data Transfer Protocol Version, int16                    |
+// +-----------------------------------------------------------+
+// |  Op code, 1 byte (READ_BLOCK = 0x51)                      |
+// +-----------------------------------------------------------+
+// |  varint length + OpReadBlockProto                         |
+// +-----------------------------------------------------------+
+func writeBlockOpRequest(w io.Writer, op uint8, msg proto.Message) error {
+	header := []byte{0x00, dataTransferVersion, op}
+	msgBytes, err := makeDelimitedMsg(msg)
+	if err != nil {
+		return err
+	}
+
+	req := append(header, msgBytes...)
+	_, err = w.Write(req)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+// The initial response from a datanode, in the case of reads and writes:
+// +-----------------------------------------------------------+
+// |  varint length + BlockOpResponseProto                     |
+// +-----------------------------------------------------------+
+func readBlockOpResponse(r io.Reader) (*hdfs.BlockOpResponseProto, error) {
+	varintBytes := make([]byte, binary.MaxVarintLen32)
+	_, err := io.ReadFull(r, varintBytes)
+	if err != nil {
+		return nil, err
+	}
+
+	respLength, varintLength := binary.Uvarint(varintBytes)
+	if varintLength < 1 {
+		return nil, io.ErrUnexpectedEOF
+	}
+
+	// We may have grabbed too many bytes when reading the varint.
+	respBytes := make([]byte, respLength)
+	extraLength := copy(respBytes, varintBytes[varintLength:])
+	_, err = io.ReadFull(r, respBytes[extraLength:])
+	if err != nil {
+		return nil, err
+	}
+
+	resp := &hdfs.BlockOpResponseProto{}
+	err = proto.Unmarshal(respBytes, resp)
+	if err != nil {
+		return nil, err
+	}
+
+	return resp, nil
 }

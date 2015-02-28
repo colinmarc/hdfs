@@ -1,7 +1,6 @@
 package rpc
 
 import (
-	"bufio"
 	"code.google.com/p/goprotobuf/proto"
 	"encoding/binary"
 	"errors"
@@ -122,8 +121,7 @@ func (br *BlockReader) connectNext() error {
 		return err
 	}
 
-	reader := bufio.NewReader(conn)
-	resp, err := br.readBlockReadResponse(reader)
+	resp, err := br.readBlockReadResponse(conn)
 	if err != nil {
 		return err
 	}
@@ -142,9 +140,8 @@ func (br *BlockReader) connectNext() error {
 		return fmt.Errorf("Unsupported checksum type: %d", checksumType)
 	}
 
-	chunkSize := checksumInfo.GetBytesPerChecksum()
-	stream := newBlockReadStream(reader, chunkSize, checksumTab)
-	stream.startNewPacket()
+	chunkSize := int(checksumInfo.GetBytesPerChecksum())
+	stream := newBlockReadStream(conn, chunkSize, checksumTab)
 
 	// The read will start aligned to a chunk boundary, so we need to seek forward
 	// to the requested offset.

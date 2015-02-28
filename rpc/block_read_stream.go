@@ -11,28 +11,25 @@ import (
 	"math"
 )
 
+var errInvalidChecksum = errors.New("Invalid checksum")
+
 // blockReadStream implements io.Reader for reading a packet stream for a single
-// block from a single datanode. It uses packetReadStream to read individual
-// packets.
+// block from a single datanode.
 type blockReadStream struct {
 	reader      io.Reader
 	checksumTab *crc32.Table
-	chunkSize   uint32
-	packet      openPacket
-	buf         bytes.Buffer
+	chunkSize   int
+
+	checksums bytes.Buffer
+	chunk     bytes.Buffer
+
+	packetLength int
+	chunkIndex   int
+	numChunks    int
+	lastPacket   bool
 }
 
-type openPacket struct {
-	numChunks     int
-	nextChunk     int
-	checksumBytes []byte
-	blockOffset   uint64
-	packetOffset  uint64
-	length        uint64
-	last          bool
-}
-
-func newBlockReadStream(reader io.Reader, chunkSize uint32, checksumTab *crc32.Table) *blockReadStream {
+func newBlockReadStream(reader io.Reader, chunkSize int, checksumTab *crc32.Table) *blockReadStream {
 	return &blockReadStream{
 		reader:      reader,
 		chunkSize:   chunkSize,
@@ -41,137 +38,137 @@ func newBlockReadStream(reader io.Reader, chunkSize uint32, checksumTab *crc32.T
 }
 
 func (s *blockReadStream) Read(b []byte) (int, error) {
-	// first, read any leftover data from buf
-	if s.buf.Len() > 0 {
-		n, _ := s.buf.Read(b)
-		return n, nil
-	}
-
-	if s.packet.nextChunk >= s.packet.numChunks {
-		if s.packet.last {
+	if s.chunkIndex == s.numChunks {
+		if s.lastPacket {
 			return 0, io.EOF
 		}
 
-		s.startNewPacket()
-	}
-
-	// then, read until we fill up b or we reach the end of the packet
-	readOffset := 0
-	for s.packet.nextChunk < s.packet.numChunks {
-		chOff := 4 * s.packet.nextChunk
-		checksum := s.packet.checksumBytes[chOff : chOff+4]
-
-		remaining := s.packet.length - s.packet.packetOffset
-		chunkLength := int64(math.Min(float64(s.chunkSize), float64(remaining)))
-
-		chunkReader := io.LimitReader(s.reader, int64(chunkLength))
-		chunkBytes := b[readOffset:]
-		bytesToRead := int(math.Min(float64(len(chunkBytes)), float64(chunkLength)))
-		n, err := io.ReadAtLeast(chunkReader, chunkBytes, bytesToRead)
-
-		readOffset += n
-		s.packet.packetOffset += uint64(n)
-		s.packet.nextChunk++
-
+		err := s.startPacket()
 		if err != nil {
-			return readOffset, err
-		}
-
-		crc := crc32.Checksum(chunkBytes[:n], s.checksumTab)
-
-		done := false
-		if readOffset == len(b) {
-			done = true
-
-			if int64(n) < chunkLength {
-				// save any leftovers
-				s.buf.Reset()
-				leftover, err := s.buf.ReadFrom(chunkReader)
-				if err != nil {
-					return readOffset, err
-				}
-
-				s.packet.packetOffset += uint64(leftover)
-
-				// update the checksum with the leftovers
-				crc = crc32.Update(crc, s.checksumTab, s.buf.Bytes())
-			}
-		}
-
-		if crc != binary.BigEndian.Uint32(checksum) {
-			return readOffset, errors.New("Invalid checksum from the datanode!")
-		}
-
-		if done {
-			break
+			return 0, err
 		}
 	}
 
-	return readOffset, nil
+	remainingInPacket := (s.packetLength - (s.chunkIndex * s.chunkSize))
+
+	// For small reads, we need to buffer a single chunk. If we did that
+	// previously, read the rest of the buffer, so we're aligned back on a
+	// chunk boundary.
+	if s.chunk.Len() > 0 {
+		n, _ := s.chunk.Read(b)
+		return n, nil
+	} else if len(b) < s.chunkSize {
+		chunkSize := s.chunkSize
+		if chunkSize > remainingInPacket {
+			chunkSize = remainingInPacket
+		}
+
+		_, err := io.CopyN(&s.chunk, s.reader, int64(chunkSize))
+		if err != nil {
+			return 0, err
+		}
+
+		err = s.validateChecksum(s.chunk.Bytes())
+		if err != nil {
+			return 0, nil
+		}
+
+		s.chunkIndex++
+		n, _ := s.chunk.Read(b)
+		return n, nil
+	}
+
+	// Always align reads to a chunk boundary. This makes the code much simpler,
+	// and with readers that pick sane read sizes (like io.Copy), should be
+	// efficient.
+	var amountToRead int
+	var chunksToRead int
+	if len(b) > remainingInPacket {
+		chunksToRead = s.numChunks - s.chunkIndex
+		amountToRead = remainingInPacket
+	} else {
+		chunksToRead = len(b) / s.chunkSize
+		amountToRead = chunksToRead * s.chunkSize
+	}
+
+	n, err := io.ReadFull(s.reader, b[:amountToRead])
+	if err != nil {
+		return n, err
+	}
+
+	// Validate the bytes we just read into b against the packet checksums.
+	for i := 0; i < chunksToRead; i++ {
+		chunkOff := i * s.chunkSize
+		chunkEnd := chunkOff + s.chunkSize
+		if chunkEnd >= len(b) {
+			chunkEnd = len(b)
+		}
+
+		err := s.validateChecksum(b[chunkOff:chunkEnd])
+		if err != nil {
+			return n, err
+		}
+
+		s.chunkIndex++
+	}
+
+	// EOF would be returned by the next call to Read anyway, but it's nice to
+	// return it here.
+	if s.chunkIndex == s.numChunks && s.lastPacket {
+		err = io.EOF
+	}
+
+	return n, err
 }
 
-// A packet from the datanode:
-// +-----------------------------------------------------------+
-// |  uint32 length of the packet                              |
-// +-----------------------------------------------------------+
-// |  size of the PacketHeaderProto, uint16                    |
-// +-----------------------------------------------------------+
-// |  PacketHeaderProto                                        |
-// +-----------------------------------------------------------+
-// |  N checksums, 4 bytes each                                |
-// +-----------------------------------------------------------+
-// |  N chunks of payload data                                 |
-// +-----------------------------------------------------------+
-func (s *blockReadStream) startNewPacket() error {
-	header, err := s.readPacketHeader()
-	if err != nil {
-		return err
-	}
+func (s *blockReadStream) validateChecksum(b []byte) error {
+	checksumOffset := 4 * s.chunkIndex
+	checksumBytes := s.checksums.Bytes()[checksumOffset : checksumOffset+4]
+	checksum := binary.BigEndian.Uint32(checksumBytes)
 
-	blockOffset := uint64(header.GetOffsetInBlock())
-	dataLength := uint64(header.GetDataLen())
-	numChunks := int(math.Ceil(float64(dataLength) / float64(s.chunkSize)))
-
-	// TODO don't assume checksum size is 4
-	s.packet = openPacket{
-		numChunks:     numChunks,
-		nextChunk:     0,
-		checksumBytes: make([]byte, numChunks*4),
-		blockOffset:   blockOffset,
-		packetOffset:  0,
-		length:        dataLength,
-		last:          header.GetLastPacketInBlock(),
-	}
-
-	_, err = io.ReadFull(s.reader, s.packet.checksumBytes)
-	if err != nil {
-		return err
+	crc := crc32.Checksum(b, s.checksumTab)
+	if crc != checksum {
+		return errInvalidChecksum
 	}
 
 	return nil
 }
 
+func (s *blockReadStream) startPacket() error {
+	header, err := s.readPacketHeader()
+	if err != nil {
+		return err
+	}
+
+	dataLength := int(header.GetDataLen())
+	numChunks := int(math.Ceil(float64(dataLength) / float64(s.chunkSize)))
+
+	// TODO don't assume checksum size is 4
+	checksumsLength := numChunks * 4
+	s.checksums.Reset()
+	s.checksums.Grow(checksumsLength)
+	_, err = io.CopyN(&s.checksums, s.reader, int64(checksumsLength))
+	if err != nil {
+		return err
+	}
+
+	s.packetLength = dataLength
+	s.numChunks = numChunks
+	s.chunkIndex = 0
+	s.lastPacket = header.GetLastPacketInBlock()
+
+	return nil
+}
+
 func (s *blockReadStream) readPacketHeader() (*hdfs.PacketHeaderProto, error) {
-	var packetLength uint32
-	err := binary.Read(s.reader, binary.BigEndian, &packetLength)
+	lengthBytes := make([]byte, 6)
+	_, err := io.ReadFull(s.reader, lengthBytes)
 	if err != nil {
-		if err == io.EOF {
-			err = io.ErrUnexpectedEOF
-		}
-
 		return nil, err
 	}
 
-	var packetHeaderLength uint16
-	err = binary.Read(s.reader, binary.BigEndian, &packetHeaderLength)
-	if err != nil {
-		if err == io.EOF {
-			err = io.ErrUnexpectedEOF
-		}
-
-		return nil, err
-	}
-
+	// We don't actually care about the total length.
+	packetHeaderLength := binary.BigEndian.Uint16(lengthBytes[4:])
 	packetHeaderBytes := make([]byte, packetHeaderLength)
 	_, err = io.ReadFull(s.reader, packetHeaderBytes)
 	if err != nil {

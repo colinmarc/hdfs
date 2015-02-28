@@ -8,6 +8,7 @@ import (
 	"hash/crc32"
 	"io"
 	"io/ioutil"
+	"math/rand"
 	"os"
 	"testing"
 	"time"
@@ -66,6 +67,25 @@ func TestFileBigRead(t *testing.T) {
 	assert.Nil(t, err)
 	assert.Equal(t, n, 1257276)
 	assert.EqualValues(t, 0x199d1ae6, hash.Sum32())
+}
+
+func TestFileBigReadWeirdSizes(t *testing.T) {
+	client := getClient(t)
+
+	file, err := client.Open("/_test/mobydick.txt")
+	require.Nil(t, err)
+
+	hash := crc32.NewIEEE()
+	copied := 0
+	var n int64
+	for err == nil {
+		n, err = io.CopyN(hash, file, int64(rand.Intn(1000)))
+		copied += int(n)
+	}
+
+	assert.Equal(t, io.EOF, err)
+	assert.EqualValues(t, 0x199d1ae6, hash.Sum32())
+	assert.Equal(t, copied, 1257276)
 }
 
 func TestFileBigReadN(t *testing.T) {

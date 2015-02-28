@@ -11,7 +11,7 @@ import (
 // HDFS. It's provided directly by the namenode, and has no unix filesystem
 // analogue.
 type ContentSummary struct {
-	name string
+	name           string
 	contentSummary *hdfs.ContentSummaryProto
 }
 

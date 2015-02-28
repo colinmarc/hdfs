@@ -31,8 +31,7 @@ func NewBlockReader(block *hdfs.LocatedBlockProto, offset int64) *BlockReader {
 	locs := block.GetLocs()
 	datanodes := make([]string, len(locs))
 	for i, loc := range locs {
-		dn := loc.GetId()
-		datanodes[i] = fmt.Sprintf("%s:%d", dn.GetIpAddr(), dn.GetXferPort())
+		datanodes[i] = getDatanodeAddress(loc)
 	}
 
 	return &BlockReader{
@@ -111,7 +110,7 @@ func (br *BlockReader) Close() error {
 func (br *BlockReader) connectNext() error {
 	address := br.datanodes.next()
 
-	conn, err := net.DialTimeout("tcp", address, connectionTimeout)
+	conn, err := net.DialTimeout("tcp", address, connectTimeout)
 	if err != nil {
 		return err
 	}
@@ -175,7 +174,19 @@ func (br *BlockReader) writeBlockReadRequest(w io.Writer) error {
 	header := []byte{0x00, dataTransferVersion, readBlockOp}
 
 	needed := br.block.GetB().GetNumBytes() - uint64(br.offset)
-	op := newBlockReadOp(br.block, uint64(br.offset), needed)
+
+	op := &hdfs.OpReadBlockProto{
+		Header: &hdfs.ClientOperationHeaderProto{
+			BaseHeader: &hdfs.BaseHeaderProto{
+				Block: br.block.GetB(),
+				Token: br.block.GetBlockToken(),
+			},
+			ClientName: proto.String(ClientName),
+		},
+		Offset: proto.Uint64(uint64(br.offset)),
+		Len:    proto.Uint64(needed),
+	}
+
 	opBytes, err := makeDelimitedMsg(op)
 	if err != nil {
 		return err
@@ -221,18 +232,4 @@ func (br *BlockReader) readBlockReadResponse(r io.Reader) (*hdfs.BlockOpResponse
 	}
 
 	return resp, nil
-}
-
-func newBlockReadOp(block *hdfs.LocatedBlockProto, offset, length uint64) *hdfs.OpReadBlockProto {
-	return &hdfs.OpReadBlockProto{
-		Header: &hdfs.ClientOperationHeaderProto{
-			BaseHeader: &hdfs.BaseHeaderProto{
-				Block: block.GetB(),
-				Token: block.GetBlockToken(),
-			},
-			ClientName: proto.String(ClientName),
-		},
-		Offset: proto.Uint64(offset),
-		Len:    proto.Uint64(length),
-	}
 }

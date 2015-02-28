@@ -5,7 +5,10 @@ package rpc
 import (
 	"bytes"
 	"encoding/binary"
-	"github.com/golang/protobuf/proto"
+	"fmt"
+	hdfs "github.com/colinmarc/hdfs/protocol/hadoop_hdfs"
+    "github.com/golang/protobuf/proto"
+	"time"
 )
 
 // ClientName is passed into the namenode on requests, and identifies this
@@ -13,8 +16,15 @@ import (
 const (
 	ClientName          = "go-hdfs"
 	dataTransferVersion = 0x1c
+	writeBlockOp        = 0x50
 	readBlockOp         = 0x51
 	checksumBlockOp     = 0x55
+)
+
+var (
+	connectTimeout  = 1 * time.Second
+	namenodeTimeout = 3 * time.Second
+	datanodeTimeout = 3 * time.Second
 )
 
 func makeDelimitedMsg(msg proto.Message) ([]byte, error) {
@@ -28,7 +38,7 @@ func makeDelimitedMsg(msg proto.Message) ([]byte, error) {
 	return append(lengthBytes[:n], msgBytes...), nil
 }
 
-func makePacket(msgs ...proto.Message) ([]byte, error) {
+func makeRPCPacket(msgs ...proto.Message) ([]byte, error) {
 	packet := make([]byte, 4, 128)
 
 	length := 0
@@ -47,7 +57,7 @@ func makePacket(msgs ...proto.Message) ([]byte, error) {
 }
 
 // Doesn't include the uint32 length
-func parsePacket(b []byte, msgs ...proto.Message) error {
+func readRPCPacket(b []byte, msgs ...proto.Message) error {
 	reader := bytes.NewReader(b)
 	for _, msg := range msgs {
 		msgLength, err := binary.ReadUvarint(reader)
@@ -70,4 +80,9 @@ func parsePacket(b []byte, msgs ...proto.Message) error {
 	}
 
 	return nil
+}
+
+func getDatanodeAddress(datanode *hdfs.DatanodeInfoProto) string {
+	id := datanode.GetId()
+	return fmt.Sprintf("%s:%d", id.GetIpAddr(), id.GetXferPort())
 }

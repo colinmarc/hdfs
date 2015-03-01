@@ -28,23 +28,12 @@ var (
 	datanodeTimeout = 3 * time.Second
 )
 
-func makeDelimitedMsg(msg proto.Message) ([]byte, error) {
-	msgBytes, err := proto.Marshal(msg)
-	if err != nil {
-		return nil, err
-	}
-
-	lengthBytes := make([]byte, 10)
-	n := binary.PutUvarint(lengthBytes, uint64(len(msgBytes)))
-	return append(lengthBytes[:n], msgBytes...), nil
-}
-
 func makeRPCPacket(msgs ...proto.Message) ([]byte, error) {
 	packet := make([]byte, 4, 128)
 
 	length := 0
 	for _, msg := range msgs {
-		b, err := makeDelimitedMsg(msg)
+		b, err := makePrefixedMessage(msg)
 		if err != nil {
 			return nil, err
 		}
@@ -83,22 +72,51 @@ func readRPCPacket(b []byte, msgs ...proto.Message) error {
 	return nil
 }
 
-func getDatanodeAddress(datanode *hdfs.DatanodeInfoProto) string {
-	id := datanode.GetId()
-	return fmt.Sprintf("%s:%d", id.GetIpAddr(), id.GetXferPort())
+func makePrefixedMessage(msg proto.Message) ([]byte, error) {
+	msgBytes, err := proto.Marshal(msg)
+	if err != nil {
+		return nil, err
+	}
+
+	lengthBytes := make([]byte, 10)
+	n := binary.PutUvarint(lengthBytes, uint64(len(msgBytes)))
+	return append(lengthBytes[:n], msgBytes...), nil
+}
+
+func readPrefixedMessage(r io.Reader, msg proto.Message) error {
+	varintBytes := make([]byte, binary.MaxVarintLen64)
+	_, err := io.ReadAtLeast(r, varintBytes, 1)
+	if err != nil {
+		return err
+	}
+
+	respLength, varintLength := binary.Uvarint(varintBytes)
+	if varintLength < 1 {
+		return io.ErrUnexpectedEOF
+	}
+
+	// We may have grabbed too many bytes when reading the varint.
+	respBytes := make([]byte, respLength)
+	extraLength := copy(respBytes, varintBytes[varintLength:])
+	_, err = io.ReadFull(r, respBytes[extraLength:])
+	if err != nil {
+		return err
+	}
+
+	return proto.Unmarshal(respBytes, msg)
 }
 
 // A op request to a datanode:
 // +-----------------------------------------------------------+
 // |  Data Transfer Protocol Version, int16                    |
 // +-----------------------------------------------------------+
-// |  Op code, 1 byte (READ_BLOCK = 0x51)                      |
+// |  Op code, 1 byte                                          |
 // +-----------------------------------------------------------+
 // |  varint length + OpReadBlockProto                         |
 // +-----------------------------------------------------------+
 func writeBlockOpRequest(w io.Writer, op uint8, msg proto.Message) error {
 	header := []byte{0x00, dataTransferVersion, op}
-	msgBytes, err := makeDelimitedMsg(msg)
+	msgBytes, err := makePrefixedMessage(msg)
 	if err != nil {
 		return err
 	}
@@ -117,30 +135,13 @@ func writeBlockOpRequest(w io.Writer, op uint8, msg proto.Message) error {
 // |  varint length + BlockOpResponseProto                     |
 // +-----------------------------------------------------------+
 func readBlockOpResponse(r io.Reader) (*hdfs.BlockOpResponseProto, error) {
-	varintBytes := make([]byte, binary.MaxVarintLen32)
-	_, err := io.ReadFull(r, varintBytes)
-	if err != nil {
-		return nil, err
-	}
-
-	respLength, varintLength := binary.Uvarint(varintBytes)
-	if varintLength < 1 {
-		return nil, io.ErrUnexpectedEOF
-	}
-
-	// We may have grabbed too many bytes when reading the varint.
-	respBytes := make([]byte, respLength)
-	extraLength := copy(respBytes, varintBytes[varintLength:])
-	_, err = io.ReadFull(r, respBytes[extraLength:])
-	if err != nil {
-		return nil, err
-	}
-
 	resp := &hdfs.BlockOpResponseProto{}
-	err = proto.Unmarshal(respBytes, resp)
-	if err != nil {
-		return nil, err
-	}
+	err := readPrefixedMessage(r, resp)
 
-	return resp, nil
+	return resp, err
+}
+
+func getDatanodeAddress(datanode *hdfs.DatanodeInfoProto) string {
+	id := datanode.GetId()
+	return fmt.Sprintf("%s:%d", id.GetIpAddr(), id.GetXferPort())
 }

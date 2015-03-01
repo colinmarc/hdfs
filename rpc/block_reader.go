@@ -122,6 +122,8 @@ func (br *BlockReader) connectNext() error {
 	resp, err := readBlockOpResponse(conn)
 	if err != nil {
 		return err
+	} else if resp.GetStatus() != hdfs.Status_SUCCESS {
+		return fmt.Errorf("Error from datanode: %s (%s)", resp.GetStatus().String(), resp.GetMessage())
 	}
 
 	readInfo := resp.GetReadOpChecksumInfo()

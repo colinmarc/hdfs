@@ -84,7 +84,7 @@ func makePrefixedMessage(msg proto.Message) ([]byte, error) {
 }
 
 func readPrefixedMessage(r io.Reader, msg proto.Message) error {
-	varintBytes := make([]byte, binary.MaxVarintLen64)
+	varintBytes := make([]byte, binary.MaxVarintLen32)
 	_, err := io.ReadAtLeast(r, varintBytes, 1)
 	if err != nil {
 		return err

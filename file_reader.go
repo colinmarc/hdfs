@@ -12,15 +12,16 @@ import (
 )
 
 // A FileReader represents an existing file or directory in HDFS. It implements
-// Reader, ReaderAt, Seeker, and Closer, and can only be used for reads.
+// io.Reader, io.ReaderAt, io.Seeker, and io.Closer, and can only be used for
+// reads. For writes, see FileWriter and Client.Create.
 type FileReader struct {
 	client *Client
 	name   string
 	info   os.FileInfo
 
-	blocks             []*hdfs.LocatedBlockProto
-	currentBlockReader *rpc.BlockReader
-	offset             int64
+	blocks      []*hdfs.LocatedBlockProto
+	blockReader *rpc.BlockReader
+	offset      int64
 
 	readdirLast string
 
@@ -28,7 +29,7 @@ type FileReader struct {
 }
 
 // Open returns an FileReader which can be used for reading.
-func (c *Client) Open(name string) (file *FileReader, err error) {
+func (c *Client) Open(name string) (*FileReader, error) {
 	info, err := c.getFileInfo(name)
 	if err != nil {
 		return nil, &os.PathError{"open", name, err}
@@ -124,7 +125,7 @@ func (f *FileReader) Seek(offset int64, whence int) (int64, error) {
 	}
 
 	f.offset = off
-	f.currentBlockReader = nil
+	f.blockReader = nil
 
 	return f.offset, nil
 }
@@ -154,7 +155,7 @@ func (f *FileReader) Read(b []byte) (int, error) {
 		}
 	}
 
-	if f.currentBlockReader == nil {
+	if f.blockReader == nil {
 		err := f.getNewBlockReader()
 		if err != nil {
 			return 0, err
@@ -162,17 +163,17 @@ func (f *FileReader) Read(b []byte) (int, error) {
 	}
 
 	for {
-		n, err := f.currentBlockReader.Read(b)
+		n, err := f.blockReader.Read(b)
 		f.offset += int64(n)
 
 		if err != nil && err != io.EOF {
-			f.currentBlockReader.Close()
-			f.currentBlockReader = nil
+			f.blockReader.Close()
+			f.blockReader = nil
 			return n, err
 		} else if n > 0 {
 			return n, nil
 		} else {
-			f.currentBlockReader.Close()
+			f.blockReader.Close()
 			f.getNewBlockReader()
 		}
 	}
@@ -273,7 +274,7 @@ func (f *FileReader) Close() error {
 	f.closed = true
 
 	if f.currentBlockReader != nil {
-		f.currentBlockReader.Close()
+	f.blockReader.Close()
 	}
 
 	return nil
@@ -305,7 +306,7 @@ func (f *FileReader) getNewBlockReader() error {
 		if start <= off && off < end {
 			br := rpc.NewBlockReader(block, int64(off-start))
 
-			f.currentBlockReader = br
+			f.blockReader = br
 			return nil
 		}
 	}

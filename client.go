@@ -79,55 +79,6 @@ func (c *Client) CopyToLocal(src string, dst string) error {
 	return err
 }
 
-// CreateEmptyFile creates a empty file named by filename, with the permissions
-// 0644.
-func (c *Client) CreateEmptyFile(filename string) error {
-	_, err := c.getFileInfo(filename)
-	if err == nil {
-		return &os.PathError{"create", filename, os.ErrExist}
-	} else if !os.IsNotExist(err) {
-		return &os.PathError{"create", filename, err}
-	}
-
-	defaults, err := c.fetchDefaults()
-	if err != nil {
-		return err
-	}
-
-	createReq := &hdfs.CreateRequestProto{
-		Src:          proto.String(filename),
-		Masked:       &hdfs.FsPermissionProto{Perm: proto.Uint32(uint32(0644))},
-		ClientName:   proto.String(rpc.ClientName),
-		CreateFlag:   proto.Uint32(1),
-		CreateParent: proto.Bool(false),
-		Replication:  proto.Uint32(defaults.GetReplication()),
-		BlockSize:    proto.Uint64(defaults.GetBlockSize()),
-	}
-	createResp := &hdfs.CreateResponseProto{}
-
-	err = c.namenode.Execute("create", createReq, createResp)
-	if err != nil {
-		if nnErr, ok := err.(*rpc.NamenodeError); ok {
-			err = interpretException(nnErr.Exception, err)
-		}
-
-		return &os.PathError{"create", filename, err}
-	}
-
-	completeReq := &hdfs.CompleteRequestProto{
-		Src:        proto.String(filename),
-		ClientName: proto.String(rpc.ClientName),
-	}
-	completeResp := &hdfs.CompleteResponseProto{}
-
-	err = c.namenode.Execute("complete", completeReq, completeResp)
-	if err != nil {
-		return &os.PathError{"create", filename, err}
-	}
-
-	return nil
-}
-
 func (c *Client) fetchDefaults() (*hdfs.FsServerDefaultsProto, error) {
 	if c.defaults != nil {
 		return c.defaults, nil

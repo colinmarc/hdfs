@@ -12,7 +12,7 @@ func TestStat(t *testing.T) {
 	client := getClient(t)
 
 	resp, err := client.Stat("/_test/foo.txt")
-	require.Nil(t, err)
+	require.NoError(t, err)
 
 	assert.Equal(t, "foo.txt", resp.Name())
 	assert.False(t, resp.IsDir())
@@ -27,7 +27,7 @@ func TestStatEmptyFile(t *testing.T) {
 	touch(t, "/_test/emptyfile2")
 
 	resp, err := client.Stat("/_test/emptyfile2")
-	require.Nil(t, err)
+	require.NoError(t, err)
 
 	assert.Equal(t, "emptyfile2", resp.Name())
 	assert.False(t, resp.IsDir())
@@ -50,7 +50,7 @@ func TestStatDir(t *testing.T) {
 	mkdirp(t, "/_test/dir")
 
 	resp, err := client.Stat("/_test/dir")
-	require.Nil(t, err)
+	require.NoError(t, err)
 
 	assert.Equal(t, "dir", resp.Name())
 	assert.True(t, resp.IsDir())

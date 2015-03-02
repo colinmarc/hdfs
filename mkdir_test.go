@@ -18,7 +18,7 @@ func TestMkdir(t *testing.T) {
 	assert.Nil(t, err)
 
 	fi, err := client.Stat("/_test/dir2")
-	require.Nil(t, err)
+	require.NoError(t, err)
 	assert.True(t, fi.IsDir())
 }
 
@@ -55,11 +55,11 @@ func TestMkdirAll(t *testing.T) {
 	assert.Nil(t, err)
 
 	fi, err := client.Stat("/_test/dir3/foo")
-	require.Nil(t, err)
+	require.NoError(t, err)
 	assert.True(t, fi.IsDir())
 
 	fi, err = client.Stat("/_test/dir3")
-	require.Nil(t, err)
+	require.NoError(t, err)
 	assert.True(t, fi.IsDir())
 	assert.Equal(t, 0, fi.Size())
 }

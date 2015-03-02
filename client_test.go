@@ -85,10 +85,10 @@ func TestCopyToLocal(t *testing.T) {
 	dir, _ := ioutil.TempDir("", "hdfs-test")
 	tmpfile := filepath.Join(dir, "foo.txt")
 	err := client.CopyToLocal("/_test/foo.txt", tmpfile)
-	require.Nil(t, err)
+	require.NoError(t, err)
 
 	f, err := os.Open(tmpfile)
-	require.Nil(t, err)
+	require.NoError(t, err)
 
 	bytes, _ := ioutil.ReadAll(f)
 	assert.Equal(t, "bar\n", string(bytes))
@@ -100,10 +100,10 @@ func TestCreateEmptyFile(t *testing.T) {
 	baleet(t, "/_test/emptyfile")
 
 	err := client.CreateEmptyFile("/_test/emptyfile")
-	require.Nil(t, err)
+	require.NoError(t, err)
 
 	fi, err := client.Stat("/_test/emptyfile")
-	require.Nil(t, err)
+	require.NoError(t, err)
 	assert.False(t, fi.IsDir())
 	assert.Equal(t, 0, fi.Size())
 

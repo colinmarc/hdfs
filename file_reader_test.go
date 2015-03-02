@@ -30,7 +30,7 @@ func TestFileRead(t *testing.T) {
 	client := getClient(t)
 
 	file, err := client.Open("/_test/foo.txt")
-	require.Nil(t, err)
+	require.NoError(t, err)
 
 	bytes, err := ioutil.ReadAll(file)
 	assert.Nil(t, err)
@@ -49,7 +49,7 @@ func TestReadEmptyFile(t *testing.T) {
 	touch(t, "/_test/emptyfile")
 
 	file, err := client.Open("/_test/emptyfile")
-	require.Nil(t, err)
+	require.NoError(t, err)
 
 	bytes, err := ioutil.ReadAll(file)
 	assert.Nil(t, err)
@@ -60,7 +60,7 @@ func TestFileBigRead(t *testing.T) {
 	client := getClient(t)
 
 	file, err := client.Open("/_test/mobydick.txt")
-	require.Nil(t, err)
+	require.NoError(t, err)
 
 	hash := crc32.NewIEEE()
 	n, err := io.Copy(hash, file)
@@ -73,7 +73,7 @@ func TestFileBigReadWeirdSizes(t *testing.T) {
 	client := getClient(t)
 
 	file, err := client.Open("/_test/mobydick.txt")
-	require.Nil(t, err)
+	require.NoError(t, err)
 
 	hash := crc32.NewIEEE()
 	copied := 0
@@ -92,7 +92,7 @@ func TestFileBigReadN(t *testing.T) {
 	client := getClient(t)
 
 	file, err := client.Open("/_test/mobydick.txt")
-	require.Nil(t, err)
+	require.NoError(t, err)
 
 	n, err := io.CopyN(ioutil.Discard, file, 1000000)
 	assert.Nil(t, err)
@@ -103,7 +103,7 @@ func TestFileReadAt(t *testing.T) {
 	client := getClient(t)
 
 	file, err := client.Open("/_test/mobydick.txt")
-	require.Nil(t, err)
+	require.NoError(t, err)
 
 	buf := make([]byte, len(testStr))
 	off := 0
@@ -132,7 +132,7 @@ func TestFileSeek(t *testing.T) {
 	client := getClient(t)
 
 	file, err := client.Open("/_test/mobydick.txt")
-	require.Nil(t, err)
+	require.NoError(t, err)
 
 	buf := new(bytes.Buffer)
 
@@ -178,7 +178,7 @@ func TestFileReadDir(t *testing.T) {
 	touch(t, "/_test/fulldir3/3")
 
 	file, err := client.Open("/_test/fulldir3")
-	require.Nil(t, err)
+	require.NoError(t, err)
 
 	res, err := file.Readdir(2)
 	require.Equal(t, 2, len(res))
@@ -208,7 +208,7 @@ func TestFileReadDirnames(t *testing.T) {
 	touch(t, "/_test/fulldir4/3")
 
 	file, err := client.Open("/_test/fulldir4")
-	require.Nil(t, err)
+	require.NoError(t, err)
 
 	res, err := file.Readdirnames(0)
 	require.Equal(t, 4, len(res))
@@ -230,10 +230,10 @@ func TestFileChecksum(t *testing.T) {
 	client := getClient(t)
 
 	file, err := client.Open("/_test/foo.txt")
-	require.Nil(t, err)
+	require.NoError(t, err)
 
 	checksum, err := file.Checksum()
-	require.Nil(t, err)
+	require.NoError(t, err)
 
 	assert.Equal(t, testChecksum, hex.EncodeToString(checksum))
 }

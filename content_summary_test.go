@@ -16,7 +16,7 @@ func TestContentSummaryDir(t *testing.T) {
 	touch(t, "/_test/dirforcs/1/bar")
 
 	resp, err := client.GetContentSummary("/_test/dirforcs")
-	require.Nil(t, err)
+	require.NoError(t, err)
 
 	assert.Equal(t, 2, resp.FileCount())
 	assert.Equal(t, 3, resp.DirectoryCount())
@@ -26,7 +26,7 @@ func TestContentSummaryFile(t *testing.T) {
 	client := getClient(t)
 
 	resp, err := client.GetContentSummary("/_test/foo.txt")
-	require.Nil(t, err)
+	require.NoError(t, err)
 
 	assert.Equal(t, 4, resp.Size())
 	assert.True(t, resp.SizeAfterReplication() >= 4)

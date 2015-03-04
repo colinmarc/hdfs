@@ -2,6 +2,7 @@ package hdfs
 
 import (
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 	"os"
 	"testing"
 )
@@ -13,14 +14,14 @@ func TestRename(t *testing.T) {
 	baleet(t, "/_test/tomovedest")
 
 	err := client.Rename("/_test/tomove", "/_test/tomovedest")
-	assert.Nil(t, err)
+	require.NoError(t, err)
 
 	fi, err := client.Stat("/_test/tomove")
 	assert.Nil(t, fi)
 	assertPathError(t, err, "stat", "/_test/tomove", os.ErrNotExist)
 
 	fi, err = client.Stat("/_test/tomovedest")
-	assert.Nil(t, err)
+	require.NoError(t, err)
 }
 
 func TestRenameSrcNotExistent(t *testing.T) {

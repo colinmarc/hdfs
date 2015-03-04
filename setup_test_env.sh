@@ -34,7 +34,7 @@ echo "minicluster jar found at $MINICLUSTER_JAR"
 
 # start the namenode in the background
 echo "Starting hadoop namenode..."
-$HADOOP_HOME/bin/hadoop jar $MINICLUSTER_JAR minicluster -nnport $NN_PORT -nomr -format "$@" > minicluster.log 2>&1 &
+$HADOOP_HOME/bin/hadoop jar $MINICLUSTER_JAR minicluster -nnport $NN_PORT -datanodes 3 -nomr -format "$@" > minicluster.log 2>&1 &
 sleep 30
 
 HADOOP_FS="$HADOOP_HOME/bin/hadoop fs -Ddfs.block.size=1048576"

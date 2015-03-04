@@ -12,6 +12,7 @@ import (
 	"os/user"
 	"testing"
 	"testing/iotest"
+	"time"
 )
 
 func getNamenode(t *testing.T) *NamenodeConnection {
@@ -48,22 +49,24 @@ func getBlocks(t *testing.T, name string) []*hdfs.LocatedBlockProto {
 	return resp.GetLocations().GetBlocks()
 }
 
-func setupFailover(t *testing.T) *BlockReader {
+func setupFailover(t *testing.T) (*BlockReader, string) {
+	// clear the failure cache
+	datanodeFailures = make(map[string]time.Time)
 	block := getBlocks(t, "/_test/mobydick.txt")[0]
-	block.Locs = append(block.GetLocs(), block.GetLocs()...)
 
 	br := NewBlockReader(block, 0)
+	dn := br.datanodes.datanodes[0]
 	err := br.connectNext()
 	if err != nil {
 		t.Fatal(err)
 	}
 
-	return br
+	return br, dn
 }
 
 func TestFailsOver(t *testing.T) {
-	br := setupFailover(t)
-	dn := br.datanodes.datanodes[0]
+	br, dn := setupFailover(t)
+	datanodes := br.datanodes.numRemaining()
 	br.stream.reader = iotest.TimeoutReader(br.stream.reader)
 
 	hash := crc32.NewIEEE()
@@ -71,15 +74,15 @@ func TestFailsOver(t *testing.T) {
 	require.NoError(t, err)
 	assert.Equal(t, 1048576, n)
 	assert.EqualValues(t, 0xb35a6a0e, hash.Sum32())
-	assert.Equal(t, 0, br.datanodes.numRemaining())
+	assert.Equal(t, datanodes - 1, br.datanodes.numRemaining())
 
 	_, exist := datanodeFailures[dn]
 	assert.True(t, exist)
 }
 
 func TestFailsOverMidRead(t *testing.T) {
-	br := setupFailover(t)
-	dn := br.datanodes.datanodes[0]
+	br, dn := setupFailover(t)
+	datanodes := br.datanodes.numRemaining()
 
 	hash := crc32.NewIEEE()
 	_, err := io.CopyN(hash, br, 10000)
@@ -91,22 +94,26 @@ func TestFailsOverMidRead(t *testing.T) {
 	require.NoError(t, err)
 	assert.Equal(t, 1048576-10000, n)
 	assert.EqualValues(t, 0xb35a6a0e, hash.Sum32())
-	assert.Equal(t, 0, br.datanodes.numRemaining())
+	assert.Equal(t, datanodes - 1, br.datanodes.numRemaining())
 
 	_, exist := datanodeFailures[dn]
 	assert.True(t, exist)
 }
 
 func TestFailsOverAndThenDies(t *testing.T) {
-	br := setupFailover(t)
+	br, _ := setupFailover(t)
+	datanodes := br.datanodes.numRemaining()
+
+	for br.datanodes.numRemaining() > 0 {
+		br.stream.reader = iotest.TimeoutReader(br.stream.reader)
+		_, err := io.CopyN(ioutil.Discard, br, 1000)
+		require.NoError(t, err)
+		require.Equal(t, datanodes - 1, br.datanodes.numRemaining())
+		datanodes--
+	}
+
 
 	br.stream.reader = iotest.TimeoutReader(br.stream.reader)
-
-	_, err := io.CopyN(ioutil.Discard, br, 10000)
-	require.NoError(t, err)
-	assert.Equal(t, 0, br.datanodes.numRemaining())
-
-	br.stream.reader = iotest.TimeoutReader(br.stream.reader)
-	_, err = io.Copy(ioutil.Discard, br)
+	_, err := io.Copy(ioutil.Discard, br)
 	assert.Equal(t, iotest.ErrTimeout, err)
 }

@@ -271,7 +271,11 @@ func (f *FileReader) Readdirnames(n int) ([]string, error) {
 // Close implements io.Closer.
 func (f *FileReader) Close() error {
 	f.closed = true
-	f.currentBlockReader.Close()
+
+	if f.currentBlockReader != nil {
+		f.currentBlockReader.Close()
+	}
+
 	return nil
 }
 

@@ -61,7 +61,7 @@ func TestMkdirAll(t *testing.T) {
 	fi, err = client.Stat("/_test/dir3")
 	require.NoError(t, err)
 	assert.True(t, fi.IsDir())
-	assert.Equal(t, 0, fi.Size())
+	assert.EqualValues(t, 0, fi.Size())
 }
 
 func TestMkdirWIthoutPermission(t *testing.T) {

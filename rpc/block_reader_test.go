@@ -72,9 +72,9 @@ func TestFailsOver(t *testing.T) {
 	hash := crc32.NewIEEE()
 	n, err := io.Copy(hash, br)
 	require.NoError(t, err)
-	assert.Equal(t, 1048576, n)
+	assert.EqualValues(t, 1048576, n)
 	assert.EqualValues(t, 0xb35a6a0e, hash.Sum32())
-	assert.Equal(t, datanodes - 1, br.datanodes.numRemaining())
+	assert.EqualValues(t, datanodes - 1, br.datanodes.numRemaining())
 
 	_, exist := datanodeFailures[dn]
 	assert.True(t, exist)
@@ -92,9 +92,9 @@ func TestFailsOverMidRead(t *testing.T) {
 
 	n, err := io.Copy(hash, br)
 	require.NoError(t, err)
-	assert.Equal(t, 1048576-10000, n)
+	assert.EqualValues(t, 1048576-10000, n)
 	assert.EqualValues(t, 0xb35a6a0e, hash.Sum32())
-	assert.Equal(t, datanodes - 1, br.datanodes.numRemaining())
+	assert.EqualValues(t, datanodes - 1, br.datanodes.numRemaining())
 
 	_, exist := datanodeFailures[dn]
 	assert.True(t, exist)
@@ -115,5 +115,5 @@ func TestFailsOverAndThenDies(t *testing.T) {
 
 	br.stream.reader = iotest.TimeoutReader(br.stream.reader)
 	_, err := io.Copy(ioutil.Discard, br)
-	assert.Equal(t, iotest.ErrTimeout, err)
+	assert.EqualValues(t, iotest.ErrTimeout, err)
 }

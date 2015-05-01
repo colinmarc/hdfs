@@ -15,5 +15,5 @@ func TestReadChecksum(t *testing.T) {
 
 	checksum, err := cr.ReadChecksum()
 	require.NoError(t, err)
-	assert.Equal(t, testChecksum, hex.EncodeToString(checksum))
+	assert.EqualValues(t, testChecksum, hex.EncodeToString(checksum))
 }

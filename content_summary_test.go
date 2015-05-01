@@ -18,8 +18,8 @@ func TestContentSummaryDir(t *testing.T) {
 	resp, err := client.GetContentSummary("/_test/dirforcs")
 	require.NoError(t, err)
 
-	assert.Equal(t, 2, resp.FileCount())
-	assert.Equal(t, 3, resp.DirectoryCount())
+	assert.EqualValues(t, 2, resp.FileCount())
+	assert.EqualValues(t, 3, resp.DirectoryCount())
 }
 
 func TestContentSummaryFile(t *testing.T) {
@@ -28,10 +28,10 @@ func TestContentSummaryFile(t *testing.T) {
 	resp, err := client.GetContentSummary("/_test/foo.txt")
 	require.NoError(t, err)
 
-	assert.Equal(t, 4, resp.Size())
+	assert.EqualValues(t, 4, resp.Size())
 	assert.True(t, resp.SizeAfterReplication() >= 4)
-	assert.Equal(t, 1, resp.FileCount())
-	assert.Equal(t, 0, resp.DirectoryCount())
+	assert.EqualValues(t, 1, resp.FileCount())
+	assert.EqualValues(t, 0, resp.DirectoryCount())
 }
 
 func TestContentSummaryNonExistent(t *testing.T) {

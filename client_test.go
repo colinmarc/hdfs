@@ -76,7 +76,7 @@ func TestReadFile(t *testing.T) {
 
 	bytes, err := client.ReadFile("/_test/foo.txt")
 	assert.Nil(t, err)
-	assert.Equal(t, "bar\n", string(bytes))
+	assert.EqualValues(t, "bar\n", string(bytes))
 }
 
 func TestCopyToLocal(t *testing.T) {
@@ -91,7 +91,7 @@ func TestCopyToLocal(t *testing.T) {
 	require.NoError(t, err)
 
 	bytes, _ := ioutil.ReadAll(f)
-	assert.Equal(t, "bar\n", string(bytes))
+	assert.EqualValues(t, "bar\n", string(bytes))
 }
 
 func TestCreateEmptyFile(t *testing.T) {
@@ -105,7 +105,7 @@ func TestCreateEmptyFile(t *testing.T) {
 	fi, err := client.Stat("/_test/emptyfile")
 	require.NoError(t, err)
 	assert.False(t, fi.IsDir())
-	assert.Equal(t, 0, fi.Size())
+	assert.EqualValues(t, 0, fi.Size())
 
 	err = client.CreateEmptyFile("/_test/emptyfile")
 	assertPathError(t, err, "create", "/_test/emptyfile", os.ErrExist)

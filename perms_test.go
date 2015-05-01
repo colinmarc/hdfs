@@ -30,7 +30,7 @@ func TestChmodDir(t *testing.T) {
 
 	fi, err := client.Stat("/_test/dirtochmod")
 	assert.Nil(t, err)
-	assert.Equal(t, 0777|os.ModeDir, fi.Mode())
+	assert.EqualValues(t, 0777|os.ModeDir, fi.Mode())
 }
 
 func TestChmodNonexistent(t *testing.T) {
@@ -62,7 +62,7 @@ func TestChown(t *testing.T) {
 
 	fi, err := client.Stat("/_test/tochown")
 	assert.Nil(t, err)
-	assert.Equal(t, fi.(*FileInfo).Owner(), "other")
+	assert.EqualValues(t, fi.(*FileInfo).Owner(), "other")
 }
 
 func TestChownDir(t *testing.T) {
@@ -76,7 +76,7 @@ func TestChownDir(t *testing.T) {
 
 	fi, err := client.Stat("/_test/tochowndir")
 	assert.Nil(t, err)
-	assert.Equal(t, fi.(*FileInfo).Owner(), "other")
+	assert.EqualValues(t, fi.(*FileInfo).Owner(), "other")
 }
 
 func TestChownNonexistent(t *testing.T) {
@@ -108,6 +108,6 @@ func TestChtimes(t *testing.T) {
 
 	fi, err := client.Stat("/_test/tochtime")
 	assert.Nil(t, err)
-	assert.Equal(t, birthday, fi.ModTime().UTC(), birthday)
-	assert.Equal(t, birthday, fi.(*FileInfo).AccessTime().UTC(), birthday)
+	assert.EqualValues(t, birthday, fi.ModTime().UTC(), birthday)
+	assert.EqualValues(t, birthday, fi.(*FileInfo).AccessTime().UTC(), birthday)
 }

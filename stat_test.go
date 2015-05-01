@@ -14,11 +14,11 @@ func TestStat(t *testing.T) {
 	resp, err := client.Stat("/_test/foo.txt")
 	require.NoError(t, err)
 
-	assert.Equal(t, "foo.txt", resp.Name())
+	assert.EqualValues(t, "foo.txt", resp.Name())
 	assert.False(t, resp.IsDir())
-	assert.Equal(t, 4, resp.Size())
-	assert.Equal(t, time.Now().Year(), resp.ModTime().Year())
-	assert.Equal(t, time.Now().Month(), resp.ModTime().Month())
+	assert.EqualValues(t, 4, resp.Size())
+	assert.EqualValues(t, time.Now().Year(), resp.ModTime().Year())
+	assert.EqualValues(t, time.Now().Month(), resp.ModTime().Month())
 }
 
 func TestStatEmptyFile(t *testing.T) {
@@ -29,11 +29,11 @@ func TestStatEmptyFile(t *testing.T) {
 	resp, err := client.Stat("/_test/emptyfile2")
 	require.NoError(t, err)
 
-	assert.Equal(t, "emptyfile2", resp.Name())
+	assert.EqualValues(t, "emptyfile2", resp.Name())
 	assert.False(t, resp.IsDir())
-	assert.Equal(t, 0, resp.Size())
-	assert.Equal(t, time.Now().Year(), resp.ModTime().Year())
-	assert.Equal(t, time.Now().Month(), resp.ModTime().Month())
+	assert.EqualValues(t, 0, resp.Size())
+	assert.EqualValues(t, time.Now().Year(), resp.ModTime().Year())
+	assert.EqualValues(t, time.Now().Month(), resp.ModTime().Month())
 }
 
 func TestStatNotExistent(t *testing.T) {
@@ -52,11 +52,11 @@ func TestStatDir(t *testing.T) {
 	resp, err := client.Stat("/_test/dir")
 	require.NoError(t, err)
 
-	assert.Equal(t, "dir", resp.Name())
+	assert.EqualValues(t, "dir", resp.Name())
 	assert.True(t, resp.IsDir())
-	assert.Equal(t, 0, resp.Size(), 0)
-	assert.Equal(t, time.Now().Year(), resp.ModTime().Year())
-	assert.Equal(t, time.Now().Month(), resp.ModTime().Month())
+	assert.EqualValues(t, 0, resp.Size(), 0)
+	assert.EqualValues(t, time.Now().Year(), resp.ModTime().Year())
+	assert.EqualValues(t, time.Now().Month(), resp.ModTime().Month())
 }
 
 func TestStatDirWithoutPermission(t *testing.T) {

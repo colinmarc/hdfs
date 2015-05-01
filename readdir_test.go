@@ -21,16 +21,16 @@ func TestReadDir(t *testing.T) {
 	assert.Nil(t, err)
 	require.Equal(t, len(res), 4)
 
-	assert.Equal(t, "1", res[0].Name())
+	assert.EqualValues(t, "1", res[0].Name())
 	assert.False(t, res[0].IsDir())
 
-	assert.Equal(t, "2", res[1].Name())
+	assert.EqualValues(t, "2", res[1].Name())
 	assert.False(t, res[1].IsDir())
 
-	assert.Equal(t, "3", res[2].Name())
+	assert.EqualValues(t, "3", res[2].Name())
 	assert.False(t, res[2].IsDir())
 
-	assert.Equal(t, "dir", res[3].Name())
+	assert.EqualValues(t, "dir", res[3].Name())
 	assert.True(t, res[3].IsDir())
 }
 
@@ -60,16 +60,16 @@ func TestReadDirTrailingSlash(t *testing.T) {
 	assert.Nil(t, err)
 	require.Equal(t, len(res), 4)
 
-	assert.Equal(t, "1", res[0].Name())
+	assert.EqualValues(t, "1", res[0].Name())
 	assert.False(t, res[0].IsDir())
 
-	assert.Equal(t, "2", res[1].Name())
+	assert.EqualValues(t, "2", res[1].Name())
 	assert.False(t, res[1].IsDir())
 
-	assert.Equal(t, "3", res[2].Name())
+	assert.EqualValues(t, "3", res[2].Name())
 	assert.False(t, res[2].IsDir())
 
-	assert.Equal(t, "dir", res[3].Name())
+	assert.EqualValues(t, "dir", res[3].Name())
 	assert.True(t, res[3].IsDir())
 }
 
@@ -81,7 +81,7 @@ func TestReadEmptyDir(t *testing.T) {
 
 	res, err := client.ReadDir("/_test/emptydir")
 	assert.Nil(t, err)
-	assert.Equal(t, 0, len(res))
+	assert.EqualValues(t, 0, len(res))
 }
 
 func TestReadDirNonexistent(t *testing.T) {

@@ -1,7 +1,7 @@
 package rpc
 
 import (
-	"code.google.com/p/goprotobuf/proto"
+	"github.com/golang/protobuf"
 	"crypto/rand"
 	"encoding/binary"
 	"errors"

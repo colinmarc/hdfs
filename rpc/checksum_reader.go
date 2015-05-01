@@ -2,7 +2,7 @@ package rpc
 
 import (
 	"bufio"
-	"code.google.com/p/goprotobuf/proto"
+	"github.com/golang/protobuf"
 	"encoding/binary"
 	"errors"
 	"fmt"

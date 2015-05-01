@@ -1,7 +1,7 @@
 package rpc
 
 import (
-	"github.com/golang/protobuf"
+	"github.com/golang/protobuf/proto"
 	hdfs "github.com/colinmarc/hdfs/protocol/hadoop_hdfs"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"

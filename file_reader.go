@@ -1,7 +1,7 @@
 package hdfs
 
 import (
-	"github.com/golang/protobuf"
+	"github.com/golang/protobuf/proto"
 	"crypto/md5"
 	"errors"
 	"fmt"

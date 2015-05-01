@@ -4,7 +4,7 @@
 
 package hadoop_hdfs
 
-import proto "github.com/golang/protobuf"
+import proto "github.com/golang/protobuf/proto"
 import math "math"
 import hadoop_common "github.com/colinmarc/hdfs/protocol/hadoop_common"
 

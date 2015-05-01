@@ -2,7 +2,7 @@ package rpc
 
 import (
 	"bytes"
-	"github.com/golang/protobuf"
+	"github.com/golang/protobuf/proto"
 	"encoding/binary"
 	"errors"
 	hdfs "github.com/colinmarc/hdfs/protocol/hadoop_hdfs"

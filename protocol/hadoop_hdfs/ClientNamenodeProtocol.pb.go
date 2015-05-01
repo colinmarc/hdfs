@@ -116,7 +116,7 @@ It has these top-level messages:
 */
 package hadoop_hdfs
 
-import proto "github.com/golang/protobuf"
+import proto "github.com/golang/protobuf/proto"
 import math "math"
 
 // discarding unused import hadoop_common "Security.pb"

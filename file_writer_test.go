@@ -50,7 +50,7 @@ func TestFileBigWrite(t *testing.T) {
 
 	n, err := io.Copy(writer, mobydick)
 	require.NoError(t, err)
-	assert.Equal(t, 1257276, n)
+	assert.EqualValues(t, 1257276, n)
 
 	err = writer.Close()
 	require.NoError(t, err)
@@ -61,7 +61,7 @@ func TestFileBigWrite(t *testing.T) {
 	hash := crc32.NewIEEE()
 	n, err = io.Copy(hash, reader)
 	assert.Nil(t, err)
-	assert.Equal(t, 1257276, n)
+	assert.EqualValues(t, 1257276, n)
 	assert.EqualValues(t, 0x199d1ae6, hash.Sum32())
 }
 
@@ -78,7 +78,7 @@ func TestFileBigWriteMultipleBlocks(t *testing.T) {
 
 	n, err := io.Copy(writer, mobydick)
 	require.NoError(t, err)
-	assert.Equal(t, 1257276, n)
+	assert.EqualValues(t, 1257276, n)
 
 	err = writer.Close()
 	require.NoError(t, err)
@@ -89,7 +89,7 @@ func TestFileBigWriteMultipleBlocks(t *testing.T) {
 	hash := crc32.NewIEEE()
 	n, err = io.Copy(hash, reader)
 	assert.Nil(t, err)
-	assert.Equal(t, 1257276, n)
+	assert.EqualValues(t, 1257276, n)
 	assert.EqualValues(t, 0x199d1ae6, hash.Sum32())
 }
 
@@ -106,7 +106,7 @@ func TestFileBigWriteWeirdBlockSize(t *testing.T) {
 
 	n, err := io.Copy(writer, mobydick)
 	require.NoError(t, err)
-	assert.Equal(t, 1257276, n)
+	assert.EqualValues(t, 1257276, n)
 
 	err = writer.Close()
 	require.NoError(t, err)
@@ -117,7 +117,7 @@ func TestFileBigWriteWeirdBlockSize(t *testing.T) {
 	hash := crc32.NewIEEE()
 	n, err = io.Copy(hash, reader)
 	assert.Nil(t, err)
-	assert.Equal(t, 1257276, n)
+	assert.EqualValues(t, 1257276, n)
 	assert.EqualValues(t, 0x199d1ae6, hash.Sum32())
 }
 
@@ -132,7 +132,7 @@ func TestCreateEmptyFile(t *testing.T) {
 	fi, err := client.Stat("/_test/emptyfile")
 	require.NoError(t, err)
 	assert.False(t, fi.IsDir())
-	assert.Equal(t, 0, fi.Size())
+	assert.EqualValues(t, 0, fi.Size())
 
 	err = client.CreateEmptyFile("/_test/emptyfile")
 	assertPathError(t, err, "create", "/_test/emptyfile", os.ErrExist)

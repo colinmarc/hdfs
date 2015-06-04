@@ -2,6 +2,7 @@ package hdfs
 
 import (
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 	"os"
 	"testing"
 )
@@ -16,7 +17,7 @@ func TestRemove(t *testing.T) {
 	require.NoError(t, err)
 
 	fi, err := client.Stat("/_test/todelete")
-	assert.NoError(t, err)
+	assert.Nil(t, fi)
 	assertPathError(t, err, "stat", "/_test/todelete", os.ErrNotExist)
 }
 

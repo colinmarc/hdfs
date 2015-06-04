@@ -75,7 +75,7 @@ func TestReadFile(t *testing.T) {
 	client := getClient(t)
 
 	bytes, err := client.ReadFile("/_test/foo.txt")
-	assert.Nil(t, err)
+	assert.NoError(t, err)
 	assert.EqualValues(t, "bar\n", string(bytes))
 }
 

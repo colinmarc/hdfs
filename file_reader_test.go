@@ -33,7 +33,7 @@ func TestFileRead(t *testing.T) {
 	require.NoError(t, err)
 
 	bytes, err := ioutil.ReadAll(file)
-	assert.Nil(t, err)
+	assert.NoError(t, err)
 	assert.EqualValues(t, "bar\n", string(bytes))
 
 	info := file.Stat()
@@ -52,7 +52,7 @@ func TestReadEmptyFile(t *testing.T) {
 	require.NoError(t, err)
 
 	bytes, err := ioutil.ReadAll(file)
-	assert.Nil(t, err)
+	assert.NoError(t, err)
 	assert.EqualValues(t, "", string(bytes))
 }
 
@@ -64,7 +64,7 @@ func TestFileBigRead(t *testing.T) {
 
 	hash := crc32.NewIEEE()
 	n, err := io.Copy(hash, file)
-	assert.Nil(t, err)
+	assert.NoError(t, err)
 	assert.EqualValues(t, n, 1257276)
 	assert.EqualValues(t, 0x199d1ae6, hash.Sum32())
 }
@@ -95,7 +95,7 @@ func TestFileBigReadN(t *testing.T) {
 	require.NoError(t, err)
 
 	n, err := io.CopyN(ioutil.Discard, file, 1000000)
-	assert.Nil(t, err)
+	assert.NoError(t, err)
 	assert.EqualValues(t, n, 1000000)
 }
 
@@ -109,7 +109,7 @@ func TestFileReadAt(t *testing.T) {
 	off := 0
 	for off < len(buf) {
 		n, err := file.ReadAt(buf[off:], int64(testStrOff+off))
-		assert.Nil(t, err)
+		assert.NoError(t, err)
 		assert.True(t, n > 0)
 		off += n
 	}
@@ -120,7 +120,7 @@ func TestFileReadAt(t *testing.T) {
 	off = 0
 	for off < len(buf) {
 		n, err := file.ReadAt(buf[off:], int64(testStr2Off+off))
-		assert.Nil(t, err)
+		assert.NoError(t, err)
 		assert.True(t, n > 0)
 		off += n
 	}
@@ -137,33 +137,33 @@ func TestFileSeek(t *testing.T) {
 	buf := new(bytes.Buffer)
 
 	off, err := file.Seek(testStrOff, 0)
-	assert.Nil(t, err)
+	assert.NoError(t, err)
 	assert.EqualValues(t, testStrOff, off)
 
 	n, err := io.CopyN(buf, file, int64(len(testStr)))
-	assert.Nil(t, err)
+	assert.NoError(t, err)
 	assert.EqualValues(t, len(testStr), n)
 	assert.EqualValues(t, testStr, string(buf.Bytes()))
 
 	// seek backwards and read it again
 	off, err = file.Seek(-1*int64(len(testStr)), 1)
-	assert.Nil(t, err)
+	assert.NoError(t, err)
 	assert.EqualValues(t, testStrOff, off)
 
 	buf.Reset()
 	n, err = io.CopyN(buf, file, int64(len(testStr)))
-	assert.Nil(t, err)
+	assert.NoError(t, err)
 	assert.EqualValues(t, len(testStr), n)
 	assert.EqualValues(t, testStr, string(buf.Bytes()))
 
 	// now seek forward to another block and read a string
 	off, err = file.Seek(testStr2NegativeOff, 2)
-	assert.Nil(t, err)
+	assert.NoError(t, err)
 	assert.EqualValues(t, testStr2Off, off)
 
 	buf.Reset()
 	n, err = io.CopyN(buf, file, int64(len(testStr2)))
-	assert.Nil(t, err)
+	assert.NoError(t, err)
 	assert.EqualValues(t, len(testStr2), n)
 	assert.EqualValues(t, testStr2, string(buf.Bytes()))
 }

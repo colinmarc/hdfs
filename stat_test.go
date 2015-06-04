@@ -66,7 +66,7 @@ func TestStatDirWithoutPermission(t *testing.T) {
 	touch(t, "/_test/accessdenied/foo")
 
 	resp, err := otherClient.Stat("/_test/accessdenied")
-	assert.Nil(t, err)
+	assert.NoError(t, err)
 	assert.NotEqual(t, "", resp.(*FileInfo).Owner())
 
 	_, err = otherClient.Stat("/_test/accessdenied/foo")

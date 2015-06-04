@@ -13,10 +13,10 @@ func TestRemove(t *testing.T) {
 	mkdirp(t, "/_test/todelete")
 
 	err := client.Remove("/_test/todelete")
-	assert.Nil(t, err)
+	require.NoError(t, err)
 
 	fi, err := client.Stat("/_test/todelete")
-	assert.Nil(t, fi)
+	assert.NoError(t, err)
 	assertPathError(t, err, "stat", "/_test/todelete", os.ErrNotExist)
 }
 

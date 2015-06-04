@@ -60,7 +60,7 @@ func TestRenameWithoutPermissionForDest(t *testing.T) {
 	baleet(t, "/_test/ownedbyother")
 
 	err := otherClient.CreateEmptyFile("/_test/ownedbyother")
-	assert.Nil(t, err)
+	require.NoError(t, err)
 
 	err = otherClient.Rename("/_test/ownedbyother", "/_test/accessdenied/tomovedest4")
 	assertPathError(t, err, "rename", "/_test/accessdenied/tomovedest4", os.ErrPermission)

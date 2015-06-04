@@ -13,10 +13,10 @@ func TestChmod(t *testing.T) {
 	touch(t, "/_test/tochmod")
 
 	err := client.Chmod("/_test/tochmod", 0777)
-	assert.Nil(t, err)
+	require.NoError(t, err)
 
 	fi, err := client.Stat("/_test/tochmod")
-	assert.Nil(t, err)
+	assert.NoError(t, err)
 	assert.EqualValues(t, 0777, fi.Mode())
 }
 
@@ -26,10 +26,10 @@ func TestChmodDir(t *testing.T) {
 	mkdirp(t, "/_test/dirtochmod")
 
 	err := client.Chmod("/_test/dirtochmod", 0777)
-	assert.Nil(t, err)
+	require.NoError(t, err)
 
 	fi, err := client.Stat("/_test/dirtochmod")
-	assert.Nil(t, err)
+	assert.NoError(t, err)
 	assert.EqualValues(t, 0777|os.ModeDir, fi.Mode())
 }
 
@@ -58,10 +58,10 @@ func TestChown(t *testing.T) {
 	touch(t, "/_test/tochown")
 
 	err := client.Chown("/_test/tochown", "other", "")
-	assert.Nil(t, err)
+	require.NoError(t, err)
 
 	fi, err := client.Stat("/_test/tochown")
-	assert.Nil(t, err)
+	assert.NoError(t, err)
 	assert.EqualValues(t, fi.(*FileInfo).Owner(), "other")
 }
 
@@ -72,10 +72,10 @@ func TestChownDir(t *testing.T) {
 	mkdirp(t, "/_test/tochowndir")
 
 	err := client.Chown("/_test/tochowndir", "other", "")
-	assert.Nil(t, err)
+	require.NoError(t, err)
 
 	fi, err := client.Stat("/_test/tochowndir")
-	assert.Nil(t, err)
+	assert.NoError(t, err)
 	assert.EqualValues(t, fi.(*FileInfo).Owner(), "other")
 }
 
@@ -107,7 +107,7 @@ func TestChtimes(t *testing.T) {
 	client.Chtimes("/_test/tochtime", birthday, birthday)
 
 	fi, err := client.Stat("/_test/tochtime")
-	assert.Nil(t, err)
+	assert.NoError(t, err)
 	assert.EqualValues(t, birthday, fi.ModTime().UTC(), birthday)
 	assert.EqualValues(t, birthday, fi.(*FileInfo).AccessTime().UTC(), birthday)
 }

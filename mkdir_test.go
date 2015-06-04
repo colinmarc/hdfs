@@ -15,7 +15,7 @@ func TestMkdir(t *testing.T) {
 	baleet(t, "/_test/dir2")
 
 	err := client.Mkdir("/_test/dir2", mode)
-	assert.Nil(t, err)
+	require.NoError(t, err)
 
 	fi, err := client.Stat("/_test/dir2")
 	require.NoError(t, err)
@@ -52,7 +52,7 @@ func TestMkdirAll(t *testing.T) {
 	baleet(t, "/_test/dir3")
 
 	err := client.MkdirAll("/_test/dir3/foo", mode)
-	assert.Nil(t, err)
+	require.NoError(t, err)
 
 	fi, err := client.Stat("/_test/dir3/foo")
 	require.NoError(t, err)

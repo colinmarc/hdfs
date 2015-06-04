@@ -18,7 +18,7 @@ func TestReadDir(t *testing.T) {
 	touch(t, "/_test/fulldir/3")
 
 	res, err := client.ReadDir("/_test/fulldir")
-	assert.Nil(t, err)
+	require.NoError(t, err)
 	require.Equal(t, len(res), 4)
 
 	assert.EqualValues(t, "1", res[0].Name())
@@ -43,7 +43,7 @@ func TestReadDirMany(t *testing.T) {
 	}
 
 	res, err := client.ReadDir("/_test/hugedir")
-	assert.Nil(t, err)
+	require.NoError(t, err)
 	require.Equal(t, len(res), 1000)
 }
 
@@ -57,7 +57,7 @@ func TestReadDirTrailingSlash(t *testing.T) {
 	touch(t, "/_test/fulldir2/3")
 
 	res, err := client.ReadDir("/_test/fulldir2/")
-	assert.Nil(t, err)
+	require.NoError(t, err)
 	require.Equal(t, len(res), 4)
 
 	assert.EqualValues(t, "1", res[0].Name())
@@ -80,7 +80,7 @@ func TestReadEmptyDir(t *testing.T) {
 	mkdirp(t, "/_test/emptydir")
 
 	res, err := client.ReadDir("/_test/emptydir")
-	assert.Nil(t, err)
+	assert.NoError(t, err)
 	assert.EqualValues(t, 0, len(res))
 }
 

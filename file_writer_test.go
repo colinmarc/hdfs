@@ -121,6 +121,34 @@ func TestFileBigWriteWeirdBlockSize(t *testing.T) {
 	assert.EqualValues(t, 0x199d1ae6, hash.Sum32())
 }
 
+func TestFileBigWriteReplication(t *testing.T) {
+	client := getClient(t)
+
+	baleet(t, "/_test/create/5.txt")
+	mkdirp(t, "/_test/create")
+	writer, err := client.CreateFile("/_test/create/5.txt", 3, 1048576, 0755)
+	require.NoError(t, err)
+
+	mobydick, err := os.Open("test/mobydick.txt")
+	require.NoError(t, err)
+
+	n, err := io.Copy(writer, mobydick)
+	require.NoError(t, err)
+	assert.EqualValues(t, 1257276, n)
+
+	err = writer.Close()
+	require.NoError(t, err)
+
+	reader, err := client.Open("/_test/create/5.txt")
+	require.NoError(t, err)
+
+	hash := crc32.NewIEEE()
+	n, err = io.Copy(hash, reader)
+	assert.Nil(t, err)
+	assert.EqualValues(t, 1257276, n)
+	assert.EqualValues(t, 0x199d1ae6, hash.Sum32())
+}
+
 func TestCreateEmptyFile(t *testing.T) {
 	client := getClient(t)
 

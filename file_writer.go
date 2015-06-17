@@ -56,7 +56,7 @@ func (c *Client) CreateFile(name string, replication int, blockSize int64, perm 
 		ClientName:   proto.String(rpc.ClientName),
 		CreateFlag:   proto.Uint32(1),
 		CreateParent: proto.Bool(false),
-		Replication:  proto.Uint32(uint32(1)),
+		Replication:  proto.Uint32(uint32(replication)),
 		BlockSize:    proto.Uint64(uint64(blockSize)),
 	}
 	createResp := &hdfs.CreateResponseProto{}

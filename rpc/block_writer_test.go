@@ -82,6 +82,8 @@ func TestWriteFailsOver(t *testing.T) {
 	require.NoError(t, err)
 
 	bw := createBlock(t, name)
+	bw.connectNext()
+	bw.stream.ackError = ackError{0, 0, hdfs.Status_ERROR}
 
 	_, err = io.CopyN(bw, mobydick, 1048576)
 	require.NoError(t, err)

@@ -9,7 +9,6 @@ import (
 	"io"
 	"os"
 	"testing"
-	"testing/iotest"
 )
 
 func createBlock(t *testing.T, name string) *BlockWriter {

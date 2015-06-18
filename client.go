@@ -37,6 +37,7 @@ func New(address string) (*Client, error) {
 	if err != nil {
 		return nil, err
 	}
+
 	return NewForUser(address, username)
 }
 

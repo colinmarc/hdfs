@@ -1,12 +1,12 @@
 package rpc
 
 import (
-	"github.com/golang/protobuf/proto"
 	"crypto/rand"
 	"encoding/binary"
 	"errors"
 	"fmt"
 	hadoop "github.com/colinmarc/hdfs/protocol/hadoop_common"
+	"github.com/golang/protobuf/proto"
 	"io"
 	"net"
 	"sync"

@@ -2,11 +2,11 @@ package rpc
 
 import (
 	"bufio"
-	"github.com/golang/protobuf/proto"
 	"encoding/binary"
 	"errors"
 	"fmt"
 	hdfs "github.com/colinmarc/hdfs/protocol/hadoop_hdfs"
+	"github.com/golang/protobuf/proto"
 	"io"
 	"net"
 )

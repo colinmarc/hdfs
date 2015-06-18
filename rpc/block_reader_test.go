@@ -1,8 +1,8 @@
 package rpc
 
 import (
-	"github.com/golang/protobuf/proto"
 	hdfs "github.com/colinmarc/hdfs/protocol/hadoop_hdfs"
+	"github.com/golang/protobuf/proto"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	"hash/crc32"
@@ -74,7 +74,7 @@ func TestFailsOver(t *testing.T) {
 	require.NoError(t, err)
 	assert.EqualValues(t, 1048576, n)
 	assert.EqualValues(t, 0xb35a6a0e, hash.Sum32())
-	assert.EqualValues(t, datanodes - 1, br.datanodes.numRemaining())
+	assert.EqualValues(t, datanodes-1, br.datanodes.numRemaining())
 
 	_, exist := datanodeFailures[dn]
 	assert.True(t, exist)
@@ -94,7 +94,7 @@ func TestFailsOverMidRead(t *testing.T) {
 	require.NoError(t, err)
 	assert.EqualValues(t, 1048576-10000, n)
 	assert.EqualValues(t, 0xb35a6a0e, hash.Sum32())
-	assert.EqualValues(t, datanodes - 1, br.datanodes.numRemaining())
+	assert.EqualValues(t, datanodes-1, br.datanodes.numRemaining())
 
 	_, exist := datanodeFailures[dn]
 	assert.True(t, exist)
@@ -108,10 +108,9 @@ func TestFailsOverAndThenDies(t *testing.T) {
 		br.stream.reader = iotest.TimeoutReader(br.stream.reader)
 		_, err := io.CopyN(ioutil.Discard, br, 1000)
 		require.NoError(t, err)
-		require.Equal(t, datanodes - 1, br.datanodes.numRemaining())
+		require.Equal(t, datanodes-1, br.datanodes.numRemaining())
 		datanodes--
 	}
-
 
 	br.stream.reader = iotest.TimeoutReader(br.stream.reader)
 	_, err := io.Copy(ioutil.Discard, br)

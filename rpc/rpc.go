@@ -4,8 +4,8 @@ package rpc
 
 import (
 	"bytes"
-	"github.com/golang/protobuf/proto"
 	"encoding/binary"
+	"github.com/golang/protobuf/proto"
 )
 
 // ClientName is passed into the namenode on requests, and identifies this

@@ -3,11 +3,11 @@ package rpc
 import (
 	"bufio"
 	"bytes"
-	"github.com/golang/protobuf/proto"
 	"encoding/binary"
 	"errors"
 	"fmt"
 	hdfs "github.com/colinmarc/hdfs/protocol/hadoop_hdfs"
+	"github.com/golang/protobuf/proto"
 	"hash/crc32"
 	"io"
 	"math"
@@ -16,7 +16,7 @@ import (
 const (
 	outboundPacketSize = 65536
 	outboundChunkSize  = 512
-	maxPacketsInQueue  = 5 // TODO: currently not actually a limit
+	maxPacketsInQueue  = 5
 )
 
 // blockWriteStream writes data out to a datanode, and reads acks back.
@@ -28,11 +28,11 @@ type blockWriteStream struct {
 	offset int64
 	closed bool
 
-	packets []outboundPacket
+	packets chan outboundPacket
 	seqno   int
 
 	ackError        error
-	acksDone        chan bool
+	acksDone        chan struct{}
 	lastPacketSeqno int
 }
 
@@ -61,8 +61,8 @@ func newBlockWriteStream(conn io.ReadWriter) *blockWriteStream {
 		conn:     conn,
 		offset:   0,
 		seqno:    1,
-		packets:  make([]outboundPacket, 0, maxPacketsInQueue),
-		acksDone: make(chan bool),
+		packets:  make(chan outboundPacket, maxPacketsInQueue),
+		acksDone: make(chan struct{}),
 	}
 
 	// Ack packets in the background.
@@ -105,6 +105,9 @@ func (s *blockWriteStream) Write(b []byte) (int, error) {
 // finish flushes the rest of the buffered bytes, and then sends a final empty
 // packet signifying the end of the block.
 func (s *blockWriteStream) finish() error {
+	if s.closed {
+		return nil
+	}
 	s.closed = true
 
 	if s.ackError != nil {
@@ -124,13 +127,12 @@ func (s *blockWriteStream) finish() error {
 		checksums: []byte{},
 		data:      []byte{},
 	}
-
-	s.packets = append(s.packets, lastPacket)
-	s.lastPacketSeqno = lastPacket.seqno
+	s.packets <- lastPacket
 	err = s.writePacket(lastPacket)
 	if err != nil {
 		return err
 	}
+	close(s.packets)
 
 	// Check one more time for any ack errors.
 	<-s.acksDone
@@ -147,7 +149,7 @@ func (s *blockWriteStream) finish() error {
 func (s *blockWriteStream) flush(force bool) error {
 	for s.buf.Len() > 0 && (force || s.buf.Len() >= outboundPacketSize) {
 		packet := s.makePacket()
-		s.packets = append(s.packets, packet)
+		s.packets <- packet
 		s.offset += int64(len(packet.data))
 		s.seqno++
 
@@ -200,6 +202,12 @@ func (s *blockWriteStream) ackPackets() {
 	reader := bufio.NewReader(s.conn)
 
 	for {
+		p, ok := <-s.packets
+		if !ok {
+			// All packets all acked.
+			return
+		}
+
 		ack := &hdfs.PipelineAckProto{}
 
 		// If we fail to read the ack at all, that counts as a failure from the
@@ -218,15 +226,8 @@ func (s *blockWriteStream) ackPackets() {
 			}
 		}
 
-		if seqno != s.packets[0].seqno {
+		if seqno != p.seqno {
 			s.ackError = ErrInvalidSeqno
-			return
-		}
-
-		// Mark the packet as successful.
-		// TODO: is this threadsafe?
-		s.packets = s.packets[1:]
-		if seqno == s.lastPacketSeqno {
 			return
 		}
 	}

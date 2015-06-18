@@ -6,11 +6,12 @@ import (
 	"encoding/binary"
 	"errors"
 	"fmt"
-	hdfs "github.com/colinmarc/hdfs/protocol/hadoop_hdfs"
-	"github.com/golang/protobuf/proto"
 	"hash/crc32"
 	"io"
 	"math"
+
+	hdfs "github.com/colinmarc/hdfs/protocol/hadoop_hdfs"
+	"github.com/golang/protobuf/proto"
 )
 
 const (

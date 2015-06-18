@@ -1,11 +1,12 @@
 package hdfs
 
 import (
-	"github.com/golang/protobuf/proto"
-	hdfs "github.com/colinmarc/hdfs/protocol/hadoop_hdfs"
-	"github.com/colinmarc/hdfs/rpc"
 	"io"
 	"os"
+
+	hdfs "github.com/colinmarc/hdfs/protocol/hadoop_hdfs"
+	"github.com/colinmarc/hdfs/rpc"
+	"github.com/golang/protobuf/proto"
 )
 
 // A FileWriter represents a writer for an open file in HDFS. It implements

@@ -5,12 +5,12 @@ package rpc
 import (
 	"bytes"
 	"encoding/binary"
-    "fmt"
-    "io"
-    "time"
+	"fmt"
+	"io"
+	"time"
 
 	hdfs "github.com/colinmarc/hdfs/protocol/hadoop_hdfs"
-    "github.com/golang/protobuf/proto"
+	"github.com/golang/protobuf/proto"
 )
 
 // ClientName is passed into the namenode on requests, and identifies this

@@ -1,12 +1,13 @@
 package rpc
 
 import (
-	"github.com/golang/protobuf/proto"
 	"errors"
 	"fmt"
-	hdfs "github.com/colinmarc/hdfs/protocol/hadoop_hdfs"
 	"io"
 	"net"
+
+	hdfs "github.com/colinmarc/hdfs/protocol/hadoop_hdfs"
+	"github.com/golang/protobuf/proto"
 )
 
 var ErrEndOfBlock = errors.New("The amount of data to be written is more than is left in the block.")

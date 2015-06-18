@@ -3,11 +3,11 @@ package hdfs
 import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
+	"hash/crc32"
+	"io"
 	"io/ioutil"
 	"os"
 	"testing"
-	"io"
-	"hash/crc32"
 )
 
 func TestFileWrite(t *testing.T) {

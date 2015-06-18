@@ -7,7 +7,7 @@ import (
 	"encoding/binary"
 	"fmt"
 	hdfs "github.com/colinmarc/hdfs/protocol/hadoop_hdfs"
-    "github.com/golang/protobuf/proto"
+	"github.com/golang/protobuf/proto"
 	"io"
 	"time"
 )

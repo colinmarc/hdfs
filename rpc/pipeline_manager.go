@@ -1,8 +1,8 @@
 package rpc
 
 import (
-	"github.com/golang/protobuf/proto"
 	hdfs "github.com/colinmarc/hdfs/protocol/hadoop_hdfs"
+	"github.com/golang/protobuf/proto"
 )
 
 // pipelineManager mediates communication with the namenode in the context of

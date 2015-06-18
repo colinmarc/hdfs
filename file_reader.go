@@ -274,7 +274,7 @@ func (f *FileReader) Close() error {
 	f.closed = true
 
 	if f.blockReader != nil {
-	f.blockReader.Close()
+		f.blockReader.Close()
 	}
 
 	return nil

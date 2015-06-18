@@ -1,10 +1,10 @@
 package rpc
 
 import (
-	"github.com/golang/protobuf/proto"
 	"errors"
 	"fmt"
 	hdfs "github.com/colinmarc/hdfs/protocol/hadoop_hdfs"
+	"github.com/golang/protobuf/proto"
 	"io"
 	"net"
 )

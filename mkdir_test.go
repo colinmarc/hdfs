@@ -64,6 +64,18 @@ func TestMkdirAll(t *testing.T) {
 	assert.EqualValues(t, 0, fi.Size())
 }
 
+func TestMkdirAllExists(t *testing.T) {
+	client := getClient(t)
+
+	baleet(t, "/_test/dir4")
+
+	err := client.MkdirAll("/_test/dir4/foo", mode)
+	require.NoError(t, err)
+
+	err := client.MkdirAll("/_test/dir4/foo", mode)
+	require.NoError(t, err)
+}
+
 func TestMkdirWIthoutPermission(t *testing.T) {
 	client := getClient(t)
 	otherClient := getClientForUser(t, "other")

@@ -15,7 +15,7 @@ clean:
 
 get-deps:
 	go get github.com/golang/protobuf/proto
-	go get code.google.com/p/getopt
+	go get github.com/pborman/getopt
 	go get github.com/stretchr/testify/assert
 	go get github.com/stretchr/testify/require
 

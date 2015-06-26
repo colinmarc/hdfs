@@ -1,10 +1,10 @@
 package main
 
 import (
-	"code.google.com/p/getopt"
 	"errors"
 	"fmt"
 	"github.com/colinmarc/hdfs"
+	"github.com/pborman/getopt"
 	"os"
 )
 

@@ -20,12 +20,8 @@ type Client struct {
 // New returns a connected Client, or an error if it can't connect. The user
 // will be the user the code is running under.
 func New(address string) (*Client, error) {
-	currentUser, err := user.Current()
-	if err != nil {
-		return nil, err
-	}
-
-	return NewForUser(address, currentUser.Username)
+	username := os.Getenv("USER")
+	return NewForUser(address, username)
 }
 
 // NewForUser returns a connected Client with the user specified, or an error if

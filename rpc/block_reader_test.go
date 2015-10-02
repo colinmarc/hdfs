@@ -5,7 +5,6 @@ import (
 	"io"
 	"io/ioutil"
 	"os"
-	"os/user"
 	"testing"
 	"testing/iotest"
 	"time"
@@ -22,8 +21,8 @@ func getNamenode(t *testing.T) *NamenodeConnection {
 		t.Fatal("HADOOP_NAMENODE not set")
 	}
 
-	currentUser, _ := user.Current()
-	conn, err := NewNamenodeConnection(nn, currentUser.Username)
+	username := os.Getenv("USER")
+	conn, err := NewNamenodeConnection(nn, username)
 	if err != nil {
 		t.Fatal(err)
 	}

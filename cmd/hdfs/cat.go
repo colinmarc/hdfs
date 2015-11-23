@@ -136,7 +136,7 @@ func tailLines(file *hdfs.FileReader, numLines int64) {
 			b, err = section.ReadByte()
 		}
 
-		if err != nil && err != io.EOF {
+		if err != nil && err != io.EOF && err != io.ErrUnexpectedEOF {
 			fatal(err)
 		}
 

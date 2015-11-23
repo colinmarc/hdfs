@@ -189,7 +189,7 @@ func (f *FileReader) ReadAt(b []byte, off int64) (int, error) {
 		return 0, err
 	}
 
-	return f.Read(b)
+	return io.ReadFull(f, b)
 }
 
 // Readdir reads the contents of the directory associated with file and returns

@@ -3,8 +3,6 @@ package hdfs
 import (
 	"bytes"
 	"encoding/hex"
-	"github.com/stretchr/testify/assert"
-	"github.com/stretchr/testify/require"
 	"hash/crc32"
 	"io"
 	"io/ioutil"
@@ -12,6 +10,9 @@ import (
 	"os"
 	"testing"
 	"time"
+
+	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 )
 
 const (

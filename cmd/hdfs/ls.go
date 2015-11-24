@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	"github.com/colinmarc/hdfs"
 	"io"
 	"os"
 	"path"
@@ -10,6 +9,8 @@ import (
 	"strings"
 	"text/tabwriter"
 	"time"
+
+	"github.com/colinmarc/hdfs"
 )
 
 func ls(paths []string, long, all, humanReadable bool) {

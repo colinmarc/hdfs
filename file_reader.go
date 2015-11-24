@@ -4,11 +4,12 @@ import (
 	"crypto/md5"
 	"errors"
 	"fmt"
+	"io"
+	"os"
+
 	hdfs "github.com/colinmarc/hdfs/protocol/hadoop_hdfs"
 	"github.com/colinmarc/hdfs/rpc"
 	"github.com/golang/protobuf/proto"
-	"io"
-	"os"
 )
 
 // A FileReader represents an existing file or directory in HDFS. It implements

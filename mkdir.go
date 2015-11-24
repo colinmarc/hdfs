@@ -1,11 +1,12 @@
 package hdfs
 
 import (
+	"os"
+	"path"
+
 	hdfs "github.com/colinmarc/hdfs/protocol/hadoop_hdfs"
 	"github.com/colinmarc/hdfs/rpc"
 	"github.com/golang/protobuf/proto"
-	"os"
-	"path"
 )
 
 // Mkdir creates a new directory with the specified name and permission bits.

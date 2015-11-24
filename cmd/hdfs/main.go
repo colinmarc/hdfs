@@ -3,9 +3,10 @@ package main
 import (
 	"errors"
 	"fmt"
+	"os"
+
 	"github.com/colinmarc/hdfs"
 	"github.com/pborman/getopt"
-	"os"
 )
 
 // TODO: put, du, df, tree, test, trash

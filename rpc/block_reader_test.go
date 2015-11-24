@@ -1,10 +1,6 @@
 package rpc
 
 import (
-	hdfs "github.com/colinmarc/hdfs/protocol/hadoop_hdfs"
-	"github.com/golang/protobuf/proto"
-	"github.com/stretchr/testify/assert"
-	"github.com/stretchr/testify/require"
 	"hash/crc32"
 	"io"
 	"io/ioutil"
@@ -13,6 +9,11 @@ import (
 	"testing"
 	"testing/iotest"
 	"time"
+
+	hdfs "github.com/colinmarc/hdfs/protocol/hadoop_hdfs"
+	"github.com/golang/protobuf/proto"
+	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 )
 
 func getNamenode(t *testing.T) *NamenodeConnection {

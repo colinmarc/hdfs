@@ -1,12 +1,13 @@
 package hdfs
 
 import (
-	hdfs "github.com/colinmarc/hdfs/protocol/hadoop_hdfs"
-	"github.com/colinmarc/hdfs/rpc"
-	"github.com/golang/protobuf/proto"
 	"os"
 	"path"
 	"time"
+
+	hdfs "github.com/colinmarc/hdfs/protocol/hadoop_hdfs"
+	"github.com/colinmarc/hdfs/rpc"
+	"github.com/golang/protobuf/proto"
 )
 
 // FileInfo implements os.FileInfo, and provides information about a file or

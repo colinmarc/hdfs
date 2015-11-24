@@ -1,13 +1,14 @@
 package hdfs
 
 import (
-	hdfs "github.com/colinmarc/hdfs/protocol/hadoop_hdfs"
-	"github.com/colinmarc/hdfs/rpc"
-	"github.com/golang/protobuf/proto"
 	"io"
 	"io/ioutil"
 	"os"
 	"os/user"
+
+	hdfs "github.com/colinmarc/hdfs/protocol/hadoop_hdfs"
+	"github.com/colinmarc/hdfs/rpc"
+	"github.com/golang/protobuf/proto"
 )
 
 // A Client represents a connection to an HDFS cluster

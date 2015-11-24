@@ -1,11 +1,12 @@
 package hdfs
 
 import (
+	"os"
+	"path"
+
 	hdfs "github.com/colinmarc/hdfs/protocol/hadoop_hdfs"
 	"github.com/colinmarc/hdfs/rpc"
 	"github.com/golang/protobuf/proto"
-	"os"
-	"path"
 )
 
 // ReadDir reads the directory named by dirname and returns a list of sorted

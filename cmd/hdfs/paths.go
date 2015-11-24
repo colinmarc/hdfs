@@ -2,7 +2,6 @@ package main
 
 import (
 	"errors"
-	"github.com/colinmarc/hdfs"
 	"io"
 	"net/url"
 	"os"
@@ -10,6 +9,8 @@ import (
 	"path"
 	"regexp"
 	"strings"
+
+	"github.com/colinmarc/hdfs"
 )
 
 var (

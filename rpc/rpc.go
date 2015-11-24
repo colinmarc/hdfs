@@ -5,6 +5,7 @@ package rpc
 import (
 	"bytes"
 	"encoding/binary"
+
 	"github.com/golang/protobuf/proto"
 )
 

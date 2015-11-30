@@ -91,6 +91,13 @@ Or, to install tab completion globally on linux:
 
     ln -sT $GOPATH/src/github.com/colinmarc/hdfs/cmd/hdfs/bash_completion /etc/bash_completion.d/gohdfs
 
+Compatibility
+-------------
+
+This library uses "Version 9" of the HDFS protocol, which means it should work
+with hadoop distributions based on 2.2.x and above. The tests run against CDH
+5.x and HDP 2.x.
+
 Acknowledgements
 ----------------
 

@@ -20,8 +20,15 @@ type Client struct {
 // New returns a connected Client, or an error if it can't connect. The user
 // will be the user the code is running under.
 func New(address string) (*Client, error) {
-	username := os.Getenv("USER")
-	return NewForUser(address, username)
+	username := os.Getenv("HADOOP_USER_NAME")
+	if username != "" {
+		return NewForUser(address, username)
+	}
+	currentUser, err := user.Current()
+	if err != nil {
+		return nil, err
+	}
+	return NewForUser(address, currentUser.Username)
 }
 
 // NewForUser returns a connected Client with the user specified, or an error if

@@ -3,7 +3,6 @@ package hdfs
 import (
 	"io/ioutil"
 	"os"
-	"os/user"
 	"path/filepath"
 	"testing"
 
@@ -13,20 +12,11 @@ import (
 
 var cachedClients = make(map[string]*Client)
 
-func getUsername(t *testing.T) string {
-	username := os.Getenv("HADOOP_USER_NAME")
-	if username != "" {
-		return username
-	}
-	currentUser, err := user.Current()
+func getClient(t *testing.T) *Client {
+	username, err := Username()
 	if err != nil {
 		t.Fatal(err)
 	}
-	return currentUser.Username
-}
-
-func getClient(t *testing.T) *Client {
-	username := getUsername(t)
 	return getClientForUser(t, username)
 }
 

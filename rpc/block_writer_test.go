@@ -76,6 +76,8 @@ func baleet(t *testing.T, name string) {
 }
 
 func TestWriteFailsOver(t *testing.T) {
+	t.Skip("Write failover isn't implemented")
+
 	name := "/_test/create/6.txt"
 	baleet(t, name)
 

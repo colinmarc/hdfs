@@ -16,14 +16,30 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
+func getUsername(*testing.T) (string, error) {
+	username := os.Getenv("HADOOP_USER_NAME")
+	if username != "" {
+		return username, nil
+	}
+	currentUser, err := user.Current()
+	if err != nil {
+		return "", err
+	}
+	return currentUser.Username, nil
+}
+
 func getNamenode(t *testing.T) *NamenodeConnection {
 	nn := os.Getenv("HADOOP_NAMENODE")
 	if nn == "" {
 		t.Fatal("HADOOP_NAMENODE not set")
 	}
 
-	currentUser, _ := user.Current()
-	conn, err := NewNamenodeConnection(nn, currentUser.Username)
+	username, err := getUsername(t)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	conn, err := NewNamenodeConnection(nn, username)
 	if err != nil {
 		t.Fatal(err)
 	}

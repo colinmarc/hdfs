@@ -16,26 +16,24 @@ var ErrEndOfBlock = errors.New("The amount of data to be written is more than is
 // Given a block location, it handles pipeline construction and failures,
 // including communicating with the namenode if need be.
 type BlockWriter struct {
-	pm        *pipelineManager
 	block     *hdfs.LocatedBlockProto
 	blockSize int64
 
-	conn   net.Conn
-	stream *blockWriteStream
-	offset int64
-	closed bool
+	namenode *NamenodeConnection
+	conn     net.Conn
+	stream   *blockWriteStream
+	offset   int64
+	closed   bool
 }
 
 // NewBlockWriter returns a BlockWriter for the given block. It will lazily
 // set up a replication pipeline, and connect to the "best" datanode based on
 // any previously seen failures.
 func NewBlockWriter(block *hdfs.LocatedBlockProto, namenode *NamenodeConnection, blockSize int64) *BlockWriter {
-	pm := newPipelineManager(namenode, block)
-
 	s := &BlockWriter{
-		pm:        pm,
 		block:     block,
 		blockSize: blockSize,
+		namenode:  namenode,
 	}
 
 	return s
@@ -92,7 +90,7 @@ func (bw *BlockWriter) Close() error {
 		}
 
 		// We need to tell the namenode what the final block length is.
-		err = bw.pm.finalizeBlock(bw.offset)
+		err = bw.finalizeBlock(bw.offset)
 		if err != nil {
 			return err
 		}
@@ -102,7 +100,7 @@ func (bw *BlockWriter) Close() error {
 }
 
 func (bw *BlockWriter) connectNext() error {
-	address := getDatanodeAddress(bw.pm.currentPipeline()[0])
+	address := getDatanodeAddress(bw.currentPipeline()[0])
 
 	conn, err := net.DialTimeout("tcp", address, connectTimeout)
 	if err != nil {
@@ -126,8 +124,52 @@ func (bw *BlockWriter) connectNext() error {
 	return nil
 }
 
+func (bw *BlockWriter) currentPipeline() []*hdfs.DatanodeInfoProto {
+	// TODO: we need to be able to reconfigure the pipeline when a node fails.
+	//
+	// targets := make([]*hdfs.DatanodeInfoProto, 0, len(br.pipeline))
+	// for _, loc := range s.block.GetLocs() {
+	// 	addr := getDatanodeAddress(loc)
+	// 	for _, pipelineAddr := range br.pipeline {
+	// 		if ipAddr == addr {
+	// 			append(targets, loc)
+	// 		}
+	// 	}
+	// }
+	//
+	// return targets
+
+	return bw.block.GetLocs()
+}
+
+func (bw *BlockWriter) currentStage() hdfs.OpWriteBlockProto_BlockConstructionStage {
+	// TODO: this should be PIPELINE_SETUP_STREAMING_RECOVERY for recovery
+	return hdfs.OpWriteBlockProto_PIPELINE_SETUP_CREATE
+}
+
+func (bw *BlockWriter) generationTimestamp() int64 {
+	// TODO: ???
+	return 0
+}
+
+func (bw *BlockWriter) finalizeBlock(length int64) error {
+	bw.block.GetB().NumBytes = proto.Uint64(uint64(length))
+	updateReq := &hdfs.UpdateBlockForPipelineRequestProto{
+		Block:      bw.block.GetB(),
+		ClientName: proto.String(ClientName),
+	}
+	updateResp := &hdfs.UpdateBlockForPipelineResponseProto{}
+
+	err := bw.namenode.Execute("updateBlockForPipeline", updateReq, updateResp)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
 func (bw *BlockWriter) writeBlockWriteRequest(w io.Writer) error {
-	targets := bw.pm.currentPipeline()[1:]
+	targets := bw.currentPipeline()[1:]
 
 	op := &hdfs.OpWriteBlockProto{
 		Header: &hdfs.ClientOperationHeaderProto{
@@ -138,11 +180,11 @@ func (bw *BlockWriter) writeBlockWriteRequest(w io.Writer) error {
 			ClientName: proto.String(ClientName),
 		},
 		Targets:               targets,
-		Stage:                 bw.pm.currentStage().Enum(),
+		Stage:                 bw.currentStage().Enum(),
 		PipelineSize:          proto.Uint32(uint32(len(targets))),
 		MinBytesRcvd:          proto.Uint64(bw.block.GetB().GetNumBytes()),
 		MaxBytesRcvd:          proto.Uint64(uint64(bw.offset)), // I don't understand these two fields
-		LatestGenerationStamp: proto.Uint64(uint64(bw.pm.generationTimestamp())),
+		LatestGenerationStamp: proto.Uint64(uint64(bw.generationTimestamp())),
 		RequestedChecksum: &hdfs.ChecksumProto{
 			Type:             hdfs.ChecksumTypeProto_CHECKSUM_CRC32.Enum(),
 			BytesPerChecksum: proto.Uint32(outboundChunkSize),

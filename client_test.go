@@ -1,20 +1,23 @@
 package hdfs
 
 import (
-	"github.com/stretchr/testify/assert"
-	"github.com/stretchr/testify/require"
 	"io/ioutil"
 	"os"
-	"os/user"
 	"path/filepath"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 )
 
 var cachedClients = make(map[string]*Client)
 
 func getClient(t *testing.T) *Client {
-	currentUser, _ := user.Current()
-	return getClientForUser(t, currentUser.Username)
+	username, err := Username()
+	if err != nil {
+		t.Fatal(err)
+	}
+	return getClientForUser(t, username)
 }
 
 func getClientForUser(t *testing.T, user string) *Client {

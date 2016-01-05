@@ -1,11 +1,12 @@
 package main
 
 import (
-	"code.google.com/p/getopt"
 	"errors"
 	"fmt"
-	"github.com/colinmarc/hdfs"
 	"os"
+
+	"github.com/colinmarc/hdfs"
+	"github.com/pborman/getopt"
 )
 
 // TODO: put, du, df, tree, test, trash

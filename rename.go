@@ -1,10 +1,11 @@
 package hdfs
 
 import (
+	"os"
+
 	hdfs "github.com/colinmarc/hdfs/protocol/hadoop_hdfs"
 	"github.com/colinmarc/hdfs/rpc"
 	"github.com/golang/protobuf/proto"
-	"os"
 )
 
 // Rename renames (moves) a file.

@@ -2,10 +2,11 @@ package hdfs
 
 import (
 	"errors"
+	"os"
+
 	hdfs "github.com/colinmarc/hdfs/protocol/hadoop_hdfs"
 	"github.com/colinmarc/hdfs/rpc"
 	"github.com/golang/protobuf/proto"
-	"os"
 )
 
 // Remove removes the named file or directory.

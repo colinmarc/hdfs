@@ -1,9 +1,10 @@
 package main
 
 import (
-	"github.com/colinmarc/hdfs"
 	"os"
 	"path"
+
+	"github.com/colinmarc/hdfs"
 )
 
 func mv(paths []string, force, treatDestAsFile bool) {

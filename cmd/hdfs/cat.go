@@ -4,12 +4,13 @@ import (
 	"bufio"
 	"errors"
 	"fmt"
-	"github.com/colinmarc/hdfs"
 	"io"
 	"os"
+
+	"github.com/colinmarc/hdfs"
 )
 
-var tailSearchSize int64 = 16384
+const tailSearchSize int64 = 16384
 
 func cat(paths []string) {
 	expanded, client, err := getClientAndExpandedPaths(paths)
@@ -119,10 +120,14 @@ func tailLines(file *hdfs.FileReader, numLines int64) {
 	if searchPoint < 0 {
 		searchPoint = 0
 	}
+	readSize := tailSearchSize
+	if readSize > fileSize {
+		readSize = fileSize
+	}
 
 	var printOffset int64
 	for searchPoint >= 0 {
-		section := bufio.NewReader(io.NewSectionReader(file, searchPoint, tailSearchSize))
+		section := bufio.NewReader(io.NewSectionReader(file, searchPoint, readSize))
 		off := searchPoint
 		newlines := make([]int64, 0, tailSearchSize/64)
 

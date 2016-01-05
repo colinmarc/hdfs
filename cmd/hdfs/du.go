@@ -2,11 +2,12 @@ package main
 
 import (
 	"fmt"
-	"github.com/colinmarc/hdfs"
 	"io"
 	"os"
 	"path"
 	"text/tabwriter"
+
+	"github.com/colinmarc/hdfs"
 )
 
 func du(args []string, summarize, humanReadable bool) {

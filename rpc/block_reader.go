@@ -16,18 +16,19 @@ import (
 // reading from multiple datanodes, in order to be robust to connection
 // failures, timeouts, and other shenanigans.
 type BlockReader struct {
-	block     *hdfs.LocatedBlockProto
-	datanodes *datanodeFailover
-	stream    *blockReadStream
-	conn      net.Conn
-	offset    int64
-	closed    bool
+	clientName string
+	block      *hdfs.LocatedBlockProto
+	datanodes  *datanodeFailover
+	stream     *blockReadStream
+	conn       net.Conn
+	offset     int64
+	closed     bool
 }
 
 // NewBlockReader returns a new BlockReader, given the block information and
 // security token from the namenode. It will connect (lazily) to one of the
 // provided datanode locations based on which datanodes have seen failures.
-func NewBlockReader(block *hdfs.LocatedBlockProto, offset int64) *BlockReader {
+func NewBlockReader(block *hdfs.LocatedBlockProto, offset int64, clientName string) *BlockReader {
 	locs := block.GetLocs()
 	datanodes := make([]string, len(locs))
 	for i, loc := range locs {
@@ -35,9 +36,10 @@ func NewBlockReader(block *hdfs.LocatedBlockProto, offset int64) *BlockReader {
 	}
 
 	return &BlockReader{
-		block:     block,
-		datanodes: newDatanodeFailover(datanodes),
-		offset:    offset,
+		clientName: clientName,
+		block:      block,
+		datanodes:  newDatanodeFailover(datanodes),
+		offset:     offset,
 	}
 }
 
@@ -180,7 +182,7 @@ func (br *BlockReader) writeBlockReadRequest(w io.Writer) error {
 				Block: br.block.GetB(),
 				Token: br.block.GetBlockToken(),
 			},
-			ClientName: proto.String(ClientName),
+			ClientName: proto.String(br.clientName),
 		},
 		Offset: proto.Uint64(uint64(br.offset)),
 		Len:    proto.Uint64(needed),

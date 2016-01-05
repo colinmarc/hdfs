@@ -76,7 +76,7 @@ func getBlockReader(t *testing.T, name string) (*BlockReader, string) {
 	datanodeFailures = make(map[string]time.Time)
 	block := getBlocks(t, name)[0]
 
-	br := NewBlockReader(block, 0)
+	br := NewBlockReader(block, 0, "test-"+string(newClientID()))
 	dn := br.datanodes.datanodes[0]
 	err := br.connectNext()
 	require.NoError(t, err)

@@ -305,7 +305,7 @@ func (f *FileReader) getNewBlockReader() error {
 		end := start + block.GetB().GetNumBytes()
 
 		if start <= off && off < end {
-			br := rpc.NewBlockReader(block, int64(off-start))
+			br := rpc.NewBlockReader(block, int64(off-start), f.client.namenode.ClientName())
 
 			f.blockReader = br
 			return nil

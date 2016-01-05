@@ -7,16 +7,14 @@ import (
 	"encoding/binary"
 	"fmt"
 	"io"
+	"math/rand"
 	"time"
 
 	hdfs "github.com/colinmarc/hdfs/protocol/hadoop_hdfs"
 	"github.com/golang/protobuf/proto"
 )
 
-// ClientName is passed into the namenode on requests, and identifies this
-// client to the namenode.
 const (
-	ClientName          = "go-hdfs"
 	dataTransferVersion = 0x1c
 	writeBlockOp        = 0x50
 	readBlockOp         = 0x51
@@ -28,6 +26,20 @@ var (
 	namenodeTimeout = 3 * time.Second
 	datanodeTimeout = 3 * time.Second
 )
+
+// Used for client ID generation, below.
+const chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
+
+func newClientID() []byte {
+	id := make([]byte, 16)
+
+	rand.Seed(time.Now().UTC().UnixNano())
+	for i := range id {
+		id[i] = chars[rand.Intn(len(chars))]
+	}
+
+	return id
+}
 
 func makeRPCPacket(msgs ...proto.Message) ([]byte, error) {
 	packet := make([]byte, 4, 128)

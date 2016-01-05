@@ -16,8 +16,9 @@ var ErrEndOfBlock = errors.New("The amount of data to be written is more than is
 // Given a block location, it handles pipeline construction and failures,
 // including communicating with the namenode if need be.
 type BlockWriter struct {
-	block     *hdfs.LocatedBlockProto
-	blockSize int64
+	clientName string
+	block      *hdfs.LocatedBlockProto
+	blockSize  int64
 
 	namenode *NamenodeConnection
 	conn     net.Conn
@@ -31,9 +32,10 @@ type BlockWriter struct {
 // any previously seen failures.
 func NewBlockWriter(block *hdfs.LocatedBlockProto, namenode *NamenodeConnection, blockSize int64) *BlockWriter {
 	s := &BlockWriter{
-		block:     block,
-		blockSize: blockSize,
-		namenode:  namenode,
+		clientName: namenode.ClientName(),
+		block:      block,
+		blockSize:  blockSize,
+		namenode:   namenode,
 	}
 
 	return s
@@ -156,7 +158,7 @@ func (bw *BlockWriter) finalizeBlock(length int64) error {
 	bw.block.GetB().NumBytes = proto.Uint64(uint64(length))
 	updateReq := &hdfs.UpdateBlockForPipelineRequestProto{
 		Block:      bw.block.GetB(),
-		ClientName: proto.String(ClientName),
+		ClientName: proto.String(bw.clientName),
 	}
 	updateResp := &hdfs.UpdateBlockForPipelineResponseProto{}
 
@@ -177,7 +179,7 @@ func (bw *BlockWriter) writeBlockWriteRequest(w io.Writer) error {
 				Block: bw.block.GetB(),
 				Token: bw.block.GetBlockToken(),
 			},
-			ClientName: proto.String(ClientName),
+			ClientName: proto.String(bw.clientName),
 		},
 		Targets:               targets,
 		Stage:                 bw.currentStage().Enum(),

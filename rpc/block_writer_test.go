@@ -19,7 +19,7 @@ func createBlock(t *testing.T, name string) *BlockWriter {
 	createReq := &hdfs.CreateRequestProto{
 		Src:          proto.String(name),
 		Masked:       &hdfs.FsPermissionProto{Perm: proto.Uint32(uint32(0644))},
-		ClientName:   proto.String(ClientName),
+		ClientName:   proto.String(namenode.ClientName()),
 		CreateFlag:   proto.Uint32(1),
 		CreateParent: proto.Bool(false),
 		Replication:  proto.Uint32(uint32(3)),
@@ -32,7 +32,7 @@ func createBlock(t *testing.T, name string) *BlockWriter {
 
 	addBlockReq := &hdfs.AddBlockRequestProto{
 		Src:        proto.String(name),
-		ClientName: proto.String(ClientName),
+		ClientName: proto.String(namenode.ClientName()),
 		Previous:   nil,
 	}
 	addBlockResp := &hdfs.AddBlockResponseProto{}
@@ -52,7 +52,7 @@ func finishBlock(t *testing.T, name string, bw *BlockWriter) {
 
 	completeReq := &hdfs.CompleteRequestProto{
 		Src:        proto.String(name),
-		ClientName: proto.String(ClientName),
+		ClientName: proto.String(namenode.ClientName()),
 		Last:       bw.block.GetB(),
 	}
 	completeResp := &hdfs.CompleteResponseProto{}

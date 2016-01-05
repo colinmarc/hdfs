@@ -9,7 +9,7 @@ import (
 	"github.com/pborman/getopt"
 )
 
-// TODO: put, du, df, tree, test, trash
+// TODO: cp, df, tree, test, trash
 
 var (
 	usage = fmt.Sprintf(`Usage: %s COMMAND
@@ -30,6 +30,7 @@ Valid commands:
   checksum FILE...
   get SOURCE [DEST]
   getmerge SOURCE DEST
+  put SOURCE DEST
 `, os.Args[0])
 
 	lsOpts = getopt.New()
@@ -128,6 +129,8 @@ func main() {
 	case "getmerge":
 		getmergeOpts.Parse(argv)
 		getmerge(getmergeOpts.Args(), *getmergen)
+	case "put":
+		put(argv[1:])
 	// it's a seeeeecret command
 	case "complete":
 		complete(argv)

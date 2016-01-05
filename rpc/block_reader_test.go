@@ -16,6 +16,8 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
+var cachedNamenode *NamenodeConnection
+
 func getUsername(*testing.T) (string, error) {
 	username := os.Getenv("HADOOP_USER_NAME")
 	if username != "" {
@@ -27,8 +29,11 @@ func getUsername(*testing.T) (string, error) {
 	}
 	return currentUser.Username, nil
 }
-
 func getNamenode(t *testing.T) *NamenodeConnection {
+	if cachedNamenode != nil {
+		return cachedNamenode
+	}
+
 	nn := os.Getenv("HADOOP_NAMENODE")
 	if nn == "" {
 		t.Fatal("HADOOP_NAMENODE not set")
@@ -66,23 +71,21 @@ func getBlocks(t *testing.T, name string) []*hdfs.LocatedBlockProto {
 	return resp.GetLocations().GetBlocks()
 }
 
-func setupFailover(t *testing.T) (*BlockReader, string) {
+func getBlockReader(t *testing.T, name string) (*BlockReader, string) {
 	// clear the failure cache
 	datanodeFailures = make(map[string]time.Time)
-	block := getBlocks(t, "/_test/mobydick.txt")[0]
+	block := getBlocks(t, name)[0]
 
-	br := NewBlockReader(block, 0)
+	br := NewBlockReader(block, 0, "test-"+string(newClientID()))
 	dn := br.datanodes.datanodes[0]
 	err := br.connectNext()
-	if err != nil {
-		t.Fatal(err)
-	}
+	require.NoError(t, err)
 
 	return br, dn
 }
 
-func TestFailsOver(t *testing.T) {
-	br, dn := setupFailover(t)
+func TestReadFailsOver(t *testing.T) {
+	br, dn := getBlockReader(t, "/_test/mobydick.txt")
 	datanodes := br.datanodes.numRemaining()
 	br.stream.reader = iotest.TimeoutReader(br.stream.reader)
 
@@ -97,8 +100,8 @@ func TestFailsOver(t *testing.T) {
 	assert.True(t, exist)
 }
 
-func TestFailsOverMidRead(t *testing.T) {
-	br, dn := setupFailover(t)
+func TestReadFailsOverMidRead(t *testing.T) {
+	br, dn := getBlockReader(t, "/_test/mobydick.txt")
 	datanodes := br.datanodes.numRemaining()
 
 	hash := crc32.NewIEEE()
@@ -117,8 +120,8 @@ func TestFailsOverMidRead(t *testing.T) {
 	assert.True(t, exist)
 }
 
-func TestFailsOverAndThenDies(t *testing.T) {
-	br, _ := setupFailover(t)
+func TestReadFailsOverAndThenDies(t *testing.T) {
+	br, _ := getBlockReader(t, "/_test/mobydick.txt")
 	datanodes := br.datanodes.numRemaining()
 
 	for br.datanodes.numRemaining() > 0 {

@@ -60,7 +60,7 @@ func (cr *ChecksumReader) ReadChecksum() ([]byte, error) {
 }
 
 func (cr *ChecksumReader) readChecksum(address string) ([]byte, error) {
-	conn, err := net.DialTimeout("tcp", address, connectionTimeout)
+	conn, err := net.DialTimeout("tcp", address, connectTimeout)
 	if err != nil {
 		return nil, err
 	}
@@ -92,7 +92,7 @@ func (cr *ChecksumReader) writeBlockChecksumRequest() error {
 	header := []byte{0x00, dataTransferVersion, checksumBlockOp}
 
 	op := newChecksumBlockOp(cr.block)
-	opBytes, err := makeDelimitedMsg(op)
+	opBytes, err := makePrefixedMessage(op)
 	if err != nil {
 		return err
 	}

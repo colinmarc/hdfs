@@ -17,6 +17,7 @@ func getClient(t *testing.T) *Client {
 	if err != nil {
 		t.Fatal(err)
 	}
+
 	return getClientForUser(t, username)
 }
 

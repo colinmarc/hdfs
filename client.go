@@ -17,8 +17,8 @@ type Client struct {
 	defaults *hdfs.FsServerDefaultsProto
 }
 
-// Username returns the HADOOP_USER_NAME environment supplied user if provided
-// or the operating system current user
+// Username returns the value of HADOOP_USER_NAME in the environment, or
+// the current system user if it is not set.
 func Username() (string, error) {
 	username := os.Getenv("HADOOP_USER_NAME")
 	if username != "" {

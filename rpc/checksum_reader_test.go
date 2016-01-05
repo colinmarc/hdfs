@@ -2,9 +2,10 @@ package rpc
 
 import (
 	"encoding/hex"
+	"testing"
+
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	"testing"
 )
 
 const testChecksum = "b8d258c1ae6b31ce38b833f7e3bb5cb0"

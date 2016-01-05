@@ -1,11 +1,12 @@
 package hdfs
 
 import (
+	"os"
+	"time"
+
 	hdfs "github.com/colinmarc/hdfs/protocol/hadoop_hdfs"
 	"github.com/colinmarc/hdfs/rpc"
 	"github.com/golang/protobuf/proto"
-	"os"
-	"time"
 )
 
 // Chmod changes the mode of the named file to mode.

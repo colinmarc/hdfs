@@ -1,11 +1,12 @@
 package hdfs
 
 import (
+	"os"
+	"path"
+
 	hdfs "github.com/colinmarc/hdfs/protocol/hadoop_hdfs"
 	"github.com/colinmarc/hdfs/rpc"
 	"github.com/golang/protobuf/proto"
-	"os"
-	"path"
 )
 
 // Mkdir creates a new directory with the specified name and permission bits.
@@ -24,8 +25,11 @@ func (c *Client) MkdirAll(dirname string, perm os.FileMode) error {
 func (c *Client) mkdir(dirname string, perm os.FileMode, createParent bool) error {
 	dirname = path.Clean(dirname)
 
-	_, err := c.getFileInfo(dirname)
+	info, err := c.getFileInfo(dirname)
 	if err == nil {
+		if createParent && info.IsDir() {
+			return nil
+		}
 		return &os.PathError{"mkdir", dirname, os.ErrExist}
 	} else if !os.IsNotExist(err) {
 		return &os.PathError{"mkdir", dirname, err}

@@ -1,7 +1,7 @@
 HDFS for Go
 ===========
 
-[![GoDoc](https://godoc.org/github.com/colinmarc/hdfs/web?status.svg)](https://godoc.org/github.com/colinmarc/hdfs/web) [![build](https://travis-ci.org/colinmarc/hdfs.svg?branch=master)](https://travis-ci.org/colinmarc/hdfs)
+[![GoDoc](https://godoc.org/github.com/colinmarc/hdfs/web?status.svg)](https://godoc.org/github.com/colinmarc/hdfs) [![build](https://travis-ci.org/colinmarc/hdfs.svg?branch=master)](https://travis-ci.org/colinmarc/hdfs)
 
 This is a native golang client for hdfs. It connects directly to the namenode using
 the protocol buffers API.
@@ -90,6 +90,13 @@ You'll also want to add two lines to your `.bashrc` or `.profile`:
 Or, to install tab completion globally on linux:
 
     ln -sT $GOPATH/src/github.com/colinmarc/hdfs/cmd/hdfs/bash_completion /etc/bash_completion.d/gohdfs
+
+Compatibility
+-------------
+
+This library uses "Version 9" of the HDFS protocol, which means it should work
+with hadoop distributions based on 2.2.x and above. The tests run against CDH
+5.x and HDP 2.x.
 
 Acknowledgements
 ----------------

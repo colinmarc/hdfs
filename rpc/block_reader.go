@@ -3,12 +3,13 @@ package rpc
 import (
 	"errors"
 	"fmt"
-	hdfs "github.com/colinmarc/hdfs/protocol/hadoop_hdfs"
-	"github.com/golang/protobuf/proto"
 	"hash/crc32"
 	"io"
 	"io/ioutil"
 	"net"
+
+	hdfs "github.com/colinmarc/hdfs/protocol/hadoop_hdfs"
+	"github.com/golang/protobuf/proto"
 )
 
 // BlockReader implements io.ReadCloser, for reading a block. It abstracts over

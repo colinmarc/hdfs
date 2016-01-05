@@ -1,10 +1,11 @@
 package hdfs
 
 import (
-	"github.com/stretchr/testify/assert"
-	"github.com/stretchr/testify/require"
 	"os"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 )
 
 var mode = 0777 | os.ModeDir
@@ -62,6 +63,18 @@ func TestMkdirAll(t *testing.T) {
 	require.NoError(t, err)
 	assert.True(t, fi.IsDir())
 	assert.EqualValues(t, 0, fi.Size())
+}
+
+func TestMkdirAllExists(t *testing.T) {
+	client := getClient(t)
+
+	baleet(t, "/_test/dir4")
+
+	err := client.MkdirAll("/_test/dir4/foo", mode)
+	require.NoError(t, err)
+
+	err = client.MkdirAll("/_test/dir4/foo", mode)
+	require.NoError(t, err)
 }
 
 func TestMkdirWIthoutPermission(t *testing.T) {

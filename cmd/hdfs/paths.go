@@ -2,14 +2,14 @@ package main
 
 import (
 	"errors"
-	"github.com/colinmarc/hdfs"
 	"io"
 	"net/url"
 	"os"
-	"os/user"
 	"path"
 	"regexp"
 	"strings"
+
+	"github.com/colinmarc/hdfs"
 )
 
 var (
@@ -18,12 +18,12 @@ var (
 )
 
 func userDir() string {
-	currentUser, err := user.Current()
-	if err != nil || currentUser.Username == "" {
+	currentUser, err := hdfs.Username()
+	if err != nil || currentUser == "" {
 		return "/"
 	}
 
-	return path.Join("/user", currentUser.Username)
+	return path.Join("/user", currentUser)
 }
 
 // normalizePaths parses the hosts out of HDFS URLs, and turns relative paths

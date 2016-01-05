@@ -1,6 +1,10 @@
 package rpc
 
 import (
+	hdfs "github.com/colinmarc/hdfs/protocol/hadoop_hdfs"
+	"github.com/golang/protobuf/proto"
+	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 	"hash/crc32"
 	"io"
 	"io/ioutil"
@@ -9,26 +13,10 @@ import (
 	"testing"
 	"testing/iotest"
 	"time"
-
-	hdfs "github.com/colinmarc/hdfs/protocol/hadoop_hdfs"
-	"github.com/golang/protobuf/proto"
-	"github.com/stretchr/testify/assert"
-	"github.com/stretchr/testify/require"
 )
 
 var cachedNamenode *NamenodeConnection
 
-func getUsername(*testing.T) (string, error) {
-	username := os.Getenv("HADOOP_USER_NAME")
-	if username != "" {
-		return username, nil
-	}
-	currentUser, err := user.Current()
-	if err != nil {
-		return "", err
-	}
-	return currentUser.Username, nil
-}
 func getNamenode(t *testing.T) *NamenodeConnection {
 	if cachedNamenode != nil {
 		return cachedNamenode
@@ -39,16 +27,13 @@ func getNamenode(t *testing.T) *NamenodeConnection {
 		t.Fatal("HADOOP_NAMENODE not set")
 	}
 
-	username, err := getUsername(t)
+	currentUser, _ := user.Current()
+	conn, err := NewNamenodeConnection(nn, currentUser.Username)
 	if err != nil {
 		t.Fatal(err)
 	}
 
-	conn, err := NewNamenodeConnection(nn, username)
-	if err != nil {
-		t.Fatal(err)
-	}
-
+	cachedNamenode = conn
 	return conn
 }
 

@@ -1,15 +1,14 @@
 package rpc
 
 import (
-	"hash/crc32"
-	"io"
-	"os"
-	"testing"
-
 	hdfs "github.com/colinmarc/hdfs/protocol/hadoop_hdfs"
 	"github.com/golang/protobuf/proto"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
+	"hash/crc32"
+	"io"
+	"os"
+	"testing"
 )
 
 func createBlock(t *testing.T, name string) *BlockWriter {
@@ -76,8 +75,6 @@ func baleet(t *testing.T, name string) {
 }
 
 func TestWriteFailsOver(t *testing.T) {
-	t.Skip("Write failover isn't implemented")
-
 	name := "/_test/create/6.txt"
 	baleet(t, name)
 

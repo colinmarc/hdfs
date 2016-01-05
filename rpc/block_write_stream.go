@@ -6,12 +6,11 @@ import (
 	"encoding/binary"
 	"errors"
 	"fmt"
+	hdfs "github.com/colinmarc/hdfs/protocol/hadoop_hdfs"
+	"github.com/golang/protobuf/proto"
 	"hash/crc32"
 	"io"
 	"math"
-
-	hdfs "github.com/colinmarc/hdfs/protocol/hadoop_hdfs"
-	"github.com/golang/protobuf/proto"
 )
 
 const (
@@ -202,11 +201,15 @@ func (s *blockWriteStream) makePacket() outboundPacket {
 func (s *blockWriteStream) ackPackets() {
 	reader := bufio.NewReader(s.conn)
 
+	loop:
 	for {
 		p, ok := <-s.packets
 		if !ok {
 			// All packets all acked.
 			return
+		}
+		if s.ackError != nil {
+			continue
 		}
 
 		ack := &hdfs.PipelineAckProto{}
@@ -216,20 +219,20 @@ func (s *blockWriteStream) ackPackets() {
 		err := readPrefixedMessage(reader, ack)
 		if err != nil {
 			s.ackError = err
-			return
+			continue
 		}
 
 		seqno := int(ack.GetSeqno())
 		for i, status := range ack.GetStatus() {
 			if status != hdfs.Status_SUCCESS {
 				s.ackError = ackError{status: status, seqno: seqno, pipelineIndex: i}
-				return
+				continue loop
 			}
 		}
 
 		if seqno != p.seqno {
 			s.ackError = ErrInvalidSeqno
-			return
+			continue
 		}
 	}
 }

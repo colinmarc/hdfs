@@ -1,13 +1,12 @@
 package hdfs
 
 import (
+	hdfs "github.com/colinmarc/hdfs/protocol/hadoop_hdfs"
+	"github.com/colinmarc/hdfs/rpc"
 	"io"
 	"io/ioutil"
 	"os"
 	"os/user"
-
-	hdfs "github.com/colinmarc/hdfs/protocol/hadoop_hdfs"
-	"github.com/colinmarc/hdfs/rpc"
 )
 
 // A Client represents a connection to an HDFS cluster
@@ -16,29 +15,15 @@ type Client struct {
 	defaults *hdfs.FsServerDefaultsProto
 }
 
-// Username returns the HADOOP_USER_NAME environment supplied user if provided
-// or the operating system current user
-func Username() (string, error) {
-	username := os.Getenv("HADOOP_USER_NAME")
-	if username != "" {
-		return username, nil
-	}
-	currentUser, err := user.Current()
-	if err != nil {
-		return "", err
-	}
-	return currentUser.Username, nil
-}
-
 // New returns a connected Client, or an error if it can't connect. The user
 // will be the user the code is running under.
 func New(address string) (*Client, error) {
-	username, err := Username()
+	currentUser, err := user.Current()
 	if err != nil {
 		return nil, err
 	}
 
-	return NewForUser(address, username)
+	return NewForUser(address, currentUser.Username)
 }
 
 // NewForUser returns a connected Client with the user specified, or an error if

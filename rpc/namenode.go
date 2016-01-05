@@ -5,12 +5,11 @@ import (
 	"encoding/binary"
 	"errors"
 	"fmt"
+	hadoop "github.com/colinmarc/hdfs/protocol/hadoop_common"
+	"github.com/golang/protobuf/proto"
 	"io"
 	"net"
 	"sync"
-
-	hadoop "github.com/colinmarc/hdfs/protocol/hadoop_common"
-	"github.com/golang/protobuf/proto"
 )
 
 const (

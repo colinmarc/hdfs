@@ -6,11 +6,10 @@ import (
 	"bytes"
 	"encoding/binary"
 	"fmt"
-	"io"
-	"time"
-
 	hdfs "github.com/colinmarc/hdfs/protocol/hadoop_hdfs"
 	"github.com/golang/protobuf/proto"
+	"io"
+	"time"
 )
 
 // ClientName is passed into the namenode on requests, and identifies this

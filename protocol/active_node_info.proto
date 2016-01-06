@@ -1,4 +1,4 @@
-package hdfs_ha;
+package hadoop_ha;
 
 message ActiveNodeInfo {
   required string nameserviceId = 1;

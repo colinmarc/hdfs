@@ -1,0 +1,9 @@
+package hdfs_ha;
+
+message ActiveNodeInfo {
+  required string nameserviceId = 1;
+  required string namenodeId = 2;
+  required string hostname = 3;
+  required int32 port = 4;
+  required int32 zkfcPort = 5;
+}

@@ -18,5 +18,6 @@ get-deps:
 	go get github.com/pborman/getopt
 	go get github.com/stretchr/testify/assert
 	go get github.com/stretchr/testify/require
+	go get github.com/samuel/go-zookeeper/zk
 
 .PHONY: install test get-deps

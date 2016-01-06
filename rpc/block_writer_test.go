@@ -120,7 +120,7 @@ func TestWriteRaceCondition(t *testing.T) {
 	ok := false
 	go func() {
 		data := []byte("TestWriteRaceCondition")
-		name := "/_test/create/TestWriteRaceCondition.txt"
+		name := "/_test/TestWriteRaceCondition.txt"
 		baleet(t, name)
 		bw := createBlock(t, name)
 		bw.connectNext()

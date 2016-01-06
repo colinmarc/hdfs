@@ -1,14 +1,12 @@
 package rpc
 
 import (
-	"crypto/rand"
 	"encoding/binary"
 	"errors"
 	"fmt"
 	"io"
 	"net"
 	"sync"
-	"time"
 
 	hadoop "github.com/colinmarc/hdfs/protocol/hadoop_common"
 	"github.com/golang/protobuf/proto"
@@ -21,14 +19,12 @@ const (
 	protocolClass        = "org.apache.hadoop.hdfs.protocol.ClientProtocol"
 	protocolClassVersion = 1
 	handshakeCallID      = -3
-
-	connectionTimeout = 5 * time.Second
 )
-
-var clientID = randomClientID()
 
 // NamenodeConnection represents an open connection to a namenode.
 type NamenodeConnection struct {
+	clientId         []byte
+	clientName       string
 	currentRequestID int
 	user             string
 	conn             net.Conn
@@ -65,7 +61,7 @@ func (err *NamenodeError) Error() string {
 // You probably want to use hdfs.New instead, which provides a higher-level
 // interface.
 func NewNamenodeConnection(address, user string) (*NamenodeConnection, error) {
-	conn, err := net.DialTimeout("tcp", address, connectionTimeout)
+	conn, err := net.DialTimeout("tcp", address, connectTimeout)
 	if err != nil {
 		return nil, err
 	}
@@ -79,9 +75,14 @@ func NewNamenodeConnection(address, user string) (*NamenodeConnection, error) {
 // You probably want to use hdfs.New instead, which provides a higher-level
 // interface.
 func WrapNamenodeConnection(conn net.Conn, user string) (*NamenodeConnection, error) {
+	// The ClientID is reused here both in the RPC headers (which requires a
+	// "globally unique" ID) and as the "client name" in various requests.
+	clientId := newClientID()
 	c := &NamenodeConnection{
-		user: user,
-		conn: conn,
+		clientId:   clientId,
+		clientName: "go-hdfs-" + string(clientId),
+		user:       user,
+		conn:       conn,
 	}
 
 	err := c.writeNamenodeHandshake()
@@ -91,6 +92,14 @@ func WrapNamenodeConnection(conn net.Conn, user string) (*NamenodeConnection, er
 	}
 
 	return c, nil
+}
+
+// ClientName provides a unique identifier for this client, which is required
+// for various RPC calls. Confusingly, it's separate from clientID, which is
+// used in the RPC header; to make things simpler, it reuses the random bytes
+// from that, but adds a prefix to make it human-readable.
+func (c *NamenodeConnection) ClientName() string {
+	return c.clientName
 }
 
 // Execute performs an rpc call. It does this by sending req over the wire and
@@ -131,10 +140,10 @@ func (c *NamenodeConnection) Execute(method string, req proto.Message, resp prot
 // |  varint length + Request                                  |
 // +-----------------------------------------------------------+
 func (c *NamenodeConnection) writeRequest(method string, req proto.Message) error {
-	rrh := newRPCRequestHeader(c.currentRequestID)
+	rrh := newRPCRequestHeader(c.currentRequestID, c.clientId)
 	rh := newRequestHeader(method)
 
-	reqBytes, err := makePacket(rrh, rh, req)
+	reqBytes, err := makeRPCPacket(rrh, rh, req)
 	if err != nil {
 		return err
 	}
@@ -165,7 +174,7 @@ func (c *NamenodeConnection) readResponse(method string, resp proto.Message) err
 	}
 
 	rrh := &hadoop.RpcResponseHeaderProto{}
-	err = parsePacket(packet, rrh, resp)
+	err = readRPCPacket(packet, rrh, resp)
 
 	if rrh.GetStatus() != hadoop.RpcResponseHeaderProto_SUCCESS {
 		return &NamenodeError{
@@ -206,9 +215,9 @@ func (c *NamenodeConnection) writeNamenodeHandshake() error {
 		rpcVersion, serviceClass, authProtocol,
 	}
 
-	rrh := newRPCRequestHeader(handshakeCallID)
+	rrh := newRPCRequestHeader(handshakeCallID, c.clientId)
 	cc := newConnectionContext(c.user)
-	packet, err := makePacket(rrh, cc)
+	packet, err := makeRPCPacket(rrh, cc)
 	if err != nil {
 		return err
 	}
@@ -217,7 +226,7 @@ func (c *NamenodeConnection) writeNamenodeHandshake() error {
 	return err
 }
 
-func newRPCRequestHeader(id int) *hadoop.RpcRequestHeaderProto {
+func newRPCRequestHeader(id int, clientID []byte) *hadoop.RpcRequestHeaderProto {
 	return &hadoop.RpcRequestHeaderProto{
 		RpcKind:  hadoop.RpcKindProto_RPC_PROTOCOL_BUFFER.Enum(),
 		RpcOp:    hadoop.RpcRequestHeaderProto_RPC_FINAL_PACKET.Enum(),
@@ -241,11 +250,4 @@ func newConnectionContext(user string) *hadoop.IpcConnectionContextProto {
 		},
 		Protocol: proto.String(protocolClass),
 	}
-}
-
-func randomClientID() []byte {
-	uuid := make([]byte, 16)
-	rand.Read(uuid)
-
-	return uuid
 }

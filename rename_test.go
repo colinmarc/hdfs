@@ -58,11 +58,11 @@ func TestRenameWithoutPermissionForSrc(t *testing.T) {
 func TestRenameWithoutPermissionForDest(t *testing.T) {
 	otherClient := getClientForUser(t, "other")
 
-	baleet(t, "/_test/ownedbyother")
+	baleet(t, "/_test/ownedbyother2")
 
-	err := otherClient.CreateEmptyFile("/_test/ownedbyother")
+	err := otherClient.CreateEmptyFile("/_test/ownedbyother2")
 	require.NoError(t, err)
 
-	err = otherClient.Rename("/_test/ownedbyother", "/_test/accessdenied/tomovedest4")
+	err = otherClient.Rename("/_test/ownedbyother2", "/_test/accessdenied/tomovedest4")
 	assertPathError(t, err, "rename", "/_test/accessdenied/tomovedest4", os.ErrPermission)
 }

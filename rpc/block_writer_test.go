@@ -5,6 +5,7 @@ import (
 	"io"
 	"os"
 	"testing"
+	"time"
 
 	hdfs "github.com/colinmarc/hdfs/protocol/hadoop_hdfs"
 	"github.com/golang/protobuf/proto"
@@ -98,4 +99,54 @@ func TestWriteFailsOver(t *testing.T) {
 	require.NoError(t, err)
 	assert.EqualValues(t, 1048576, n)
 	assert.EqualValues(t, 0xb35a6a0e, hash.Sum32())
+}
+
+func (s *blockWriteStream) flushInvalidSeqno(force bool) error {
+	for s.buf.Len() > 0 && (force || s.buf.Len() >= outboundPacketSize) {
+		packet := s.makePacket()
+		s.packets <- packet
+		s.offset += int64(len(packet.data))
+		s.seqno++
+		packet.seqno = + 10
+		err := s.writePacket(packet)
+		if err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
+func TestWriteRaceCondition(t *testing.T) {
+	ok := false
+	c := make(chan bool)
+	timeout := time.NewTicker(3 * time.Second).C
+	go func() {
+		data := []byte("TestWriteRaceCondition")
+		name := "/_test/TestWriteRaceCondition.txt"
+		baleet(t, name)
+		bw := createBlock(t, name)
+		bw.connectNext()
+		s := bw.stream
+		require.NoError(t, s.ackError)
+		n, _ := s.buf.Write(data)
+		assert.True(t, n > 0)
+		err := s.flushInvalidSeqno(true)
+		require.NoError(t, err)
+		time.Sleep(100 * time.Microsecond)
+		for i := 0; i < 2 * maxPacketsInQueue; i++ {
+			n, _ = s.buf.Write(data)
+			assert.True(t, n > 0)
+			err = s.flush(true)
+			require.NoError(t, err)
+		}
+		ok = true
+		c <- true
+	}()
+	select {
+	case <-c:
+		break
+	case <-timeout:
+		break
+	}
+	assert.True(t, ok)
 }

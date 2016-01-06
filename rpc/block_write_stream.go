@@ -209,28 +209,33 @@ func (s *blockWriteStream) ackPackets() {
 			return
 		}
 
-		ack := &hdfs.PipelineAckProto{}
-
 		// If we fail to read the ack at all, that counts as a failure from the
 		// first datanode (the one we're connected to).
+		ack := &hdfs.PipelineAckProto{}
 		err := readPrefixedMessage(reader, ack)
 		if err != nil {
 			s.ackError = err
-			return
+			break
 		}
 
 		seqno := int(ack.GetSeqno())
 		for i, status := range ack.GetStatus() {
 			if status != hdfs.Status_SUCCESS {
 				s.ackError = ackError{status: status, seqno: seqno, pipelineIndex: i}
-				return
+				break
 			}
 		}
 
 		if seqno != p.seqno {
 			s.ackError = ErrInvalidSeqno
-			return
+			break
 		}
+	}
+
+	// Once we've seen an error, just keep reading packets off the channel (but
+	// not off the socket) until the writing thread figures it out. If we don't,
+	// the upstream thread could deadlock waiting for the channel to have space.
+	for _ = range s.packets {
 	}
 }
 

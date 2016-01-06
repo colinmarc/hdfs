@@ -118,6 +118,8 @@ func (s *blockWriteStream) flushInvalidSeqno(force bool) error {
 
 func TestWriteRaceCondition(t *testing.T) {
 	ok := false
+	c := make(chan bool)
+	timeout := time.NewTicker(3 * time.Second).C
 	go func() {
 		data := []byte("TestWriteRaceCondition")
 		name := "/_test/TestWriteRaceCondition.txt"
@@ -138,7 +140,13 @@ func TestWriteRaceCondition(t *testing.T) {
 			require.NoError(t, err)
 		}
 		ok = true
+		c <- true
 	}()
-	time.Sleep(3 * time.Second)
+	select {
+	case <-c:
+		break
+	case <-timeout:
+		break
+	}
 	assert.True(t, ok)
 }

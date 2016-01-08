@@ -43,12 +43,11 @@ func NewBlockWriter(block *hdfs.LocatedBlockProto, namenode *NamenodeConnection,
 
 // Write implements io.Writer.
 //
-// In the case that a failure (such as a timeout) occurs while reading, the
-// BlockWriter will transparently set up a new pipeline, and start writing to
-// that.
+// Unlike BlockReader, BlockWriter currently has no ability to recover from
+// write failures (timeouts, datanode failure, etc). Once it returns an error
+// from Write or Close, it may be in an invalid state.
 //
-// Any datanode failures are recorded in a global cache, so subsequent reads,
-// even reads for different blocks, will prioritize them lower.
+// This will hopefully be fixed in a future release.
 func (bw *BlockWriter) Write(b []byte) (int, error) {
 	var blockFull bool
 	if bw.offset >= bw.blockSize {

@@ -82,6 +82,25 @@ func (c *Client) CopyToLocal(src string, dst string) error {
 	return err
 }
 
+// CopyToRemote copies the local file specified by src to the HDFS file at dst.
+// If dst already exists, it will be overwritten.
+func (c *Client) CopyToRemote(src string, dst string) error {
+	local, err := os.Open(src)
+	if err != nil {
+		return err
+	}
+	defer local.Close()
+
+	remote, err := c.Create(dst)
+	if err != nil {
+		return err
+	}
+	defer remote.Close()
+
+	_, err = io.Copy(remote, local)
+	return err
+}
+
 func (c *Client) fetchDefaults() (*hdfs.FsServerDefaultsProto, error) {
 	if c.defaults != nil {
 		return c.defaults, nil

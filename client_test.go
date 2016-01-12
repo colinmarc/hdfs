@@ -97,3 +97,15 @@ func TestCopyToLocal(t *testing.T) {
 	bytes, _ := ioutil.ReadAll(f)
 	assert.EqualValues(t, "bar\n", string(bytes))
 }
+
+func TestCopyToRemote(t *testing.T) {
+	client := getClient(t)
+
+	err := client.CopyToRemote("test/foo.txt", "/_test/copytoremote.txt")
+	require.NoError(t, err)
+
+	bytes, err := client.ReadFile("/_test/copytoremote.txt")
+	require.NoError(t, err)
+
+	assert.EqualValues(t, "bar\n", string(bytes))
+}

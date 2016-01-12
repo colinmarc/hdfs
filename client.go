@@ -59,6 +59,7 @@ func (c *Client) ReadFile(filename string) ([]byte, error) {
 		return nil, err
 	}
 
+	defer f.Close()
 	return ioutil.ReadAll(f)
 }
 
@@ -69,11 +70,13 @@ func (c *Client) CopyToLocal(src string, dst string) error {
 	if err != nil {
 		return err
 	}
+	defer remote.Close()
 
 	local, err := os.Create(dst)
 	if err != nil {
 		return err
 	}
+	defer local.Close()
 
 	_, err = io.Copy(local, remote)
 	return err

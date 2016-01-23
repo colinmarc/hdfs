@@ -125,9 +125,13 @@ func (f *FileReader) Seek(offset int64, whence int) (int64, error) {
 		return f.offset, fmt.Errorf("Invalid resulting offset: %d", off)
 	}
 
-	f.offset = off
-	f.blockReader = nil
-
+	if f.offset != off {
+		f.offset = off
+		if f.blockReader != nil {
+			f.blockReader.Close()
+			f.blockReader = nil
+		}
+	}
 	return f.offset, nil
 }
 

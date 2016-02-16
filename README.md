@@ -34,7 +34,7 @@ verbs:
 
 
     $ hdfs --help
-    Usage: ./hdfs COMMAND
+    Usage: hdfs COMMAND
     The flags available are a subset of the POSIX ones, but should behave similarly.
 
     Valid commands:
@@ -52,6 +52,7 @@ verbs:
       checksum FILE...
       get SOURCE [DEST]
       getmerge SOURCE DEST
+      put SOURCE DEST
 
 Since it doesn't have to wait for the JVM to start up, it's also a lot faster
 `hadoop -fs`:

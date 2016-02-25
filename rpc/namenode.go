@@ -226,6 +226,11 @@ func (c *NamenodeConnection) writeNamenodeHandshake() error {
 	return err
 }
 
+// Close terminates all underlying socket connections to remote server.
+func (c *NamenodeConnection) Close() error {
+	return c.conn.Close()
+}
+
 func newRPCRequestHeader(id int, clientID []byte) *hadoop.RpcRequestHeaderProto {
 	return &hadoop.RpcRequestHeaderProto{
 		RpcKind:  hadoop.RpcKindProto_RPC_PROTOCOL_BUFFER.Enum(),

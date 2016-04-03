@@ -145,7 +145,7 @@ func printLong(tw *tabwriter.Writer, name string, info os.FileInfo, humanReadabl
 	if modtime.Year() == time.Now().Year() {
 		timeOrYear = modtime.Format("15:04")
 	} else {
-		timeOrYear = string(modtime.Year())
+		timeOrYear = modtime.Format("2006")
 	}
 
 	fmt.Fprintf(tw, "%s \t%s \t %s \t %s \t%s \t%s \t%s\n",

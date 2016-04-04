@@ -19,4 +19,7 @@ get-deps:
 	go get github.com/stretchr/testify/assert
 	go get github.com/stretchr/testify/require
 
-.PHONY: install test get-deps
+protocol:
+	cd protocol && $(MAKE)
+
+.PHONY: install test get-deps protocol

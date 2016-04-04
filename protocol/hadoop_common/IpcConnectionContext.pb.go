@@ -14,15 +14,32 @@ It is generated from these files:
 It has these top-level messages:
 	UserInformationProto
 	IpcConnectionContextProto
+	RequestHeaderProto
+	RpcRequestHeaderProto
+	RpcResponseHeaderProto
+	RpcSaslProto
+	TokenProto
+	GetDelegationTokenRequestProto
+	GetDelegationTokenResponseProto
+	RenewDelegationTokenRequestProto
+	RenewDelegationTokenResponseProto
+	CancelDelegationTokenRequestProto
+	CancelDelegationTokenResponseProto
 */
 package hadoop_common
 
 import proto "github.com/golang/protobuf/proto"
+import fmt "fmt"
 import math "math"
 
 // Reference imports to suppress errors if they are not otherwise used.
 var _ = proto.Marshal
+var _ = fmt.Errorf
 var _ = math.Inf
+
+// This is a compile-time assertion to ensure that this generated file
+// is compatible with the proto package it is being compiled against.
+const _ = proto.ProtoPackageIsVersion1
 
 // *
 // Spec for UserInformationProto is specified in ProtoUtil#makeIpcConnectionContext
@@ -32,9 +49,10 @@ type UserInformationProto struct {
 	XXX_unrecognized []byte  `json:"-"`
 }
 
-func (m *UserInformationProto) Reset()         { *m = UserInformationProto{} }
-func (m *UserInformationProto) String() string { return proto.CompactTextString(m) }
-func (*UserInformationProto) ProtoMessage()    {}
+func (m *UserInformationProto) Reset()                    { *m = UserInformationProto{} }
+func (m *UserInformationProto) String() string            { return proto.CompactTextString(m) }
+func (*UserInformationProto) ProtoMessage()               {}
+func (*UserInformationProto) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{0} }
 
 func (m *UserInformationProto) GetEffectiveUser() string {
 	if m != nil && m.EffectiveUser != nil {
@@ -63,9 +81,10 @@ type IpcConnectionContextProto struct {
 	XXX_unrecognized []byte  `json:"-"`
 }
 
-func (m *IpcConnectionContextProto) Reset()         { *m = IpcConnectionContextProto{} }
-func (m *IpcConnectionContextProto) String() string { return proto.CompactTextString(m) }
-func (*IpcConnectionContextProto) ProtoMessage()    {}
+func (m *IpcConnectionContextProto) Reset()                    { *m = IpcConnectionContextProto{} }
+func (m *IpcConnectionContextProto) String() string            { return proto.CompactTextString(m) }
+func (*IpcConnectionContextProto) ProtoMessage()               {}
+func (*IpcConnectionContextProto) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{1} }
 
 func (m *IpcConnectionContextProto) GetUserInfo() *UserInformationProto {
 	if m != nil {
@@ -82,4 +101,22 @@ func (m *IpcConnectionContextProto) GetProtocol() string {
 }
 
 func init() {
+	proto.RegisterType((*UserInformationProto)(nil), "hadoop.common.UserInformationProto")
+	proto.RegisterType((*IpcConnectionContextProto)(nil), "hadoop.common.IpcConnectionContextProto")
+}
+
+var fileDescriptor0 = []byte{
+	// 187 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x09, 0x6e, 0x88, 0x02, 0xff, 0xe2, 0x92, 0xf2, 0x2c, 0x48, 0x76,
+	0xce, 0xcf, 0xcb, 0x4b, 0x4d, 0x2e, 0xc9, 0xcc, 0xcf, 0x03, 0xb2, 0x4a, 0x52, 0x2b, 0x4a, 0xf4,
+	0x0a, 0x8a, 0xf2, 0x4b, 0xf2, 0x85, 0x78, 0x33, 0x12, 0x53, 0xf2, 0xf3, 0x0b, 0xf4, 0x92, 0xf3,
+	0x73, 0x73, 0xf3, 0xf3, 0x94, 0xec, 0xb9, 0x44, 0x42, 0x8b, 0x53, 0x8b, 0x3c, 0xf3, 0xd2, 0xf2,
+	0x8b, 0x72, 0x13, 0x41, 0xca, 0x03, 0xc0, 0xca, 0x44, 0xb9, 0x78, 0x53, 0xd3, 0xd2, 0x40, 0x06,
+	0x94, 0xa5, 0x82, 0x14, 0x48, 0x30, 0x2a, 0x30, 0x6a, 0x70, 0x0a, 0x09, 0x70, 0x71, 0x14, 0xa5,
+	0x26, 0xe6, 0x80, 0x45, 0x98, 0x40, 0x22, 0x4a, 0x29, 0x5c, 0x92, 0xd8, 0x6c, 0x83, 0x98, 0x62,
+	0xca, 0xc5, 0x51, 0x0a, 0x35, 0x1d, 0xac, 0x9c, 0xdb, 0x48, 0x59, 0x0f, 0xc5, 0x7e, 0x3d, 0xac,
+	0x96, 0x03, 0x6d, 0x01, 0x3b, 0x36, 0x39, 0x3f, 0x47, 0x82, 0x19, 0x64, 0x8b, 0x93, 0x3d, 0x97,
+	0x5c, 0x7e, 0x51, 0xba, 0x5e, 0x62, 0x41, 0x62, 0x72, 0x46, 0x2a, 0xcc, 0x88, 0xcc, 0x82, 0x64,
+	0x88, 0xa7, 0x92, 0x4a, 0xd3, 0x9c, 0xa4, 0x70, 0xba, 0xa2, 0x78, 0x01, 0x23, 0x23, 0x20, 0x00,
+	0x00, 0xff, 0xff, 0x25, 0x2f, 0x0f, 0x34, 0x13, 0x01, 0x00, 0x00,
 }

@@ -9,6 +9,9 @@ It is generated from these files:
 	ClientNamenodeProtocol.proto
 	datatransfer.proto
 	hdfs.proto
+	acl.proto
+	inotify.proto
+	xattr.proto
 
 It has these top-level messages:
 	GetBlockLocationsRequestProto
@@ -21,6 +24,10 @@ It has these top-level messages:
 	AppendResponseProto
 	SetReplicationRequestProto
 	SetReplicationResponseProto
+	SetStoragePolicyRequestProto
+	SetStoragePolicyResponseProto
+	GetStoragePoliciesRequestProto
+	GetStoragePoliciesResponseProto
 	SetPermissionRequestProto
 	SetPermissionResponseProto
 	SetOwnerRequestProto
@@ -37,6 +44,8 @@ It has these top-level messages:
 	ReportBadBlocksResponseProto
 	ConcatRequestProto
 	ConcatResponseProto
+	TruncateRequestProto
+	TruncateResponseProto
 	RenameRequestProto
 	RenameResponseProto
 	Rename2RequestProto
@@ -59,6 +68,9 @@ It has these top-level messages:
 	GetFsStatsResponseProto
 	GetDatanodeReportRequestProto
 	GetDatanodeReportResponseProto
+	GetDatanodeStorageReportRequestProto
+	DatanodeStorageReportProto
+	GetDatanodeStorageReportResponseProto
 	GetPreferredBlockSizeRequestProto
 	GetPreferredBlockSizeResponseProto
 	SetSafeModeRequestProto
@@ -73,6 +85,9 @@ It has these top-level messages:
 	RefreshNodesResponseProto
 	FinalizeUpgradeRequestProto
 	FinalizeUpgradeResponseProto
+	RollingUpgradeRequestProto
+	RollingUpgradeInfoProto
+	RollingUpgradeResponseProto
 	ListCorruptFileBlocksRequestProto
 	ListCorruptFileBlocksResponseProto
 	MetaSaveRequestProto
@@ -81,6 +96,29 @@ It has these top-level messages:
 	GetFileInfoResponseProto
 	IsFileClosedRequestProto
 	IsFileClosedResponseProto
+	CacheDirectiveInfoProto
+	CacheDirectiveInfoExpirationProto
+	CacheDirectiveStatsProto
+	AddCacheDirectiveRequestProto
+	AddCacheDirectiveResponseProto
+	ModifyCacheDirectiveRequestProto
+	ModifyCacheDirectiveResponseProto
+	RemoveCacheDirectiveRequestProto
+	RemoveCacheDirectiveResponseProto
+	ListCacheDirectivesRequestProto
+	CacheDirectiveEntryProto
+	ListCacheDirectivesResponseProto
+	CachePoolInfoProto
+	CachePoolStatsProto
+	AddCachePoolRequestProto
+	AddCachePoolResponseProto
+	ModifyCachePoolRequestProto
+	ModifyCachePoolResponseProto
+	RemoveCachePoolRequestProto
+	RemoveCachePoolResponseProto
+	ListCachePoolsRequestProto
+	ListCachePoolsResponseProto
+	CachePoolEntryProto
 	GetFileLinkInfoRequestProto
 	GetFileLinkInfoResponseProto
 	GetContentSummaryRequestProto
@@ -113,35 +151,158 @@ It has these top-level messages:
 	DisallowSnapshotResponseProto
 	DeleteSnapshotRequestProto
 	DeleteSnapshotResponseProto
+	CheckAccessRequestProto
+	CheckAccessResponseProto
+	GetCurrentEditLogTxidRequestProto
+	GetCurrentEditLogTxidResponseProto
+	GetEditsFromTxidRequestProto
+	GetEditsFromTxidResponseProto
+	DataTransferEncryptorMessageProto
+	BaseHeaderProto
+	DataTransferTraceInfoProto
+	ClientOperationHeaderProto
+	CachingStrategyProto
+	OpReadBlockProto
+	ChecksumProto
+	OpWriteBlockProto
+	OpTransferBlockProto
+	OpReplaceBlockProto
+	OpCopyBlockProto
+	OpBlockChecksumProto
+	ShortCircuitShmIdProto
+	ShortCircuitShmSlotProto
+	OpRequestShortCircuitAccessProto
+	ReleaseShortCircuitAccessRequestProto
+	ReleaseShortCircuitAccessResponseProto
+	ShortCircuitShmRequestProto
+	ShortCircuitShmResponseProto
+	PacketHeaderProto
+	PipelineAckProto
+	ReadOpChecksumInfoProto
+	BlockOpResponseProto
+	ClientReadStatusProto
+	DNTransferAckProto
+	OpBlockChecksumResponseProto
+	ExtendedBlockProto
+	DatanodeIDProto
+	DatanodeLocalInfoProto
+	DatanodeInfosProto
+	DatanodeInfoProto
+	DatanodeStorageProto
+	StorageReportProto
+	ContentSummaryProto
+	StorageTypeQuotaInfosProto
+	StorageTypeQuotaInfoProto
+	CorruptFileBlocksProto
+	FsPermissionProto
+	StorageTypesProto
+	BlockStoragePolicyProto
+	StorageUuidsProto
+	LocatedBlockProto
+	DataEncryptionKeyProto
+	FileEncryptionInfoProto
+	PerFileEncryptionInfoProto
+	ZoneEncryptionInfoProto
+	CipherOptionProto
+	LocatedBlocksProto
+	HdfsFileStatusProto
+	FsServerDefaultsProto
+	DirectoryListingProto
+	SnapshottableDirectoryStatusProto
+	SnapshottableDirectoryListingProto
+	SnapshotDiffReportEntryProto
+	SnapshotDiffReportProto
+	StorageInfoProto
+	NamenodeRegistrationProto
+	CheckpointSignatureProto
+	NamenodeCommandProto
+	CheckpointCommandProto
+	BlockProto
+	BlockWithLocationsProto
+	BlocksWithLocationsProto
+	RemoteEditLogProto
+	RemoteEditLogManifestProto
+	NamespaceInfoProto
+	BlockKeyProto
+	ExportedBlockKeysProto
+	RecoveringBlockProto
+	VersionRequestProto
+	VersionResponseProto
+	SnapshotInfoProto
+	RollingUpgradeStatusProto
+	AclEntryProto
+	AclStatusProto
+	AclEditLogProto
+	ModifyAclEntriesRequestProto
+	ModifyAclEntriesResponseProto
+	RemoveAclRequestProto
+	RemoveAclResponseProto
+	RemoveAclEntriesRequestProto
+	RemoveAclEntriesResponseProto
+	RemoveDefaultAclRequestProto
+	RemoveDefaultAclResponseProto
+	SetAclRequestProto
+	SetAclResponseProto
+	GetAclStatusRequestProto
+	GetAclStatusResponseProto
+	EventProto
+	EventBatchProto
+	CreateEventProto
+	CloseEventProto
+	AppendEventProto
+	RenameEventProto
+	MetadataUpdateEventProto
+	UnlinkEventProto
+	EventsListProto
+	XAttrProto
+	XAttrEditLogProto
+	SetXAttrRequestProto
+	SetXAttrResponseProto
+	GetXAttrsRequestProto
+	GetXAttrsResponseProto
+	ListXAttrsRequestProto
+	ListXAttrsResponseProto
+	RemoveXAttrRequestProto
+	RemoveXAttrResponseProto
 */
 package hadoop_hdfs
 
 import proto "github.com/golang/protobuf/proto"
+import fmt "fmt"
 import math "math"
-
-// discarding unused import hadoop_common "Security.pb"
 
 // Reference imports to suppress errors if they are not otherwise used.
 var _ = proto.Marshal
+var _ = fmt.Errorf
 var _ = math.Inf
+
+// This is a compile-time assertion to ensure that this generated file
+// is compatible with the proto package it is being compiled against.
+const _ = proto.ProtoPackageIsVersion1
 
 type CreateFlagProto int32
 
 const (
-	CreateFlagProto_CREATE    CreateFlagProto = 1
-	CreateFlagProto_OVERWRITE CreateFlagProto = 2
-	CreateFlagProto_APPEND    CreateFlagProto = 4
+	CreateFlagProto_CREATE       CreateFlagProto = 1
+	CreateFlagProto_OVERWRITE    CreateFlagProto = 2
+	CreateFlagProto_APPEND       CreateFlagProto = 4
+	CreateFlagProto_LAZY_PERSIST CreateFlagProto = 16
+	CreateFlagProto_NEW_BLOCK    CreateFlagProto = 32
 )
 
 var CreateFlagProto_name = map[int32]string{
-	1: "CREATE",
-	2: "OVERWRITE",
-	4: "APPEND",
+	1:  "CREATE",
+	2:  "OVERWRITE",
+	4:  "APPEND",
+	16: "LAZY_PERSIST",
+	32: "NEW_BLOCK",
 }
 var CreateFlagProto_value = map[string]int32{
-	"CREATE":    1,
-	"OVERWRITE": 2,
-	"APPEND":    4,
+	"CREATE":       1,
+	"OVERWRITE":    2,
+	"APPEND":       4,
+	"LAZY_PERSIST": 16,
+	"NEW_BLOCK":    32,
 }
 
 func (x CreateFlagProto) Enum() *CreateFlagProto {
@@ -160,24 +321,28 @@ func (x *CreateFlagProto) UnmarshalJSON(data []byte) error {
 	*x = CreateFlagProto(value)
 	return nil
 }
+func (CreateFlagProto) EnumDescriptor() ([]byte, []int) { return fileDescriptor0, []int{0} }
 
 type DatanodeReportTypeProto int32
 
 const (
-	DatanodeReportTypeProto_ALL  DatanodeReportTypeProto = 1
-	DatanodeReportTypeProto_LIVE DatanodeReportTypeProto = 2
-	DatanodeReportTypeProto_DEAD DatanodeReportTypeProto = 3
+	DatanodeReportTypeProto_ALL             DatanodeReportTypeProto = 1
+	DatanodeReportTypeProto_LIVE            DatanodeReportTypeProto = 2
+	DatanodeReportTypeProto_DEAD            DatanodeReportTypeProto = 3
+	DatanodeReportTypeProto_DECOMMISSIONING DatanodeReportTypeProto = 4
 )
 
 var DatanodeReportTypeProto_name = map[int32]string{
 	1: "ALL",
 	2: "LIVE",
 	3: "DEAD",
+	4: "DECOMMISSIONING",
 }
 var DatanodeReportTypeProto_value = map[string]int32{
-	"ALL":  1,
-	"LIVE": 2,
-	"DEAD": 3,
+	"ALL":             1,
+	"LIVE":            2,
+	"DEAD":            3,
+	"DECOMMISSIONING": 4,
 }
 
 func (x DatanodeReportTypeProto) Enum() *DatanodeReportTypeProto {
@@ -196,6 +361,7 @@ func (x *DatanodeReportTypeProto) UnmarshalJSON(data []byte) error {
 	*x = DatanodeReportTypeProto(value)
 	return nil
 }
+func (DatanodeReportTypeProto) EnumDescriptor() ([]byte, []int) { return fileDescriptor0, []int{1} }
 
 type SafeModeActionProto int32
 
@@ -232,6 +398,75 @@ func (x *SafeModeActionProto) UnmarshalJSON(data []byte) error {
 	*x = SafeModeActionProto(value)
 	return nil
 }
+func (SafeModeActionProto) EnumDescriptor() ([]byte, []int) { return fileDescriptor0, []int{2} }
+
+type RollingUpgradeActionProto int32
+
+const (
+	RollingUpgradeActionProto_QUERY    RollingUpgradeActionProto = 1
+	RollingUpgradeActionProto_START    RollingUpgradeActionProto = 2
+	RollingUpgradeActionProto_FINALIZE RollingUpgradeActionProto = 3
+)
+
+var RollingUpgradeActionProto_name = map[int32]string{
+	1: "QUERY",
+	2: "START",
+	3: "FINALIZE",
+}
+var RollingUpgradeActionProto_value = map[string]int32{
+	"QUERY":    1,
+	"START":    2,
+	"FINALIZE": 3,
+}
+
+func (x RollingUpgradeActionProto) Enum() *RollingUpgradeActionProto {
+	p := new(RollingUpgradeActionProto)
+	*p = x
+	return p
+}
+func (x RollingUpgradeActionProto) String() string {
+	return proto.EnumName(RollingUpgradeActionProto_name, int32(x))
+}
+func (x *RollingUpgradeActionProto) UnmarshalJSON(data []byte) error {
+	value, err := proto.UnmarshalJSONEnum(RollingUpgradeActionProto_value, data, "RollingUpgradeActionProto")
+	if err != nil {
+		return err
+	}
+	*x = RollingUpgradeActionProto(value)
+	return nil
+}
+func (RollingUpgradeActionProto) EnumDescriptor() ([]byte, []int) { return fileDescriptor0, []int{3} }
+
+type CacheFlagProto int32
+
+const (
+	CacheFlagProto_FORCE CacheFlagProto = 1
+)
+
+var CacheFlagProto_name = map[int32]string{
+	1: "FORCE",
+}
+var CacheFlagProto_value = map[string]int32{
+	"FORCE": 1,
+}
+
+func (x CacheFlagProto) Enum() *CacheFlagProto {
+	p := new(CacheFlagProto)
+	*p = x
+	return p
+}
+func (x CacheFlagProto) String() string {
+	return proto.EnumName(CacheFlagProto_name, int32(x))
+}
+func (x *CacheFlagProto) UnmarshalJSON(data []byte) error {
+	value, err := proto.UnmarshalJSONEnum(CacheFlagProto_value, data, "CacheFlagProto")
+	if err != nil {
+		return err
+	}
+	*x = CacheFlagProto(value)
+	return nil
+}
+func (CacheFlagProto) EnumDescriptor() ([]byte, []int) { return fileDescriptor0, []int{4} }
 
 type GetBlockLocationsRequestProto struct {
 	Src              *string `protobuf:"bytes,1,req,name=src" json:"src,omitempty"`
@@ -240,9 +475,10 @@ type GetBlockLocationsRequestProto struct {
 	XXX_unrecognized []byte  `json:"-"`
 }
 
-func (m *GetBlockLocationsRequestProto) Reset()         { *m = GetBlockLocationsRequestProto{} }
-func (m *GetBlockLocationsRequestProto) String() string { return proto.CompactTextString(m) }
-func (*GetBlockLocationsRequestProto) ProtoMessage()    {}
+func (m *GetBlockLocationsRequestProto) Reset()                    { *m = GetBlockLocationsRequestProto{} }
+func (m *GetBlockLocationsRequestProto) String() string            { return proto.CompactTextString(m) }
+func (*GetBlockLocationsRequestProto) ProtoMessage()               {}
+func (*GetBlockLocationsRequestProto) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{0} }
 
 func (m *GetBlockLocationsRequestProto) GetSrc() string {
 	if m != nil && m.Src != nil {
@@ -270,9 +506,10 @@ type GetBlockLocationsResponseProto struct {
 	XXX_unrecognized []byte              `json:"-"`
 }
 
-func (m *GetBlockLocationsResponseProto) Reset()         { *m = GetBlockLocationsResponseProto{} }
-func (m *GetBlockLocationsResponseProto) String() string { return proto.CompactTextString(m) }
-func (*GetBlockLocationsResponseProto) ProtoMessage()    {}
+func (m *GetBlockLocationsResponseProto) Reset()                    { *m = GetBlockLocationsResponseProto{} }
+func (m *GetBlockLocationsResponseProto) String() string            { return proto.CompactTextString(m) }
+func (*GetBlockLocationsResponseProto) ProtoMessage()               {}
+func (*GetBlockLocationsResponseProto) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{1} }
 
 func (m *GetBlockLocationsResponseProto) GetLocations() *LocatedBlocksProto {
 	if m != nil {
@@ -285,18 +522,20 @@ type GetServerDefaultsRequestProto struct {
 	XXX_unrecognized []byte `json:"-"`
 }
 
-func (m *GetServerDefaultsRequestProto) Reset()         { *m = GetServerDefaultsRequestProto{} }
-func (m *GetServerDefaultsRequestProto) String() string { return proto.CompactTextString(m) }
-func (*GetServerDefaultsRequestProto) ProtoMessage()    {}
+func (m *GetServerDefaultsRequestProto) Reset()                    { *m = GetServerDefaultsRequestProto{} }
+func (m *GetServerDefaultsRequestProto) String() string            { return proto.CompactTextString(m) }
+func (*GetServerDefaultsRequestProto) ProtoMessage()               {}
+func (*GetServerDefaultsRequestProto) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{2} }
 
 type GetServerDefaultsResponseProto struct {
 	ServerDefaults   *FsServerDefaultsProto `protobuf:"bytes,1,req,name=serverDefaults" json:"serverDefaults,omitempty"`
 	XXX_unrecognized []byte                 `json:"-"`
 }
 
-func (m *GetServerDefaultsResponseProto) Reset()         { *m = GetServerDefaultsResponseProto{} }
-func (m *GetServerDefaultsResponseProto) String() string { return proto.CompactTextString(m) }
-func (*GetServerDefaultsResponseProto) ProtoMessage()    {}
+func (m *GetServerDefaultsResponseProto) Reset()                    { *m = GetServerDefaultsResponseProto{} }
+func (m *GetServerDefaultsResponseProto) String() string            { return proto.CompactTextString(m) }
+func (*GetServerDefaultsResponseProto) ProtoMessage()               {}
+func (*GetServerDefaultsResponseProto) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{3} }
 
 func (m *GetServerDefaultsResponseProto) GetServerDefaults() *FsServerDefaultsProto {
 	if m != nil {
@@ -306,19 +545,21 @@ func (m *GetServerDefaultsResponseProto) GetServerDefaults() *FsServerDefaultsPr
 }
 
 type CreateRequestProto struct {
-	Src              *string            `protobuf:"bytes,1,req,name=src" json:"src,omitempty"`
-	Masked           *FsPermissionProto `protobuf:"bytes,2,req,name=masked" json:"masked,omitempty"`
-	ClientName       *string            `protobuf:"bytes,3,req,name=clientName" json:"clientName,omitempty"`
-	CreateFlag       *uint32            `protobuf:"varint,4,req,name=createFlag" json:"createFlag,omitempty"`
-	CreateParent     *bool              `protobuf:"varint,5,req,name=createParent" json:"createParent,omitempty"`
-	Replication      *uint32            `protobuf:"varint,6,req,name=replication" json:"replication,omitempty"`
-	BlockSize        *uint64            `protobuf:"varint,7,req,name=blockSize" json:"blockSize,omitempty"`
-	XXX_unrecognized []byte             `json:"-"`
+	Src                   *string                      `protobuf:"bytes,1,req,name=src" json:"src,omitempty"`
+	Masked                *FsPermissionProto           `protobuf:"bytes,2,req,name=masked" json:"masked,omitempty"`
+	ClientName            *string                      `protobuf:"bytes,3,req,name=clientName" json:"clientName,omitempty"`
+	CreateFlag            *uint32                      `protobuf:"varint,4,req,name=createFlag" json:"createFlag,omitempty"`
+	CreateParent          *bool                        `protobuf:"varint,5,req,name=createParent" json:"createParent,omitempty"`
+	Replication           *uint32                      `protobuf:"varint,6,req,name=replication" json:"replication,omitempty"`
+	BlockSize             *uint64                      `protobuf:"varint,7,req,name=blockSize" json:"blockSize,omitempty"`
+	CryptoProtocolVersion []CryptoProtocolVersionProto `protobuf:"varint,8,rep,name=cryptoProtocolVersion,enum=hadoop.hdfs.CryptoProtocolVersionProto" json:"cryptoProtocolVersion,omitempty"`
+	XXX_unrecognized      []byte                       `json:"-"`
 }
 
-func (m *CreateRequestProto) Reset()         { *m = CreateRequestProto{} }
-func (m *CreateRequestProto) String() string { return proto.CompactTextString(m) }
-func (*CreateRequestProto) ProtoMessage()    {}
+func (m *CreateRequestProto) Reset()                    { *m = CreateRequestProto{} }
+func (m *CreateRequestProto) String() string            { return proto.CompactTextString(m) }
+func (*CreateRequestProto) ProtoMessage()               {}
+func (*CreateRequestProto) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{4} }
 
 func (m *CreateRequestProto) GetSrc() string {
 	if m != nil && m.Src != nil {
@@ -369,14 +610,22 @@ func (m *CreateRequestProto) GetBlockSize() uint64 {
 	return 0
 }
 
+func (m *CreateRequestProto) GetCryptoProtocolVersion() []CryptoProtocolVersionProto {
+	if m != nil {
+		return m.CryptoProtocolVersion
+	}
+	return nil
+}
+
 type CreateResponseProto struct {
 	Fs               *HdfsFileStatusProto `protobuf:"bytes,1,opt,name=fs" json:"fs,omitempty"`
 	XXX_unrecognized []byte               `json:"-"`
 }
 
-func (m *CreateResponseProto) Reset()         { *m = CreateResponseProto{} }
-func (m *CreateResponseProto) String() string { return proto.CompactTextString(m) }
-func (*CreateResponseProto) ProtoMessage()    {}
+func (m *CreateResponseProto) Reset()                    { *m = CreateResponseProto{} }
+func (m *CreateResponseProto) String() string            { return proto.CompactTextString(m) }
+func (*CreateResponseProto) ProtoMessage()               {}
+func (*CreateResponseProto) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{5} }
 
 func (m *CreateResponseProto) GetFs() *HdfsFileStatusProto {
 	if m != nil {
@@ -388,12 +637,14 @@ func (m *CreateResponseProto) GetFs() *HdfsFileStatusProto {
 type AppendRequestProto struct {
 	Src              *string `protobuf:"bytes,1,req,name=src" json:"src,omitempty"`
 	ClientName       *string `protobuf:"bytes,2,req,name=clientName" json:"clientName,omitempty"`
+	Flag             *uint32 `protobuf:"varint,3,opt,name=flag" json:"flag,omitempty"`
 	XXX_unrecognized []byte  `json:"-"`
 }
 
-func (m *AppendRequestProto) Reset()         { *m = AppendRequestProto{} }
-func (m *AppendRequestProto) String() string { return proto.CompactTextString(m) }
-func (*AppendRequestProto) ProtoMessage()    {}
+func (m *AppendRequestProto) Reset()                    { *m = AppendRequestProto{} }
+func (m *AppendRequestProto) String() string            { return proto.CompactTextString(m) }
+func (*AppendRequestProto) ProtoMessage()               {}
+func (*AppendRequestProto) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{6} }
 
 func (m *AppendRequestProto) GetSrc() string {
 	if m != nil && m.Src != nil {
@@ -409,18 +660,34 @@ func (m *AppendRequestProto) GetClientName() string {
 	return ""
 }
 
-type AppendResponseProto struct {
-	Block            *LocatedBlockProto `protobuf:"bytes,1,opt,name=block" json:"block,omitempty"`
-	XXX_unrecognized []byte             `json:"-"`
+func (m *AppendRequestProto) GetFlag() uint32 {
+	if m != nil && m.Flag != nil {
+		return *m.Flag
+	}
+	return 0
 }
 
-func (m *AppendResponseProto) Reset()         { *m = AppendResponseProto{} }
-func (m *AppendResponseProto) String() string { return proto.CompactTextString(m) }
-func (*AppendResponseProto) ProtoMessage()    {}
+type AppendResponseProto struct {
+	Block            *LocatedBlockProto   `protobuf:"bytes,1,opt,name=block" json:"block,omitempty"`
+	Stat             *HdfsFileStatusProto `protobuf:"bytes,2,opt,name=stat" json:"stat,omitempty"`
+	XXX_unrecognized []byte               `json:"-"`
+}
+
+func (m *AppendResponseProto) Reset()                    { *m = AppendResponseProto{} }
+func (m *AppendResponseProto) String() string            { return proto.CompactTextString(m) }
+func (*AppendResponseProto) ProtoMessage()               {}
+func (*AppendResponseProto) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{7} }
 
 func (m *AppendResponseProto) GetBlock() *LocatedBlockProto {
 	if m != nil {
 		return m.Block
+	}
+	return nil
+}
+
+func (m *AppendResponseProto) GetStat() *HdfsFileStatusProto {
+	if m != nil {
+		return m.Stat
 	}
 	return nil
 }
@@ -431,9 +698,10 @@ type SetReplicationRequestProto struct {
 	XXX_unrecognized []byte  `json:"-"`
 }
 
-func (m *SetReplicationRequestProto) Reset()         { *m = SetReplicationRequestProto{} }
-func (m *SetReplicationRequestProto) String() string { return proto.CompactTextString(m) }
-func (*SetReplicationRequestProto) ProtoMessage()    {}
+func (m *SetReplicationRequestProto) Reset()                    { *m = SetReplicationRequestProto{} }
+func (m *SetReplicationRequestProto) String() string            { return proto.CompactTextString(m) }
+func (*SetReplicationRequestProto) ProtoMessage()               {}
+func (*SetReplicationRequestProto) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{8} }
 
 func (m *SetReplicationRequestProto) GetSrc() string {
 	if m != nil && m.Src != nil {
@@ -454,9 +722,10 @@ type SetReplicationResponseProto struct {
 	XXX_unrecognized []byte `json:"-"`
 }
 
-func (m *SetReplicationResponseProto) Reset()         { *m = SetReplicationResponseProto{} }
-func (m *SetReplicationResponseProto) String() string { return proto.CompactTextString(m) }
-func (*SetReplicationResponseProto) ProtoMessage()    {}
+func (m *SetReplicationResponseProto) Reset()                    { *m = SetReplicationResponseProto{} }
+func (m *SetReplicationResponseProto) String() string            { return proto.CompactTextString(m) }
+func (*SetReplicationResponseProto) ProtoMessage()               {}
+func (*SetReplicationResponseProto) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{9} }
 
 func (m *SetReplicationResponseProto) GetResult() bool {
 	if m != nil && m.Result != nil {
@@ -465,15 +734,78 @@ func (m *SetReplicationResponseProto) GetResult() bool {
 	return false
 }
 
+type SetStoragePolicyRequestProto struct {
+	Src              *string `protobuf:"bytes,1,req,name=src" json:"src,omitempty"`
+	PolicyName       *string `protobuf:"bytes,2,req,name=policyName" json:"policyName,omitempty"`
+	XXX_unrecognized []byte  `json:"-"`
+}
+
+func (m *SetStoragePolicyRequestProto) Reset()                    { *m = SetStoragePolicyRequestProto{} }
+func (m *SetStoragePolicyRequestProto) String() string            { return proto.CompactTextString(m) }
+func (*SetStoragePolicyRequestProto) ProtoMessage()               {}
+func (*SetStoragePolicyRequestProto) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{10} }
+
+func (m *SetStoragePolicyRequestProto) GetSrc() string {
+	if m != nil && m.Src != nil {
+		return *m.Src
+	}
+	return ""
+}
+
+func (m *SetStoragePolicyRequestProto) GetPolicyName() string {
+	if m != nil && m.PolicyName != nil {
+		return *m.PolicyName
+	}
+	return ""
+}
+
+type SetStoragePolicyResponseProto struct {
+	XXX_unrecognized []byte `json:"-"`
+}
+
+func (m *SetStoragePolicyResponseProto) Reset()                    { *m = SetStoragePolicyResponseProto{} }
+func (m *SetStoragePolicyResponseProto) String() string            { return proto.CompactTextString(m) }
+func (*SetStoragePolicyResponseProto) ProtoMessage()               {}
+func (*SetStoragePolicyResponseProto) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{11} }
+
+type GetStoragePoliciesRequestProto struct {
+	XXX_unrecognized []byte `json:"-"`
+}
+
+func (m *GetStoragePoliciesRequestProto) Reset()                    { *m = GetStoragePoliciesRequestProto{} }
+func (m *GetStoragePoliciesRequestProto) String() string            { return proto.CompactTextString(m) }
+func (*GetStoragePoliciesRequestProto) ProtoMessage()               {}
+func (*GetStoragePoliciesRequestProto) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{12} }
+
+type GetStoragePoliciesResponseProto struct {
+	Policies         []*BlockStoragePolicyProto `protobuf:"bytes,1,rep,name=policies" json:"policies,omitempty"`
+	XXX_unrecognized []byte                     `json:"-"`
+}
+
+func (m *GetStoragePoliciesResponseProto) Reset()         { *m = GetStoragePoliciesResponseProto{} }
+func (m *GetStoragePoliciesResponseProto) String() string { return proto.CompactTextString(m) }
+func (*GetStoragePoliciesResponseProto) ProtoMessage()    {}
+func (*GetStoragePoliciesResponseProto) Descriptor() ([]byte, []int) {
+	return fileDescriptor0, []int{13}
+}
+
+func (m *GetStoragePoliciesResponseProto) GetPolicies() []*BlockStoragePolicyProto {
+	if m != nil {
+		return m.Policies
+	}
+	return nil
+}
+
 type SetPermissionRequestProto struct {
 	Src              *string            `protobuf:"bytes,1,req,name=src" json:"src,omitempty"`
 	Permission       *FsPermissionProto `protobuf:"bytes,2,req,name=permission" json:"permission,omitempty"`
 	XXX_unrecognized []byte             `json:"-"`
 }
 
-func (m *SetPermissionRequestProto) Reset()         { *m = SetPermissionRequestProto{} }
-func (m *SetPermissionRequestProto) String() string { return proto.CompactTextString(m) }
-func (*SetPermissionRequestProto) ProtoMessage()    {}
+func (m *SetPermissionRequestProto) Reset()                    { *m = SetPermissionRequestProto{} }
+func (m *SetPermissionRequestProto) String() string            { return proto.CompactTextString(m) }
+func (*SetPermissionRequestProto) ProtoMessage()               {}
+func (*SetPermissionRequestProto) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{14} }
 
 func (m *SetPermissionRequestProto) GetSrc() string {
 	if m != nil && m.Src != nil {
@@ -493,9 +825,10 @@ type SetPermissionResponseProto struct {
 	XXX_unrecognized []byte `json:"-"`
 }
 
-func (m *SetPermissionResponseProto) Reset()         { *m = SetPermissionResponseProto{} }
-func (m *SetPermissionResponseProto) String() string { return proto.CompactTextString(m) }
-func (*SetPermissionResponseProto) ProtoMessage()    {}
+func (m *SetPermissionResponseProto) Reset()                    { *m = SetPermissionResponseProto{} }
+func (m *SetPermissionResponseProto) String() string            { return proto.CompactTextString(m) }
+func (*SetPermissionResponseProto) ProtoMessage()               {}
+func (*SetPermissionResponseProto) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{15} }
 
 type SetOwnerRequestProto struct {
 	Src              *string `protobuf:"bytes,1,req,name=src" json:"src,omitempty"`
@@ -504,9 +837,10 @@ type SetOwnerRequestProto struct {
 	XXX_unrecognized []byte  `json:"-"`
 }
 
-func (m *SetOwnerRequestProto) Reset()         { *m = SetOwnerRequestProto{} }
-func (m *SetOwnerRequestProto) String() string { return proto.CompactTextString(m) }
-func (*SetOwnerRequestProto) ProtoMessage()    {}
+func (m *SetOwnerRequestProto) Reset()                    { *m = SetOwnerRequestProto{} }
+func (m *SetOwnerRequestProto) String() string            { return proto.CompactTextString(m) }
+func (*SetOwnerRequestProto) ProtoMessage()               {}
+func (*SetOwnerRequestProto) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{16} }
 
 func (m *SetOwnerRequestProto) GetSrc() string {
 	if m != nil && m.Src != nil {
@@ -533,20 +867,25 @@ type SetOwnerResponseProto struct {
 	XXX_unrecognized []byte `json:"-"`
 }
 
-func (m *SetOwnerResponseProto) Reset()         { *m = SetOwnerResponseProto{} }
-func (m *SetOwnerResponseProto) String() string { return proto.CompactTextString(m) }
-func (*SetOwnerResponseProto) ProtoMessage()    {}
+func (m *SetOwnerResponseProto) Reset()                    { *m = SetOwnerResponseProto{} }
+func (m *SetOwnerResponseProto) String() string            { return proto.CompactTextString(m) }
+func (*SetOwnerResponseProto) ProtoMessage()               {}
+func (*SetOwnerResponseProto) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{17} }
 
 type AbandonBlockRequestProto struct {
 	B                *ExtendedBlockProto `protobuf:"bytes,1,req,name=b" json:"b,omitempty"`
 	Src              *string             `protobuf:"bytes,2,req,name=src" json:"src,omitempty"`
 	Holder           *string             `protobuf:"bytes,3,req,name=holder" json:"holder,omitempty"`
+	FileId           *uint64             `protobuf:"varint,4,opt,name=fileId,def=0" json:"fileId,omitempty"`
 	XXX_unrecognized []byte              `json:"-"`
 }
 
-func (m *AbandonBlockRequestProto) Reset()         { *m = AbandonBlockRequestProto{} }
-func (m *AbandonBlockRequestProto) String() string { return proto.CompactTextString(m) }
-func (*AbandonBlockRequestProto) ProtoMessage()    {}
+func (m *AbandonBlockRequestProto) Reset()                    { *m = AbandonBlockRequestProto{} }
+func (m *AbandonBlockRequestProto) String() string            { return proto.CompactTextString(m) }
+func (*AbandonBlockRequestProto) ProtoMessage()               {}
+func (*AbandonBlockRequestProto) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{18} }
+
+const Default_AbandonBlockRequestProto_FileId uint64 = 0
 
 func (m *AbandonBlockRequestProto) GetB() *ExtendedBlockProto {
 	if m != nil {
@@ -569,13 +908,21 @@ func (m *AbandonBlockRequestProto) GetHolder() string {
 	return ""
 }
 
+func (m *AbandonBlockRequestProto) GetFileId() uint64 {
+	if m != nil && m.FileId != nil {
+		return *m.FileId
+	}
+	return Default_AbandonBlockRequestProto_FileId
+}
+
 type AbandonBlockResponseProto struct {
 	XXX_unrecognized []byte `json:"-"`
 }
 
-func (m *AbandonBlockResponseProto) Reset()         { *m = AbandonBlockResponseProto{} }
-func (m *AbandonBlockResponseProto) String() string { return proto.CompactTextString(m) }
-func (*AbandonBlockResponseProto) ProtoMessage()    {}
+func (m *AbandonBlockResponseProto) Reset()                    { *m = AbandonBlockResponseProto{} }
+func (m *AbandonBlockResponseProto) String() string            { return proto.CompactTextString(m) }
+func (*AbandonBlockResponseProto) ProtoMessage()               {}
+func (*AbandonBlockResponseProto) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{19} }
 
 type AddBlockRequestProto struct {
 	Src              *string              `protobuf:"bytes,1,req,name=src" json:"src,omitempty"`
@@ -587,9 +934,10 @@ type AddBlockRequestProto struct {
 	XXX_unrecognized []byte               `json:"-"`
 }
 
-func (m *AddBlockRequestProto) Reset()         { *m = AddBlockRequestProto{} }
-func (m *AddBlockRequestProto) String() string { return proto.CompactTextString(m) }
-func (*AddBlockRequestProto) ProtoMessage()    {}
+func (m *AddBlockRequestProto) Reset()                    { *m = AddBlockRequestProto{} }
+func (m *AddBlockRequestProto) String() string            { return proto.CompactTextString(m) }
+func (*AddBlockRequestProto) ProtoMessage()               {}
+func (*AddBlockRequestProto) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{20} }
 
 const Default_AddBlockRequestProto_FileId uint64 = 0
 
@@ -640,9 +988,10 @@ type AddBlockResponseProto struct {
 	XXX_unrecognized []byte             `json:"-"`
 }
 
-func (m *AddBlockResponseProto) Reset()         { *m = AddBlockResponseProto{} }
-func (m *AddBlockResponseProto) String() string { return proto.CompactTextString(m) }
-func (*AddBlockResponseProto) ProtoMessage()    {}
+func (m *AddBlockResponseProto) Reset()                    { *m = AddBlockResponseProto{} }
+func (m *AddBlockResponseProto) String() string            { return proto.CompactTextString(m) }
+func (*AddBlockResponseProto) ProtoMessage()               {}
+func (*AddBlockResponseProto) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{21} }
 
 func (m *AddBlockResponseProto) GetBlock() *LocatedBlockProto {
 	if m != nil {
@@ -652,18 +1001,25 @@ func (m *AddBlockResponseProto) GetBlock() *LocatedBlockProto {
 }
 
 type GetAdditionalDatanodeRequestProto struct {
-	Src                *string              `protobuf:"bytes,1,req,name=src" json:"src,omitempty"`
-	Blk                *ExtendedBlockProto  `protobuf:"bytes,2,req,name=blk" json:"blk,omitempty"`
-	Existings          []*DatanodeInfoProto `protobuf:"bytes,3,rep,name=existings" json:"existings,omitempty"`
-	Excludes           []*DatanodeInfoProto `protobuf:"bytes,4,rep,name=excludes" json:"excludes,omitempty"`
-	NumAdditionalNodes *uint32              `protobuf:"varint,5,req,name=numAdditionalNodes" json:"numAdditionalNodes,omitempty"`
-	ClientName         *string              `protobuf:"bytes,6,req,name=clientName" json:"clientName,omitempty"`
-	XXX_unrecognized   []byte               `json:"-"`
+	Src                  *string              `protobuf:"bytes,1,req,name=src" json:"src,omitempty"`
+	Blk                  *ExtendedBlockProto  `protobuf:"bytes,2,req,name=blk" json:"blk,omitempty"`
+	Existings            []*DatanodeInfoProto `protobuf:"bytes,3,rep,name=existings" json:"existings,omitempty"`
+	Excludes             []*DatanodeInfoProto `protobuf:"bytes,4,rep,name=excludes" json:"excludes,omitempty"`
+	NumAdditionalNodes   *uint32              `protobuf:"varint,5,req,name=numAdditionalNodes" json:"numAdditionalNodes,omitempty"`
+	ClientName           *string              `protobuf:"bytes,6,req,name=clientName" json:"clientName,omitempty"`
+	ExistingStorageUuids []string             `protobuf:"bytes,7,rep,name=existingStorageUuids" json:"existingStorageUuids,omitempty"`
+	FileId               *uint64              `protobuf:"varint,8,opt,name=fileId,def=0" json:"fileId,omitempty"`
+	XXX_unrecognized     []byte               `json:"-"`
 }
 
 func (m *GetAdditionalDatanodeRequestProto) Reset()         { *m = GetAdditionalDatanodeRequestProto{} }
 func (m *GetAdditionalDatanodeRequestProto) String() string { return proto.CompactTextString(m) }
 func (*GetAdditionalDatanodeRequestProto) ProtoMessage()    {}
+func (*GetAdditionalDatanodeRequestProto) Descriptor() ([]byte, []int) {
+	return fileDescriptor0, []int{22}
+}
+
+const Default_GetAdditionalDatanodeRequestProto_FileId uint64 = 0
 
 func (m *GetAdditionalDatanodeRequestProto) GetSrc() string {
 	if m != nil && m.Src != nil {
@@ -707,6 +1063,20 @@ func (m *GetAdditionalDatanodeRequestProto) GetClientName() string {
 	return ""
 }
 
+func (m *GetAdditionalDatanodeRequestProto) GetExistingStorageUuids() []string {
+	if m != nil {
+		return m.ExistingStorageUuids
+	}
+	return nil
+}
+
+func (m *GetAdditionalDatanodeRequestProto) GetFileId() uint64 {
+	if m != nil && m.FileId != nil {
+		return *m.FileId
+	}
+	return Default_GetAdditionalDatanodeRequestProto_FileId
+}
+
 type GetAdditionalDatanodeResponseProto struct {
 	Block            *LocatedBlockProto `protobuf:"bytes,1,req,name=block" json:"block,omitempty"`
 	XXX_unrecognized []byte             `json:"-"`
@@ -715,6 +1085,9 @@ type GetAdditionalDatanodeResponseProto struct {
 func (m *GetAdditionalDatanodeResponseProto) Reset()         { *m = GetAdditionalDatanodeResponseProto{} }
 func (m *GetAdditionalDatanodeResponseProto) String() string { return proto.CompactTextString(m) }
 func (*GetAdditionalDatanodeResponseProto) ProtoMessage()    {}
+func (*GetAdditionalDatanodeResponseProto) Descriptor() ([]byte, []int) {
+	return fileDescriptor0, []int{23}
+}
 
 func (m *GetAdditionalDatanodeResponseProto) GetBlock() *LocatedBlockProto {
 	if m != nil {
@@ -731,9 +1104,10 @@ type CompleteRequestProto struct {
 	XXX_unrecognized []byte              `json:"-"`
 }
 
-func (m *CompleteRequestProto) Reset()         { *m = CompleteRequestProto{} }
-func (m *CompleteRequestProto) String() string { return proto.CompactTextString(m) }
-func (*CompleteRequestProto) ProtoMessage()    {}
+func (m *CompleteRequestProto) Reset()                    { *m = CompleteRequestProto{} }
+func (m *CompleteRequestProto) String() string            { return proto.CompactTextString(m) }
+func (*CompleteRequestProto) ProtoMessage()               {}
+func (*CompleteRequestProto) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{24} }
 
 const Default_CompleteRequestProto_FileId uint64 = 0
 
@@ -770,9 +1144,10 @@ type CompleteResponseProto struct {
 	XXX_unrecognized []byte `json:"-"`
 }
 
-func (m *CompleteResponseProto) Reset()         { *m = CompleteResponseProto{} }
-func (m *CompleteResponseProto) String() string { return proto.CompactTextString(m) }
-func (*CompleteResponseProto) ProtoMessage()    {}
+func (m *CompleteResponseProto) Reset()                    { *m = CompleteResponseProto{} }
+func (m *CompleteResponseProto) String() string            { return proto.CompactTextString(m) }
+func (*CompleteResponseProto) ProtoMessage()               {}
+func (*CompleteResponseProto) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{25} }
 
 func (m *CompleteResponseProto) GetResult() bool {
 	if m != nil && m.Result != nil {
@@ -786,9 +1161,10 @@ type ReportBadBlocksRequestProto struct {
 	XXX_unrecognized []byte               `json:"-"`
 }
 
-func (m *ReportBadBlocksRequestProto) Reset()         { *m = ReportBadBlocksRequestProto{} }
-func (m *ReportBadBlocksRequestProto) String() string { return proto.CompactTextString(m) }
-func (*ReportBadBlocksRequestProto) ProtoMessage()    {}
+func (m *ReportBadBlocksRequestProto) Reset()                    { *m = ReportBadBlocksRequestProto{} }
+func (m *ReportBadBlocksRequestProto) String() string            { return proto.CompactTextString(m) }
+func (*ReportBadBlocksRequestProto) ProtoMessage()               {}
+func (*ReportBadBlocksRequestProto) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{26} }
 
 func (m *ReportBadBlocksRequestProto) GetBlocks() []*LocatedBlockProto {
 	if m != nil {
@@ -801,9 +1177,10 @@ type ReportBadBlocksResponseProto struct {
 	XXX_unrecognized []byte `json:"-"`
 }
 
-func (m *ReportBadBlocksResponseProto) Reset()         { *m = ReportBadBlocksResponseProto{} }
-func (m *ReportBadBlocksResponseProto) String() string { return proto.CompactTextString(m) }
-func (*ReportBadBlocksResponseProto) ProtoMessage()    {}
+func (m *ReportBadBlocksResponseProto) Reset()                    { *m = ReportBadBlocksResponseProto{} }
+func (m *ReportBadBlocksResponseProto) String() string            { return proto.CompactTextString(m) }
+func (*ReportBadBlocksResponseProto) ProtoMessage()               {}
+func (*ReportBadBlocksResponseProto) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{27} }
 
 type ConcatRequestProto struct {
 	Trg              *string  `protobuf:"bytes,1,req,name=trg" json:"trg,omitempty"`
@@ -811,9 +1188,10 @@ type ConcatRequestProto struct {
 	XXX_unrecognized []byte   `json:"-"`
 }
 
-func (m *ConcatRequestProto) Reset()         { *m = ConcatRequestProto{} }
-func (m *ConcatRequestProto) String() string { return proto.CompactTextString(m) }
-func (*ConcatRequestProto) ProtoMessage()    {}
+func (m *ConcatRequestProto) Reset()                    { *m = ConcatRequestProto{} }
+func (m *ConcatRequestProto) String() string            { return proto.CompactTextString(m) }
+func (*ConcatRequestProto) ProtoMessage()               {}
+func (*ConcatRequestProto) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{28} }
 
 func (m *ConcatRequestProto) GetTrg() string {
 	if m != nil && m.Trg != nil {
@@ -833,9 +1211,60 @@ type ConcatResponseProto struct {
 	XXX_unrecognized []byte `json:"-"`
 }
 
-func (m *ConcatResponseProto) Reset()         { *m = ConcatResponseProto{} }
-func (m *ConcatResponseProto) String() string { return proto.CompactTextString(m) }
-func (*ConcatResponseProto) ProtoMessage()    {}
+func (m *ConcatResponseProto) Reset()                    { *m = ConcatResponseProto{} }
+func (m *ConcatResponseProto) String() string            { return proto.CompactTextString(m) }
+func (*ConcatResponseProto) ProtoMessage()               {}
+func (*ConcatResponseProto) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{29} }
+
+type TruncateRequestProto struct {
+	Src              *string `protobuf:"bytes,1,req,name=src" json:"src,omitempty"`
+	NewLength        *uint64 `protobuf:"varint,2,req,name=newLength" json:"newLength,omitempty"`
+	ClientName       *string `protobuf:"bytes,3,req,name=clientName" json:"clientName,omitempty"`
+	XXX_unrecognized []byte  `json:"-"`
+}
+
+func (m *TruncateRequestProto) Reset()                    { *m = TruncateRequestProto{} }
+func (m *TruncateRequestProto) String() string            { return proto.CompactTextString(m) }
+func (*TruncateRequestProto) ProtoMessage()               {}
+func (*TruncateRequestProto) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{30} }
+
+func (m *TruncateRequestProto) GetSrc() string {
+	if m != nil && m.Src != nil {
+		return *m.Src
+	}
+	return ""
+}
+
+func (m *TruncateRequestProto) GetNewLength() uint64 {
+	if m != nil && m.NewLength != nil {
+		return *m.NewLength
+	}
+	return 0
+}
+
+func (m *TruncateRequestProto) GetClientName() string {
+	if m != nil && m.ClientName != nil {
+		return *m.ClientName
+	}
+	return ""
+}
+
+type TruncateResponseProto struct {
+	Result           *bool  `protobuf:"varint,1,req,name=result" json:"result,omitempty"`
+	XXX_unrecognized []byte `json:"-"`
+}
+
+func (m *TruncateResponseProto) Reset()                    { *m = TruncateResponseProto{} }
+func (m *TruncateResponseProto) String() string            { return proto.CompactTextString(m) }
+func (*TruncateResponseProto) ProtoMessage()               {}
+func (*TruncateResponseProto) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{31} }
+
+func (m *TruncateResponseProto) GetResult() bool {
+	if m != nil && m.Result != nil {
+		return *m.Result
+	}
+	return false
+}
 
 type RenameRequestProto struct {
 	Src              *string `protobuf:"bytes,1,req,name=src" json:"src,omitempty"`
@@ -843,9 +1272,10 @@ type RenameRequestProto struct {
 	XXX_unrecognized []byte  `json:"-"`
 }
 
-func (m *RenameRequestProto) Reset()         { *m = RenameRequestProto{} }
-func (m *RenameRequestProto) String() string { return proto.CompactTextString(m) }
-func (*RenameRequestProto) ProtoMessage()    {}
+func (m *RenameRequestProto) Reset()                    { *m = RenameRequestProto{} }
+func (m *RenameRequestProto) String() string            { return proto.CompactTextString(m) }
+func (*RenameRequestProto) ProtoMessage()               {}
+func (*RenameRequestProto) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{32} }
 
 func (m *RenameRequestProto) GetSrc() string {
 	if m != nil && m.Src != nil {
@@ -866,9 +1296,10 @@ type RenameResponseProto struct {
 	XXX_unrecognized []byte `json:"-"`
 }
 
-func (m *RenameResponseProto) Reset()         { *m = RenameResponseProto{} }
-func (m *RenameResponseProto) String() string { return proto.CompactTextString(m) }
-func (*RenameResponseProto) ProtoMessage()    {}
+func (m *RenameResponseProto) Reset()                    { *m = RenameResponseProto{} }
+func (m *RenameResponseProto) String() string            { return proto.CompactTextString(m) }
+func (*RenameResponseProto) ProtoMessage()               {}
+func (*RenameResponseProto) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{33} }
 
 func (m *RenameResponseProto) GetResult() bool {
 	if m != nil && m.Result != nil {
@@ -884,9 +1315,10 @@ type Rename2RequestProto struct {
 	XXX_unrecognized []byte  `json:"-"`
 }
 
-func (m *Rename2RequestProto) Reset()         { *m = Rename2RequestProto{} }
-func (m *Rename2RequestProto) String() string { return proto.CompactTextString(m) }
-func (*Rename2RequestProto) ProtoMessage()    {}
+func (m *Rename2RequestProto) Reset()                    { *m = Rename2RequestProto{} }
+func (m *Rename2RequestProto) String() string            { return proto.CompactTextString(m) }
+func (*Rename2RequestProto) ProtoMessage()               {}
+func (*Rename2RequestProto) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{34} }
 
 func (m *Rename2RequestProto) GetSrc() string {
 	if m != nil && m.Src != nil {
@@ -913,9 +1345,10 @@ type Rename2ResponseProto struct {
 	XXX_unrecognized []byte `json:"-"`
 }
 
-func (m *Rename2ResponseProto) Reset()         { *m = Rename2ResponseProto{} }
-func (m *Rename2ResponseProto) String() string { return proto.CompactTextString(m) }
-func (*Rename2ResponseProto) ProtoMessage()    {}
+func (m *Rename2ResponseProto) Reset()                    { *m = Rename2ResponseProto{} }
+func (m *Rename2ResponseProto) String() string            { return proto.CompactTextString(m) }
+func (*Rename2ResponseProto) ProtoMessage()               {}
+func (*Rename2ResponseProto) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{35} }
 
 type DeleteRequestProto struct {
 	Src              *string `protobuf:"bytes,1,req,name=src" json:"src,omitempty"`
@@ -923,9 +1356,10 @@ type DeleteRequestProto struct {
 	XXX_unrecognized []byte  `json:"-"`
 }
 
-func (m *DeleteRequestProto) Reset()         { *m = DeleteRequestProto{} }
-func (m *DeleteRequestProto) String() string { return proto.CompactTextString(m) }
-func (*DeleteRequestProto) ProtoMessage()    {}
+func (m *DeleteRequestProto) Reset()                    { *m = DeleteRequestProto{} }
+func (m *DeleteRequestProto) String() string            { return proto.CompactTextString(m) }
+func (*DeleteRequestProto) ProtoMessage()               {}
+func (*DeleteRequestProto) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{36} }
 
 func (m *DeleteRequestProto) GetSrc() string {
 	if m != nil && m.Src != nil {
@@ -946,9 +1380,10 @@ type DeleteResponseProto struct {
 	XXX_unrecognized []byte `json:"-"`
 }
 
-func (m *DeleteResponseProto) Reset()         { *m = DeleteResponseProto{} }
-func (m *DeleteResponseProto) String() string { return proto.CompactTextString(m) }
-func (*DeleteResponseProto) ProtoMessage()    {}
+func (m *DeleteResponseProto) Reset()                    { *m = DeleteResponseProto{} }
+func (m *DeleteResponseProto) String() string            { return proto.CompactTextString(m) }
+func (*DeleteResponseProto) ProtoMessage()               {}
+func (*DeleteResponseProto) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{37} }
 
 func (m *DeleteResponseProto) GetResult() bool {
 	if m != nil && m.Result != nil {
@@ -964,9 +1399,10 @@ type MkdirsRequestProto struct {
 	XXX_unrecognized []byte             `json:"-"`
 }
 
-func (m *MkdirsRequestProto) Reset()         { *m = MkdirsRequestProto{} }
-func (m *MkdirsRequestProto) String() string { return proto.CompactTextString(m) }
-func (*MkdirsRequestProto) ProtoMessage()    {}
+func (m *MkdirsRequestProto) Reset()                    { *m = MkdirsRequestProto{} }
+func (m *MkdirsRequestProto) String() string            { return proto.CompactTextString(m) }
+func (*MkdirsRequestProto) ProtoMessage()               {}
+func (*MkdirsRequestProto) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{38} }
 
 func (m *MkdirsRequestProto) GetSrc() string {
 	if m != nil && m.Src != nil {
@@ -994,9 +1430,10 @@ type MkdirsResponseProto struct {
 	XXX_unrecognized []byte `json:"-"`
 }
 
-func (m *MkdirsResponseProto) Reset()         { *m = MkdirsResponseProto{} }
-func (m *MkdirsResponseProto) String() string { return proto.CompactTextString(m) }
-func (*MkdirsResponseProto) ProtoMessage()    {}
+func (m *MkdirsResponseProto) Reset()                    { *m = MkdirsResponseProto{} }
+func (m *MkdirsResponseProto) String() string            { return proto.CompactTextString(m) }
+func (*MkdirsResponseProto) ProtoMessage()               {}
+func (*MkdirsResponseProto) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{39} }
 
 func (m *MkdirsResponseProto) GetResult() bool {
 	if m != nil && m.Result != nil {
@@ -1012,9 +1449,10 @@ type GetListingRequestProto struct {
 	XXX_unrecognized []byte  `json:"-"`
 }
 
-func (m *GetListingRequestProto) Reset()         { *m = GetListingRequestProto{} }
-func (m *GetListingRequestProto) String() string { return proto.CompactTextString(m) }
-func (*GetListingRequestProto) ProtoMessage()    {}
+func (m *GetListingRequestProto) Reset()                    { *m = GetListingRequestProto{} }
+func (m *GetListingRequestProto) String() string            { return proto.CompactTextString(m) }
+func (*GetListingRequestProto) ProtoMessage()               {}
+func (*GetListingRequestProto) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{40} }
 
 func (m *GetListingRequestProto) GetSrc() string {
 	if m != nil && m.Src != nil {
@@ -1042,9 +1480,10 @@ type GetListingResponseProto struct {
 	XXX_unrecognized []byte                 `json:"-"`
 }
 
-func (m *GetListingResponseProto) Reset()         { *m = GetListingResponseProto{} }
-func (m *GetListingResponseProto) String() string { return proto.CompactTextString(m) }
-func (*GetListingResponseProto) ProtoMessage()    {}
+func (m *GetListingResponseProto) Reset()                    { *m = GetListingResponseProto{} }
+func (m *GetListingResponseProto) String() string            { return proto.CompactTextString(m) }
+func (*GetListingResponseProto) ProtoMessage()               {}
+func (*GetListingResponseProto) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{41} }
 
 func (m *GetListingResponseProto) GetDirList() *DirectoryListingProto {
 	if m != nil {
@@ -1062,6 +1501,9 @@ func (m *GetSnapshottableDirListingRequestProto) Reset() {
 }
 func (m *GetSnapshottableDirListingRequestProto) String() string { return proto.CompactTextString(m) }
 func (*GetSnapshottableDirListingRequestProto) ProtoMessage()    {}
+func (*GetSnapshottableDirListingRequestProto) Descriptor() ([]byte, []int) {
+	return fileDescriptor0, []int{42}
+}
 
 type GetSnapshottableDirListingResponseProto struct {
 	SnapshottableDirList *SnapshottableDirectoryListingProto `protobuf:"bytes,1,opt,name=snapshottableDirList" json:"snapshottableDirList,omitempty"`
@@ -1073,6 +1515,9 @@ func (m *GetSnapshottableDirListingResponseProto) Reset() {
 }
 func (m *GetSnapshottableDirListingResponseProto) String() string { return proto.CompactTextString(m) }
 func (*GetSnapshottableDirListingResponseProto) ProtoMessage()    {}
+func (*GetSnapshottableDirListingResponseProto) Descriptor() ([]byte, []int) {
+	return fileDescriptor0, []int{43}
+}
 
 func (m *GetSnapshottableDirListingResponseProto) GetSnapshottableDirList() *SnapshottableDirectoryListingProto {
 	if m != nil {
@@ -1091,6 +1536,9 @@ type GetSnapshotDiffReportRequestProto struct {
 func (m *GetSnapshotDiffReportRequestProto) Reset()         { *m = GetSnapshotDiffReportRequestProto{} }
 func (m *GetSnapshotDiffReportRequestProto) String() string { return proto.CompactTextString(m) }
 func (*GetSnapshotDiffReportRequestProto) ProtoMessage()    {}
+func (*GetSnapshotDiffReportRequestProto) Descriptor() ([]byte, []int) {
+	return fileDescriptor0, []int{44}
+}
 
 func (m *GetSnapshotDiffReportRequestProto) GetSnapshotRoot() string {
 	if m != nil && m.SnapshotRoot != nil {
@@ -1121,6 +1569,9 @@ type GetSnapshotDiffReportResponseProto struct {
 func (m *GetSnapshotDiffReportResponseProto) Reset()         { *m = GetSnapshotDiffReportResponseProto{} }
 func (m *GetSnapshotDiffReportResponseProto) String() string { return proto.CompactTextString(m) }
 func (*GetSnapshotDiffReportResponseProto) ProtoMessage()    {}
+func (*GetSnapshotDiffReportResponseProto) Descriptor() ([]byte, []int) {
+	return fileDescriptor0, []int{45}
+}
 
 func (m *GetSnapshotDiffReportResponseProto) GetDiffReport() *SnapshotDiffReportProto {
 	if m != nil {
@@ -1134,9 +1585,10 @@ type RenewLeaseRequestProto struct {
 	XXX_unrecognized []byte  `json:"-"`
 }
 
-func (m *RenewLeaseRequestProto) Reset()         { *m = RenewLeaseRequestProto{} }
-func (m *RenewLeaseRequestProto) String() string { return proto.CompactTextString(m) }
-func (*RenewLeaseRequestProto) ProtoMessage()    {}
+func (m *RenewLeaseRequestProto) Reset()                    { *m = RenewLeaseRequestProto{} }
+func (m *RenewLeaseRequestProto) String() string            { return proto.CompactTextString(m) }
+func (*RenewLeaseRequestProto) ProtoMessage()               {}
+func (*RenewLeaseRequestProto) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{46} }
 
 func (m *RenewLeaseRequestProto) GetClientName() string {
 	if m != nil && m.ClientName != nil {
@@ -1149,9 +1601,10 @@ type RenewLeaseResponseProto struct {
 	XXX_unrecognized []byte `json:"-"`
 }
 
-func (m *RenewLeaseResponseProto) Reset()         { *m = RenewLeaseResponseProto{} }
-func (m *RenewLeaseResponseProto) String() string { return proto.CompactTextString(m) }
-func (*RenewLeaseResponseProto) ProtoMessage()    {}
+func (m *RenewLeaseResponseProto) Reset()                    { *m = RenewLeaseResponseProto{} }
+func (m *RenewLeaseResponseProto) String() string            { return proto.CompactTextString(m) }
+func (*RenewLeaseResponseProto) ProtoMessage()               {}
+func (*RenewLeaseResponseProto) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{47} }
 
 type RecoverLeaseRequestProto struct {
 	Src              *string `protobuf:"bytes,1,req,name=src" json:"src,omitempty"`
@@ -1159,9 +1612,10 @@ type RecoverLeaseRequestProto struct {
 	XXX_unrecognized []byte  `json:"-"`
 }
 
-func (m *RecoverLeaseRequestProto) Reset()         { *m = RecoverLeaseRequestProto{} }
-func (m *RecoverLeaseRequestProto) String() string { return proto.CompactTextString(m) }
-func (*RecoverLeaseRequestProto) ProtoMessage()    {}
+func (m *RecoverLeaseRequestProto) Reset()                    { *m = RecoverLeaseRequestProto{} }
+func (m *RecoverLeaseRequestProto) String() string            { return proto.CompactTextString(m) }
+func (*RecoverLeaseRequestProto) ProtoMessage()               {}
+func (*RecoverLeaseRequestProto) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{48} }
 
 func (m *RecoverLeaseRequestProto) GetSrc() string {
 	if m != nil && m.Src != nil {
@@ -1182,9 +1636,10 @@ type RecoverLeaseResponseProto struct {
 	XXX_unrecognized []byte `json:"-"`
 }
 
-func (m *RecoverLeaseResponseProto) Reset()         { *m = RecoverLeaseResponseProto{} }
-func (m *RecoverLeaseResponseProto) String() string { return proto.CompactTextString(m) }
-func (*RecoverLeaseResponseProto) ProtoMessage()    {}
+func (m *RecoverLeaseResponseProto) Reset()                    { *m = RecoverLeaseResponseProto{} }
+func (m *RecoverLeaseResponseProto) String() string            { return proto.CompactTextString(m) }
+func (*RecoverLeaseResponseProto) ProtoMessage()               {}
+func (*RecoverLeaseResponseProto) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{49} }
 
 func (m *RecoverLeaseResponseProto) GetResult() bool {
 	if m != nil && m.Result != nil {
@@ -1197,23 +1652,26 @@ type GetFsStatusRequestProto struct {
 	XXX_unrecognized []byte `json:"-"`
 }
 
-func (m *GetFsStatusRequestProto) Reset()         { *m = GetFsStatusRequestProto{} }
-func (m *GetFsStatusRequestProto) String() string { return proto.CompactTextString(m) }
-func (*GetFsStatusRequestProto) ProtoMessage()    {}
+func (m *GetFsStatusRequestProto) Reset()                    { *m = GetFsStatusRequestProto{} }
+func (m *GetFsStatusRequestProto) String() string            { return proto.CompactTextString(m) }
+func (*GetFsStatusRequestProto) ProtoMessage()               {}
+func (*GetFsStatusRequestProto) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{50} }
 
 type GetFsStatsResponseProto struct {
-	Capacity         *uint64 `protobuf:"varint,1,req,name=capacity" json:"capacity,omitempty"`
-	Used             *uint64 `protobuf:"varint,2,req,name=used" json:"used,omitempty"`
-	Remaining        *uint64 `protobuf:"varint,3,req,name=remaining" json:"remaining,omitempty"`
-	UnderReplicated  *uint64 `protobuf:"varint,4,req,name=under_replicated" json:"under_replicated,omitempty"`
-	CorruptBlocks    *uint64 `protobuf:"varint,5,req,name=corrupt_blocks" json:"corrupt_blocks,omitempty"`
-	MissingBlocks    *uint64 `protobuf:"varint,6,req,name=missing_blocks" json:"missing_blocks,omitempty"`
-	XXX_unrecognized []byte  `json:"-"`
+	Capacity             *uint64 `protobuf:"varint,1,req,name=capacity" json:"capacity,omitempty"`
+	Used                 *uint64 `protobuf:"varint,2,req,name=used" json:"used,omitempty"`
+	Remaining            *uint64 `protobuf:"varint,3,req,name=remaining" json:"remaining,omitempty"`
+	UnderReplicated      *uint64 `protobuf:"varint,4,req,name=under_replicated" json:"under_replicated,omitempty"`
+	CorruptBlocks        *uint64 `protobuf:"varint,5,req,name=corrupt_blocks" json:"corrupt_blocks,omitempty"`
+	MissingBlocks        *uint64 `protobuf:"varint,6,req,name=missing_blocks" json:"missing_blocks,omitempty"`
+	MissingReplOneBlocks *uint64 `protobuf:"varint,7,opt,name=missing_repl_one_blocks" json:"missing_repl_one_blocks,omitempty"`
+	XXX_unrecognized     []byte  `json:"-"`
 }
 
-func (m *GetFsStatsResponseProto) Reset()         { *m = GetFsStatsResponseProto{} }
-func (m *GetFsStatsResponseProto) String() string { return proto.CompactTextString(m) }
-func (*GetFsStatsResponseProto) ProtoMessage()    {}
+func (m *GetFsStatsResponseProto) Reset()                    { *m = GetFsStatsResponseProto{} }
+func (m *GetFsStatsResponseProto) String() string            { return proto.CompactTextString(m) }
+func (*GetFsStatsResponseProto) ProtoMessage()               {}
+func (*GetFsStatsResponseProto) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{51} }
 
 func (m *GetFsStatsResponseProto) GetCapacity() uint64 {
 	if m != nil && m.Capacity != nil {
@@ -1257,14 +1715,22 @@ func (m *GetFsStatsResponseProto) GetMissingBlocks() uint64 {
 	return 0
 }
 
+func (m *GetFsStatsResponseProto) GetMissingReplOneBlocks() uint64 {
+	if m != nil && m.MissingReplOneBlocks != nil {
+		return *m.MissingReplOneBlocks
+	}
+	return 0
+}
+
 type GetDatanodeReportRequestProto struct {
 	Type             *DatanodeReportTypeProto `protobuf:"varint,1,req,name=type,enum=hadoop.hdfs.DatanodeReportTypeProto" json:"type,omitempty"`
 	XXX_unrecognized []byte                   `json:"-"`
 }
 
-func (m *GetDatanodeReportRequestProto) Reset()         { *m = GetDatanodeReportRequestProto{} }
-func (m *GetDatanodeReportRequestProto) String() string { return proto.CompactTextString(m) }
-func (*GetDatanodeReportRequestProto) ProtoMessage()    {}
+func (m *GetDatanodeReportRequestProto) Reset()                    { *m = GetDatanodeReportRequestProto{} }
+func (m *GetDatanodeReportRequestProto) String() string            { return proto.CompactTextString(m) }
+func (*GetDatanodeReportRequestProto) ProtoMessage()               {}
+func (*GetDatanodeReportRequestProto) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{52} }
 
 func (m *GetDatanodeReportRequestProto) GetType() DatanodeReportTypeProto {
 	if m != nil && m.Type != nil {
@@ -1278,13 +1744,77 @@ type GetDatanodeReportResponseProto struct {
 	XXX_unrecognized []byte               `json:"-"`
 }
 
-func (m *GetDatanodeReportResponseProto) Reset()         { *m = GetDatanodeReportResponseProto{} }
-func (m *GetDatanodeReportResponseProto) String() string { return proto.CompactTextString(m) }
-func (*GetDatanodeReportResponseProto) ProtoMessage()    {}
+func (m *GetDatanodeReportResponseProto) Reset()                    { *m = GetDatanodeReportResponseProto{} }
+func (m *GetDatanodeReportResponseProto) String() string            { return proto.CompactTextString(m) }
+func (*GetDatanodeReportResponseProto) ProtoMessage()               {}
+func (*GetDatanodeReportResponseProto) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{53} }
 
 func (m *GetDatanodeReportResponseProto) GetDi() []*DatanodeInfoProto {
 	if m != nil {
 		return m.Di
+	}
+	return nil
+}
+
+type GetDatanodeStorageReportRequestProto struct {
+	Type             *DatanodeReportTypeProto `protobuf:"varint,1,req,name=type,enum=hadoop.hdfs.DatanodeReportTypeProto" json:"type,omitempty"`
+	XXX_unrecognized []byte                   `json:"-"`
+}
+
+func (m *GetDatanodeStorageReportRequestProto) Reset()         { *m = GetDatanodeStorageReportRequestProto{} }
+func (m *GetDatanodeStorageReportRequestProto) String() string { return proto.CompactTextString(m) }
+func (*GetDatanodeStorageReportRequestProto) ProtoMessage()    {}
+func (*GetDatanodeStorageReportRequestProto) Descriptor() ([]byte, []int) {
+	return fileDescriptor0, []int{54}
+}
+
+func (m *GetDatanodeStorageReportRequestProto) GetType() DatanodeReportTypeProto {
+	if m != nil && m.Type != nil {
+		return *m.Type
+	}
+	return DatanodeReportTypeProto_ALL
+}
+
+type DatanodeStorageReportProto struct {
+	DatanodeInfo     *DatanodeInfoProto    `protobuf:"bytes,1,req,name=datanodeInfo" json:"datanodeInfo,omitempty"`
+	StorageReports   []*StorageReportProto `protobuf:"bytes,2,rep,name=storageReports" json:"storageReports,omitempty"`
+	XXX_unrecognized []byte                `json:"-"`
+}
+
+func (m *DatanodeStorageReportProto) Reset()                    { *m = DatanodeStorageReportProto{} }
+func (m *DatanodeStorageReportProto) String() string            { return proto.CompactTextString(m) }
+func (*DatanodeStorageReportProto) ProtoMessage()               {}
+func (*DatanodeStorageReportProto) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{55} }
+
+func (m *DatanodeStorageReportProto) GetDatanodeInfo() *DatanodeInfoProto {
+	if m != nil {
+		return m.DatanodeInfo
+	}
+	return nil
+}
+
+func (m *DatanodeStorageReportProto) GetStorageReports() []*StorageReportProto {
+	if m != nil {
+		return m.StorageReports
+	}
+	return nil
+}
+
+type GetDatanodeStorageReportResponseProto struct {
+	DatanodeStorageReports []*DatanodeStorageReportProto `protobuf:"bytes,1,rep,name=datanodeStorageReports" json:"datanodeStorageReports,omitempty"`
+	XXX_unrecognized       []byte                        `json:"-"`
+}
+
+func (m *GetDatanodeStorageReportResponseProto) Reset()         { *m = GetDatanodeStorageReportResponseProto{} }
+func (m *GetDatanodeStorageReportResponseProto) String() string { return proto.CompactTextString(m) }
+func (*GetDatanodeStorageReportResponseProto) ProtoMessage()    {}
+func (*GetDatanodeStorageReportResponseProto) Descriptor() ([]byte, []int) {
+	return fileDescriptor0, []int{56}
+}
+
+func (m *GetDatanodeStorageReportResponseProto) GetDatanodeStorageReports() []*DatanodeStorageReportProto {
+	if m != nil {
+		return m.DatanodeStorageReports
 	}
 	return nil
 }
@@ -1297,6 +1827,9 @@ type GetPreferredBlockSizeRequestProto struct {
 func (m *GetPreferredBlockSizeRequestProto) Reset()         { *m = GetPreferredBlockSizeRequestProto{} }
 func (m *GetPreferredBlockSizeRequestProto) String() string { return proto.CompactTextString(m) }
 func (*GetPreferredBlockSizeRequestProto) ProtoMessage()    {}
+func (*GetPreferredBlockSizeRequestProto) Descriptor() ([]byte, []int) {
+	return fileDescriptor0, []int{57}
+}
 
 func (m *GetPreferredBlockSizeRequestProto) GetFilename() string {
 	if m != nil && m.Filename != nil {
@@ -1313,6 +1846,9 @@ type GetPreferredBlockSizeResponseProto struct {
 func (m *GetPreferredBlockSizeResponseProto) Reset()         { *m = GetPreferredBlockSizeResponseProto{} }
 func (m *GetPreferredBlockSizeResponseProto) String() string { return proto.CompactTextString(m) }
 func (*GetPreferredBlockSizeResponseProto) ProtoMessage()    {}
+func (*GetPreferredBlockSizeResponseProto) Descriptor() ([]byte, []int) {
+	return fileDescriptor0, []int{58}
+}
 
 func (m *GetPreferredBlockSizeResponseProto) GetBsize() uint64 {
 	if m != nil && m.Bsize != nil {
@@ -1327,9 +1863,10 @@ type SetSafeModeRequestProto struct {
 	XXX_unrecognized []byte               `json:"-"`
 }
 
-func (m *SetSafeModeRequestProto) Reset()         { *m = SetSafeModeRequestProto{} }
-func (m *SetSafeModeRequestProto) String() string { return proto.CompactTextString(m) }
-func (*SetSafeModeRequestProto) ProtoMessage()    {}
+func (m *SetSafeModeRequestProto) Reset()                    { *m = SetSafeModeRequestProto{} }
+func (m *SetSafeModeRequestProto) String() string            { return proto.CompactTextString(m) }
+func (*SetSafeModeRequestProto) ProtoMessage()               {}
+func (*SetSafeModeRequestProto) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{59} }
 
 const Default_SetSafeModeRequestProto_Checked bool = false
 
@@ -1352,9 +1889,10 @@ type SetSafeModeResponseProto struct {
 	XXX_unrecognized []byte `json:"-"`
 }
 
-func (m *SetSafeModeResponseProto) Reset()         { *m = SetSafeModeResponseProto{} }
-func (m *SetSafeModeResponseProto) String() string { return proto.CompactTextString(m) }
-func (*SetSafeModeResponseProto) ProtoMessage()    {}
+func (m *SetSafeModeResponseProto) Reset()                    { *m = SetSafeModeResponseProto{} }
+func (m *SetSafeModeResponseProto) String() string            { return proto.CompactTextString(m) }
+func (*SetSafeModeResponseProto) ProtoMessage()               {}
+func (*SetSafeModeResponseProto) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{60} }
 
 func (m *SetSafeModeResponseProto) GetResult() bool {
 	if m != nil && m.Result != nil {
@@ -1367,34 +1905,38 @@ type SaveNamespaceRequestProto struct {
 	XXX_unrecognized []byte `json:"-"`
 }
 
-func (m *SaveNamespaceRequestProto) Reset()         { *m = SaveNamespaceRequestProto{} }
-func (m *SaveNamespaceRequestProto) String() string { return proto.CompactTextString(m) }
-func (*SaveNamespaceRequestProto) ProtoMessage()    {}
+func (m *SaveNamespaceRequestProto) Reset()                    { *m = SaveNamespaceRequestProto{} }
+func (m *SaveNamespaceRequestProto) String() string            { return proto.CompactTextString(m) }
+func (*SaveNamespaceRequestProto) ProtoMessage()               {}
+func (*SaveNamespaceRequestProto) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{61} }
 
 type SaveNamespaceResponseProto struct {
 	XXX_unrecognized []byte `json:"-"`
 }
 
-func (m *SaveNamespaceResponseProto) Reset()         { *m = SaveNamespaceResponseProto{} }
-func (m *SaveNamespaceResponseProto) String() string { return proto.CompactTextString(m) }
-func (*SaveNamespaceResponseProto) ProtoMessage()    {}
+func (m *SaveNamespaceResponseProto) Reset()                    { *m = SaveNamespaceResponseProto{} }
+func (m *SaveNamespaceResponseProto) String() string            { return proto.CompactTextString(m) }
+func (*SaveNamespaceResponseProto) ProtoMessage()               {}
+func (*SaveNamespaceResponseProto) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{62} }
 
 type RollEditsRequestProto struct {
 	XXX_unrecognized []byte `json:"-"`
 }
 
-func (m *RollEditsRequestProto) Reset()         { *m = RollEditsRequestProto{} }
-func (m *RollEditsRequestProto) String() string { return proto.CompactTextString(m) }
-func (*RollEditsRequestProto) ProtoMessage()    {}
+func (m *RollEditsRequestProto) Reset()                    { *m = RollEditsRequestProto{} }
+func (m *RollEditsRequestProto) String() string            { return proto.CompactTextString(m) }
+func (*RollEditsRequestProto) ProtoMessage()               {}
+func (*RollEditsRequestProto) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{63} }
 
 type RollEditsResponseProto struct {
 	NewSegmentTxId   *uint64 `protobuf:"varint,1,req,name=newSegmentTxId" json:"newSegmentTxId,omitempty"`
 	XXX_unrecognized []byte  `json:"-"`
 }
 
-func (m *RollEditsResponseProto) Reset()         { *m = RollEditsResponseProto{} }
-func (m *RollEditsResponseProto) String() string { return proto.CompactTextString(m) }
-func (*RollEditsResponseProto) ProtoMessage()    {}
+func (m *RollEditsResponseProto) Reset()                    { *m = RollEditsResponseProto{} }
+func (m *RollEditsResponseProto) String() string            { return proto.CompactTextString(m) }
+func (*RollEditsResponseProto) ProtoMessage()               {}
+func (*RollEditsResponseProto) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{64} }
 
 func (m *RollEditsResponseProto) GetNewSegmentTxId() uint64 {
 	if m != nil && m.NewSegmentTxId != nil {
@@ -1411,6 +1953,9 @@ type RestoreFailedStorageRequestProto struct {
 func (m *RestoreFailedStorageRequestProto) Reset()         { *m = RestoreFailedStorageRequestProto{} }
 func (m *RestoreFailedStorageRequestProto) String() string { return proto.CompactTextString(m) }
 func (*RestoreFailedStorageRequestProto) ProtoMessage()    {}
+func (*RestoreFailedStorageRequestProto) Descriptor() ([]byte, []int) {
+	return fileDescriptor0, []int{65}
+}
 
 func (m *RestoreFailedStorageRequestProto) GetArg() string {
 	if m != nil && m.Arg != nil {
@@ -1427,6 +1972,9 @@ type RestoreFailedStorageResponseProto struct {
 func (m *RestoreFailedStorageResponseProto) Reset()         { *m = RestoreFailedStorageResponseProto{} }
 func (m *RestoreFailedStorageResponseProto) String() string { return proto.CompactTextString(m) }
 func (*RestoreFailedStorageResponseProto) ProtoMessage()    {}
+func (*RestoreFailedStorageResponseProto) Descriptor() ([]byte, []int) {
+	return fileDescriptor0, []int{66}
+}
 
 func (m *RestoreFailedStorageResponseProto) GetResult() bool {
 	if m != nil && m.Result != nil {
@@ -1439,33 +1987,112 @@ type RefreshNodesRequestProto struct {
 	XXX_unrecognized []byte `json:"-"`
 }
 
-func (m *RefreshNodesRequestProto) Reset()         { *m = RefreshNodesRequestProto{} }
-func (m *RefreshNodesRequestProto) String() string { return proto.CompactTextString(m) }
-func (*RefreshNodesRequestProto) ProtoMessage()    {}
+func (m *RefreshNodesRequestProto) Reset()                    { *m = RefreshNodesRequestProto{} }
+func (m *RefreshNodesRequestProto) String() string            { return proto.CompactTextString(m) }
+func (*RefreshNodesRequestProto) ProtoMessage()               {}
+func (*RefreshNodesRequestProto) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{67} }
 
 type RefreshNodesResponseProto struct {
 	XXX_unrecognized []byte `json:"-"`
 }
 
-func (m *RefreshNodesResponseProto) Reset()         { *m = RefreshNodesResponseProto{} }
-func (m *RefreshNodesResponseProto) String() string { return proto.CompactTextString(m) }
-func (*RefreshNodesResponseProto) ProtoMessage()    {}
+func (m *RefreshNodesResponseProto) Reset()                    { *m = RefreshNodesResponseProto{} }
+func (m *RefreshNodesResponseProto) String() string            { return proto.CompactTextString(m) }
+func (*RefreshNodesResponseProto) ProtoMessage()               {}
+func (*RefreshNodesResponseProto) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{68} }
 
 type FinalizeUpgradeRequestProto struct {
 	XXX_unrecognized []byte `json:"-"`
 }
 
-func (m *FinalizeUpgradeRequestProto) Reset()         { *m = FinalizeUpgradeRequestProto{} }
-func (m *FinalizeUpgradeRequestProto) String() string { return proto.CompactTextString(m) }
-func (*FinalizeUpgradeRequestProto) ProtoMessage()    {}
+func (m *FinalizeUpgradeRequestProto) Reset()                    { *m = FinalizeUpgradeRequestProto{} }
+func (m *FinalizeUpgradeRequestProto) String() string            { return proto.CompactTextString(m) }
+func (*FinalizeUpgradeRequestProto) ProtoMessage()               {}
+func (*FinalizeUpgradeRequestProto) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{69} }
 
 type FinalizeUpgradeResponseProto struct {
 	XXX_unrecognized []byte `json:"-"`
 }
 
-func (m *FinalizeUpgradeResponseProto) Reset()         { *m = FinalizeUpgradeResponseProto{} }
-func (m *FinalizeUpgradeResponseProto) String() string { return proto.CompactTextString(m) }
-func (*FinalizeUpgradeResponseProto) ProtoMessage()    {}
+func (m *FinalizeUpgradeResponseProto) Reset()                    { *m = FinalizeUpgradeResponseProto{} }
+func (m *FinalizeUpgradeResponseProto) String() string            { return proto.CompactTextString(m) }
+func (*FinalizeUpgradeResponseProto) ProtoMessage()               {}
+func (*FinalizeUpgradeResponseProto) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{70} }
+
+type RollingUpgradeRequestProto struct {
+	Action           *RollingUpgradeActionProto `protobuf:"varint,1,req,name=action,enum=hadoop.hdfs.RollingUpgradeActionProto" json:"action,omitempty"`
+	XXX_unrecognized []byte                     `json:"-"`
+}
+
+func (m *RollingUpgradeRequestProto) Reset()                    { *m = RollingUpgradeRequestProto{} }
+func (m *RollingUpgradeRequestProto) String() string            { return proto.CompactTextString(m) }
+func (*RollingUpgradeRequestProto) ProtoMessage()               {}
+func (*RollingUpgradeRequestProto) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{71} }
+
+func (m *RollingUpgradeRequestProto) GetAction() RollingUpgradeActionProto {
+	if m != nil && m.Action != nil {
+		return *m.Action
+	}
+	return RollingUpgradeActionProto_QUERY
+}
+
+type RollingUpgradeInfoProto struct {
+	Status                *RollingUpgradeStatusProto `protobuf:"bytes,1,req,name=status" json:"status,omitempty"`
+	StartTime             *uint64                    `protobuf:"varint,2,req,name=startTime" json:"startTime,omitempty"`
+	FinalizeTime          *uint64                    `protobuf:"varint,3,req,name=finalizeTime" json:"finalizeTime,omitempty"`
+	CreatedRollbackImages *bool                      `protobuf:"varint,4,req,name=createdRollbackImages" json:"createdRollbackImages,omitempty"`
+	XXX_unrecognized      []byte                     `json:"-"`
+}
+
+func (m *RollingUpgradeInfoProto) Reset()                    { *m = RollingUpgradeInfoProto{} }
+func (m *RollingUpgradeInfoProto) String() string            { return proto.CompactTextString(m) }
+func (*RollingUpgradeInfoProto) ProtoMessage()               {}
+func (*RollingUpgradeInfoProto) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{72} }
+
+func (m *RollingUpgradeInfoProto) GetStatus() *RollingUpgradeStatusProto {
+	if m != nil {
+		return m.Status
+	}
+	return nil
+}
+
+func (m *RollingUpgradeInfoProto) GetStartTime() uint64 {
+	if m != nil && m.StartTime != nil {
+		return *m.StartTime
+	}
+	return 0
+}
+
+func (m *RollingUpgradeInfoProto) GetFinalizeTime() uint64 {
+	if m != nil && m.FinalizeTime != nil {
+		return *m.FinalizeTime
+	}
+	return 0
+}
+
+func (m *RollingUpgradeInfoProto) GetCreatedRollbackImages() bool {
+	if m != nil && m.CreatedRollbackImages != nil {
+		return *m.CreatedRollbackImages
+	}
+	return false
+}
+
+type RollingUpgradeResponseProto struct {
+	RollingUpgradeInfo *RollingUpgradeInfoProto `protobuf:"bytes,1,opt,name=rollingUpgradeInfo" json:"rollingUpgradeInfo,omitempty"`
+	XXX_unrecognized   []byte                   `json:"-"`
+}
+
+func (m *RollingUpgradeResponseProto) Reset()                    { *m = RollingUpgradeResponseProto{} }
+func (m *RollingUpgradeResponseProto) String() string            { return proto.CompactTextString(m) }
+func (*RollingUpgradeResponseProto) ProtoMessage()               {}
+func (*RollingUpgradeResponseProto) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{73} }
+
+func (m *RollingUpgradeResponseProto) GetRollingUpgradeInfo() *RollingUpgradeInfoProto {
+	if m != nil {
+		return m.RollingUpgradeInfo
+	}
+	return nil
+}
 
 type ListCorruptFileBlocksRequestProto struct {
 	Path             *string `protobuf:"bytes,1,req,name=path" json:"path,omitempty"`
@@ -1476,6 +2103,9 @@ type ListCorruptFileBlocksRequestProto struct {
 func (m *ListCorruptFileBlocksRequestProto) Reset()         { *m = ListCorruptFileBlocksRequestProto{} }
 func (m *ListCorruptFileBlocksRequestProto) String() string { return proto.CompactTextString(m) }
 func (*ListCorruptFileBlocksRequestProto) ProtoMessage()    {}
+func (*ListCorruptFileBlocksRequestProto) Descriptor() ([]byte, []int) {
+	return fileDescriptor0, []int{74}
+}
 
 func (m *ListCorruptFileBlocksRequestProto) GetPath() string {
 	if m != nil && m.Path != nil {
@@ -1499,6 +2129,9 @@ type ListCorruptFileBlocksResponseProto struct {
 func (m *ListCorruptFileBlocksResponseProto) Reset()         { *m = ListCorruptFileBlocksResponseProto{} }
 func (m *ListCorruptFileBlocksResponseProto) String() string { return proto.CompactTextString(m) }
 func (*ListCorruptFileBlocksResponseProto) ProtoMessage()    {}
+func (*ListCorruptFileBlocksResponseProto) Descriptor() ([]byte, []int) {
+	return fileDescriptor0, []int{75}
+}
 
 func (m *ListCorruptFileBlocksResponseProto) GetCorrupt() *CorruptFileBlocksProto {
 	if m != nil {
@@ -1512,9 +2145,10 @@ type MetaSaveRequestProto struct {
 	XXX_unrecognized []byte  `json:"-"`
 }
 
-func (m *MetaSaveRequestProto) Reset()         { *m = MetaSaveRequestProto{} }
-func (m *MetaSaveRequestProto) String() string { return proto.CompactTextString(m) }
-func (*MetaSaveRequestProto) ProtoMessage()    {}
+func (m *MetaSaveRequestProto) Reset()                    { *m = MetaSaveRequestProto{} }
+func (m *MetaSaveRequestProto) String() string            { return proto.CompactTextString(m) }
+func (*MetaSaveRequestProto) ProtoMessage()               {}
+func (*MetaSaveRequestProto) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{76} }
 
 func (m *MetaSaveRequestProto) GetFilename() string {
 	if m != nil && m.Filename != nil {
@@ -1527,18 +2161,20 @@ type MetaSaveResponseProto struct {
 	XXX_unrecognized []byte `json:"-"`
 }
 
-func (m *MetaSaveResponseProto) Reset()         { *m = MetaSaveResponseProto{} }
-func (m *MetaSaveResponseProto) String() string { return proto.CompactTextString(m) }
-func (*MetaSaveResponseProto) ProtoMessage()    {}
+func (m *MetaSaveResponseProto) Reset()                    { *m = MetaSaveResponseProto{} }
+func (m *MetaSaveResponseProto) String() string            { return proto.CompactTextString(m) }
+func (*MetaSaveResponseProto) ProtoMessage()               {}
+func (*MetaSaveResponseProto) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{77} }
 
 type GetFileInfoRequestProto struct {
 	Src              *string `protobuf:"bytes,1,req,name=src" json:"src,omitempty"`
 	XXX_unrecognized []byte  `json:"-"`
 }
 
-func (m *GetFileInfoRequestProto) Reset()         { *m = GetFileInfoRequestProto{} }
-func (m *GetFileInfoRequestProto) String() string { return proto.CompactTextString(m) }
-func (*GetFileInfoRequestProto) ProtoMessage()    {}
+func (m *GetFileInfoRequestProto) Reset()                    { *m = GetFileInfoRequestProto{} }
+func (m *GetFileInfoRequestProto) String() string            { return proto.CompactTextString(m) }
+func (*GetFileInfoRequestProto) ProtoMessage()               {}
+func (*GetFileInfoRequestProto) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{78} }
 
 func (m *GetFileInfoRequestProto) GetSrc() string {
 	if m != nil && m.Src != nil {
@@ -1552,9 +2188,10 @@ type GetFileInfoResponseProto struct {
 	XXX_unrecognized []byte               `json:"-"`
 }
 
-func (m *GetFileInfoResponseProto) Reset()         { *m = GetFileInfoResponseProto{} }
-func (m *GetFileInfoResponseProto) String() string { return proto.CompactTextString(m) }
-func (*GetFileInfoResponseProto) ProtoMessage()    {}
+func (m *GetFileInfoResponseProto) Reset()                    { *m = GetFileInfoResponseProto{} }
+func (m *GetFileInfoResponseProto) String() string            { return proto.CompactTextString(m) }
+func (*GetFileInfoResponseProto) ProtoMessage()               {}
+func (*GetFileInfoResponseProto) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{79} }
 
 func (m *GetFileInfoResponseProto) GetFs() *HdfsFileStatusProto {
 	if m != nil {
@@ -1568,9 +2205,10 @@ type IsFileClosedRequestProto struct {
 	XXX_unrecognized []byte  `json:"-"`
 }
 
-func (m *IsFileClosedRequestProto) Reset()         { *m = IsFileClosedRequestProto{} }
-func (m *IsFileClosedRequestProto) String() string { return proto.CompactTextString(m) }
-func (*IsFileClosedRequestProto) ProtoMessage()    {}
+func (m *IsFileClosedRequestProto) Reset()                    { *m = IsFileClosedRequestProto{} }
+func (m *IsFileClosedRequestProto) String() string            { return proto.CompactTextString(m) }
+func (*IsFileClosedRequestProto) ProtoMessage()               {}
+func (*IsFileClosedRequestProto) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{80} }
 
 func (m *IsFileClosedRequestProto) GetSrc() string {
 	if m != nil && m.Src != nil {
@@ -1584,9 +2222,10 @@ type IsFileClosedResponseProto struct {
 	XXX_unrecognized []byte `json:"-"`
 }
 
-func (m *IsFileClosedResponseProto) Reset()         { *m = IsFileClosedResponseProto{} }
-func (m *IsFileClosedResponseProto) String() string { return proto.CompactTextString(m) }
-func (*IsFileClosedResponseProto) ProtoMessage()    {}
+func (m *IsFileClosedResponseProto) Reset()                    { *m = IsFileClosedResponseProto{} }
+func (m *IsFileClosedResponseProto) String() string            { return proto.CompactTextString(m) }
+func (*IsFileClosedResponseProto) ProtoMessage()               {}
+func (*IsFileClosedResponseProto) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{81} }
 
 func (m *IsFileClosedResponseProto) GetResult() bool {
 	if m != nil && m.Result != nil {
@@ -1595,14 +2234,580 @@ func (m *IsFileClosedResponseProto) GetResult() bool {
 	return false
 }
 
+type CacheDirectiveInfoProto struct {
+	Id               *int64                             `protobuf:"varint,1,opt,name=id" json:"id,omitempty"`
+	Path             *string                            `protobuf:"bytes,2,opt,name=path" json:"path,omitempty"`
+	Replication      *uint32                            `protobuf:"varint,3,opt,name=replication" json:"replication,omitempty"`
+	Pool             *string                            `protobuf:"bytes,4,opt,name=pool" json:"pool,omitempty"`
+	Expiration       *CacheDirectiveInfoExpirationProto `protobuf:"bytes,5,opt,name=expiration" json:"expiration,omitempty"`
+	XXX_unrecognized []byte                             `json:"-"`
+}
+
+func (m *CacheDirectiveInfoProto) Reset()                    { *m = CacheDirectiveInfoProto{} }
+func (m *CacheDirectiveInfoProto) String() string            { return proto.CompactTextString(m) }
+func (*CacheDirectiveInfoProto) ProtoMessage()               {}
+func (*CacheDirectiveInfoProto) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{82} }
+
+func (m *CacheDirectiveInfoProto) GetId() int64 {
+	if m != nil && m.Id != nil {
+		return *m.Id
+	}
+	return 0
+}
+
+func (m *CacheDirectiveInfoProto) GetPath() string {
+	if m != nil && m.Path != nil {
+		return *m.Path
+	}
+	return ""
+}
+
+func (m *CacheDirectiveInfoProto) GetReplication() uint32 {
+	if m != nil && m.Replication != nil {
+		return *m.Replication
+	}
+	return 0
+}
+
+func (m *CacheDirectiveInfoProto) GetPool() string {
+	if m != nil && m.Pool != nil {
+		return *m.Pool
+	}
+	return ""
+}
+
+func (m *CacheDirectiveInfoProto) GetExpiration() *CacheDirectiveInfoExpirationProto {
+	if m != nil {
+		return m.Expiration
+	}
+	return nil
+}
+
+type CacheDirectiveInfoExpirationProto struct {
+	Millis           *int64 `protobuf:"varint,1,req,name=millis" json:"millis,omitempty"`
+	IsRelative       *bool  `protobuf:"varint,2,req,name=isRelative" json:"isRelative,omitempty"`
+	XXX_unrecognized []byte `json:"-"`
+}
+
+func (m *CacheDirectiveInfoExpirationProto) Reset()         { *m = CacheDirectiveInfoExpirationProto{} }
+func (m *CacheDirectiveInfoExpirationProto) String() string { return proto.CompactTextString(m) }
+func (*CacheDirectiveInfoExpirationProto) ProtoMessage()    {}
+func (*CacheDirectiveInfoExpirationProto) Descriptor() ([]byte, []int) {
+	return fileDescriptor0, []int{83}
+}
+
+func (m *CacheDirectiveInfoExpirationProto) GetMillis() int64 {
+	if m != nil && m.Millis != nil {
+		return *m.Millis
+	}
+	return 0
+}
+
+func (m *CacheDirectiveInfoExpirationProto) GetIsRelative() bool {
+	if m != nil && m.IsRelative != nil {
+		return *m.IsRelative
+	}
+	return false
+}
+
+type CacheDirectiveStatsProto struct {
+	BytesNeeded      *int64 `protobuf:"varint,1,req,name=bytesNeeded" json:"bytesNeeded,omitempty"`
+	BytesCached      *int64 `protobuf:"varint,2,req,name=bytesCached" json:"bytesCached,omitempty"`
+	FilesNeeded      *int64 `protobuf:"varint,3,req,name=filesNeeded" json:"filesNeeded,omitempty"`
+	FilesCached      *int64 `protobuf:"varint,4,req,name=filesCached" json:"filesCached,omitempty"`
+	HasExpired       *bool  `protobuf:"varint,5,req,name=hasExpired" json:"hasExpired,omitempty"`
+	XXX_unrecognized []byte `json:"-"`
+}
+
+func (m *CacheDirectiveStatsProto) Reset()                    { *m = CacheDirectiveStatsProto{} }
+func (m *CacheDirectiveStatsProto) String() string            { return proto.CompactTextString(m) }
+func (*CacheDirectiveStatsProto) ProtoMessage()               {}
+func (*CacheDirectiveStatsProto) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{84} }
+
+func (m *CacheDirectiveStatsProto) GetBytesNeeded() int64 {
+	if m != nil && m.BytesNeeded != nil {
+		return *m.BytesNeeded
+	}
+	return 0
+}
+
+func (m *CacheDirectiveStatsProto) GetBytesCached() int64 {
+	if m != nil && m.BytesCached != nil {
+		return *m.BytesCached
+	}
+	return 0
+}
+
+func (m *CacheDirectiveStatsProto) GetFilesNeeded() int64 {
+	if m != nil && m.FilesNeeded != nil {
+		return *m.FilesNeeded
+	}
+	return 0
+}
+
+func (m *CacheDirectiveStatsProto) GetFilesCached() int64 {
+	if m != nil && m.FilesCached != nil {
+		return *m.FilesCached
+	}
+	return 0
+}
+
+func (m *CacheDirectiveStatsProto) GetHasExpired() bool {
+	if m != nil && m.HasExpired != nil {
+		return *m.HasExpired
+	}
+	return false
+}
+
+type AddCacheDirectiveRequestProto struct {
+	Info             *CacheDirectiveInfoProto `protobuf:"bytes,1,req,name=info" json:"info,omitempty"`
+	CacheFlags       *uint32                  `protobuf:"varint,2,opt,name=cacheFlags" json:"cacheFlags,omitempty"`
+	XXX_unrecognized []byte                   `json:"-"`
+}
+
+func (m *AddCacheDirectiveRequestProto) Reset()                    { *m = AddCacheDirectiveRequestProto{} }
+func (m *AddCacheDirectiveRequestProto) String() string            { return proto.CompactTextString(m) }
+func (*AddCacheDirectiveRequestProto) ProtoMessage()               {}
+func (*AddCacheDirectiveRequestProto) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{85} }
+
+func (m *AddCacheDirectiveRequestProto) GetInfo() *CacheDirectiveInfoProto {
+	if m != nil {
+		return m.Info
+	}
+	return nil
+}
+
+func (m *AddCacheDirectiveRequestProto) GetCacheFlags() uint32 {
+	if m != nil && m.CacheFlags != nil {
+		return *m.CacheFlags
+	}
+	return 0
+}
+
+type AddCacheDirectiveResponseProto struct {
+	Id               *int64 `protobuf:"varint,1,req,name=id" json:"id,omitempty"`
+	XXX_unrecognized []byte `json:"-"`
+}
+
+func (m *AddCacheDirectiveResponseProto) Reset()                    { *m = AddCacheDirectiveResponseProto{} }
+func (m *AddCacheDirectiveResponseProto) String() string            { return proto.CompactTextString(m) }
+func (*AddCacheDirectiveResponseProto) ProtoMessage()               {}
+func (*AddCacheDirectiveResponseProto) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{86} }
+
+func (m *AddCacheDirectiveResponseProto) GetId() int64 {
+	if m != nil && m.Id != nil {
+		return *m.Id
+	}
+	return 0
+}
+
+type ModifyCacheDirectiveRequestProto struct {
+	Info             *CacheDirectiveInfoProto `protobuf:"bytes,1,req,name=info" json:"info,omitempty"`
+	CacheFlags       *uint32                  `protobuf:"varint,2,opt,name=cacheFlags" json:"cacheFlags,omitempty"`
+	XXX_unrecognized []byte                   `json:"-"`
+}
+
+func (m *ModifyCacheDirectiveRequestProto) Reset()         { *m = ModifyCacheDirectiveRequestProto{} }
+func (m *ModifyCacheDirectiveRequestProto) String() string { return proto.CompactTextString(m) }
+func (*ModifyCacheDirectiveRequestProto) ProtoMessage()    {}
+func (*ModifyCacheDirectiveRequestProto) Descriptor() ([]byte, []int) {
+	return fileDescriptor0, []int{87}
+}
+
+func (m *ModifyCacheDirectiveRequestProto) GetInfo() *CacheDirectiveInfoProto {
+	if m != nil {
+		return m.Info
+	}
+	return nil
+}
+
+func (m *ModifyCacheDirectiveRequestProto) GetCacheFlags() uint32 {
+	if m != nil && m.CacheFlags != nil {
+		return *m.CacheFlags
+	}
+	return 0
+}
+
+type ModifyCacheDirectiveResponseProto struct {
+	XXX_unrecognized []byte `json:"-"`
+}
+
+func (m *ModifyCacheDirectiveResponseProto) Reset()         { *m = ModifyCacheDirectiveResponseProto{} }
+func (m *ModifyCacheDirectiveResponseProto) String() string { return proto.CompactTextString(m) }
+func (*ModifyCacheDirectiveResponseProto) ProtoMessage()    {}
+func (*ModifyCacheDirectiveResponseProto) Descriptor() ([]byte, []int) {
+	return fileDescriptor0, []int{88}
+}
+
+type RemoveCacheDirectiveRequestProto struct {
+	Id               *int64 `protobuf:"varint,1,req,name=id" json:"id,omitempty"`
+	XXX_unrecognized []byte `json:"-"`
+}
+
+func (m *RemoveCacheDirectiveRequestProto) Reset()         { *m = RemoveCacheDirectiveRequestProto{} }
+func (m *RemoveCacheDirectiveRequestProto) String() string { return proto.CompactTextString(m) }
+func (*RemoveCacheDirectiveRequestProto) ProtoMessage()    {}
+func (*RemoveCacheDirectiveRequestProto) Descriptor() ([]byte, []int) {
+	return fileDescriptor0, []int{89}
+}
+
+func (m *RemoveCacheDirectiveRequestProto) GetId() int64 {
+	if m != nil && m.Id != nil {
+		return *m.Id
+	}
+	return 0
+}
+
+type RemoveCacheDirectiveResponseProto struct {
+	XXX_unrecognized []byte `json:"-"`
+}
+
+func (m *RemoveCacheDirectiveResponseProto) Reset()         { *m = RemoveCacheDirectiveResponseProto{} }
+func (m *RemoveCacheDirectiveResponseProto) String() string { return proto.CompactTextString(m) }
+func (*RemoveCacheDirectiveResponseProto) ProtoMessage()    {}
+func (*RemoveCacheDirectiveResponseProto) Descriptor() ([]byte, []int) {
+	return fileDescriptor0, []int{90}
+}
+
+type ListCacheDirectivesRequestProto struct {
+	PrevId           *int64                   `protobuf:"varint,1,req,name=prevId" json:"prevId,omitempty"`
+	Filter           *CacheDirectiveInfoProto `protobuf:"bytes,2,req,name=filter" json:"filter,omitempty"`
+	XXX_unrecognized []byte                   `json:"-"`
+}
+
+func (m *ListCacheDirectivesRequestProto) Reset()         { *m = ListCacheDirectivesRequestProto{} }
+func (m *ListCacheDirectivesRequestProto) String() string { return proto.CompactTextString(m) }
+func (*ListCacheDirectivesRequestProto) ProtoMessage()    {}
+func (*ListCacheDirectivesRequestProto) Descriptor() ([]byte, []int) {
+	return fileDescriptor0, []int{91}
+}
+
+func (m *ListCacheDirectivesRequestProto) GetPrevId() int64 {
+	if m != nil && m.PrevId != nil {
+		return *m.PrevId
+	}
+	return 0
+}
+
+func (m *ListCacheDirectivesRequestProto) GetFilter() *CacheDirectiveInfoProto {
+	if m != nil {
+		return m.Filter
+	}
+	return nil
+}
+
+type CacheDirectiveEntryProto struct {
+	Info             *CacheDirectiveInfoProto  `protobuf:"bytes,1,req,name=info" json:"info,omitempty"`
+	Stats            *CacheDirectiveStatsProto `protobuf:"bytes,2,req,name=stats" json:"stats,omitempty"`
+	XXX_unrecognized []byte                    `json:"-"`
+}
+
+func (m *CacheDirectiveEntryProto) Reset()                    { *m = CacheDirectiveEntryProto{} }
+func (m *CacheDirectiveEntryProto) String() string            { return proto.CompactTextString(m) }
+func (*CacheDirectiveEntryProto) ProtoMessage()               {}
+func (*CacheDirectiveEntryProto) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{92} }
+
+func (m *CacheDirectiveEntryProto) GetInfo() *CacheDirectiveInfoProto {
+	if m != nil {
+		return m.Info
+	}
+	return nil
+}
+
+func (m *CacheDirectiveEntryProto) GetStats() *CacheDirectiveStatsProto {
+	if m != nil {
+		return m.Stats
+	}
+	return nil
+}
+
+type ListCacheDirectivesResponseProto struct {
+	Elements         []*CacheDirectiveEntryProto `protobuf:"bytes,1,rep,name=elements" json:"elements,omitempty"`
+	HasMore          *bool                       `protobuf:"varint,2,req,name=hasMore" json:"hasMore,omitempty"`
+	XXX_unrecognized []byte                      `json:"-"`
+}
+
+func (m *ListCacheDirectivesResponseProto) Reset()         { *m = ListCacheDirectivesResponseProto{} }
+func (m *ListCacheDirectivesResponseProto) String() string { return proto.CompactTextString(m) }
+func (*ListCacheDirectivesResponseProto) ProtoMessage()    {}
+func (*ListCacheDirectivesResponseProto) Descriptor() ([]byte, []int) {
+	return fileDescriptor0, []int{93}
+}
+
+func (m *ListCacheDirectivesResponseProto) GetElements() []*CacheDirectiveEntryProto {
+	if m != nil {
+		return m.Elements
+	}
+	return nil
+}
+
+func (m *ListCacheDirectivesResponseProto) GetHasMore() bool {
+	if m != nil && m.HasMore != nil {
+		return *m.HasMore
+	}
+	return false
+}
+
+type CachePoolInfoProto struct {
+	PoolName          *string `protobuf:"bytes,1,opt,name=poolName" json:"poolName,omitempty"`
+	OwnerName         *string `protobuf:"bytes,2,opt,name=ownerName" json:"ownerName,omitempty"`
+	GroupName         *string `protobuf:"bytes,3,opt,name=groupName" json:"groupName,omitempty"`
+	Mode              *int32  `protobuf:"varint,4,opt,name=mode" json:"mode,omitempty"`
+	Limit             *int64  `protobuf:"varint,5,opt,name=limit" json:"limit,omitempty"`
+	MaxRelativeExpiry *int64  `protobuf:"varint,6,opt,name=maxRelativeExpiry" json:"maxRelativeExpiry,omitempty"`
+	XXX_unrecognized  []byte  `json:"-"`
+}
+
+func (m *CachePoolInfoProto) Reset()                    { *m = CachePoolInfoProto{} }
+func (m *CachePoolInfoProto) String() string            { return proto.CompactTextString(m) }
+func (*CachePoolInfoProto) ProtoMessage()               {}
+func (*CachePoolInfoProto) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{94} }
+
+func (m *CachePoolInfoProto) GetPoolName() string {
+	if m != nil && m.PoolName != nil {
+		return *m.PoolName
+	}
+	return ""
+}
+
+func (m *CachePoolInfoProto) GetOwnerName() string {
+	if m != nil && m.OwnerName != nil {
+		return *m.OwnerName
+	}
+	return ""
+}
+
+func (m *CachePoolInfoProto) GetGroupName() string {
+	if m != nil && m.GroupName != nil {
+		return *m.GroupName
+	}
+	return ""
+}
+
+func (m *CachePoolInfoProto) GetMode() int32 {
+	if m != nil && m.Mode != nil {
+		return *m.Mode
+	}
+	return 0
+}
+
+func (m *CachePoolInfoProto) GetLimit() int64 {
+	if m != nil && m.Limit != nil {
+		return *m.Limit
+	}
+	return 0
+}
+
+func (m *CachePoolInfoProto) GetMaxRelativeExpiry() int64 {
+	if m != nil && m.MaxRelativeExpiry != nil {
+		return *m.MaxRelativeExpiry
+	}
+	return 0
+}
+
+type CachePoolStatsProto struct {
+	BytesNeeded      *int64 `protobuf:"varint,1,req,name=bytesNeeded" json:"bytesNeeded,omitempty"`
+	BytesCached      *int64 `protobuf:"varint,2,req,name=bytesCached" json:"bytesCached,omitempty"`
+	BytesOverlimit   *int64 `protobuf:"varint,3,req,name=bytesOverlimit" json:"bytesOverlimit,omitempty"`
+	FilesNeeded      *int64 `protobuf:"varint,4,req,name=filesNeeded" json:"filesNeeded,omitempty"`
+	FilesCached      *int64 `protobuf:"varint,5,req,name=filesCached" json:"filesCached,omitempty"`
+	XXX_unrecognized []byte `json:"-"`
+}
+
+func (m *CachePoolStatsProto) Reset()                    { *m = CachePoolStatsProto{} }
+func (m *CachePoolStatsProto) String() string            { return proto.CompactTextString(m) }
+func (*CachePoolStatsProto) ProtoMessage()               {}
+func (*CachePoolStatsProto) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{95} }
+
+func (m *CachePoolStatsProto) GetBytesNeeded() int64 {
+	if m != nil && m.BytesNeeded != nil {
+		return *m.BytesNeeded
+	}
+	return 0
+}
+
+func (m *CachePoolStatsProto) GetBytesCached() int64 {
+	if m != nil && m.BytesCached != nil {
+		return *m.BytesCached
+	}
+	return 0
+}
+
+func (m *CachePoolStatsProto) GetBytesOverlimit() int64 {
+	if m != nil && m.BytesOverlimit != nil {
+		return *m.BytesOverlimit
+	}
+	return 0
+}
+
+func (m *CachePoolStatsProto) GetFilesNeeded() int64 {
+	if m != nil && m.FilesNeeded != nil {
+		return *m.FilesNeeded
+	}
+	return 0
+}
+
+func (m *CachePoolStatsProto) GetFilesCached() int64 {
+	if m != nil && m.FilesCached != nil {
+		return *m.FilesCached
+	}
+	return 0
+}
+
+type AddCachePoolRequestProto struct {
+	Info             *CachePoolInfoProto `protobuf:"bytes,1,req,name=info" json:"info,omitempty"`
+	XXX_unrecognized []byte              `json:"-"`
+}
+
+func (m *AddCachePoolRequestProto) Reset()                    { *m = AddCachePoolRequestProto{} }
+func (m *AddCachePoolRequestProto) String() string            { return proto.CompactTextString(m) }
+func (*AddCachePoolRequestProto) ProtoMessage()               {}
+func (*AddCachePoolRequestProto) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{96} }
+
+func (m *AddCachePoolRequestProto) GetInfo() *CachePoolInfoProto {
+	if m != nil {
+		return m.Info
+	}
+	return nil
+}
+
+type AddCachePoolResponseProto struct {
+	XXX_unrecognized []byte `json:"-"`
+}
+
+func (m *AddCachePoolResponseProto) Reset()                    { *m = AddCachePoolResponseProto{} }
+func (m *AddCachePoolResponseProto) String() string            { return proto.CompactTextString(m) }
+func (*AddCachePoolResponseProto) ProtoMessage()               {}
+func (*AddCachePoolResponseProto) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{97} }
+
+type ModifyCachePoolRequestProto struct {
+	Info             *CachePoolInfoProto `protobuf:"bytes,1,req,name=info" json:"info,omitempty"`
+	XXX_unrecognized []byte              `json:"-"`
+}
+
+func (m *ModifyCachePoolRequestProto) Reset()                    { *m = ModifyCachePoolRequestProto{} }
+func (m *ModifyCachePoolRequestProto) String() string            { return proto.CompactTextString(m) }
+func (*ModifyCachePoolRequestProto) ProtoMessage()               {}
+func (*ModifyCachePoolRequestProto) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{98} }
+
+func (m *ModifyCachePoolRequestProto) GetInfo() *CachePoolInfoProto {
+	if m != nil {
+		return m.Info
+	}
+	return nil
+}
+
+type ModifyCachePoolResponseProto struct {
+	XXX_unrecognized []byte `json:"-"`
+}
+
+func (m *ModifyCachePoolResponseProto) Reset()                    { *m = ModifyCachePoolResponseProto{} }
+func (m *ModifyCachePoolResponseProto) String() string            { return proto.CompactTextString(m) }
+func (*ModifyCachePoolResponseProto) ProtoMessage()               {}
+func (*ModifyCachePoolResponseProto) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{99} }
+
+type RemoveCachePoolRequestProto struct {
+	PoolName         *string `protobuf:"bytes,1,req,name=poolName" json:"poolName,omitempty"`
+	XXX_unrecognized []byte  `json:"-"`
+}
+
+func (m *RemoveCachePoolRequestProto) Reset()                    { *m = RemoveCachePoolRequestProto{} }
+func (m *RemoveCachePoolRequestProto) String() string            { return proto.CompactTextString(m) }
+func (*RemoveCachePoolRequestProto) ProtoMessage()               {}
+func (*RemoveCachePoolRequestProto) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{100} }
+
+func (m *RemoveCachePoolRequestProto) GetPoolName() string {
+	if m != nil && m.PoolName != nil {
+		return *m.PoolName
+	}
+	return ""
+}
+
+type RemoveCachePoolResponseProto struct {
+	XXX_unrecognized []byte `json:"-"`
+}
+
+func (m *RemoveCachePoolResponseProto) Reset()                    { *m = RemoveCachePoolResponseProto{} }
+func (m *RemoveCachePoolResponseProto) String() string            { return proto.CompactTextString(m) }
+func (*RemoveCachePoolResponseProto) ProtoMessage()               {}
+func (*RemoveCachePoolResponseProto) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{101} }
+
+type ListCachePoolsRequestProto struct {
+	PrevPoolName     *string `protobuf:"bytes,1,req,name=prevPoolName" json:"prevPoolName,omitempty"`
+	XXX_unrecognized []byte  `json:"-"`
+}
+
+func (m *ListCachePoolsRequestProto) Reset()                    { *m = ListCachePoolsRequestProto{} }
+func (m *ListCachePoolsRequestProto) String() string            { return proto.CompactTextString(m) }
+func (*ListCachePoolsRequestProto) ProtoMessage()               {}
+func (*ListCachePoolsRequestProto) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{102} }
+
+func (m *ListCachePoolsRequestProto) GetPrevPoolName() string {
+	if m != nil && m.PrevPoolName != nil {
+		return *m.PrevPoolName
+	}
+	return ""
+}
+
+type ListCachePoolsResponseProto struct {
+	Entries          []*CachePoolEntryProto `protobuf:"bytes,1,rep,name=entries" json:"entries,omitempty"`
+	HasMore          *bool                  `protobuf:"varint,2,req,name=hasMore" json:"hasMore,omitempty"`
+	XXX_unrecognized []byte                 `json:"-"`
+}
+
+func (m *ListCachePoolsResponseProto) Reset()                    { *m = ListCachePoolsResponseProto{} }
+func (m *ListCachePoolsResponseProto) String() string            { return proto.CompactTextString(m) }
+func (*ListCachePoolsResponseProto) ProtoMessage()               {}
+func (*ListCachePoolsResponseProto) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{103} }
+
+func (m *ListCachePoolsResponseProto) GetEntries() []*CachePoolEntryProto {
+	if m != nil {
+		return m.Entries
+	}
+	return nil
+}
+
+func (m *ListCachePoolsResponseProto) GetHasMore() bool {
+	if m != nil && m.HasMore != nil {
+		return *m.HasMore
+	}
+	return false
+}
+
+type CachePoolEntryProto struct {
+	Info             *CachePoolInfoProto  `protobuf:"bytes,1,req,name=info" json:"info,omitempty"`
+	Stats            *CachePoolStatsProto `protobuf:"bytes,2,req,name=stats" json:"stats,omitempty"`
+	XXX_unrecognized []byte               `json:"-"`
+}
+
+func (m *CachePoolEntryProto) Reset()                    { *m = CachePoolEntryProto{} }
+func (m *CachePoolEntryProto) String() string            { return proto.CompactTextString(m) }
+func (*CachePoolEntryProto) ProtoMessage()               {}
+func (*CachePoolEntryProto) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{104} }
+
+func (m *CachePoolEntryProto) GetInfo() *CachePoolInfoProto {
+	if m != nil {
+		return m.Info
+	}
+	return nil
+}
+
+func (m *CachePoolEntryProto) GetStats() *CachePoolStatsProto {
+	if m != nil {
+		return m.Stats
+	}
+	return nil
+}
+
 type GetFileLinkInfoRequestProto struct {
 	Src              *string `protobuf:"bytes,1,req,name=src" json:"src,omitempty"`
 	XXX_unrecognized []byte  `json:"-"`
 }
 
-func (m *GetFileLinkInfoRequestProto) Reset()         { *m = GetFileLinkInfoRequestProto{} }
-func (m *GetFileLinkInfoRequestProto) String() string { return proto.CompactTextString(m) }
-func (*GetFileLinkInfoRequestProto) ProtoMessage()    {}
+func (m *GetFileLinkInfoRequestProto) Reset()                    { *m = GetFileLinkInfoRequestProto{} }
+func (m *GetFileLinkInfoRequestProto) String() string            { return proto.CompactTextString(m) }
+func (*GetFileLinkInfoRequestProto) ProtoMessage()               {}
+func (*GetFileLinkInfoRequestProto) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{105} }
 
 func (m *GetFileLinkInfoRequestProto) GetSrc() string {
 	if m != nil && m.Src != nil {
@@ -1616,9 +2821,10 @@ type GetFileLinkInfoResponseProto struct {
 	XXX_unrecognized []byte               `json:"-"`
 }
 
-func (m *GetFileLinkInfoResponseProto) Reset()         { *m = GetFileLinkInfoResponseProto{} }
-func (m *GetFileLinkInfoResponseProto) String() string { return proto.CompactTextString(m) }
-func (*GetFileLinkInfoResponseProto) ProtoMessage()    {}
+func (m *GetFileLinkInfoResponseProto) Reset()                    { *m = GetFileLinkInfoResponseProto{} }
+func (m *GetFileLinkInfoResponseProto) String() string            { return proto.CompactTextString(m) }
+func (*GetFileLinkInfoResponseProto) ProtoMessage()               {}
+func (*GetFileLinkInfoResponseProto) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{106} }
 
 func (m *GetFileLinkInfoResponseProto) GetFs() *HdfsFileStatusProto {
 	if m != nil {
@@ -1632,9 +2838,10 @@ type GetContentSummaryRequestProto struct {
 	XXX_unrecognized []byte  `json:"-"`
 }
 
-func (m *GetContentSummaryRequestProto) Reset()         { *m = GetContentSummaryRequestProto{} }
-func (m *GetContentSummaryRequestProto) String() string { return proto.CompactTextString(m) }
-func (*GetContentSummaryRequestProto) ProtoMessage()    {}
+func (m *GetContentSummaryRequestProto) Reset()                    { *m = GetContentSummaryRequestProto{} }
+func (m *GetContentSummaryRequestProto) String() string            { return proto.CompactTextString(m) }
+func (*GetContentSummaryRequestProto) ProtoMessage()               {}
+func (*GetContentSummaryRequestProto) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{107} }
 
 func (m *GetContentSummaryRequestProto) GetPath() string {
 	if m != nil && m.Path != nil {
@@ -1651,6 +2858,9 @@ type GetContentSummaryResponseProto struct {
 func (m *GetContentSummaryResponseProto) Reset()         { *m = GetContentSummaryResponseProto{} }
 func (m *GetContentSummaryResponseProto) String() string { return proto.CompactTextString(m) }
 func (*GetContentSummaryResponseProto) ProtoMessage()    {}
+func (*GetContentSummaryResponseProto) Descriptor() ([]byte, []int) {
+	return fileDescriptor0, []int{108}
+}
 
 func (m *GetContentSummaryResponseProto) GetSummary() *ContentSummaryProto {
 	if m != nil {
@@ -1660,15 +2870,17 @@ func (m *GetContentSummaryResponseProto) GetSummary() *ContentSummaryProto {
 }
 
 type SetQuotaRequestProto struct {
-	Path             *string `protobuf:"bytes,1,req,name=path" json:"path,omitempty"`
-	NamespaceQuota   *uint64 `protobuf:"varint,2,req,name=namespaceQuota" json:"namespaceQuota,omitempty"`
-	DiskspaceQuota   *uint64 `protobuf:"varint,3,req,name=diskspaceQuota" json:"diskspaceQuota,omitempty"`
-	XXX_unrecognized []byte  `json:"-"`
+	Path              *string           `protobuf:"bytes,1,req,name=path" json:"path,omitempty"`
+	NamespaceQuota    *uint64           `protobuf:"varint,2,req,name=namespaceQuota" json:"namespaceQuota,omitempty"`
+	StoragespaceQuota *uint64           `protobuf:"varint,3,req,name=storagespaceQuota" json:"storagespaceQuota,omitempty"`
+	StorageType       *StorageTypeProto `protobuf:"varint,4,opt,name=storageType,enum=hadoop.hdfs.StorageTypeProto" json:"storageType,omitempty"`
+	XXX_unrecognized  []byte            `json:"-"`
 }
 
-func (m *SetQuotaRequestProto) Reset()         { *m = SetQuotaRequestProto{} }
-func (m *SetQuotaRequestProto) String() string { return proto.CompactTextString(m) }
-func (*SetQuotaRequestProto) ProtoMessage()    {}
+func (m *SetQuotaRequestProto) Reset()                    { *m = SetQuotaRequestProto{} }
+func (m *SetQuotaRequestProto) String() string            { return proto.CompactTextString(m) }
+func (*SetQuotaRequestProto) ProtoMessage()               {}
+func (*SetQuotaRequestProto) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{109} }
 
 func (m *SetQuotaRequestProto) GetPath() string {
 	if m != nil && m.Path != nil {
@@ -1684,33 +2896,44 @@ func (m *SetQuotaRequestProto) GetNamespaceQuota() uint64 {
 	return 0
 }
 
-func (m *SetQuotaRequestProto) GetDiskspaceQuota() uint64 {
-	if m != nil && m.DiskspaceQuota != nil {
-		return *m.DiskspaceQuota
+func (m *SetQuotaRequestProto) GetStoragespaceQuota() uint64 {
+	if m != nil && m.StoragespaceQuota != nil {
+		return *m.StoragespaceQuota
 	}
 	return 0
+}
+
+func (m *SetQuotaRequestProto) GetStorageType() StorageTypeProto {
+	if m != nil && m.StorageType != nil {
+		return *m.StorageType
+	}
+	return StorageTypeProto_DISK
 }
 
 type SetQuotaResponseProto struct {
 	XXX_unrecognized []byte `json:"-"`
 }
 
-func (m *SetQuotaResponseProto) Reset()         { *m = SetQuotaResponseProto{} }
-func (m *SetQuotaResponseProto) String() string { return proto.CompactTextString(m) }
-func (*SetQuotaResponseProto) ProtoMessage()    {}
+func (m *SetQuotaResponseProto) Reset()                    { *m = SetQuotaResponseProto{} }
+func (m *SetQuotaResponseProto) String() string            { return proto.CompactTextString(m) }
+func (*SetQuotaResponseProto) ProtoMessage()               {}
+func (*SetQuotaResponseProto) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{110} }
 
 type FsyncRequestProto struct {
 	Src              *string `protobuf:"bytes,1,req,name=src" json:"src,omitempty"`
 	Client           *string `protobuf:"bytes,2,req,name=client" json:"client,omitempty"`
 	LastBlockLength  *int64  `protobuf:"zigzag64,3,opt,name=lastBlockLength,def=-1" json:"lastBlockLength,omitempty"`
+	FileId           *uint64 `protobuf:"varint,4,opt,name=fileId,def=0" json:"fileId,omitempty"`
 	XXX_unrecognized []byte  `json:"-"`
 }
 
-func (m *FsyncRequestProto) Reset()         { *m = FsyncRequestProto{} }
-func (m *FsyncRequestProto) String() string { return proto.CompactTextString(m) }
-func (*FsyncRequestProto) ProtoMessage()    {}
+func (m *FsyncRequestProto) Reset()                    { *m = FsyncRequestProto{} }
+func (m *FsyncRequestProto) String() string            { return proto.CompactTextString(m) }
+func (*FsyncRequestProto) ProtoMessage()               {}
+func (*FsyncRequestProto) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{111} }
 
 const Default_FsyncRequestProto_LastBlockLength int64 = -1
+const Default_FsyncRequestProto_FileId uint64 = 0
 
 func (m *FsyncRequestProto) GetSrc() string {
 	if m != nil && m.Src != nil {
@@ -1733,13 +2956,21 @@ func (m *FsyncRequestProto) GetLastBlockLength() int64 {
 	return Default_FsyncRequestProto_LastBlockLength
 }
 
+func (m *FsyncRequestProto) GetFileId() uint64 {
+	if m != nil && m.FileId != nil {
+		return *m.FileId
+	}
+	return Default_FsyncRequestProto_FileId
+}
+
 type FsyncResponseProto struct {
 	XXX_unrecognized []byte `json:"-"`
 }
 
-func (m *FsyncResponseProto) Reset()         { *m = FsyncResponseProto{} }
-func (m *FsyncResponseProto) String() string { return proto.CompactTextString(m) }
-func (*FsyncResponseProto) ProtoMessage()    {}
+func (m *FsyncResponseProto) Reset()                    { *m = FsyncResponseProto{} }
+func (m *FsyncResponseProto) String() string            { return proto.CompactTextString(m) }
+func (*FsyncResponseProto) ProtoMessage()               {}
+func (*FsyncResponseProto) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{112} }
 
 type SetTimesRequestProto struct {
 	Src              *string `protobuf:"bytes,1,req,name=src" json:"src,omitempty"`
@@ -1748,9 +2979,10 @@ type SetTimesRequestProto struct {
 	XXX_unrecognized []byte  `json:"-"`
 }
 
-func (m *SetTimesRequestProto) Reset()         { *m = SetTimesRequestProto{} }
-func (m *SetTimesRequestProto) String() string { return proto.CompactTextString(m) }
-func (*SetTimesRequestProto) ProtoMessage()    {}
+func (m *SetTimesRequestProto) Reset()                    { *m = SetTimesRequestProto{} }
+func (m *SetTimesRequestProto) String() string            { return proto.CompactTextString(m) }
+func (*SetTimesRequestProto) ProtoMessage()               {}
+func (*SetTimesRequestProto) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{113} }
 
 func (m *SetTimesRequestProto) GetSrc() string {
 	if m != nil && m.Src != nil {
@@ -1777,9 +3009,10 @@ type SetTimesResponseProto struct {
 	XXX_unrecognized []byte `json:"-"`
 }
 
-func (m *SetTimesResponseProto) Reset()         { *m = SetTimesResponseProto{} }
-func (m *SetTimesResponseProto) String() string { return proto.CompactTextString(m) }
-func (*SetTimesResponseProto) ProtoMessage()    {}
+func (m *SetTimesResponseProto) Reset()                    { *m = SetTimesResponseProto{} }
+func (m *SetTimesResponseProto) String() string            { return proto.CompactTextString(m) }
+func (*SetTimesResponseProto) ProtoMessage()               {}
+func (*SetTimesResponseProto) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{114} }
 
 type CreateSymlinkRequestProto struct {
 	Target           *string            `protobuf:"bytes,1,req,name=target" json:"target,omitempty"`
@@ -1789,9 +3022,10 @@ type CreateSymlinkRequestProto struct {
 	XXX_unrecognized []byte             `json:"-"`
 }
 
-func (m *CreateSymlinkRequestProto) Reset()         { *m = CreateSymlinkRequestProto{} }
-func (m *CreateSymlinkRequestProto) String() string { return proto.CompactTextString(m) }
-func (*CreateSymlinkRequestProto) ProtoMessage()    {}
+func (m *CreateSymlinkRequestProto) Reset()                    { *m = CreateSymlinkRequestProto{} }
+func (m *CreateSymlinkRequestProto) String() string            { return proto.CompactTextString(m) }
+func (*CreateSymlinkRequestProto) ProtoMessage()               {}
+func (*CreateSymlinkRequestProto) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{115} }
 
 func (m *CreateSymlinkRequestProto) GetTarget() string {
 	if m != nil && m.Target != nil {
@@ -1825,18 +3059,20 @@ type CreateSymlinkResponseProto struct {
 	XXX_unrecognized []byte `json:"-"`
 }
 
-func (m *CreateSymlinkResponseProto) Reset()         { *m = CreateSymlinkResponseProto{} }
-func (m *CreateSymlinkResponseProto) String() string { return proto.CompactTextString(m) }
-func (*CreateSymlinkResponseProto) ProtoMessage()    {}
+func (m *CreateSymlinkResponseProto) Reset()                    { *m = CreateSymlinkResponseProto{} }
+func (m *CreateSymlinkResponseProto) String() string            { return proto.CompactTextString(m) }
+func (*CreateSymlinkResponseProto) ProtoMessage()               {}
+func (*CreateSymlinkResponseProto) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{116} }
 
 type GetLinkTargetRequestProto struct {
 	Path             *string `protobuf:"bytes,1,req,name=path" json:"path,omitempty"`
 	XXX_unrecognized []byte  `json:"-"`
 }
 
-func (m *GetLinkTargetRequestProto) Reset()         { *m = GetLinkTargetRequestProto{} }
-func (m *GetLinkTargetRequestProto) String() string { return proto.CompactTextString(m) }
-func (*GetLinkTargetRequestProto) ProtoMessage()    {}
+func (m *GetLinkTargetRequestProto) Reset()                    { *m = GetLinkTargetRequestProto{} }
+func (m *GetLinkTargetRequestProto) String() string            { return proto.CompactTextString(m) }
+func (*GetLinkTargetRequestProto) ProtoMessage()               {}
+func (*GetLinkTargetRequestProto) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{117} }
 
 func (m *GetLinkTargetRequestProto) GetPath() string {
 	if m != nil && m.Path != nil {
@@ -1850,9 +3086,10 @@ type GetLinkTargetResponseProto struct {
 	XXX_unrecognized []byte  `json:"-"`
 }
 
-func (m *GetLinkTargetResponseProto) Reset()         { *m = GetLinkTargetResponseProto{} }
-func (m *GetLinkTargetResponseProto) String() string { return proto.CompactTextString(m) }
-func (*GetLinkTargetResponseProto) ProtoMessage()    {}
+func (m *GetLinkTargetResponseProto) Reset()                    { *m = GetLinkTargetResponseProto{} }
+func (m *GetLinkTargetResponseProto) String() string            { return proto.CompactTextString(m) }
+func (*GetLinkTargetResponseProto) ProtoMessage()               {}
+func (*GetLinkTargetResponseProto) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{118} }
 
 func (m *GetLinkTargetResponseProto) GetTargetPath() string {
 	if m != nil && m.TargetPath != nil {
@@ -1870,6 +3107,9 @@ type UpdateBlockForPipelineRequestProto struct {
 func (m *UpdateBlockForPipelineRequestProto) Reset()         { *m = UpdateBlockForPipelineRequestProto{} }
 func (m *UpdateBlockForPipelineRequestProto) String() string { return proto.CompactTextString(m) }
 func (*UpdateBlockForPipelineRequestProto) ProtoMessage()    {}
+func (*UpdateBlockForPipelineRequestProto) Descriptor() ([]byte, []int) {
+	return fileDescriptor0, []int{119}
+}
 
 func (m *UpdateBlockForPipelineRequestProto) GetBlock() *ExtendedBlockProto {
 	if m != nil {
@@ -1893,6 +3133,9 @@ type UpdateBlockForPipelineResponseProto struct {
 func (m *UpdateBlockForPipelineResponseProto) Reset()         { *m = UpdateBlockForPipelineResponseProto{} }
 func (m *UpdateBlockForPipelineResponseProto) String() string { return proto.CompactTextString(m) }
 func (*UpdateBlockForPipelineResponseProto) ProtoMessage()    {}
+func (*UpdateBlockForPipelineResponseProto) Descriptor() ([]byte, []int) {
+	return fileDescriptor0, []int{120}
+}
 
 func (m *UpdateBlockForPipelineResponseProto) GetBlock() *LocatedBlockProto {
 	if m != nil {
@@ -1906,12 +3149,14 @@ type UpdatePipelineRequestProto struct {
 	OldBlock         *ExtendedBlockProto `protobuf:"bytes,2,req,name=oldBlock" json:"oldBlock,omitempty"`
 	NewBlock         *ExtendedBlockProto `protobuf:"bytes,3,req,name=newBlock" json:"newBlock,omitempty"`
 	NewNodes         []*DatanodeIDProto  `protobuf:"bytes,4,rep,name=newNodes" json:"newNodes,omitempty"`
+	StorageIDs       []string            `protobuf:"bytes,5,rep,name=storageIDs" json:"storageIDs,omitempty"`
 	XXX_unrecognized []byte              `json:"-"`
 }
 
-func (m *UpdatePipelineRequestProto) Reset()         { *m = UpdatePipelineRequestProto{} }
-func (m *UpdatePipelineRequestProto) String() string { return proto.CompactTextString(m) }
-func (*UpdatePipelineRequestProto) ProtoMessage()    {}
+func (m *UpdatePipelineRequestProto) Reset()                    { *m = UpdatePipelineRequestProto{} }
+func (m *UpdatePipelineRequestProto) String() string            { return proto.CompactTextString(m) }
+func (*UpdatePipelineRequestProto) ProtoMessage()               {}
+func (*UpdatePipelineRequestProto) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{121} }
 
 func (m *UpdatePipelineRequestProto) GetClientName() string {
 	if m != nil && m.ClientName != nil {
@@ -1941,13 +3186,21 @@ func (m *UpdatePipelineRequestProto) GetNewNodes() []*DatanodeIDProto {
 	return nil
 }
 
+func (m *UpdatePipelineRequestProto) GetStorageIDs() []string {
+	if m != nil {
+		return m.StorageIDs
+	}
+	return nil
+}
+
 type UpdatePipelineResponseProto struct {
 	XXX_unrecognized []byte `json:"-"`
 }
 
-func (m *UpdatePipelineResponseProto) Reset()         { *m = UpdatePipelineResponseProto{} }
-func (m *UpdatePipelineResponseProto) String() string { return proto.CompactTextString(m) }
-func (*UpdatePipelineResponseProto) ProtoMessage()    {}
+func (m *UpdatePipelineResponseProto) Reset()                    { *m = UpdatePipelineResponseProto{} }
+func (m *UpdatePipelineResponseProto) String() string            { return proto.CompactTextString(m) }
+func (*UpdatePipelineResponseProto) ProtoMessage()               {}
+func (*UpdatePipelineResponseProto) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{122} }
 
 type SetBalancerBandwidthRequestProto struct {
 	Bandwidth        *int64 `protobuf:"varint,1,req,name=bandwidth" json:"bandwidth,omitempty"`
@@ -1957,6 +3210,9 @@ type SetBalancerBandwidthRequestProto struct {
 func (m *SetBalancerBandwidthRequestProto) Reset()         { *m = SetBalancerBandwidthRequestProto{} }
 func (m *SetBalancerBandwidthRequestProto) String() string { return proto.CompactTextString(m) }
 func (*SetBalancerBandwidthRequestProto) ProtoMessage()    {}
+func (*SetBalancerBandwidthRequestProto) Descriptor() ([]byte, []int) {
+	return fileDescriptor0, []int{123}
+}
 
 func (m *SetBalancerBandwidthRequestProto) GetBandwidth() int64 {
 	if m != nil && m.Bandwidth != nil {
@@ -1972,6 +3228,9 @@ type SetBalancerBandwidthResponseProto struct {
 func (m *SetBalancerBandwidthResponseProto) Reset()         { *m = SetBalancerBandwidthResponseProto{} }
 func (m *SetBalancerBandwidthResponseProto) String() string { return proto.CompactTextString(m) }
 func (*SetBalancerBandwidthResponseProto) ProtoMessage()    {}
+func (*SetBalancerBandwidthResponseProto) Descriptor() ([]byte, []int) {
+	return fileDescriptor0, []int{124}
+}
 
 type GetDataEncryptionKeyRequestProto struct {
 	XXX_unrecognized []byte `json:"-"`
@@ -1980,6 +3239,9 @@ type GetDataEncryptionKeyRequestProto struct {
 func (m *GetDataEncryptionKeyRequestProto) Reset()         { *m = GetDataEncryptionKeyRequestProto{} }
 func (m *GetDataEncryptionKeyRequestProto) String() string { return proto.CompactTextString(m) }
 func (*GetDataEncryptionKeyRequestProto) ProtoMessage()    {}
+func (*GetDataEncryptionKeyRequestProto) Descriptor() ([]byte, []int) {
+	return fileDescriptor0, []int{125}
+}
 
 type GetDataEncryptionKeyResponseProto struct {
 	DataEncryptionKey *DataEncryptionKeyProto `protobuf:"bytes,1,opt,name=dataEncryptionKey" json:"dataEncryptionKey,omitempty"`
@@ -1989,6 +3251,9 @@ type GetDataEncryptionKeyResponseProto struct {
 func (m *GetDataEncryptionKeyResponseProto) Reset()         { *m = GetDataEncryptionKeyResponseProto{} }
 func (m *GetDataEncryptionKeyResponseProto) String() string { return proto.CompactTextString(m) }
 func (*GetDataEncryptionKeyResponseProto) ProtoMessage()    {}
+func (*GetDataEncryptionKeyResponseProto) Descriptor() ([]byte, []int) {
+	return fileDescriptor0, []int{126}
+}
 
 func (m *GetDataEncryptionKeyResponseProto) GetDataEncryptionKey() *DataEncryptionKeyProto {
 	if m != nil {
@@ -2003,9 +3268,10 @@ type CreateSnapshotRequestProto struct {
 	XXX_unrecognized []byte  `json:"-"`
 }
 
-func (m *CreateSnapshotRequestProto) Reset()         { *m = CreateSnapshotRequestProto{} }
-func (m *CreateSnapshotRequestProto) String() string { return proto.CompactTextString(m) }
-func (*CreateSnapshotRequestProto) ProtoMessage()    {}
+func (m *CreateSnapshotRequestProto) Reset()                    { *m = CreateSnapshotRequestProto{} }
+func (m *CreateSnapshotRequestProto) String() string            { return proto.CompactTextString(m) }
+func (*CreateSnapshotRequestProto) ProtoMessage()               {}
+func (*CreateSnapshotRequestProto) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{127} }
 
 func (m *CreateSnapshotRequestProto) GetSnapshotRoot() string {
 	if m != nil && m.SnapshotRoot != nil {
@@ -2026,9 +3292,10 @@ type CreateSnapshotResponseProto struct {
 	XXX_unrecognized []byte  `json:"-"`
 }
 
-func (m *CreateSnapshotResponseProto) Reset()         { *m = CreateSnapshotResponseProto{} }
-func (m *CreateSnapshotResponseProto) String() string { return proto.CompactTextString(m) }
-func (*CreateSnapshotResponseProto) ProtoMessage()    {}
+func (m *CreateSnapshotResponseProto) Reset()                    { *m = CreateSnapshotResponseProto{} }
+func (m *CreateSnapshotResponseProto) String() string            { return proto.CompactTextString(m) }
+func (*CreateSnapshotResponseProto) ProtoMessage()               {}
+func (*CreateSnapshotResponseProto) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{128} }
 
 func (m *CreateSnapshotResponseProto) GetSnapshotPath() string {
 	if m != nil && m.SnapshotPath != nil {
@@ -2044,9 +3311,10 @@ type RenameSnapshotRequestProto struct {
 	XXX_unrecognized []byte  `json:"-"`
 }
 
-func (m *RenameSnapshotRequestProto) Reset()         { *m = RenameSnapshotRequestProto{} }
-func (m *RenameSnapshotRequestProto) String() string { return proto.CompactTextString(m) }
-func (*RenameSnapshotRequestProto) ProtoMessage()    {}
+func (m *RenameSnapshotRequestProto) Reset()                    { *m = RenameSnapshotRequestProto{} }
+func (m *RenameSnapshotRequestProto) String() string            { return proto.CompactTextString(m) }
+func (*RenameSnapshotRequestProto) ProtoMessage()               {}
+func (*RenameSnapshotRequestProto) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{129} }
 
 func (m *RenameSnapshotRequestProto) GetSnapshotRoot() string {
 	if m != nil && m.SnapshotRoot != nil {
@@ -2073,18 +3341,20 @@ type RenameSnapshotResponseProto struct {
 	XXX_unrecognized []byte `json:"-"`
 }
 
-func (m *RenameSnapshotResponseProto) Reset()         { *m = RenameSnapshotResponseProto{} }
-func (m *RenameSnapshotResponseProto) String() string { return proto.CompactTextString(m) }
-func (*RenameSnapshotResponseProto) ProtoMessage()    {}
+func (m *RenameSnapshotResponseProto) Reset()                    { *m = RenameSnapshotResponseProto{} }
+func (m *RenameSnapshotResponseProto) String() string            { return proto.CompactTextString(m) }
+func (*RenameSnapshotResponseProto) ProtoMessage()               {}
+func (*RenameSnapshotResponseProto) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{130} }
 
 type AllowSnapshotRequestProto struct {
 	SnapshotRoot     *string `protobuf:"bytes,1,req,name=snapshotRoot" json:"snapshotRoot,omitempty"`
 	XXX_unrecognized []byte  `json:"-"`
 }
 
-func (m *AllowSnapshotRequestProto) Reset()         { *m = AllowSnapshotRequestProto{} }
-func (m *AllowSnapshotRequestProto) String() string { return proto.CompactTextString(m) }
-func (*AllowSnapshotRequestProto) ProtoMessage()    {}
+func (m *AllowSnapshotRequestProto) Reset()                    { *m = AllowSnapshotRequestProto{} }
+func (m *AllowSnapshotRequestProto) String() string            { return proto.CompactTextString(m) }
+func (*AllowSnapshotRequestProto) ProtoMessage()               {}
+func (*AllowSnapshotRequestProto) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{131} }
 
 func (m *AllowSnapshotRequestProto) GetSnapshotRoot() string {
 	if m != nil && m.SnapshotRoot != nil {
@@ -2097,18 +3367,20 @@ type AllowSnapshotResponseProto struct {
 	XXX_unrecognized []byte `json:"-"`
 }
 
-func (m *AllowSnapshotResponseProto) Reset()         { *m = AllowSnapshotResponseProto{} }
-func (m *AllowSnapshotResponseProto) String() string { return proto.CompactTextString(m) }
-func (*AllowSnapshotResponseProto) ProtoMessage()    {}
+func (m *AllowSnapshotResponseProto) Reset()                    { *m = AllowSnapshotResponseProto{} }
+func (m *AllowSnapshotResponseProto) String() string            { return proto.CompactTextString(m) }
+func (*AllowSnapshotResponseProto) ProtoMessage()               {}
+func (*AllowSnapshotResponseProto) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{132} }
 
 type DisallowSnapshotRequestProto struct {
 	SnapshotRoot     *string `protobuf:"bytes,1,req,name=snapshotRoot" json:"snapshotRoot,omitempty"`
 	XXX_unrecognized []byte  `json:"-"`
 }
 
-func (m *DisallowSnapshotRequestProto) Reset()         { *m = DisallowSnapshotRequestProto{} }
-func (m *DisallowSnapshotRequestProto) String() string { return proto.CompactTextString(m) }
-func (*DisallowSnapshotRequestProto) ProtoMessage()    {}
+func (m *DisallowSnapshotRequestProto) Reset()                    { *m = DisallowSnapshotRequestProto{} }
+func (m *DisallowSnapshotRequestProto) String() string            { return proto.CompactTextString(m) }
+func (*DisallowSnapshotRequestProto) ProtoMessage()               {}
+func (*DisallowSnapshotRequestProto) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{133} }
 
 func (m *DisallowSnapshotRequestProto) GetSnapshotRoot() string {
 	if m != nil && m.SnapshotRoot != nil {
@@ -2121,9 +3393,10 @@ type DisallowSnapshotResponseProto struct {
 	XXX_unrecognized []byte `json:"-"`
 }
 
-func (m *DisallowSnapshotResponseProto) Reset()         { *m = DisallowSnapshotResponseProto{} }
-func (m *DisallowSnapshotResponseProto) String() string { return proto.CompactTextString(m) }
-func (*DisallowSnapshotResponseProto) ProtoMessage()    {}
+func (m *DisallowSnapshotResponseProto) Reset()                    { *m = DisallowSnapshotResponseProto{} }
+func (m *DisallowSnapshotResponseProto) String() string            { return proto.CompactTextString(m) }
+func (*DisallowSnapshotResponseProto) ProtoMessage()               {}
+func (*DisallowSnapshotResponseProto) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{134} }
 
 type DeleteSnapshotRequestProto struct {
 	SnapshotRoot     *string `protobuf:"bytes,1,req,name=snapshotRoot" json:"snapshotRoot,omitempty"`
@@ -2131,9 +3404,10 @@ type DeleteSnapshotRequestProto struct {
 	XXX_unrecognized []byte  `json:"-"`
 }
 
-func (m *DeleteSnapshotRequestProto) Reset()         { *m = DeleteSnapshotRequestProto{} }
-func (m *DeleteSnapshotRequestProto) String() string { return proto.CompactTextString(m) }
-func (*DeleteSnapshotRequestProto) ProtoMessage()    {}
+func (m *DeleteSnapshotRequestProto) Reset()                    { *m = DeleteSnapshotRequestProto{} }
+func (m *DeleteSnapshotRequestProto) String() string            { return proto.CompactTextString(m) }
+func (*DeleteSnapshotRequestProto) ProtoMessage()               {}
+func (*DeleteSnapshotRequestProto) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{135} }
 
 func (m *DeleteSnapshotRequestProto) GetSnapshotRoot() string {
 	if m != nil && m.SnapshotRoot != nil {
@@ -2153,12 +3427,553 @@ type DeleteSnapshotResponseProto struct {
 	XXX_unrecognized []byte `json:"-"`
 }
 
-func (m *DeleteSnapshotResponseProto) Reset()         { *m = DeleteSnapshotResponseProto{} }
-func (m *DeleteSnapshotResponseProto) String() string { return proto.CompactTextString(m) }
-func (*DeleteSnapshotResponseProto) ProtoMessage()    {}
+func (m *DeleteSnapshotResponseProto) Reset()                    { *m = DeleteSnapshotResponseProto{} }
+func (m *DeleteSnapshotResponseProto) String() string            { return proto.CompactTextString(m) }
+func (*DeleteSnapshotResponseProto) ProtoMessage()               {}
+func (*DeleteSnapshotResponseProto) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{136} }
+
+type CheckAccessRequestProto struct {
+	Path             *string                      `protobuf:"bytes,1,req,name=path" json:"path,omitempty"`
+	Mode             *AclEntryProto_FsActionProto `protobuf:"varint,2,req,name=mode,enum=hadoop.hdfs.AclEntryProto_FsActionProto" json:"mode,omitempty"`
+	XXX_unrecognized []byte                       `json:"-"`
+}
+
+func (m *CheckAccessRequestProto) Reset()                    { *m = CheckAccessRequestProto{} }
+func (m *CheckAccessRequestProto) String() string            { return proto.CompactTextString(m) }
+func (*CheckAccessRequestProto) ProtoMessage()               {}
+func (*CheckAccessRequestProto) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{137} }
+
+func (m *CheckAccessRequestProto) GetPath() string {
+	if m != nil && m.Path != nil {
+		return *m.Path
+	}
+	return ""
+}
+
+func (m *CheckAccessRequestProto) GetMode() AclEntryProto_FsActionProto {
+	if m != nil && m.Mode != nil {
+		return *m.Mode
+	}
+	return AclEntryProto_NONE
+}
+
+type CheckAccessResponseProto struct {
+	XXX_unrecognized []byte `json:"-"`
+}
+
+func (m *CheckAccessResponseProto) Reset()                    { *m = CheckAccessResponseProto{} }
+func (m *CheckAccessResponseProto) String() string            { return proto.CompactTextString(m) }
+func (*CheckAccessResponseProto) ProtoMessage()               {}
+func (*CheckAccessResponseProto) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{138} }
+
+type GetCurrentEditLogTxidRequestProto struct {
+	XXX_unrecognized []byte `json:"-"`
+}
+
+func (m *GetCurrentEditLogTxidRequestProto) Reset()         { *m = GetCurrentEditLogTxidRequestProto{} }
+func (m *GetCurrentEditLogTxidRequestProto) String() string { return proto.CompactTextString(m) }
+func (*GetCurrentEditLogTxidRequestProto) ProtoMessage()    {}
+func (*GetCurrentEditLogTxidRequestProto) Descriptor() ([]byte, []int) {
+	return fileDescriptor0, []int{139}
+}
+
+type GetCurrentEditLogTxidResponseProto struct {
+	Txid             *int64 `protobuf:"varint,1,req,name=txid" json:"txid,omitempty"`
+	XXX_unrecognized []byte `json:"-"`
+}
+
+func (m *GetCurrentEditLogTxidResponseProto) Reset()         { *m = GetCurrentEditLogTxidResponseProto{} }
+func (m *GetCurrentEditLogTxidResponseProto) String() string { return proto.CompactTextString(m) }
+func (*GetCurrentEditLogTxidResponseProto) ProtoMessage()    {}
+func (*GetCurrentEditLogTxidResponseProto) Descriptor() ([]byte, []int) {
+	return fileDescriptor0, []int{140}
+}
+
+func (m *GetCurrentEditLogTxidResponseProto) GetTxid() int64 {
+	if m != nil && m.Txid != nil {
+		return *m.Txid
+	}
+	return 0
+}
+
+type GetEditsFromTxidRequestProto struct {
+	Txid             *int64 `protobuf:"varint,1,req,name=txid" json:"txid,omitempty"`
+	XXX_unrecognized []byte `json:"-"`
+}
+
+func (m *GetEditsFromTxidRequestProto) Reset()                    { *m = GetEditsFromTxidRequestProto{} }
+func (m *GetEditsFromTxidRequestProto) String() string            { return proto.CompactTextString(m) }
+func (*GetEditsFromTxidRequestProto) ProtoMessage()               {}
+func (*GetEditsFromTxidRequestProto) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{141} }
+
+func (m *GetEditsFromTxidRequestProto) GetTxid() int64 {
+	if m != nil && m.Txid != nil {
+		return *m.Txid
+	}
+	return 0
+}
+
+type GetEditsFromTxidResponseProto struct {
+	EventsList       *EventsListProto `protobuf:"bytes,1,req,name=eventsList" json:"eventsList,omitempty"`
+	XXX_unrecognized []byte           `json:"-"`
+}
+
+func (m *GetEditsFromTxidResponseProto) Reset()                    { *m = GetEditsFromTxidResponseProto{} }
+func (m *GetEditsFromTxidResponseProto) String() string            { return proto.CompactTextString(m) }
+func (*GetEditsFromTxidResponseProto) ProtoMessage()               {}
+func (*GetEditsFromTxidResponseProto) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{142} }
+
+func (m *GetEditsFromTxidResponseProto) GetEventsList() *EventsListProto {
+	if m != nil {
+		return m.EventsList
+	}
+	return nil
+}
 
 func init() {
+	proto.RegisterType((*GetBlockLocationsRequestProto)(nil), "hadoop.hdfs.GetBlockLocationsRequestProto")
+	proto.RegisterType((*GetBlockLocationsResponseProto)(nil), "hadoop.hdfs.GetBlockLocationsResponseProto")
+	proto.RegisterType((*GetServerDefaultsRequestProto)(nil), "hadoop.hdfs.GetServerDefaultsRequestProto")
+	proto.RegisterType((*GetServerDefaultsResponseProto)(nil), "hadoop.hdfs.GetServerDefaultsResponseProto")
+	proto.RegisterType((*CreateRequestProto)(nil), "hadoop.hdfs.CreateRequestProto")
+	proto.RegisterType((*CreateResponseProto)(nil), "hadoop.hdfs.CreateResponseProto")
+	proto.RegisterType((*AppendRequestProto)(nil), "hadoop.hdfs.AppendRequestProto")
+	proto.RegisterType((*AppendResponseProto)(nil), "hadoop.hdfs.AppendResponseProto")
+	proto.RegisterType((*SetReplicationRequestProto)(nil), "hadoop.hdfs.SetReplicationRequestProto")
+	proto.RegisterType((*SetReplicationResponseProto)(nil), "hadoop.hdfs.SetReplicationResponseProto")
+	proto.RegisterType((*SetStoragePolicyRequestProto)(nil), "hadoop.hdfs.SetStoragePolicyRequestProto")
+	proto.RegisterType((*SetStoragePolicyResponseProto)(nil), "hadoop.hdfs.SetStoragePolicyResponseProto")
+	proto.RegisterType((*GetStoragePoliciesRequestProto)(nil), "hadoop.hdfs.GetStoragePoliciesRequestProto")
+	proto.RegisterType((*GetStoragePoliciesResponseProto)(nil), "hadoop.hdfs.GetStoragePoliciesResponseProto")
+	proto.RegisterType((*SetPermissionRequestProto)(nil), "hadoop.hdfs.SetPermissionRequestProto")
+	proto.RegisterType((*SetPermissionResponseProto)(nil), "hadoop.hdfs.SetPermissionResponseProto")
+	proto.RegisterType((*SetOwnerRequestProto)(nil), "hadoop.hdfs.SetOwnerRequestProto")
+	proto.RegisterType((*SetOwnerResponseProto)(nil), "hadoop.hdfs.SetOwnerResponseProto")
+	proto.RegisterType((*AbandonBlockRequestProto)(nil), "hadoop.hdfs.AbandonBlockRequestProto")
+	proto.RegisterType((*AbandonBlockResponseProto)(nil), "hadoop.hdfs.AbandonBlockResponseProto")
+	proto.RegisterType((*AddBlockRequestProto)(nil), "hadoop.hdfs.AddBlockRequestProto")
+	proto.RegisterType((*AddBlockResponseProto)(nil), "hadoop.hdfs.AddBlockResponseProto")
+	proto.RegisterType((*GetAdditionalDatanodeRequestProto)(nil), "hadoop.hdfs.GetAdditionalDatanodeRequestProto")
+	proto.RegisterType((*GetAdditionalDatanodeResponseProto)(nil), "hadoop.hdfs.GetAdditionalDatanodeResponseProto")
+	proto.RegisterType((*CompleteRequestProto)(nil), "hadoop.hdfs.CompleteRequestProto")
+	proto.RegisterType((*CompleteResponseProto)(nil), "hadoop.hdfs.CompleteResponseProto")
+	proto.RegisterType((*ReportBadBlocksRequestProto)(nil), "hadoop.hdfs.ReportBadBlocksRequestProto")
+	proto.RegisterType((*ReportBadBlocksResponseProto)(nil), "hadoop.hdfs.ReportBadBlocksResponseProto")
+	proto.RegisterType((*ConcatRequestProto)(nil), "hadoop.hdfs.ConcatRequestProto")
+	proto.RegisterType((*ConcatResponseProto)(nil), "hadoop.hdfs.ConcatResponseProto")
+	proto.RegisterType((*TruncateRequestProto)(nil), "hadoop.hdfs.TruncateRequestProto")
+	proto.RegisterType((*TruncateResponseProto)(nil), "hadoop.hdfs.TruncateResponseProto")
+	proto.RegisterType((*RenameRequestProto)(nil), "hadoop.hdfs.RenameRequestProto")
+	proto.RegisterType((*RenameResponseProto)(nil), "hadoop.hdfs.RenameResponseProto")
+	proto.RegisterType((*Rename2RequestProto)(nil), "hadoop.hdfs.Rename2RequestProto")
+	proto.RegisterType((*Rename2ResponseProto)(nil), "hadoop.hdfs.Rename2ResponseProto")
+	proto.RegisterType((*DeleteRequestProto)(nil), "hadoop.hdfs.DeleteRequestProto")
+	proto.RegisterType((*DeleteResponseProto)(nil), "hadoop.hdfs.DeleteResponseProto")
+	proto.RegisterType((*MkdirsRequestProto)(nil), "hadoop.hdfs.MkdirsRequestProto")
+	proto.RegisterType((*MkdirsResponseProto)(nil), "hadoop.hdfs.MkdirsResponseProto")
+	proto.RegisterType((*GetListingRequestProto)(nil), "hadoop.hdfs.GetListingRequestProto")
+	proto.RegisterType((*GetListingResponseProto)(nil), "hadoop.hdfs.GetListingResponseProto")
+	proto.RegisterType((*GetSnapshottableDirListingRequestProto)(nil), "hadoop.hdfs.GetSnapshottableDirListingRequestProto")
+	proto.RegisterType((*GetSnapshottableDirListingResponseProto)(nil), "hadoop.hdfs.GetSnapshottableDirListingResponseProto")
+	proto.RegisterType((*GetSnapshotDiffReportRequestProto)(nil), "hadoop.hdfs.GetSnapshotDiffReportRequestProto")
+	proto.RegisterType((*GetSnapshotDiffReportResponseProto)(nil), "hadoop.hdfs.GetSnapshotDiffReportResponseProto")
+	proto.RegisterType((*RenewLeaseRequestProto)(nil), "hadoop.hdfs.RenewLeaseRequestProto")
+	proto.RegisterType((*RenewLeaseResponseProto)(nil), "hadoop.hdfs.RenewLeaseResponseProto")
+	proto.RegisterType((*RecoverLeaseRequestProto)(nil), "hadoop.hdfs.RecoverLeaseRequestProto")
+	proto.RegisterType((*RecoverLeaseResponseProto)(nil), "hadoop.hdfs.RecoverLeaseResponseProto")
+	proto.RegisterType((*GetFsStatusRequestProto)(nil), "hadoop.hdfs.GetFsStatusRequestProto")
+	proto.RegisterType((*GetFsStatsResponseProto)(nil), "hadoop.hdfs.GetFsStatsResponseProto")
+	proto.RegisterType((*GetDatanodeReportRequestProto)(nil), "hadoop.hdfs.GetDatanodeReportRequestProto")
+	proto.RegisterType((*GetDatanodeReportResponseProto)(nil), "hadoop.hdfs.GetDatanodeReportResponseProto")
+	proto.RegisterType((*GetDatanodeStorageReportRequestProto)(nil), "hadoop.hdfs.GetDatanodeStorageReportRequestProto")
+	proto.RegisterType((*DatanodeStorageReportProto)(nil), "hadoop.hdfs.DatanodeStorageReportProto")
+	proto.RegisterType((*GetDatanodeStorageReportResponseProto)(nil), "hadoop.hdfs.GetDatanodeStorageReportResponseProto")
+	proto.RegisterType((*GetPreferredBlockSizeRequestProto)(nil), "hadoop.hdfs.GetPreferredBlockSizeRequestProto")
+	proto.RegisterType((*GetPreferredBlockSizeResponseProto)(nil), "hadoop.hdfs.GetPreferredBlockSizeResponseProto")
+	proto.RegisterType((*SetSafeModeRequestProto)(nil), "hadoop.hdfs.SetSafeModeRequestProto")
+	proto.RegisterType((*SetSafeModeResponseProto)(nil), "hadoop.hdfs.SetSafeModeResponseProto")
+	proto.RegisterType((*SaveNamespaceRequestProto)(nil), "hadoop.hdfs.SaveNamespaceRequestProto")
+	proto.RegisterType((*SaveNamespaceResponseProto)(nil), "hadoop.hdfs.SaveNamespaceResponseProto")
+	proto.RegisterType((*RollEditsRequestProto)(nil), "hadoop.hdfs.RollEditsRequestProto")
+	proto.RegisterType((*RollEditsResponseProto)(nil), "hadoop.hdfs.RollEditsResponseProto")
+	proto.RegisterType((*RestoreFailedStorageRequestProto)(nil), "hadoop.hdfs.RestoreFailedStorageRequestProto")
+	proto.RegisterType((*RestoreFailedStorageResponseProto)(nil), "hadoop.hdfs.RestoreFailedStorageResponseProto")
+	proto.RegisterType((*RefreshNodesRequestProto)(nil), "hadoop.hdfs.RefreshNodesRequestProto")
+	proto.RegisterType((*RefreshNodesResponseProto)(nil), "hadoop.hdfs.RefreshNodesResponseProto")
+	proto.RegisterType((*FinalizeUpgradeRequestProto)(nil), "hadoop.hdfs.FinalizeUpgradeRequestProto")
+	proto.RegisterType((*FinalizeUpgradeResponseProto)(nil), "hadoop.hdfs.FinalizeUpgradeResponseProto")
+	proto.RegisterType((*RollingUpgradeRequestProto)(nil), "hadoop.hdfs.RollingUpgradeRequestProto")
+	proto.RegisterType((*RollingUpgradeInfoProto)(nil), "hadoop.hdfs.RollingUpgradeInfoProto")
+	proto.RegisterType((*RollingUpgradeResponseProto)(nil), "hadoop.hdfs.RollingUpgradeResponseProto")
+	proto.RegisterType((*ListCorruptFileBlocksRequestProto)(nil), "hadoop.hdfs.ListCorruptFileBlocksRequestProto")
+	proto.RegisterType((*ListCorruptFileBlocksResponseProto)(nil), "hadoop.hdfs.ListCorruptFileBlocksResponseProto")
+	proto.RegisterType((*MetaSaveRequestProto)(nil), "hadoop.hdfs.MetaSaveRequestProto")
+	proto.RegisterType((*MetaSaveResponseProto)(nil), "hadoop.hdfs.MetaSaveResponseProto")
+	proto.RegisterType((*GetFileInfoRequestProto)(nil), "hadoop.hdfs.GetFileInfoRequestProto")
+	proto.RegisterType((*GetFileInfoResponseProto)(nil), "hadoop.hdfs.GetFileInfoResponseProto")
+	proto.RegisterType((*IsFileClosedRequestProto)(nil), "hadoop.hdfs.IsFileClosedRequestProto")
+	proto.RegisterType((*IsFileClosedResponseProto)(nil), "hadoop.hdfs.IsFileClosedResponseProto")
+	proto.RegisterType((*CacheDirectiveInfoProto)(nil), "hadoop.hdfs.CacheDirectiveInfoProto")
+	proto.RegisterType((*CacheDirectiveInfoExpirationProto)(nil), "hadoop.hdfs.CacheDirectiveInfoExpirationProto")
+	proto.RegisterType((*CacheDirectiveStatsProto)(nil), "hadoop.hdfs.CacheDirectiveStatsProto")
+	proto.RegisterType((*AddCacheDirectiveRequestProto)(nil), "hadoop.hdfs.AddCacheDirectiveRequestProto")
+	proto.RegisterType((*AddCacheDirectiveResponseProto)(nil), "hadoop.hdfs.AddCacheDirectiveResponseProto")
+	proto.RegisterType((*ModifyCacheDirectiveRequestProto)(nil), "hadoop.hdfs.ModifyCacheDirectiveRequestProto")
+	proto.RegisterType((*ModifyCacheDirectiveResponseProto)(nil), "hadoop.hdfs.ModifyCacheDirectiveResponseProto")
+	proto.RegisterType((*RemoveCacheDirectiveRequestProto)(nil), "hadoop.hdfs.RemoveCacheDirectiveRequestProto")
+	proto.RegisterType((*RemoveCacheDirectiveResponseProto)(nil), "hadoop.hdfs.RemoveCacheDirectiveResponseProto")
+	proto.RegisterType((*ListCacheDirectivesRequestProto)(nil), "hadoop.hdfs.ListCacheDirectivesRequestProto")
+	proto.RegisterType((*CacheDirectiveEntryProto)(nil), "hadoop.hdfs.CacheDirectiveEntryProto")
+	proto.RegisterType((*ListCacheDirectivesResponseProto)(nil), "hadoop.hdfs.ListCacheDirectivesResponseProto")
+	proto.RegisterType((*CachePoolInfoProto)(nil), "hadoop.hdfs.CachePoolInfoProto")
+	proto.RegisterType((*CachePoolStatsProto)(nil), "hadoop.hdfs.CachePoolStatsProto")
+	proto.RegisterType((*AddCachePoolRequestProto)(nil), "hadoop.hdfs.AddCachePoolRequestProto")
+	proto.RegisterType((*AddCachePoolResponseProto)(nil), "hadoop.hdfs.AddCachePoolResponseProto")
+	proto.RegisterType((*ModifyCachePoolRequestProto)(nil), "hadoop.hdfs.ModifyCachePoolRequestProto")
+	proto.RegisterType((*ModifyCachePoolResponseProto)(nil), "hadoop.hdfs.ModifyCachePoolResponseProto")
+	proto.RegisterType((*RemoveCachePoolRequestProto)(nil), "hadoop.hdfs.RemoveCachePoolRequestProto")
+	proto.RegisterType((*RemoveCachePoolResponseProto)(nil), "hadoop.hdfs.RemoveCachePoolResponseProto")
+	proto.RegisterType((*ListCachePoolsRequestProto)(nil), "hadoop.hdfs.ListCachePoolsRequestProto")
+	proto.RegisterType((*ListCachePoolsResponseProto)(nil), "hadoop.hdfs.ListCachePoolsResponseProto")
+	proto.RegisterType((*CachePoolEntryProto)(nil), "hadoop.hdfs.CachePoolEntryProto")
+	proto.RegisterType((*GetFileLinkInfoRequestProto)(nil), "hadoop.hdfs.GetFileLinkInfoRequestProto")
+	proto.RegisterType((*GetFileLinkInfoResponseProto)(nil), "hadoop.hdfs.GetFileLinkInfoResponseProto")
+	proto.RegisterType((*GetContentSummaryRequestProto)(nil), "hadoop.hdfs.GetContentSummaryRequestProto")
+	proto.RegisterType((*GetContentSummaryResponseProto)(nil), "hadoop.hdfs.GetContentSummaryResponseProto")
+	proto.RegisterType((*SetQuotaRequestProto)(nil), "hadoop.hdfs.SetQuotaRequestProto")
+	proto.RegisterType((*SetQuotaResponseProto)(nil), "hadoop.hdfs.SetQuotaResponseProto")
+	proto.RegisterType((*FsyncRequestProto)(nil), "hadoop.hdfs.FsyncRequestProto")
+	proto.RegisterType((*FsyncResponseProto)(nil), "hadoop.hdfs.FsyncResponseProto")
+	proto.RegisterType((*SetTimesRequestProto)(nil), "hadoop.hdfs.SetTimesRequestProto")
+	proto.RegisterType((*SetTimesResponseProto)(nil), "hadoop.hdfs.SetTimesResponseProto")
+	proto.RegisterType((*CreateSymlinkRequestProto)(nil), "hadoop.hdfs.CreateSymlinkRequestProto")
+	proto.RegisterType((*CreateSymlinkResponseProto)(nil), "hadoop.hdfs.CreateSymlinkResponseProto")
+	proto.RegisterType((*GetLinkTargetRequestProto)(nil), "hadoop.hdfs.GetLinkTargetRequestProto")
+	proto.RegisterType((*GetLinkTargetResponseProto)(nil), "hadoop.hdfs.GetLinkTargetResponseProto")
+	proto.RegisterType((*UpdateBlockForPipelineRequestProto)(nil), "hadoop.hdfs.UpdateBlockForPipelineRequestProto")
+	proto.RegisterType((*UpdateBlockForPipelineResponseProto)(nil), "hadoop.hdfs.UpdateBlockForPipelineResponseProto")
+	proto.RegisterType((*UpdatePipelineRequestProto)(nil), "hadoop.hdfs.UpdatePipelineRequestProto")
+	proto.RegisterType((*UpdatePipelineResponseProto)(nil), "hadoop.hdfs.UpdatePipelineResponseProto")
+	proto.RegisterType((*SetBalancerBandwidthRequestProto)(nil), "hadoop.hdfs.SetBalancerBandwidthRequestProto")
+	proto.RegisterType((*SetBalancerBandwidthResponseProto)(nil), "hadoop.hdfs.SetBalancerBandwidthResponseProto")
+	proto.RegisterType((*GetDataEncryptionKeyRequestProto)(nil), "hadoop.hdfs.GetDataEncryptionKeyRequestProto")
+	proto.RegisterType((*GetDataEncryptionKeyResponseProto)(nil), "hadoop.hdfs.GetDataEncryptionKeyResponseProto")
+	proto.RegisterType((*CreateSnapshotRequestProto)(nil), "hadoop.hdfs.CreateSnapshotRequestProto")
+	proto.RegisterType((*CreateSnapshotResponseProto)(nil), "hadoop.hdfs.CreateSnapshotResponseProto")
+	proto.RegisterType((*RenameSnapshotRequestProto)(nil), "hadoop.hdfs.RenameSnapshotRequestProto")
+	proto.RegisterType((*RenameSnapshotResponseProto)(nil), "hadoop.hdfs.RenameSnapshotResponseProto")
+	proto.RegisterType((*AllowSnapshotRequestProto)(nil), "hadoop.hdfs.AllowSnapshotRequestProto")
+	proto.RegisterType((*AllowSnapshotResponseProto)(nil), "hadoop.hdfs.AllowSnapshotResponseProto")
+	proto.RegisterType((*DisallowSnapshotRequestProto)(nil), "hadoop.hdfs.DisallowSnapshotRequestProto")
+	proto.RegisterType((*DisallowSnapshotResponseProto)(nil), "hadoop.hdfs.DisallowSnapshotResponseProto")
+	proto.RegisterType((*DeleteSnapshotRequestProto)(nil), "hadoop.hdfs.DeleteSnapshotRequestProto")
+	proto.RegisterType((*DeleteSnapshotResponseProto)(nil), "hadoop.hdfs.DeleteSnapshotResponseProto")
+	proto.RegisterType((*CheckAccessRequestProto)(nil), "hadoop.hdfs.CheckAccessRequestProto")
+	proto.RegisterType((*CheckAccessResponseProto)(nil), "hadoop.hdfs.CheckAccessResponseProto")
+	proto.RegisterType((*GetCurrentEditLogTxidRequestProto)(nil), "hadoop.hdfs.GetCurrentEditLogTxidRequestProto")
+	proto.RegisterType((*GetCurrentEditLogTxidResponseProto)(nil), "hadoop.hdfs.GetCurrentEditLogTxidResponseProto")
+	proto.RegisterType((*GetEditsFromTxidRequestProto)(nil), "hadoop.hdfs.GetEditsFromTxidRequestProto")
+	proto.RegisterType((*GetEditsFromTxidResponseProto)(nil), "hadoop.hdfs.GetEditsFromTxidResponseProto")
 	proto.RegisterEnum("hadoop.hdfs.CreateFlagProto", CreateFlagProto_name, CreateFlagProto_value)
 	proto.RegisterEnum("hadoop.hdfs.DatanodeReportTypeProto", DatanodeReportTypeProto_name, DatanodeReportTypeProto_value)
 	proto.RegisterEnum("hadoop.hdfs.SafeModeActionProto", SafeModeActionProto_name, SafeModeActionProto_value)
+	proto.RegisterEnum("hadoop.hdfs.RollingUpgradeActionProto", RollingUpgradeActionProto_name, RollingUpgradeActionProto_value)
+	proto.RegisterEnum("hadoop.hdfs.CacheFlagProto", CacheFlagProto_name, CacheFlagProto_value)
+}
+
+var fileDescriptor0 = []byte{
+	// 4681 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x09, 0x6e, 0x88, 0x02, 0xff, 0xbc, 0x3c, 0x5b, 0x72, 0xdc, 0x48,
+	0x72, 0xd1, 0x7c, 0x48, 0x64, 0xea, 0x45, 0x41, 0x94, 0x44, 0x82, 0x92, 0x48, 0x81, 0x7a, 0x70,
+	0xb9, 0x12, 0x25, 0x71, 0xb4, 0xbb, 0x8e, 0x71, 0xc4, 0xae, 0x5b, 0xcd, 0xa6, 0x86, 0x16, 0x5f,
+	0x43, 0x72, 0x66, 0x76, 0x14, 0xb6, 0xb5, 0x50, 0x03, 0xdd, 0x84, 0x89, 0x6e, 0xb4, 0x01, 0xb4,
+	0x44, 0xda, 0xfe, 0xf0, 0x3a, 0x36, 0xc2, 0x8e, 0xf0, 0x09, 0xec, 0x2f, 0x7f, 0xf8, 0x00, 0xfe,
+	0xf3, 0x19, 0x7c, 0x05, 0x5f, 0xc6, 0xce, 0x2a, 0x14, 0x1a, 0x55, 0x59, 0x05, 0x74, 0xcf, 0xcc,
+	0x86, 0x7f, 0x66, 0xc8, 0x42, 0x56, 0x66, 0x56, 0x56, 0x66, 0x56, 0xbe, 0x28, 0xb8, 0xd7, 0x08,
+	0x03, 0xbf, 0x97, 0xee, 0xbb, 0x5d, 0xbf, 0x17, 0x79, 0xfe, 0x61, 0x1c, 0xa5, 0x51, 0x2b, 0x0a,
+	0x37, 0xfa, 0xec, 0x07, 0xeb, 0xca, 0xa9, 0xeb, 0x45, 0x51, 0x7f, 0xe3, 0xd4, 0x6b, 0x27, 0xf6,
+	0xf5, 0x63, 0xbf, 0x35, 0x88, 0x83, 0xf4, 0x22, 0xfb, 0x68, 0x03, 0x5b, 0x15, 0x3f, 0xcf, 0xba,
+	0x2d, 0xb1, 0xc7, 0xbe, 0x72, 0xee, 0xa6, 0x69, 0x2c, 0x7e, 0x99, 0xf3, 0x7b, 0xad, 0xf8, 0xa2,
+	0x9f, 0x06, 0x51, 0x4f, 0xac, 0x5c, 0x0b, 0x7a, 0x51, 0x1a, 0xb4, 0x05, 0x12, 0x67, 0x17, 0xee,
+	0xbf, 0xf5, 0xd3, 0x37, 0x61, 0xd4, 0x3a, 0xdb, 0x8d, 0x5a, 0x2e, 0x03, 0x4c, 0x8e, 0xfc, 0xbf,
+	0x19, 0xf8, 0x49, 0x7a, 0x98, 0xb1, 0x00, 0x93, 0x49, 0xdc, 0x5a, 0xa8, 0xad, 0x4c, 0xac, 0xcd,
+	0x5a, 0xd7, 0xe1, 0x52, 0xd4, 0x6e, 0x27, 0x7e, 0xba, 0x30, 0x81, 0xbf, 0x4f, 0xb1, 0xdf, 0x43,
+	0xbf, 0xd7, 0x49, 0x4f, 0x17, 0x26, 0xd9, 0xef, 0xce, 0x09, 0x3c, 0x30, 0x60, 0x4b, 0xfa, 0xf8,
+	0xbf, 0xec, 0x68, 0xd6, 0x26, 0xcc, 0x86, 0xf9, 0x17, 0x44, 0x5a, 0x5b, 0xbb, 0xb2, 0xb9, 0xbc,
+	0x21, 0x9d, 0x72, 0x83, 0xef, 0xf3, 0x3d, 0x8e, 0x23, 0xe1, 0x7b, 0x9c, 0x65, 0xce, 0xe3, 0xb1,
+	0x1f, 0x7f, 0xf2, 0xe3, 0x2d, 0xbf, 0xed, 0x0e, 0xc2, 0x54, 0xe1, 0xd1, 0xf9, 0x0b, 0x4e, 0x96,
+	0x02, 0xc8, 0x64, 0xbf, 0x84, 0xeb, 0x89, 0xf2, 0x99, 0x1f, 0xe8, 0xca, 0xa6, 0xa3, 0xd0, 0xde,
+	0x4e, 0x54, 0x1c, 0x19, 0xf6, 0xff, 0xad, 0x81, 0xd5, 0x88, 0x7d, 0xe4, 0xaa, 0x5c, 0x30, 0x1b,
+	0x70, 0xa9, 0xeb, 0x26, 0x67, 0xbe, 0xc7, 0x05, 0x73, 0x65, 0xf3, 0x01, 0xc1, 0x7b, 0xe8, 0xc7,
+	0xdd, 0x20, 0x49, 0xf0, 0xd4, 0xd9, 0x66, 0x0b, 0xa0, 0x35, 0xbc, 0x78, 0x2e, 0xbc, 0x59, 0xbe,
+	0xc6, 0xc9, 0x6c, 0x87, 0x6e, 0x67, 0x61, 0x0a, 0xd7, 0xae, 0x59, 0xf3, 0x70, 0x35, 0x5b, 0x3b,
+	0x74, 0x63, 0x84, 0x5e, 0x98, 0xc6, 0xd5, 0x19, 0xeb, 0x16, 0x5c, 0x89, 0xfd, 0x7e, 0x18, 0x64,
+	0x72, 0x5c, 0xb8, 0xc4, 0x41, 0x6f, 0xc2, 0xec, 0x47, 0x26, 0xb4, 0xe3, 0xe0, 0x6f, 0xfd, 0x85,
+	0xcb, 0xfc, 0x7a, 0xb6, 0xe1, 0x36, 0xbf, 0xfd, 0x28, 0x57, 0xab, 0x6f, 0xfd, 0x98, 0xf1, 0xb0,
+	0x30, 0xb3, 0x32, 0xb9, 0x76, 0x7d, 0xf3, 0xa9, 0xc2, 0x64, 0xc3, 0x04, 0x99, 0x49, 0xa0, 0x01,
+	0xb7, 0x72, 0x01, 0xc8, 0x42, 0x7d, 0x06, 0x13, 0xed, 0xfc, 0x12, 0x57, 0x14, 0x5c, 0x5f, 0xe1,
+	0x7f, 0xb6, 0x83, 0xd0, 0x3f, 0x4e, 0xdd, 0x74, 0x90, 0xe4, 0x48, 0xac, 0x7a, 0xbf, 0xef, 0xf7,
+	0xbc, 0x72, 0x29, 0xaa, 0x52, 0x99, 0xe0, 0x6b, 0x57, 0x61, 0xaa, 0xcd, 0xe4, 0x31, 0x89, 0x64,
+	0xae, 0x39, 0x29, 0xdc, 0xca, 0x91, 0xc8, 0x9c, 0x3c, 0x87, 0x69, 0x7e, 0x76, 0xc1, 0xcc, 0x83,
+	0x52, 0x8d, 0xca, 0xc0, 0x37, 0x60, 0x2a, 0x41, 0xce, 0x90, 0xc2, 0x78, 0xac, 0xff, 0x1a, 0xec,
+	0x63, 0x3f, 0x3d, 0x2a, 0x44, 0x5e, 0x7e, 0x04, 0x72, 0x35, 0xec, 0x0c, 0xd7, 0x9c, 0xe7, 0xb0,
+	0x44, 0xf7, 0xcb, 0xdc, 0xa3, 0x15, 0xc5, 0x7e, 0x82, 0x0a, 0xc7, 0x71, 0xcc, 0x38, 0xbf, 0x81,
+	0x7b, 0x08, 0x7e, 0x9c, 0x46, 0xb1, 0xdb, 0xf1, 0x0f, 0x23, 0xdc, 0x74, 0x51, 0x29, 0xb3, 0x3e,
+	0x07, 0x29, 0x64, 0xc6, 0x0c, 0x46, 0x47, 0x20, 0x51, 0x74, 0x56, 0x32, 0x83, 0x91, 0x00, 0x02,
+	0x5f, 0x35, 0xa9, 0xef, 0x61, 0xd9, 0x04, 0x21, 0xb3, 0xfd, 0x4b, 0x98, 0xe9, 0x8b, 0x0f, 0xc8,
+	0xcb, 0x24, 0x4a, 0xf2, 0x91, 0x22, 0x49, 0x2e, 0x70, 0x85, 0x89, 0xdc, 0x5a, 0x17, 0x91, 0xbb,
+	0xc2, 0x22, 0xca, 0xcf, 0xb6, 0x89, 0x67, 0x1b, 0x82, 0x8d, 0x67, 0x59, 0xce, 0x3d, 0x7e, 0x57,
+	0x32, 0x76, 0xf9, 0xe0, 0x5f, 0xc1, 0x3c, 0x7e, 0x3d, 0xf8, 0xdc, 0xf3, 0xe3, 0x72, 0xb2, 0x73,
+	0x30, 0x33, 0x40, 0x6f, 0xd1, 0xcb, 0x04, 0x5a, 0xc3, 0x15, 0xb4, 0xad, 0x4e, 0x1c, 0x0d, 0xfa,
+	0xbd, 0xcc, 0x5a, 0x71, 0xc9, 0xb9, 0x0b, 0xb7, 0x0b, 0x4c, 0x32, 0x89, 0x4f, 0xb0, 0x50, 0xff,
+	0xe8, 0xf6, 0xbc, 0xa8, 0xc7, 0x05, 0xa0, 0x90, 0x59, 0x87, 0xda, 0x47, 0xe1, 0x79, 0x54, 0xaf,
+	0xd7, 0x3c, 0x4f, 0x51, 0xa9, 0x15, 0x25, 0x15, 0x2c, 0x4d, 0xe4, 0x8e, 0xf7, 0x34, 0x0a, 0x3d,
+	0x3f, 0x16, 0xbe, 0xe2, 0x26, 0x5c, 0x6a, 0xa3, 0x92, 0xee, 0x78, 0xe8, 0x27, 0x6a, 0x6b, 0x53,
+	0x5f, 0xd6, 0x5e, 0x3a, 0x4b, 0xb0, 0xa8, 0xd2, 0x95, 0x99, 0xfa, 0xef, 0x1a, 0xcc, 0xd7, 0x3d,
+	0x4f, 0xe7, 0x68, 0xa4, 0xfd, 0xbd, 0xc2, 0x5b, 0x8e, 0xfd, 0x4f, 0x41, 0x34, 0x48, 0xf8, 0xc9,
+	0xc7, 0xe0, 0xfc, 0x35, 0x5c, 0xf5, 0xcf, 0x5b, 0xe1, 0xc0, 0xf3, 0xf7, 0xf1, 0x49, 0x4b, 0x90,
+	0xc5, 0x49, 0xed, 0xe2, 0xb6, 0xdc, 0xd4, 0x65, 0x0f, 0xde, 0x4e, 0xaf, 0x9d, 0xf9, 0x1c, 0xe9,
+	0x48, 0xd3, 0xe2, 0x48, 0xcc, 0xfb, 0xb5, 0xdd, 0x4f, 0x51, 0xec, 0x7b, 0x19, 0xa2, 0x4b, 0x88,
+	0x68, 0xd6, 0x41, 0xaf, 0x56, 0x1c, 0xa5, 0xc4, 0x0b, 0x4c, 0x8c, 0xf6, 0x02, 0xce, 0x7f, 0x4c,
+	0xc0, 0x43, 0xd4, 0x71, 0xc4, 0x15, 0x30, 0x9b, 0x74, 0xc3, 0x9c, 0xa7, 0x72, 0x01, 0x3d, 0x83,
+	0xc9, 0x8f, 0xe1, 0x99, 0xd0, 0xc4, 0x91, 0x72, 0x78, 0x05, 0xb3, 0xfe, 0x79, 0x90, 0xa4, 0x41,
+	0xaf, 0xc3, 0x64, 0x37, 0x8e, 0x10, 0x5e, 0xc2, 0x8c, 0x10, 0xdd, 0xb8, 0x62, 0xb3, 0xc1, 0xea,
+	0x0d, 0xba, 0xc5, 0x21, 0x32, 0x49, 0x4d, 0xf3, 0x27, 0x41, 0xbd, 0xcf, 0x4b, 0xfc, 0x08, 0xf7,
+	0x60, 0x3e, 0x67, 0x4a, 0xd8, 0xe6, 0x37, 0x83, 0xc0, 0x4b, 0xf0, 0xc5, 0x98, 0x54, 0xf4, 0x6a,
+	0x26, 0xd7, 0xab, 0x63, 0x70, 0x4a, 0xa4, 0xf4, 0x13, 0x64, 0x7f, 0x01, 0xf3, 0x8d, 0xa8, 0xdb,
+	0x0f, 0xfd, 0xaa, 0x47, 0xd5, 0xa4, 0x8e, 0xcf, 0x61, 0x2a, 0x74, 0x93, 0x74, 0x5c, 0x55, 0x34,
+	0xd8, 0xc9, 0x53, 0xb8, 0x5d, 0x90, 0xae, 0x72, 0xc3, 0x7b, 0xb0, 0x84, 0x2e, 0x3b, 0x8a, 0xd3,
+	0x37, 0xae, 0x08, 0x47, 0x14, 0x56, 0xf1, 0xc9, 0xe7, 0x27, 0xce, 0x9d, 0xdf, 0xa8, 0x23, 0x3f,
+	0x80, 0x7b, 0x1a, 0x3a, 0xd9, 0x44, 0x5f, 0x60, 0x94, 0x11, 0xf5, 0x70, 0x17, 0x15, 0x48, 0x1a,
+	0x77, 0x84, 0x40, 0xf0, 0x2d, 0x44, 0xe9, 0x24, 0x28, 0x0a, 0x66, 0x07, 0xb7, 0xf1, 0x55, 0x16,
+	0x1b, 0x64, 0x3c, 0x7f, 0x0e, 0xf3, 0x27, 0xf1, 0x80, 0xad, 0x57, 0x88, 0x16, 0x1d, 0x5a, 0xcf,
+	0xff, 0xbc, 0x9b, 0xc5, 0x6e, 0x59, 0x2c, 0x67, 0x08, 0x49, 0x98, 0xac, 0x0a, 0x5c, 0x55, 0xb2,
+	0xda, 0x00, 0xeb, 0xc8, 0x67, 0xde, 0xb1, 0x9c, 0x24, 0xfe, 0xe2, 0x25, 0xa9, 0x78, 0xa1, 0x1e,
+	0xc3, 0xad, 0x1c, 0xbe, 0x0a, 0xed, 0x76, 0x0e, 0xb6, 0x39, 0x1e, 0x5e, 0xeb, 0x36, 0x5c, 0x8b,
+	0x30, 0x80, 0xfb, 0x8c, 0x61, 0xb2, 0xbf, 0xe5, 0x73, 0x3d, 0x61, 0x78, 0xee, 0xc0, 0xfc, 0x10,
+	0x8f, 0x2c, 0xab, 0xd7, 0x60, 0x6d, 0xf9, 0xd5, 0x4a, 0x88, 0x92, 0x8a, 0x59, 0xdc, 0x9d, 0x04,
+	0x9f, 0x32, 0x1d, 0x9c, 0x61, 0xcc, 0xe7, 0xbb, 0xaa, 0x98, 0xef, 0x80, 0xb5, 0x77, 0xe6, 0x05,
+	0x71, 0xf2, 0xc7, 0x0b, 0x1b, 0x69, 0x38, 0x38, 0x99, 0xf3, 0x93, 0x13, 0xaa, 0xe2, 0xe7, 0x00,
+	0xee, 0xa0, 0x21, 0xef, 0x66, 0xb6, 0x5f, 0x69, 0x75, 0x18, 0x1c, 0xc5, 0x69, 0xbd, 0x9d, 0xe2,
+	0x73, 0xc3, 0xf8, 0xba, 0xca, 0xe8, 0xf6, 0x7c, 0xdf, 0xcb, 0x63, 0x7a, 0x41, 0x77, 0x1f, 0xee,
+	0xca, 0x08, 0x65, 0xda, 0x5f, 0xc0, 0x65, 0x64, 0x88, 0x7d, 0x12, 0x21, 0x99, 0x1a, 0x68, 0x6f,
+	0x05, 0x28, 0x53, 0xf4, 0x3e, 0x17, 0x62, 0x73, 0x76, 0x1b, 0x6b, 0xf0, 0x84, 0xc5, 0x1c, 0x3d,
+	0xb7, 0x9f, 0x9c, 0x46, 0x69, 0xea, 0x7e, 0x0c, 0xfd, 0xad, 0x0c, 0x09, 0x61, 0xd8, 0x39, 0x87,
+	0xa7, 0x55, 0x90, 0x32, 0x27, 0x7b, 0x30, 0x9f, 0x18, 0xe0, 0x04, 0x5b, 0x2f, 0x14, 0xb6, 0x28,
+	0x42, 0x03, 0x8f, 0x2d, 0xfe, 0x66, 0xe4, 0x80, 0x5b, 0x41, 0xbb, 0x9d, 0x19, 0xb5, 0x22, 0x4f,
+	0x14, 0x57, 0x4e, 0xf3, 0x28, 0x8a, 0x52, 0x21, 0x58, 0xf6, 0x9a, 0xc5, 0x51, 0x37, 0xdf, 0x2b,
+	0x34, 0x16, 0xc5, 0x9d, 0x46, 0xc3, 0xb5, 0xcc, 0xec, 0xfe, 0x8a, 0xbb, 0x5c, 0x13, 0x11, 0xf9,
+	0x64, 0x7f, 0x02, 0xe0, 0x0d, 0x3f, 0x09, 0xbf, 0xfb, 0xc8, 0x78, 0x9e, 0x02, 0x43, 0x76, 0x88,
+	0x67, 0x70, 0x07, 0xcd, 0x81, 0xd9, 0xbf, 0x9b, 0xa8, 0xaa, 0xaf, 0x3a, 0x01, 0xce, 0xb7, 0xb3,
+	0x08, 0x77, 0x65, 0x68, 0xd9, 0x7e, 0xfe, 0x14, 0x16, 0x8e, 0xfc, 0x16, 0xb3, 0x38, 0x1d, 0xd5,
+	0x28, 0x57, 0xee, 0xfc, 0x1c, 0x16, 0xd5, 0xcd, 0x55, 0xca, 0xbb, 0xc8, 0x75, 0x0d, 0x13, 0x34,
+	0x1e, 0x96, 0x2b, 0xca, 0xf0, 0x5f, 0x35, 0xe9, 0x1b, 0xb1, 0x01, 0x0c, 0xe5, 0x5a, 0x6e, 0xdf,
+	0x6d, 0x61, 0xd6, 0xcc, 0x11, 0x4d, 0x31, 0x1f, 0x8a, 0xc1, 0x9d, 0x27, 0x9c, 0x1e, 0xb7, 0xee,
+	0xae, 0x1b, 0xf4, 0xf0, 0x82, 0xb3, 0x1c, 0xd6, 0x5a, 0x80, 0xb9, 0x01, 0xbe, 0x22, 0xf1, 0x87,
+	0x3c, 0x8e, 0xf7, 0x3d, 0x9e, 0x8c, 0x4d, 0x59, 0x77, 0xe0, 0x7a, 0x2b, 0x8a, 0xe3, 0x41, 0x3f,
+	0xfd, 0x20, 0x3c, 0xff, 0x74, 0xbe, 0xce, 0xad, 0xb4, 0xd7, 0xc9, 0xd7, 0x2f, 0xf1, 0xf5, 0x65,
+	0xb8, 0x9b, 0xaf, 0x33, 0x5c, 0x1f, 0xa2, 0x9e, 0x9f, 0x03, 0x5c, 0x66, 0xaf, 0x11, 0x3e, 0xad,
+	0x2c, 0xb1, 0x2d, 0x1e, 0x54, 0x4d, 0x91, 0x36, 0x61, 0x2a, 0xbd, 0xe8, 0x67, 0x17, 0x71, 0x9d,
+	0x5c, 0xae, 0xba, 0xed, 0x04, 0xc1, 0x0e, 0x45, 0x46, 0xff, 0xc0, 0x80, 0x54, 0x16, 0xca, 0x3a,
+	0x4c, 0x78, 0x81, 0xf1, 0xd5, 0xd2, 0xc2, 0x0b, 0xe7, 0x3d, 0x3c, 0x92, 0xb0, 0x89, 0x88, 0xe1,
+	0x8f, 0xc4, 0xe9, 0xbf, 0xd4, 0xc0, 0x36, 0x62, 0x1e, 0x86, 0x91, 0x9e, 0xc4, 0x8f, 0x31, 0xb2,
+	0xd0, 0xe3, 0xa1, 0x5f, 0x61, 0xa6, 0x2f, 0xe3, 0xca, 0x5e, 0x4b, 0x1a, 0x2a, 0xe8, 0xe4, 0x9c,
+	0x3e, 0x3c, 0x2e, 0x3f, 0xa9, 0x2c, 0xbe, 0xb7, 0x70, 0xc7, 0x33, 0x41, 0xe5, 0x81, 0xc0, 0x53,
+	0x23, 0x87, 0x06, 0x8a, 0xbf, 0xe0, 0xbe, 0xe4, 0x30, 0xf6, 0xdb, 0x7e, 0x1c, 0x8b, 0x58, 0x81,
+	0x65, 0xef, 0x8a, 0x60, 0x51, 0x83, 0x59, 0x04, 0xd3, 0x2b, 0xec, 0xf1, 0x0b, 0xee, 0x1d, 0x4c,
+	0xdb, 0x64, 0x2e, 0xaf, 0x61, 0x40, 0x96, 0xb0, 0x52, 0x00, 0x57, 0x7b, 0xf4, 0x5b, 0x77, 0x59,
+	0x4a, 0xe8, 0xb6, 0xfd, 0x3d, 0x1a, 0xe1, 0xbe, 0x84, 0x4b, 0x6e, 0x8b, 0xbb, 0xf5, 0xec, 0xf2,
+	0xd4, 0x7c, 0x38, 0xdf, 0x52, 0xe7, 0x20, 0xd9, 0x8e, 0x3b, 0x70, 0xb9, 0x75, 0xea, 0xb7, 0xb2,
+	0x77, 0xab, 0xb6, 0x36, 0xf3, 0xe5, 0x74, 0xdb, 0x0d, 0x13, 0xdf, 0x59, 0x87, 0x05, 0x85, 0x48,
+	0x95, 0x41, 0x63, 0xba, 0x72, 0xec, 0x7e, 0xf2, 0x99, 0x3f, 0x48, 0xd0, 0x40, 0x15, 0x96, 0x78,
+	0x12, 0xa7, 0x7e, 0x94, 0xbd, 0x0e, 0xa6, 0x5e, 0x47, 0x51, 0x18, 0x36, 0x31, 0x22, 0x55, 0x3d,
+	0xc1, 0x4b, 0xf4, 0x6b, 0xc5, 0x07, 0x99, 0x3a, 0x9a, 0x28, 0x7a, 0xb0, 0x63, 0xbf, 0xd3, 0x45,
+	0x1f, 0x74, 0x72, 0x8e, 0xf1, 0x60, 0x26, 0x96, 0x17, 0xb0, 0x82, 0x80, 0x78, 0x35, 0xfe, 0xb6,
+	0x8b, 0x52, 0xf6, 0x86, 0xb7, 0xa4, 0x3a, 0x32, 0x37, 0x0f, 0xc1, 0x50, 0xf8, 0x0f, 0xcd, 0x1b,
+	0xaa, 0xce, 0x6a, 0x33, 0x37, 0xd9, 0xc6, 0xa5, 0x53, 0x1e, 0x9d, 0x2b, 0x3c, 0x2f, 0x31, 0x2f,
+	0x28, 0x7f, 0x93, 0x4f, 0x7a, 0x1f, 0x96, 0xb6, 0x03, 0x8c, 0xb9, 0xf1, 0x1e, 0xbf, 0xe9, 0x77,
+	0x62, 0x57, 0xbd, 0x39, 0x16, 0x52, 0x6a, 0x9f, 0xe5, 0xed, 0x27, 0x60, 0x33, 0x79, 0xa0, 0x03,
+	0x32, 0xec, 0xc6, 0xfc, 0x5d, 0xbd, 0xf7, 0x27, 0xca, 0xbd, 0xab, 0x1b, 0xa5, 0xdb, 0x77, 0xfe,
+	0x15, 0xfd, 0xad, 0xfa, 0xb5, 0xb0, 0x3e, 0xc4, 0x99, 0x70, 0x0f, 0x2d, 0xac, 0xb5, 0x0a, 0xa7,
+	0x54, 0x61, 0x61, 0x7e, 0x98, 0x07, 0x1d, 0x27, 0x81, 0x78, 0x1e, 0xa6, 0xf8, 0x73, 0x29, 0x0e,
+	0xc7, 0x57, 0x33, 0xef, 0x7c, 0x9f, 0x95, 0xb4, 0x58, 0x04, 0xe4, 0x31, 0x64, 0x1f, 0xdd, 0xd6,
+	0xd9, 0x4e, 0x17, 0xe5, 0x9f, 0x70, 0x17, 0x3d, 0xe3, 0x7c, 0xc0, 0x98, 0x9d, 0x9c, 0x58, 0xbe,
+	0x98, 0x3f, 0x03, 0x2b, 0xd6, 0x38, 0x17, 0xa1, 0xc0, 0xa3, 0x0a, 0x56, 0x0b, 0x7f, 0x58, 0x87,
+	0x87, 0x2c, 0x1e, 0x68, 0x64, 0xef, 0x00, 0x2b, 0x14, 0x19, 0x52, 0x03, 0x7c, 0x63, 0xfa, 0x2e,
+	0x06, 0xd6, 0xc3, 0xa2, 0x69, 0x2b, 0x8a, 0xce, 0x02, 0x51, 0x4c, 0x40, 0x97, 0xea, 0x94, 0xa0,
+	0x90, 0x59, 0x7d, 0x8d, 0x36, 0x96, 0x41, 0x08, 0x51, 0xae, 0xaa, 0xd5, 0x3a, 0xba, 0x3b, 0x0f,
+	0xa1, 0xe6, 0xf7, 0xfc, 0xd4, 0x65, 0xc6, 0x33, 0xc2, 0x8b, 0xa0, 0x11, 0x15, 0x90, 0xb2, 0xd2,
+	0x3c, 0xc9, 0x5e, 0x53, 0x96, 0x35, 0xe1, 0xa9, 0x4b, 0x9f, 0x74, 0xe7, 0x2b, 0x58, 0x50, 0xe0,
+	0x7e, 0x7c, 0x65, 0xf0, 0x29, 0x2c, 0xec, 0xf0, 0xc5, 0x46, 0x18, 0xe1, 0xd3, 0x5c, 0x4e, 0x12,
+	0x23, 0x06, 0x15, 0xb0, 0xca, 0xe8, 0xfe, 0x0d, 0xd5, 0xb4, 0xe1, 0xa2, 0x9f, 0xca, 0x02, 0x39,
+	0x0c, 0xdf, 0x0b, 0x35, 0x05, 0x98, 0x08, 0x3c, 0xce, 0xdf, 0xe4, 0xf0, 0xb2, 0xb2, 0x4a, 0x0f,
+	0xa9, 0xdf, 0xf1, 0xaa, 0x23, 0x07, 0x89, 0xa2, 0x90, 0xe7, 0x90, 0xb3, 0xd6, 0x1b, 0x00, 0xff,
+	0xbc, 0x1f, 0xc4, 0x19, 0xc4, 0x34, 0x3f, 0xe4, 0x86, 0x7a, 0x39, 0x1a, 0xd9, 0xe6, 0x70, 0x43,
+	0x76, 0xe4, 0xb7, 0xf0, 0x70, 0x24, 0x10, 0x3b, 0x51, 0x37, 0x40, 0x35, 0xcc, 0x8c, 0x69, 0x92,
+	0x05, 0x51, 0x01, 0x6a, 0x49, 0xe8, 0xa6, 0x45, 0x2e, 0xf2, 0x8f, 0x35, 0x58, 0x50, 0x31, 0xf1,
+	0x28, 0x28, 0x43, 0x80, 0x87, 0xf9, 0x78, 0x91, 0xfa, 0xc9, 0x3e, 0xc6, 0xee, 0xbe, 0x27, 0xb0,
+	0xe4, 0x8b, 0x7c, 0x57, 0x16, 0x07, 0xf1, 0x45, 0xa6, 0x1f, 0x39, 0xe4, 0xa4, 0xb2, 0x28, 0x20,
+	0xa7, 0x72, 0x26, 0x4e, 0xdd, 0x84, 0xb3, 0xea, 0x7b, 0x59, 0x3d, 0x1a, 0x33, 0x9d, 0xfb, 0x75,
+	0xcf, 0x53, 0xd9, 0xa0, 0xd1, 0x41, 0x50, 0x3c, 0xe1, 0x8f, 0x46, 0x08, 0xab, 0x08, 0x45, 0xd9,
+	0x27, 0x56, 0x0d, 0x4f, 0xf8, 0xed, 0x5c, 0xc3, 0xc0, 0xf5, 0x81, 0x81, 0x90, 0xac, 0x05, 0xf9,
+	0xcd, 0x22, 0xab, 0xce, 0x5f, 0xc3, 0x0a, 0xbe, 0x43, 0x41, 0xfb, 0xe2, 0xff, 0x81, 0xb3, 0x55,
+	0x78, 0x68, 0xa6, 0x25, 0x9b, 0xd6, 0x06, 0x7b, 0x6d, 0xba, 0x18, 0xf1, 0x56, 0x30, 0x24, 0x1f,
+	0x60, 0x95, 0x3d, 0x36, 0x26, 0x78, 0x19, 0x69, 0x07, 0x96, 0xb9, 0x3b, 0x51, 0x40, 0x54, 0x7f,
+	0x84, 0x8a, 0xc4, 0x6a, 0x78, 0x3b, 0xb9, 0x0a, 0xbc, 0xe6, 0x55, 0x91, 0x3c, 0xbd, 0x1b, 0xf3,
+	0xd8, 0xce, 0x1f, 0x34, 0x55, 0x6b, 0xf6, 0xd2, 0xf8, 0xe2, 0xc7, 0xcb, 0xf1, 0x35, 0x4c, 0xb3,
+	0xc7, 0x22, 0x11, 0x5c, 0x3c, 0xae, 0xd8, 0x54, 0x28, 0xb5, 0x13, 0xc2, 0x8a, 0xf1, 0xbc, 0xb2,
+	0x16, 0xfc, 0x0a, 0x66, 0x30, 0x41, 0x67, 0x6f, 0x7d, 0x1e, 0x94, 0x55, 0x21, 0x97, 0x8e, 0x71,
+	0x03, 0x2e, 0xa3, 0x76, 0xef, 0xe1, 0xf3, 0x2e, 0xec, 0xeb, 0x0f, 0xac, 0xf9, 0xc3, 0xa0, 0x0f,
+	0xd1, 0x01, 0x14, 0xac, 0xcf, 0xb1, 0xda, 0x77, 0x14, 0x8a, 0x2c, 0x49, 0x94, 0x88, 0x23, 0x56,
+	0x0c, 0xde, 0xd7, 0xab, 0xc6, 0xfb, 0xc3, 0xaa, 0x31, 0xf3, 0x24, 0x5d, 0x7c, 0xe6, 0xb9, 0x27,
+	0x99, 0x66, 0x31, 0x5a, 0x18, 0x74, 0x83, 0x94, 0x3b, 0x91, 0x49, 0x6b, 0x11, 0x6e, 0x76, 0xdd,
+	0xf3, 0xdc, 0xc0, 0xb9, 0x89, 0x5d, 0x60, 0x2a, 0x81, 0x9f, 0x9c, 0xdf, 0xd7, 0xe0, 0xd6, 0x90,
+	0x8d, 0x1f, 0x65, 0xe1, 0x18, 0x01, 0xf1, 0xc5, 0x03, 0xcc, 0xb7, 0x32, 0xa2, 0x93, 0x26, 0xcb,
+	0x9f, 0x32, 0x59, 0xfe, 0x34, 0xd7, 0xc6, 0x1d, 0x58, 0xc8, 0x8d, 0x8f, 0x71, 0xa1, 0x68, 0xd8,
+	0x73, 0xe5, 0xfa, 0x97, 0x75, 0x61, 0x2b, 0xe2, 0xe3, 0xb5, 0x6a, 0x05, 0x95, 0xac, 0xd0, 0xbb,
+	0xb0, 0x24, 0x99, 0xd2, 0x4f, 0x25, 0x85, 0x31, 0x92, 0x86, 0x4d, 0x2d, 0xbb, 0x2d, 0x49, 0x36,
+	0xa6, 0x51, 0x53, 0x2f, 0x9a, 0x3d, 0x42, 0xbc, 0x8e, 0x47, 0x36, 0xc8, 0x08, 0x37, 0xc1, 0x1e,
+	0xea, 0x27, 0xfb, 0x9a, 0xd0, 0xd2, 0x00, 0x33, 0xc5, 0x43, 0x15, 0xa7, 0x0b, 0x4b, 0x74, 0x8f,
+	0xac, 0xce, 0xaf, 0xe0, 0x32, 0xaa, 0x72, 0x5c, 0x34, 0x5a, 0x56, 0xcc, 0xa7, 0xae, 0x52, 0xe4,
+	0x81, 0xa4, 0x40, 0x12, 0xdc, 0x0f, 0x93, 0xa6, 0xf5, 0x42, 0x35, 0xd9, 0x12, 0x3e, 0x24, 0x6b,
+	0x5d, 0x87, 0x25, 0x11, 0x25, 0xec, 0x06, 0xbd, 0xb3, 0xea, 0x88, 0x62, 0x17, 0xee, 0x69, 0xb0,
+	0x3f, 0x3e, 0xaa, 0x78, 0xce, 0x93, 0xeb, 0x46, 0xd4, 0x4b, 0x51, 0x76, 0xc7, 0x83, 0x6e, 0xd7,
+	0x8d, 0x2f, 0xca, 0xa3, 0x34, 0xcc, 0xc5, 0x1f, 0x18, 0xc0, 0xc9, 0x2d, 0x24, 0xd9, 0xba, 0x90,
+	0x16, 0x39, 0xbd, 0xb2, 0x75, 0x98, 0xe1, 0xb2, 0x7e, 0xd3, 0xd7, 0x83, 0x28, 0x75, 0x2b, 0x22,
+	0x44, 0x96, 0x9d, 0xe4, 0xa9, 0x0e, 0x87, 0x15, 0x21, 0x30, 0x3a, 0x04, 0x91, 0xcb, 0x4a, 0x9f,
+	0xb2, 0x38, 0x78, 0x13, 0xae, 0x88, 0x4f, 0x2c, 0x9f, 0xe6, 0xfe, 0xe4, 0xfa, 0xe6, 0x7d, 0x53,
+	0x8e, 0x5b, 0xe4, 0xdb, 0x59, 0xcb, 0x4a, 0x30, 0x23, 0xab, 0xec, 0xef, 0xe0, 0xe6, 0x76, 0x72,
+	0xd1, 0x6b, 0x55, 0x36, 0xfe, 0xb3, 0xfa, 0x8d, 0xa8, 0x5a, 0x2d, 0xc1, 0x0d, 0x56, 0x86, 0xcf,
+	0x3a, 0xfd, 0xf9, 0x04, 0x40, 0x6d, 0xcd, 0xfa, 0x72, 0xe2, 0xf9, 0x2b, 0x53, 0xd1, 0x7d, 0x1e,
+	0x2c, 0x41, 0x41, 0xa6, 0x5b, 0xe7, 0xd2, 0x61, 0xd1, 0x7d, 0x45, 0x8d, 0x14, 0x9d, 0x64, 0x37,
+	0x2d, 0xd2, 0x02, 0xfc, 0xd5, 0x4d, 0x87, 0xf9, 0x80, 0x38, 0x93, 0x40, 0x21, 0xe3, 0xfe, 0x87,
+	0x1a, 0x2c, 0x66, 0x4d, 0xeb, 0xe3, 0x8b, 0x2e, 0x86, 0xf2, 0x67, 0xf4, 0x45, 0xc4, 0x74, 0xa3,
+	0xe3, 0xa7, 0x45, 0x65, 0x9d, 0xc1, 0x88, 0xd3, 0xbd, 0xe0, 0xd5, 0x4b, 0x56, 0x7c, 0xe5, 0x54,
+	0x7e, 0x78, 0x5d, 0x36, 0x4b, 0x46, 0x30, 0x8b, 0x25, 0x1c, 0xc8, 0x0c, 0xfe, 0x0c, 0x16, 0x79,
+	0xf5, 0xb4, 0x77, 0x76, 0xc2, 0x39, 0xa9, 0xd0, 0xcd, 0x97, 0x60, 0x13, 0x50, 0x59, 0x2f, 0x59,
+	0x05, 0x91, 0x2f, 0x1f, 0x66, 0x3b, 0x58, 0x8e, 0x71, 0x0a, 0xce, 0x37, 0x7d, 0x0f, 0x49, 0xf3,
+	0x1b, 0xda, 0x8e, 0xe2, 0xc3, 0xa0, 0xef, 0x23, 0x0f, 0x3e, 0x69, 0x61, 0x28, 0x4d, 0x9b, 0x91,
+	0xdd, 0x14, 0x53, 0x15, 0xef, 0x04, 0x56, 0xcb, 0x28, 0xfd, 0x84, 0xfe, 0xd0, 0xff, 0xd4, 0xc0,
+	0xce, 0xd0, 0x1a, 0x19, 0x37, 0x94, 0x29, 0x59, 0xa3, 0x32, 0x0a, 0x33, 0x1c, 0xe3, 0x37, 0xe8,
+	0x66, 0x7a, 0xfe, 0xe7, 0x6c, 0xcb, 0xe4, 0x78, 0x5b, 0x36, 0xf8, 0x16, 0xb9, 0xaf, 0x79, 0xcf,
+	0x5c, 0x90, 0xda, 0x1a, 0x72, 0x2a, 0xec, 0x74, 0x67, 0x8b, 0xd5, 0x0b, 0x59, 0xe3, 0x06, 0xb3,
+	0x7a, 0x7a, 0x36, 0x59, 0x31, 0x7e, 0x01, 0x2b, 0xa8, 0xd2, 0x6f, 0xdc, 0xd0, 0xed, 0xb5, 0xfc,
+	0xf8, 0x8d, 0xdb, 0xf3, 0x3e, 0x07, 0x5e, 0x7a, 0xaa, 0x08, 0x80, 0x0d, 0x7b, 0xe4, 0x1f, 0x8a,
+	0x60, 0xd1, 0xbc, 0x4d, 0xc6, 0xed, 0xc0, 0x8a, 0x28, 0x72, 0x35, 0x87, 0x83, 0x41, 0xef, 0x7c,
+	0xc5, 0x2f, 0x8a, 0x12, 0xb7, 0x01, 0x46, 0xbe, 0xcf, 0x5f, 0xc3, 0x4d, 0x8f, 0x42, 0x08, 0xd7,
+	0xbc, 0xaa, 0x09, 0x44, 0x81, 0xca, 0x1b, 0xf1, 0xb9, 0x6d, 0xe4, 0x85, 0xf2, 0xb1, 0x0a, 0xe8,
+	0xf9, 0x6a, 0x11, 0x65, 0x39, 0x5f, 0xc0, 0x12, 0xc5, 0x24, 0x33, 0x2a, 0x6d, 0x3a, 0x2c, 0x2c,
+	0xca, 0x03, 0x3b, 0x6b, 0x08, 0xfd, 0x00, 0xf2, 0x77, 0xe1, 0x46, 0xbe, 0x7a, 0x10, 0x7a, 0x52,
+	0x4f, 0x52, 0xfa, 0xb0, 0x8f, 0xba, 0x51, 0xb4, 0xcf, 0xee, 0xb3, 0xd8, 0x42, 0xa5, 0x22, 0x5f,
+	0xc6, 0x2b, 0x8c, 0x82, 0xc2, 0x30, 0xfa, 0x3c, 0x3e, 0x0f, 0xcc, 0xa5, 0x90, 0x2d, 0x6a, 0x3b,
+	0xeb, 0xde, 0x56, 0x90, 0xb8, 0x3f, 0x10, 0xe7, 0x32, 0xdc, 0xd7, 0x77, 0xa9, 0x43, 0x13, 0x76,
+	0xd6, 0xef, 0xfa, 0x49, 0x77, 0x25, 0x04, 0x42, 0x31, 0xc9, 0x84, 0x3e, 0x60, 0xc6, 0xce, 0xea,
+	0x8a, 0xf5, 0x56, 0xcb, 0x4f, 0xaa, 0x4a, 0x2a, 0xbf, 0x14, 0x61, 0xf4, 0x04, 0x2f, 0x5c, 0xad,
+	0x29, 0x0a, 0x57, 0x6f, 0x49, 0xf1, 0x0d, 0xfa, 0x6a, 0xb9, 0x74, 0x65, 0x63, 0x06, 0x23, 0x13,
+	0x90, 0x89, 0xaf, 0x72, 0xb5, 0x6f, 0x0c, 0x62, 0xe6, 0xc1, 0x59, 0x09, 0x71, 0x37, 0xea, 0x9c,
+	0x9c, 0x07, 0x4a, 0x39, 0x02, 0x83, 0x3b, 0xa7, 0x04, 0x48, 0xd6, 0x39, 0x64, 0x36, 0x3d, 0x1f,
+	0x66, 0x71, 0xcf, 0x78, 0x58, 0xc3, 0x8b, 0x92, 0xdb, 0x71, 0xd4, 0xa5, 0x38, 0x09, 0xf4, 0xd7,
+	0x3c, 0x6c, 0x21, 0xd0, 0x32, 0xf2, 0x97, 0x00, 0xfe, 0x27, 0x96, 0xd9, 0x88, 0x36, 0xd6, 0x84,
+	0xe6, 0x83, 0x9a, 0xc3, 0xcf, 0x7c, 0xc7, 0xfa, 0xf7, 0x70, 0xa3, 0x31, 0x1c, 0x2c, 0xcb, 0xb3,
+	0xcc, 0x4b, 0x8d, 0xa3, 0x66, 0xfd, 0xa4, 0x39, 0x57, 0xc3, 0x17, 0x75, 0xf6, 0xe0, 0xdb, 0xe6,
+	0xd1, 0x77, 0x47, 0x3b, 0xf8, 0xeb, 0x04, 0xfb, 0x54, 0x3f, 0x3c, 0x6c, 0xee, 0x6f, 0xcd, 0x4d,
+	0x61, 0xf4, 0x7b, 0x75, 0xb7, 0xfe, 0xfe, 0xfb, 0x0f, 0x87, 0xcd, 0xa3, 0xe3, 0x9d, 0xe3, 0x93,
+	0xb9, 0x39, 0x06, 0xbc, 0xdf, 0xfc, 0xee, 0xc3, 0x9b, 0xdd, 0x83, 0xc6, 0xbb, 0xb9, 0x95, 0xf5,
+	0x77, 0x70, 0xb7, 0xa4, 0xba, 0x6f, 0x5d, 0x86, 0xc9, 0xfa, 0xee, 0x2e, 0xe2, 0x9f, 0x81, 0xa9,
+	0xdd, 0x9d, 0x6f, 0x19, 0x6a, 0xfc, 0x69, 0xab, 0x59, 0xdf, 0x9a, 0x63, 0x09, 0xc6, 0x8d, 0xad,
+	0x66, 0xe3, 0x60, 0x6f, 0x6f, 0xe7, 0xf8, 0x78, 0xe7, 0x60, 0x7f, 0x67, 0xff, 0xed, 0xdc, 0xd4,
+	0xfa, 0x01, 0xdc, 0x32, 0x55, 0x9b, 0x2d, 0xb8, 0x7e, 0x5c, 0xdf, 0x6e, 0xee, 0x1d, 0x6c, 0x35,
+	0x3f, 0xec, 0x36, 0xeb, 0xdf, 0x32, 0x9e, 0xe5, 0xb5, 0xe6, 0xfe, 0x49, 0xf3, 0x08, 0xb1, 0x23,
+	0xb3, 0xc3, 0xb5, 0xb7, 0xcd, 0x93, 0xb9, 0xc9, 0xf5, 0xdf, 0xc0, 0x62, 0x69, 0x19, 0xd3, 0x9a,
+	0x85, 0xe9, 0xaf, 0xbf, 0x69, 0x1e, 0x7d, 0x8f, 0xd8, 0xf0, 0xc7, 0xe3, 0x93, 0xfa, 0xd1, 0x09,
+	0x22, 0xb9, 0x0a, 0x33, 0xdb, 0x3b, 0xfb, 0xf5, 0xdd, 0x9d, 0xf7, 0x4d, 0x44, 0xb0, 0x04, 0xd7,
+	0x1b, 0x79, 0xa6, 0x3f, 0xdc, 0xb5, 0x7d, 0x70, 0xd4, 0x40, 0x1e, 0x36, 0xff, 0xb3, 0x0e, 0x77,
+	0xcc, 0xd3, 0x9b, 0x56, 0x08, 0x37, 0x3b, 0x74, 0x0e, 0xd2, 0x5a, 0x57, 0x2e, 0xa9, 0x72, 0xea,
+	0xd2, 0xfe, 0xf9, 0x28, 0x58, 0x59, 0x23, 0x32, 0x6a, 0xea, 0xe8, 0xa2, 0x4e, 0xad, 0x7c, 0x7e,
+	0x52, 0xa7, 0x56, 0x35, 0x4a, 0xf9, 0x0e, 0x43, 0x41, 0xae, 0x4d, 0x16, 0xc9, 0x16, 0xb4, 0x11,
+	0x49, 0x7b, 0xc5, 0x08, 0x40, 0x90, 0xb9, 0x7c, 0x9e, 0x8f, 0x20, 0xd3, 0x27, 0x05, 0x09, 0x32,
+	0xd3, 0x14, 0x60, 0x8b, 0x0d, 0x79, 0xca, 0x63, 0x76, 0x96, 0xda, 0x8a, 0x29, 0x9f, 0xe1, 0xb3,
+	0xd7, 0x2a, 0x01, 0x65, 0x22, 0x01, 0xcc, 0x25, 0x64, 0xb6, 0xce, 0xfa, 0x19, 0xdd, 0x5d, 0x3a,
+	0xbb, 0x67, 0xaf, 0x8f, 0x00, 0x95, 0x49, 0x45, 0x60, 0x75, 0xb4, 0x19, 0x3c, 0x4b, 0xbf, 0xac,
+	0xf2, 0x31, 0x3e, 0xfb, 0xd9, 0x48, 0x60, 0x99, 0xe0, 0xef, 0xe0, 0x5a, 0x22, 0xcf, 0xce, 0x59,
+	0x4f, 0x28, 0xb7, 0xe6, 0xa9, 0x3d, 0xfb, 0x69, 0x15, 0x9c, 0x4c, 0xe1, 0x6b, 0x98, 0x49, 0xc4,
+	0xd4, 0x9c, 0xf5, 0x90, 0x6e, 0xd2, 0xc6, 0xf2, 0x6c, 0xa7, 0x04, 0x44, 0x46, 0xf9, 0x97, 0x70,
+	0xd5, 0x95, 0xe6, 0xde, 0x2c, 0xb5, 0xd2, 0x53, 0x36, 0x8a, 0x67, 0x3f, 0xa9, 0x00, 0x23, 0x1c,
+	0xbb, 0x62, 0xda, 0x8c, 0x70, 0x6c, 0x9a, 0xa7, 0x23, 0x1c, 0x9b, 0xe7, 0xd4, 0xce, 0xe1, 0x76,
+	0xc7, 0x34, 0x51, 0x65, 0x6d, 0xd0, 0xdb, 0xaa, 0x9e, 0x4d, 0xb3, 0x5f, 0x8c, 0x03, 0x4f, 0x0e,
+	0xd3, 0x12, 0xb3, 0x4f, 0xe4, 0x30, 0xa6, 0x69, 0x2c, 0x72, 0x18, 0xf3, 0xd4, 0x54, 0x1b, 0x6e,
+	0xc4, 0xea, 0x58, 0x93, 0xa5, 0x1a, 0x53, 0xc5, 0x0c, 0x95, 0xfd, 0xb3, 0x6a, 0x48, 0xea, 0x76,
+	0xf8, 0xb4, 0x13, 0x75, 0x3b, 0xda, 0xcc, 0x94, 0xbd, 0x62, 0x04, 0x20, 0x72, 0x48, 0xc5, 0x5c,
+	0x13, 0x91, 0x83, 0x69, 0x74, 0x8a, 0xc8, 0xc1, 0x3c, 0x11, 0xf5, 0x8e, 0xb5, 0x1f, 0x58, 0xac,
+	0x47, 0xf8, 0xd3, 0xc7, 0xa2, 0x08, 0x7f, 0xa6, 0x39, 0xa8, 0x7d, 0xb8, 0x9c, 0x21, 0xdb, 0xb4,
+	0x4c, 0xc0, 0xca, 0x34, 0x94, 0xfd, 0xd0, 0x0c, 0x41, 0x98, 0xf3, 0x78, 0xdc, 0x45, 0x98, 0xd3,
+	0x87, 0x9f, 0x08, 0x73, 0xa6, 0x39, 0x27, 0x44, 0xd6, 0xe5, 0xe3, 0x46, 0x04, 0x99, 0x3e, 0xec,
+	0x44, 0x90, 0x99, 0x86, 0x94, 0xbe, 0x03, 0xe8, 0x0c, 0x67, 0x88, 0xac, 0x55, 0xaa, 0xd0, 0x86,
+	0xe1, 0x1f, 0xfb, 0x51, 0x29, 0x10, 0x41, 0x1c, 0x0f, 0xa7, 0x56, 0x08, 0x62, 0xf3, 0xf0, 0x0b,
+	0x41, 0x5c, 0x32, 0xf3, 0xc2, 0xfc, 0x4d, 0x2c, 0x8d, 0xad, 0x10, 0x7f, 0x53, 0x36, 0x0e, 0x43,
+	0xfc, 0x4d, 0xf9, 0xe0, 0xcb, 0x6f, 0xb9, 0x40, 0xc4, 0x30, 0x8b, 0xa5, 0x9d, 0xd5, 0x34, 0x01,
+	0x63, 0x97, 0x40, 0x19, 0xc3, 0x04, 0x35, 0x5c, 0xd3, 0xc3, 0x84, 0xf2, 0x69, 0x14, 0x3d, 0x4c,
+	0xa8, 0x1a, 0x32, 0xf9, 0x7d, 0x0d, 0x16, 0x3a, 0x25, 0xf3, 0x14, 0xd6, 0xab, 0x32, 0x4c, 0xa5,
+	0x03, 0x26, 0xf6, 0xe6, 0x98, 0x5b, 0x74, 0x47, 0xab, 0x4f, 0x4a, 0xe8, 0x8e, 0xb6, 0x7a, 0x08,
+	0x43, 0x77, 0xb4, 0xa3, 0xa6, 0x2f, 0xde, 0xc3, 0x95, 0xa4, 0x98, 0x84, 0x20, 0xd7, 0x58, 0x32,
+	0x88, 0x61, 0x3f, 0x2e, 0x87, 0xa2, 0xaf, 0xb4, 0x3c, 0x1c, 0x41, 0x5f, 0xe9, 0xb2, 0xa9, 0x0a,
+	0xfa, 0x4a, 0x97, 0x0e, 0x58, 0x58, 0x27, 0x30, 0x1b, 0xe7, 0x73, 0x14, 0x96, 0xa3, 0xf5, 0xc5,
+	0xb5, 0xc1, 0x0b, 0x7b, 0xb5, 0x0c, 0x46, 0xc6, 0x3a, 0x80, 0xf9, 0xd8, 0x30, 0x3a, 0x61, 0x3d,
+	0x27, 0x96, 0x51, 0x3d, 0x8e, 0x61, 0x6f, 0x8c, 0x01, 0xae, 0xd9, 0x6b, 0x31, 0x60, 0xa1, 0xd9,
+	0xab, 0x79, 0x2e, 0x43, 0xb3, 0xd7, 0x92, 0x11, 0x0d, 0xf6, 0xfe, 0xb5, 0xd5, 0x19, 0x0c, 0xf2,
+	0xfe, 0x55, 0x0c, 0x70, 0x90, 0xf7, 0xaf, 0x6a, 0x96, 0x83, 0x05, 0xb7, 0xea, 0xe8, 0x02, 0x09,
+	0x6e, 0xcb, 0x07, 0x3d, 0x48, 0x70, 0x5b, 0x35, 0x1f, 0x81, 0x06, 0x13, 0x9a, 0x46, 0x13, 0x88,
+	0xc1, 0x8c, 0x9c, 0x80, 0x20, 0x06, 0x33, 0xc6, 0xb8, 0x03, 0xbe, 0xc8, 0x5d, 0x31, 0x8e, 0x40,
+	0x5e, 0x64, 0xd3, 0x3c, 0x03, 0x79, 0x91, 0x8d, 0x83, 0x0c, 0xcc, 0x06, 0x3b, 0xc5, 0x80, 0x82,
+	0xc1, 0x95, 0x1a, 0x46, 0x1c, 0x88, 0x0d, 0x96, 0x0e, 0x38, 0xa0, 0x2f, 0x75, 0x69, 0x23, 0x9a,
+	0xf8, 0xd2, 0xca, 0x8e, 0x38, 0xf1, 0xa5, 0x23, 0x9a, 0xda, 0x68, 0x39, 0x5d, 0x43, 0x73, 0x99,
+	0x58, 0xce, 0xa8, 0x5e, 0x37, 0xb1, 0x9c, 0x91, 0xed, 0xea, 0xcc, 0x60, 0xf5, 0xf6, 0xb3, 0x66,
+	0xb0, 0xd5, 0x1d, 0x6d, 0xcd, 0x60, 0x47, 0x34, 0xb4, 0xad, 0x18, 0x6e, 0x85, 0x7a, 0x83, 0xd7,
+	0x7a, 0xa6, 0xab, 0x54, 0x79, 0xcb, 0xdb, 0x7e, 0x3e, 0x1a, 0x9a, 0x26, 0x11, 0x52, 0x43, 0x92,
+	0x26, 0x11, 0x25, 0x6d, 0x4f, 0x9a, 0x44, 0x94, 0xb5, 0x34, 0x99, 0x93, 0xe8, 0xaa, 0x4d, 0x48,
+	0xe2, 0x24, 0x2a, 0x1a, 0x9e, 0xc4, 0x49, 0x54, 0x35, 0x33, 0xb3, 0x60, 0x5c, 0xe9, 0x4d, 0x6a,
+	0xc1, 0x78, 0x69, 0xab, 0x53, 0x0b, 0xc6, 0xcb, 0x7b, 0x9c, 0xcc, 0x19, 0x85, 0x4a, 0xbf, 0x92,
+	0x38, 0xa3, 0xf2, 0x06, 0x28, 0x71, 0x46, 0x55, 0x5d, 0x4f, 0x3c, 0x4c, 0x47, 0x6d, 0x07, 0x92,
+	0xc3, 0x54, 0x34, 0x16, 0xc9, 0x61, 0x2a, 0xdb, 0x8a, 0x59, 0x5c, 0xa4, 0xb6, 0xef, 0xf4, 0xb8,
+	0xa8, 0xbc, 0x91, 0xa8, 0xc7, 0x45, 0x55, 0x5d, 0xc4, 0x2c, 0x03, 0xe6, 0x4d, 0x38, 0x3d, 0x03,
+	0xd6, 0x1a, 0x85, 0x7a, 0x06, 0xac, 0xb7, 0xef, 0xac, 0xaf, 0x60, 0xba, 0xcd, 0x9a, 0x6b, 0x16,
+	0x6d, 0x53, 0x91, 0x96, 0x9e, 0xbd, 0x6c, 0xfa, 0xae, 0x33, 0xc7, 0xbb, 0x69, 0x3a, 0x73, 0x5a,
+	0x9f, 0x4e, 0x67, 0x4e, 0xef, 0xc3, 0xb1, 0x68, 0xa5, 0x25, 0x37, 0xc1, 0x48, 0xb4, 0x52, 0xda,
+	0xa2, 0xb3, 0x9f, 0x56, 0xc1, 0x11, 0x0a, 0x1d, 0xb9, 0x3b, 0x46, 0x28, 0x94, 0x36, 0xd9, 0x08,
+	0x85, 0x8a, 0x0e, 0xdb, 0xdf, 0xc1, 0x9d, 0x81, 0xb1, 0xc7, 0x65, 0xa9, 0xef, 0xdc, 0xe8, 0x96,
+	0x9b, 0xfd, 0x72, 0xac, 0x0d, 0xc4, 0xd6, 0x06, 0x4a, 0xb7, 0x88, 0xd8, 0x5a, 0x79, 0x9b, 0x8c,
+	0xd8, 0x5a, 0x45, 0xcf, 0xc9, 0x4a, 0x78, 0xa9, 0x89, 0x65, 0x7b, 0x1d, 0x5e, 0xf3, 0x3a, 0x89,
+	0xce, 0xfc, 0x5e, 0xe1, 0xe8, 0x5b, 0x51, 0xb7, 0x1b, 0xf5, 0x78, 0xd4, 0xad, 0x82, 0x98, 0x1d,
+	0x7d, 0x05, 0xb8, 0x4c, 0xf4, 0x82, 0xbd, 0x2f, 0x98, 0x64, 0x51, 0xb2, 0x2f, 0x08, 0x9e, 0x23,
+	0x03, 0x90, 0x59, 0xa8, 0x95, 0x1b, 0x64, 0xd2, 0x7f, 0x0f, 0xb7, 0x5b, 0xac, 0x4f, 0x16, 0x52,
+	0xda, 0x14, 0x55, 0xc3, 0x04, 0xa5, 0x10, 0x7f, 0x35, 0xde, 0x0e, 0xf2, 0xb0, 0x26, 0x86, 0x56,
+	0x1d, 0x79, 0x58, 0x47, 0x35, 0x01, 0xc9, 0xc3, 0x3a, 0xb2, 0xf9, 0xc7, 0xc8, 0x76, 0x0c, 0x8d,
+	0x3d, 0x42, 0x76, 0x54, 0x7f, 0xd0, 0xde, 0x18, 0x03, 0x9c, 0x28, 0x70, 0x4b, 0x69, 0xd0, 0x59,
+	0x46, 0xd3, 0x36, 0xf4, 0x96, 0x88, 0x02, 0x57, 0xb5, 0xf9, 0x58, 0x78, 0xac, 0xb4, 0xda, 0x68,
+	0x78, 0x5c, 0xda, 0xed, 0xa3, 0xe1, 0x71, 0x79, 0xc3, 0x8e, 0x79, 0x1a, 0xa5, 0x4d, 0x46, 0x3c,
+	0x4d, 0x69, 0x33, 0x8f, 0x78, 0x9a, 0xf2, 0x0e, 0x1e, 0xab, 0x2e, 0x7b, 0xa4, 0x17, 0x47, 0xaa,
+	0xcb, 0x55, 0x0d, 0x3e, 0x52, 0x5d, 0xae, 0xec, 0xea, 0x59, 0xff, 0x54, 0x03, 0xbb, 0x53, 0xfa,
+	0x47, 0x54, 0xd6, 0x17, 0x5a, 0xe5, 0x78, 0xf4, 0xdf, 0x65, 0xd9, 0xaf, 0xc7, 0xde, 0x44, 0xee,
+	0xce, 0x53, 0xba, 0x82, 0xe4, 0xee, 0xca, 0x9b, 0x8f, 0xe4, 0xee, 0x2a, 0x7a, 0x8b, 0xa2, 0x16,
+	0xa0, 0xff, 0x45, 0x94, 0x5e, 0x0b, 0xa8, 0xfe, 0xe3, 0x2e, 0xbd, 0x16, 0x30, 0xea, 0xef, 0xb4,
+	0x30, 0xb6, 0x0c, 0xa4, 0xa9, 0x65, 0x12, 0x5b, 0x96, 0x4d, 0x3e, 0x93, 0xd8, 0xb2, 0x7c, 0xee,
+	0x19, 0x55, 0x26, 0x8b, 0x2d, 0x45, 0xe3, 0x93, 0xf5, 0x08, 0x4c, 0x21, 0x63, 0xf1, 0xb9, 0x42,
+	0x65, 0x74, 0x50, 0x42, 0x2a, 0x0b, 0x2f, 0x4b, 0x49, 0x1d, 0x91, 0xcf, 0x15, 0xa4, 0x74, 0x50,
+	0x23, 0x29, 0xd1, 0x84, 0x42, 0x38, 0x23, 0xa9, 0xe2, 0xf3, 0x48, 0x52, 0x32, 0x28, 0xad, 0x76,
+	0xe4, 0xbc, 0xd0, 0x6a, 0x47, 0xbe, 0x5e, 0x55, 0xed, 0x28, 0x60, 0x48, 0x95, 0x14, 0x7d, 0x3c,
+	0x43, 0xb9, 0x4c, 0xdd, 0x34, 0xc5, 0xb7, 0x62, 0x04, 0x20, 0x2a, 0xd4, 0xe1, 0xcb, 0x59, 0xf1,
+	0xcf, 0xd2, 0xb2, 0xd4, 0xe1, 0xa7, 0x0a, 0x15, 0x52, 0xc1, 0xf4, 0xb0, 0xef, 0xb7, 0xf5, 0x34,
+	0x35, 0x74, 0x65, 0xf8, 0x72, 0x75, 0xd8, 0x27, 0x40, 0x88, 0x50, 0x3b, 0xe2, 0x03, 0x2d, 0x21,
+	0xbd, 0xcd, 0xd7, 0x2b, 0x84, 0x2a, 0xc1, 0x90, 0xa2, 0x2e, 0xcb, 0x3b, 0x04, 0xda, 0x55, 0x2d,
+	0x95, 0x30, 0xe0, 0x7d, 0x54, 0x0a, 0x44, 0x6a, 0x05, 0x99, 0x0e, 0x64, 0x42, 0x78, 0x64, 0xb8,
+	0x61, 0x5d, 0x0e, 0x8f, 0xcb, 0xa1, 0x08, 0xee, 0x56, 0x31, 0x74, 0x40, 0x70, 0x97, 0xcc, 0x3b,
+	0x10, 0xdc, 0x65, 0x43, 0x0b, 0xec, 0x49, 0xcf, 0xde, 0xd6, 0xe2, 0xfd, 0x7d, 0x1f, 0xf5, 0x68,
+	0x8a, 0xde, 0x30, 0x80, 0x54, 0x3c, 0xe9, 0x66, 0x70, 0x43, 0x8a, 0xae, 0x82, 0x98, 0x52, 0x74,
+	0x02, 0x31, 0x22, 0x45, 0xd7, 0xa0, 0x75, 0x1b, 0x68, 0xbe, 0x67, 0x81, 0xb2, 0x8b, 0xc1, 0x92,
+	0x66, 0x03, 0xc3, 0x4f, 0xd5, 0x36, 0x20, 0x81, 0xe9, 0xef, 0x83, 0x3e, 0xd9, 0xa1, 0xbf, 0x0f,
+	0xd5, 0x23, 0x22, 0xfa, 0xfb, 0x30, 0x6a, 0x5a, 0x04, 0x5d, 0x5d, 0x87, 0x4c, 0x7c, 0x58, 0x5a,
+	0xfa, 0x5a, 0x3a, 0x3e, 0x62, 0xaf, 0x8f, 0x00, 0x95, 0x48, 0xbd, 0x79, 0x07, 0x8f, 0xa3, 0xb8,
+	0xb3, 0xc1, 0xfe, 0x22, 0xf6, 0xd4, 0x57, 0xf6, 0xf5, 0x95, 0x7f, 0x78, 0xea, 0x4d, 0xc9, 0x3f,
+	0x4b, 0xc5, 0xff, 0x9f, 0xfc, 0x73, 0xad, 0xf6, 0xef, 0xb5, 0xda, 0xff, 0x05, 0x00, 0x00, 0xff,
+	0xff, 0xaf, 0xe5, 0x9c, 0xdf, 0xbb, 0x4a, 0x00, 0x00,
 }

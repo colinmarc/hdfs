@@ -21,7 +21,6 @@ file.ReadAt(buf, 48847)
 
 fmt.Println(string(buf))
 // => Abominable are the tumblers into which he pours his poison.
-
 ```
 
 For complete documentation, check out the [Godoc][1].

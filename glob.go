@@ -7,6 +7,10 @@ import (
 	"strings"
 )
 
+func ExpandPath(path string) []string {
+	return ExpandPaths([]string{path}, []string{})
+}
+
 func ExpandPaths(paths []string, returnPaths []string) []string {
 	for _, path := range paths {
 		hasExpander, _ := regexp.MatchString("{(.*?)}", path)
@@ -26,10 +30,6 @@ func ExpandPaths(paths []string, returnPaths []string) []string {
 		}
 	}
 	return returnPaths
-}
-
-func ExpandPath(path string) []string {
-	return ExpandPaths([]string{path}, []string{})
 }
 
 func GlobHasMagic(element string) bool {
@@ -91,8 +91,8 @@ func (c *Client) GetGlob(originalGlobPath string, pathsArray []os.FileInfo) ([]o
 					regexString := fmt.Sprintf("^%s$", strings.Replace(magicString, "*", ".*", -1))
 					fileNameMatched, _ := regexp.MatchString(regexString, node.Name())
 
-					if (fileNameMatched) {
-						if (len(rest) > 0 && GlobHasMagic(rest)) {
+					if fileNameMatched {
+						if len(rest) > 0 && GlobHasMagic(rest) {
 							pathsArray, _ = c.GetGlob(nextPath, pathsArray)
 						} else {
 							nextPathStat, _ = c.Stat(nextPath)

@@ -3,6 +3,7 @@ package hdfs
 import (
 	"fmt"
 	"os"
+	"path"
 	"regexp"
 	"strings"
 )
@@ -11,28 +12,28 @@ var magicRe = regexp.MustCompile("[*?[{}]")
 var expanderRe = regexp.MustCompile("{(.*?)}")
 
 func ExpandPaths(paths []string, returnPaths []string) []string {
-	for _, path := range paths {
-		hasExpander := expanderRe.MatchString(path)
+	for _, p := range paths {
+		hasExpander := expanderRe.MatchString(p)
 		if hasExpander {
 			var globList []string
-			firstOpen := strings.Index(path, "{") + 1
-			firstClose := strings.Index(path, "}")
-			opts := strings.Split(path[firstOpen:firstClose], ",")
-			templateArray := []string{path[:firstOpen-1], "%s", path[firstClose+1:]}
+			firstOpen := strings.Index(p, "{") + 1
+			firstClose := strings.Index(p, "}")
+			opts := strings.Split(p[firstOpen:firstClose], ",")
+			templateArray := []string{p[:firstOpen-1], "%s", p[firstClose+1:]}
 			template := strings.Join(templateArray, "")
 			for _, opt := range opts {
 				globList = append(globList, fmt.Sprintf(template, opt))
 			}
 			returnPaths = ExpandPaths(globList, returnPaths)
 		} else {
-			returnPaths = append(returnPaths, path)
+			returnPaths = append(returnPaths, p)
 		}
 	}
 	return returnPaths
 }
 
-func ExpandPath(path string) []string {
-	return ExpandPaths([]string{path}, []string{})
+func ExpandPath(p string) []string {
+	return ExpandPaths([]string{p}, []string{})
 }
 
 func GlobHasMagic(element string) bool {
@@ -91,9 +92,7 @@ func (c *Client) GetGlob(originalGlobPath string, pathsArray []os.FileInfo) ([]o
 					}
 					nextPath := strings.Join(nextPathArray, "/")
 
-					quotedMagicString := regexp.QuoteMeta(magicString)
-					regexString := fmt.Sprintf("^%s$", strings.Replace(quotedMagicString, "\\*", ".*", -1))
-					fileNameMatched, _ := regexp.MatchString(regexString, node.Name())
+					fileNameMatched, _ := path.Match(magicString, node.Name())
 
 					if (fileNameMatched) {
 						if (len(rest) > 0 && GlobHasMagic(rest)) {

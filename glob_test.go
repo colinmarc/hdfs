@@ -73,6 +73,7 @@ func TestGlobFindRegexWildcard(t *testing.T) {
 	touch(t, "/_test/glob4/2.txt")
 	touch(t, "/_test/glob4/3")
 	touch(t, "/_test/glob42/1.txt")
+	touch(t, "/_test/glob42/nottxt")
 	touch(t, "/_test/glob42/2")
 
 	res, err := client.GlobFind("/_test/glob*/*.txt")

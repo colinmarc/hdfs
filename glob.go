@@ -7,13 +7,12 @@ import (
 	"strings"
 )
 
-func ExpandPath(path string) []string {
-	return ExpandPaths([]string{path}, []string{})
-}
+var magicRe = regexp.MustCompile("[*?[{}]")
+var expanderRe = regexp.MustCompile("{(.*?)}")
 
 func ExpandPaths(paths []string, returnPaths []string) []string {
 	for _, path := range paths {
-		hasExpander, _ := regexp.MatchString("{(.*?)}", path)
+		hasExpander := expanderRe.MatchString(path)
 		if hasExpander {
 			var globList []string
 			firstOpen := strings.Index(path, "{") + 1
@@ -32,8 +31,12 @@ func ExpandPaths(paths []string, returnPaths []string) []string {
 	return returnPaths
 }
 
+func ExpandPath(path string) []string {
+	return ExpandPaths([]string{path}, []string{})
+}
+
 func GlobHasMagic(element string) bool {
-	matched, _ := regexp.MatchString("[*?[{}]", element)
+	matched := magicRe.MatchString(element)
 	return matched
 }
 
@@ -88,11 +91,12 @@ func (c *Client) GetGlob(originalGlobPath string, pathsArray []os.FileInfo) ([]o
 					}
 					nextPath := strings.Join(nextPathArray, "/")
 
-					regexString := fmt.Sprintf("^%s$", strings.Replace(magicString, "*", ".*", -1))
+					quotedMagicString := regexp.QuoteMeta(magicString)
+					regexString := fmt.Sprintf("^%s$", strings.Replace(quotedMagicString, "\\*", ".*", -1))
 					fileNameMatched, _ := regexp.MatchString(regexString, node.Name())
 
-					if fileNameMatched {
-						if len(rest) > 0 && GlobHasMagic(rest) {
+					if (fileNameMatched) {
+						if (len(rest) > 0 && GlobHasMagic(rest)) {
 							pathsArray, _ = c.GetGlob(nextPath, pathsArray)
 						} else {
 							nextPathStat, _ = c.Stat(nextPath)

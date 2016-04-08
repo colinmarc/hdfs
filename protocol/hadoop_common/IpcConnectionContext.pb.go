@@ -2,19 +2,6 @@
 // source: IpcConnectionContext.proto
 // DO NOT EDIT!
 
-/*
-Package hadoop_common is a generated protocol buffer package.
-
-It is generated from these files:
-	IpcConnectionContext.proto
-	ProtobufRpcEngine.proto
-	RpcHeader.proto
-	Security.proto
-
-It has these top-level messages:
-	UserInformationProto
-	IpcConnectionContextProto
-*/
 package hadoop_common
 
 import proto "github.com/golang/protobuf/proto"

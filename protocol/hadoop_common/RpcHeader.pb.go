@@ -231,6 +231,62 @@ func (x *RpcSaslProto_SaslState) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
+// *
+// Used to pass through the information necessary to continue
+// a trace after an RPC is made. All we need is the traceid
+// (so we know the overarching trace this message is a part of), and
+// the id of the current span when this message was sent, so we know
+// what span caused the new span we will create when this message is received.
+type RPCTraceInfoProto struct {
+	TraceId          *int64 `protobuf:"varint,1,opt,name=traceId" json:"traceId,omitempty"`
+	ParentId         *int64 `protobuf:"varint,2,opt,name=parentId" json:"parentId,omitempty"`
+	XXX_unrecognized []byte `json:"-"`
+}
+
+func (m *RPCTraceInfoProto) Reset()         { *m = RPCTraceInfoProto{} }
+func (m *RPCTraceInfoProto) String() string { return proto.CompactTextString(m) }
+func (*RPCTraceInfoProto) ProtoMessage()    {}
+
+func (m *RPCTraceInfoProto) GetTraceId() int64 {
+	if m != nil && m.TraceId != nil {
+		return *m.TraceId
+	}
+	return 0
+}
+
+func (m *RPCTraceInfoProto) GetParentId() int64 {
+	if m != nil && m.ParentId != nil {
+		return *m.ParentId
+	}
+	return 0
+}
+
+// *
+// Used to pass through the call context entry after an RPC is made.
+type RPCCallerContextProto struct {
+	Context          *string `protobuf:"bytes,1,req,name=context" json:"context,omitempty"`
+	Signature        []byte  `protobuf:"bytes,2,opt,name=signature" json:"signature,omitempty"`
+	XXX_unrecognized []byte  `json:"-"`
+}
+
+func (m *RPCCallerContextProto) Reset()         { *m = RPCCallerContextProto{} }
+func (m *RPCCallerContextProto) String() string { return proto.CompactTextString(m) }
+func (*RPCCallerContextProto) ProtoMessage()    {}
+
+func (m *RPCCallerContextProto) GetContext() string {
+	if m != nil && m.Context != nil {
+		return *m.Context
+	}
+	return ""
+}
+
+func (m *RPCCallerContextProto) GetSignature() []byte {
+	if m != nil {
+		return m.Signature
+	}
+	return nil
+}
+
 type RpcRequestHeaderProto struct {
 	RpcKind  *RpcKindProto                         `protobuf:"varint,1,opt,name=rpcKind,enum=hadoop.common.RpcKindProto" json:"rpcKind,omitempty"`
 	RpcOp    *RpcRequestHeaderProto_OperationProto `protobuf:"varint,2,opt,name=rpcOp,enum=hadoop.common.RpcRequestHeaderProto_OperationProto" json:"rpcOp,omitempty"`
@@ -238,8 +294,10 @@ type RpcRequestHeaderProto struct {
 	ClientId []byte                                `protobuf:"bytes,4,req,name=clientId" json:"clientId,omitempty"`
 	// clientId + callId uniquely identifies a request
 	// retry count, 1 means this is the first retry
-	RetryCount       *int32 `protobuf:"zigzag32,5,opt,name=retryCount,def=-1" json:"retryCount,omitempty"`
-	XXX_unrecognized []byte `json:"-"`
+	RetryCount       *int32                 `protobuf:"zigzag32,5,opt,name=retryCount,def=-1" json:"retryCount,omitempty"`
+	TraceInfo        *RPCTraceInfoProto     `protobuf:"bytes,6,opt,name=traceInfo" json:"traceInfo,omitempty"`
+	CallerContext    *RPCCallerContextProto `protobuf:"bytes,7,opt,name=callerContext" json:"callerContext,omitempty"`
+	XXX_unrecognized []byte                 `json:"-"`
 }
 
 func (m *RpcRequestHeaderProto) Reset()         { *m = RpcRequestHeaderProto{} }
@@ -281,6 +339,20 @@ func (m *RpcRequestHeaderProto) GetRetryCount() int32 {
 		return *m.RetryCount
 	}
 	return Default_RpcRequestHeaderProto_RetryCount
+}
+
+func (m *RpcRequestHeaderProto) GetTraceInfo() *RPCTraceInfoProto {
+	if m != nil {
+		return m.TraceInfo
+	}
+	return nil
+}
+
+func (m *RpcRequestHeaderProto) GetCallerContext() *RPCCallerContextProto {
+	if m != nil {
+		return m.CallerContext
+	}
+	return nil
 }
 
 // *

@@ -12,6 +12,7 @@ import hadoop_common "github.com/colinmarc/hdfs/protocol/hadoop_common"
 var _ = proto.Marshal
 var _ = math.Inf
 
+// Status is a 4-bit enum
 type Status int32
 
 const (
@@ -23,17 +24,27 @@ const (
 	Status_ERROR_ACCESS_TOKEN Status = 5
 	Status_CHECKSUM_OK        Status = 6
 	Status_ERROR_UNSUPPORTED  Status = 7
+	Status_OOB_RESTART        Status = 8
+	Status_OOB_RESERVED1      Status = 9
+	Status_OOB_RESERVED2      Status = 10
+	Status_OOB_RESERVED3      Status = 11
+	Status_IN_PROGRESS        Status = 12
 )
 
 var Status_name = map[int32]string{
-	0: "SUCCESS",
-	1: "ERROR",
-	2: "ERROR_CHECKSUM",
-	3: "ERROR_INVALID",
-	4: "ERROR_EXISTS",
-	5: "ERROR_ACCESS_TOKEN",
-	6: "CHECKSUM_OK",
-	7: "ERROR_UNSUPPORTED",
+	0:  "SUCCESS",
+	1:  "ERROR",
+	2:  "ERROR_CHECKSUM",
+	3:  "ERROR_INVALID",
+	4:  "ERROR_EXISTS",
+	5:  "ERROR_ACCESS_TOKEN",
+	6:  "CHECKSUM_OK",
+	7:  "ERROR_UNSUPPORTED",
+	8:  "OOB_RESTART",
+	9:  "OOB_RESERVED1",
+	10: "OOB_RESERVED2",
+	11: "OOB_RESERVED3",
+	12: "IN_PROGRESS",
 }
 var Status_value = map[string]int32{
 	"SUCCESS":            0,
@@ -44,6 +55,11 @@ var Status_value = map[string]int32{
 	"ERROR_ACCESS_TOKEN": 5,
 	"CHECKSUM_OK":        6,
 	"ERROR_UNSUPPORTED":  7,
+	"OOB_RESTART":        8,
+	"OOB_RESERVED1":      9,
+	"OOB_RESERVED2":      10,
+	"OOB_RESERVED3":      11,
+	"IN_PROGRESS":        12,
 }
 
 func (x Status) Enum() *Status {
@@ -60,6 +76,39 @@ func (x *Status) UnmarshalJSON(data []byte) error {
 		return err
 	}
 	*x = Status(value)
+	return nil
+}
+
+type ShortCircuitFdResponse int32
+
+const (
+	ShortCircuitFdResponse_DO_NOT_USE_RECEIPT_VERIFICATION ShortCircuitFdResponse = 0
+	ShortCircuitFdResponse_USE_RECEIPT_VERIFICATION        ShortCircuitFdResponse = 1
+)
+
+var ShortCircuitFdResponse_name = map[int32]string{
+	0: "DO_NOT_USE_RECEIPT_VERIFICATION",
+	1: "USE_RECEIPT_VERIFICATION",
+}
+var ShortCircuitFdResponse_value = map[string]int32{
+	"DO_NOT_USE_RECEIPT_VERIFICATION": 0,
+	"USE_RECEIPT_VERIFICATION":        1,
+}
+
+func (x ShortCircuitFdResponse) Enum() *ShortCircuitFdResponse {
+	p := new(ShortCircuitFdResponse)
+	*p = x
+	return p
+}
+func (x ShortCircuitFdResponse) String() string {
+	return proto.EnumName(ShortCircuitFdResponse_name, int32(x))
+}
+func (x *ShortCircuitFdResponse) UnmarshalJSON(data []byte) error {
+	value, err := proto.UnmarshalJSONEnum(ShortCircuitFdResponse_value, data, "ShortCircuitFdResponse")
+	if err != nil {
+		return err
+	}
+	*x = ShortCircuitFdResponse(value)
 	return nil
 }
 
@@ -165,6 +214,7 @@ type DataTransferEncryptorMessageProto struct {
 	Status           *DataTransferEncryptorMessageProto_DataTransferEncryptorStatus `protobuf:"varint,1,req,name=status,enum=hadoop.hdfs.DataTransferEncryptorMessageProto_DataTransferEncryptorStatus" json:"status,omitempty"`
 	Payload          []byte                                                         `protobuf:"bytes,2,opt,name=payload" json:"payload,omitempty"`
 	Message          *string                                                        `protobuf:"bytes,3,opt,name=message" json:"message,omitempty"`
+	CipherOption     []*CipherOptionProto                                           `protobuf:"bytes,4,rep,name=cipherOption" json:"cipherOption,omitempty"`
 	XXX_unrecognized []byte                                                         `json:"-"`
 }
 
@@ -193,10 +243,18 @@ func (m *DataTransferEncryptorMessageProto) GetMessage() string {
 	return ""
 }
 
+func (m *DataTransferEncryptorMessageProto) GetCipherOption() []*CipherOptionProto {
+	if m != nil {
+		return m.CipherOption
+	}
+	return nil
+}
+
 type BaseHeaderProto struct {
-	Block            *ExtendedBlockProto       `protobuf:"bytes,1,req,name=block" json:"block,omitempty"`
-	Token            *hadoop_common.TokenProto `protobuf:"bytes,2,opt,name=token" json:"token,omitempty"`
-	XXX_unrecognized []byte                    `json:"-"`
+	Block            *ExtendedBlockProto         `protobuf:"bytes,1,req,name=block" json:"block,omitempty"`
+	Token            *hadoop_common.TokenProto   `protobuf:"bytes,2,opt,name=token" json:"token,omitempty"`
+	TraceInfo        *DataTransferTraceInfoProto `protobuf:"bytes,3,opt,name=traceInfo" json:"traceInfo,omitempty"`
+	XXX_unrecognized []byte                      `json:"-"`
 }
 
 func (m *BaseHeaderProto) Reset()         { *m = BaseHeaderProto{} }
@@ -215,6 +273,37 @@ func (m *BaseHeaderProto) GetToken() *hadoop_common.TokenProto {
 		return m.Token
 	}
 	return nil
+}
+
+func (m *BaseHeaderProto) GetTraceInfo() *DataTransferTraceInfoProto {
+	if m != nil {
+		return m.TraceInfo
+	}
+	return nil
+}
+
+type DataTransferTraceInfoProto struct {
+	TraceId          *uint64 `protobuf:"varint,1,req,name=traceId" json:"traceId,omitempty"`
+	ParentId         *uint64 `protobuf:"varint,2,req,name=parentId" json:"parentId,omitempty"`
+	XXX_unrecognized []byte  `json:"-"`
+}
+
+func (m *DataTransferTraceInfoProto) Reset()         { *m = DataTransferTraceInfoProto{} }
+func (m *DataTransferTraceInfoProto) String() string { return proto.CompactTextString(m) }
+func (*DataTransferTraceInfoProto) ProtoMessage()    {}
+
+func (m *DataTransferTraceInfoProto) GetTraceId() uint64 {
+	if m != nil && m.TraceId != nil {
+		return *m.TraceId
+	}
+	return 0
+}
+
+func (m *DataTransferTraceInfoProto) GetParentId() uint64 {
+	if m != nil && m.ParentId != nil {
+		return *m.ParentId
+	}
+	return 0
 }
 
 type ClientOperationHeaderProto struct {
@@ -350,14 +439,28 @@ type OpWriteBlockProto struct {
 	LatestGenerationStamp *uint64                                   `protobuf:"varint,8,req,name=latestGenerationStamp" json:"latestGenerationStamp,omitempty"`
 	// *
 	// The requested checksum mechanism for this block write.
-	RequestedChecksum *ChecksumProto        `protobuf:"bytes,9,req,name=requestedChecksum" json:"requestedChecksum,omitempty"`
-	CachingStrategy   *CachingStrategyProto `protobuf:"bytes,10,opt,name=cachingStrategy" json:"cachingStrategy,omitempty"`
-	XXX_unrecognized  []byte                `json:"-"`
+	RequestedChecksum  *ChecksumProto        `protobuf:"bytes,9,req,name=requestedChecksum" json:"requestedChecksum,omitempty"`
+	CachingStrategy    *CachingStrategyProto `protobuf:"bytes,10,opt,name=cachingStrategy" json:"cachingStrategy,omitempty"`
+	StorageType        *StorageTypeProto     `protobuf:"varint,11,opt,name=storageType,enum=hadoop.hdfs.StorageTypeProto,def=1" json:"storageType,omitempty"`
+	TargetStorageTypes []StorageTypeProto    `protobuf:"varint,12,rep,name=targetStorageTypes,enum=hadoop.hdfs.StorageTypeProto" json:"targetStorageTypes,omitempty"`
+	// *
+	// Hint to the DataNode that the block can be allocated on transient
+	// storage i.e. memory and written to disk lazily. The DataNode is free
+	// to ignore this hint.
+	AllowLazyPersist *bool `protobuf:"varint,13,opt,name=allowLazyPersist,def=0" json:"allowLazyPersist,omitempty"`
+	// whether to pin the block, so Balancer won't move it.
+	Pinning          *bool  `protobuf:"varint,14,opt,name=pinning,def=0" json:"pinning,omitempty"`
+	TargetPinnings   []bool `protobuf:"varint,15,rep,name=targetPinnings" json:"targetPinnings,omitempty"`
+	XXX_unrecognized []byte `json:"-"`
 }
 
 func (m *OpWriteBlockProto) Reset()         { *m = OpWriteBlockProto{} }
 func (m *OpWriteBlockProto) String() string { return proto.CompactTextString(m) }
 func (*OpWriteBlockProto) ProtoMessage()    {}
+
+const Default_OpWriteBlockProto_StorageType StorageTypeProto = StorageTypeProto_DISK
+const Default_OpWriteBlockProto_AllowLazyPersist bool = false
+const Default_OpWriteBlockProto_Pinning bool = false
 
 func (m *OpWriteBlockProto) GetHeader() *ClientOperationHeaderProto {
 	if m != nil {
@@ -429,10 +532,46 @@ func (m *OpWriteBlockProto) GetCachingStrategy() *CachingStrategyProto {
 	return nil
 }
 
+func (m *OpWriteBlockProto) GetStorageType() StorageTypeProto {
+	if m != nil && m.StorageType != nil {
+		return *m.StorageType
+	}
+	return Default_OpWriteBlockProto_StorageType
+}
+
+func (m *OpWriteBlockProto) GetTargetStorageTypes() []StorageTypeProto {
+	if m != nil {
+		return m.TargetStorageTypes
+	}
+	return nil
+}
+
+func (m *OpWriteBlockProto) GetAllowLazyPersist() bool {
+	if m != nil && m.AllowLazyPersist != nil {
+		return *m.AllowLazyPersist
+	}
+	return Default_OpWriteBlockProto_AllowLazyPersist
+}
+
+func (m *OpWriteBlockProto) GetPinning() bool {
+	if m != nil && m.Pinning != nil {
+		return *m.Pinning
+	}
+	return Default_OpWriteBlockProto_Pinning
+}
+
+func (m *OpWriteBlockProto) GetTargetPinnings() []bool {
+	if m != nil {
+		return m.TargetPinnings
+	}
+	return nil
+}
+
 type OpTransferBlockProto struct {
-	Header           *ClientOperationHeaderProto `protobuf:"bytes,1,req,name=header" json:"header,omitempty"`
-	Targets          []*DatanodeInfoProto        `protobuf:"bytes,2,rep,name=targets" json:"targets,omitempty"`
-	XXX_unrecognized []byte                      `json:"-"`
+	Header             *ClientOperationHeaderProto `protobuf:"bytes,1,req,name=header" json:"header,omitempty"`
+	Targets            []*DatanodeInfoProto        `protobuf:"bytes,2,rep,name=targets" json:"targets,omitempty"`
+	TargetStorageTypes []StorageTypeProto          `protobuf:"varint,3,rep,name=targetStorageTypes,enum=hadoop.hdfs.StorageTypeProto" json:"targetStorageTypes,omitempty"`
+	XXX_unrecognized   []byte                      `json:"-"`
 }
 
 func (m *OpTransferBlockProto) Reset()         { *m = OpTransferBlockProto{} }
@@ -453,16 +592,26 @@ func (m *OpTransferBlockProto) GetTargets() []*DatanodeInfoProto {
 	return nil
 }
 
+func (m *OpTransferBlockProto) GetTargetStorageTypes() []StorageTypeProto {
+	if m != nil {
+		return m.TargetStorageTypes
+	}
+	return nil
+}
+
 type OpReplaceBlockProto struct {
 	Header           *BaseHeaderProto   `protobuf:"bytes,1,req,name=header" json:"header,omitempty"`
 	DelHint          *string            `protobuf:"bytes,2,req,name=delHint" json:"delHint,omitempty"`
 	Source           *DatanodeInfoProto `protobuf:"bytes,3,req,name=source" json:"source,omitempty"`
+	StorageType      *StorageTypeProto  `protobuf:"varint,4,opt,name=storageType,enum=hadoop.hdfs.StorageTypeProto,def=1" json:"storageType,omitempty"`
 	XXX_unrecognized []byte             `json:"-"`
 }
 
 func (m *OpReplaceBlockProto) Reset()         { *m = OpReplaceBlockProto{} }
 func (m *OpReplaceBlockProto) String() string { return proto.CompactTextString(m) }
 func (*OpReplaceBlockProto) ProtoMessage()    {}
+
+const Default_OpReplaceBlockProto_StorageType StorageTypeProto = StorageTypeProto_DISK
 
 func (m *OpReplaceBlockProto) GetHeader() *BaseHeaderProto {
 	if m != nil {
@@ -483,6 +632,13 @@ func (m *OpReplaceBlockProto) GetSource() *DatanodeInfoProto {
 		return m.Source
 	}
 	return nil
+}
+
+func (m *OpReplaceBlockProto) GetStorageType() StorageTypeProto {
+	if m != nil && m.StorageType != nil {
+		return *m.StorageType
+	}
+	return Default_OpReplaceBlockProto_StorageType
 }
 
 type OpCopyBlockProto struct {
@@ -517,19 +673,121 @@ func (m *OpBlockChecksumProto) GetHeader() *BaseHeaderProto {
 	return nil
 }
 
+type OpBlockGroupChecksumProto struct {
+	Header    *BaseHeaderProto    `protobuf:"bytes,1,req,name=header" json:"header,omitempty"`
+	Datanodes *DatanodeInfosProto `protobuf:"bytes,2,req,name=datanodes" json:"datanodes,omitempty"`
+	// each internal block has a block token
+	BlockTokens      []*hadoop_common.TokenProto `protobuf:"bytes,3,rep,name=blockTokens" json:"blockTokens,omitempty"`
+	EcPolicy         *ErasureCodingPolicyProto   `protobuf:"bytes,4,req,name=ecPolicy" json:"ecPolicy,omitempty"`
+	XXX_unrecognized []byte                      `json:"-"`
+}
+
+func (m *OpBlockGroupChecksumProto) Reset()         { *m = OpBlockGroupChecksumProto{} }
+func (m *OpBlockGroupChecksumProto) String() string { return proto.CompactTextString(m) }
+func (*OpBlockGroupChecksumProto) ProtoMessage()    {}
+
+func (m *OpBlockGroupChecksumProto) GetHeader() *BaseHeaderProto {
+	if m != nil {
+		return m.Header
+	}
+	return nil
+}
+
+func (m *OpBlockGroupChecksumProto) GetDatanodes() *DatanodeInfosProto {
+	if m != nil {
+		return m.Datanodes
+	}
+	return nil
+}
+
+func (m *OpBlockGroupChecksumProto) GetBlockTokens() []*hadoop_common.TokenProto {
+	if m != nil {
+		return m.BlockTokens
+	}
+	return nil
+}
+
+func (m *OpBlockGroupChecksumProto) GetEcPolicy() *ErasureCodingPolicyProto {
+	if m != nil {
+		return m.EcPolicy
+	}
+	return nil
+}
+
+// *
+// An ID uniquely identifying a shared memory segment.
+type ShortCircuitShmIdProto struct {
+	Hi               *int64 `protobuf:"varint,1,req,name=hi" json:"hi,omitempty"`
+	Lo               *int64 `protobuf:"varint,2,req,name=lo" json:"lo,omitempty"`
+	XXX_unrecognized []byte `json:"-"`
+}
+
+func (m *ShortCircuitShmIdProto) Reset()         { *m = ShortCircuitShmIdProto{} }
+func (m *ShortCircuitShmIdProto) String() string { return proto.CompactTextString(m) }
+func (*ShortCircuitShmIdProto) ProtoMessage()    {}
+
+func (m *ShortCircuitShmIdProto) GetHi() int64 {
+	if m != nil && m.Hi != nil {
+		return *m.Hi
+	}
+	return 0
+}
+
+func (m *ShortCircuitShmIdProto) GetLo() int64 {
+	if m != nil && m.Lo != nil {
+		return *m.Lo
+	}
+	return 0
+}
+
+// *
+// An ID uniquely identifying a slot within a shared memory segment.
+type ShortCircuitShmSlotProto struct {
+	ShmId            *ShortCircuitShmIdProto `protobuf:"bytes,1,req,name=shmId" json:"shmId,omitempty"`
+	SlotIdx          *int32                  `protobuf:"varint,2,req,name=slotIdx" json:"slotIdx,omitempty"`
+	XXX_unrecognized []byte                  `json:"-"`
+}
+
+func (m *ShortCircuitShmSlotProto) Reset()         { *m = ShortCircuitShmSlotProto{} }
+func (m *ShortCircuitShmSlotProto) String() string { return proto.CompactTextString(m) }
+func (*ShortCircuitShmSlotProto) ProtoMessage()    {}
+
+func (m *ShortCircuitShmSlotProto) GetShmId() *ShortCircuitShmIdProto {
+	if m != nil {
+		return m.ShmId
+	}
+	return nil
+}
+
+func (m *ShortCircuitShmSlotProto) GetSlotIdx() int32 {
+	if m != nil && m.SlotIdx != nil {
+		return *m.SlotIdx
+	}
+	return 0
+}
+
 type OpRequestShortCircuitAccessProto struct {
 	Header *BaseHeaderProto `protobuf:"bytes,1,req,name=header" json:"header,omitempty"`
 	// * In order to get short-circuit access to block data, clients must set this
 	// to the highest version of the block data that they can understand.
 	// Currently 1 is the only version, but more versions may exist in the future
 	// if the on-disk format changes.
-	MaxVersion       *uint32 `protobuf:"varint,2,req,name=maxVersion" json:"maxVersion,omitempty"`
-	XXX_unrecognized []byte  `json:"-"`
+	MaxVersion *uint32 `protobuf:"varint,2,req,name=maxVersion" json:"maxVersion,omitempty"`
+	// *
+	// The shared memory slot to use, if we are using one.
+	SlotId *ShortCircuitShmSlotProto `protobuf:"bytes,3,opt,name=slotId" json:"slotId,omitempty"`
+	// *
+	// True if the client supports verifying that the file descriptor has been
+	// sent successfully.
+	SupportsReceiptVerification *bool  `protobuf:"varint,4,opt,name=supportsReceiptVerification,def=0" json:"supportsReceiptVerification,omitempty"`
+	XXX_unrecognized            []byte `json:"-"`
 }
 
 func (m *OpRequestShortCircuitAccessProto) Reset()         { *m = OpRequestShortCircuitAccessProto{} }
 func (m *OpRequestShortCircuitAccessProto) String() string { return proto.CompactTextString(m) }
 func (*OpRequestShortCircuitAccessProto) ProtoMessage()    {}
+
+const Default_OpRequestShortCircuitAccessProto_SupportsReceiptVerification bool = false
 
 func (m *OpRequestShortCircuitAccessProto) GetHeader() *BaseHeaderProto {
 	if m != nil {
@@ -543,6 +801,128 @@ func (m *OpRequestShortCircuitAccessProto) GetMaxVersion() uint32 {
 		return *m.MaxVersion
 	}
 	return 0
+}
+
+func (m *OpRequestShortCircuitAccessProto) GetSlotId() *ShortCircuitShmSlotProto {
+	if m != nil {
+		return m.SlotId
+	}
+	return nil
+}
+
+func (m *OpRequestShortCircuitAccessProto) GetSupportsReceiptVerification() bool {
+	if m != nil && m.SupportsReceiptVerification != nil {
+		return *m.SupportsReceiptVerification
+	}
+	return Default_OpRequestShortCircuitAccessProto_SupportsReceiptVerification
+}
+
+type ReleaseShortCircuitAccessRequestProto struct {
+	SlotId           *ShortCircuitShmSlotProto   `protobuf:"bytes,1,req,name=slotId" json:"slotId,omitempty"`
+	TraceInfo        *DataTransferTraceInfoProto `protobuf:"bytes,2,opt,name=traceInfo" json:"traceInfo,omitempty"`
+	XXX_unrecognized []byte                      `json:"-"`
+}
+
+func (m *ReleaseShortCircuitAccessRequestProto) Reset()         { *m = ReleaseShortCircuitAccessRequestProto{} }
+func (m *ReleaseShortCircuitAccessRequestProto) String() string { return proto.CompactTextString(m) }
+func (*ReleaseShortCircuitAccessRequestProto) ProtoMessage()    {}
+
+func (m *ReleaseShortCircuitAccessRequestProto) GetSlotId() *ShortCircuitShmSlotProto {
+	if m != nil {
+		return m.SlotId
+	}
+	return nil
+}
+
+func (m *ReleaseShortCircuitAccessRequestProto) GetTraceInfo() *DataTransferTraceInfoProto {
+	if m != nil {
+		return m.TraceInfo
+	}
+	return nil
+}
+
+type ReleaseShortCircuitAccessResponseProto struct {
+	Status           *Status `protobuf:"varint,1,req,name=status,enum=hadoop.hdfs.Status" json:"status,omitempty"`
+	Error            *string `protobuf:"bytes,2,opt,name=error" json:"error,omitempty"`
+	XXX_unrecognized []byte  `json:"-"`
+}
+
+func (m *ReleaseShortCircuitAccessResponseProto) Reset() {
+	*m = ReleaseShortCircuitAccessResponseProto{}
+}
+func (m *ReleaseShortCircuitAccessResponseProto) String() string { return proto.CompactTextString(m) }
+func (*ReleaseShortCircuitAccessResponseProto) ProtoMessage()    {}
+
+func (m *ReleaseShortCircuitAccessResponseProto) GetStatus() Status {
+	if m != nil && m.Status != nil {
+		return *m.Status
+	}
+	return Status_SUCCESS
+}
+
+func (m *ReleaseShortCircuitAccessResponseProto) GetError() string {
+	if m != nil && m.Error != nil {
+		return *m.Error
+	}
+	return ""
+}
+
+type ShortCircuitShmRequestProto struct {
+	// The name of the client requesting the shared memory segment.  This is
+	// purely for logging / debugging purposes.
+	ClientName       *string                     `protobuf:"bytes,1,req,name=clientName" json:"clientName,omitempty"`
+	TraceInfo        *DataTransferTraceInfoProto `protobuf:"bytes,2,opt,name=traceInfo" json:"traceInfo,omitempty"`
+	XXX_unrecognized []byte                      `json:"-"`
+}
+
+func (m *ShortCircuitShmRequestProto) Reset()         { *m = ShortCircuitShmRequestProto{} }
+func (m *ShortCircuitShmRequestProto) String() string { return proto.CompactTextString(m) }
+func (*ShortCircuitShmRequestProto) ProtoMessage()    {}
+
+func (m *ShortCircuitShmRequestProto) GetClientName() string {
+	if m != nil && m.ClientName != nil {
+		return *m.ClientName
+	}
+	return ""
+}
+
+func (m *ShortCircuitShmRequestProto) GetTraceInfo() *DataTransferTraceInfoProto {
+	if m != nil {
+		return m.TraceInfo
+	}
+	return nil
+}
+
+type ShortCircuitShmResponseProto struct {
+	Status           *Status                 `protobuf:"varint,1,req,name=status,enum=hadoop.hdfs.Status" json:"status,omitempty"`
+	Error            *string                 `protobuf:"bytes,2,opt,name=error" json:"error,omitempty"`
+	Id               *ShortCircuitShmIdProto `protobuf:"bytes,3,opt,name=id" json:"id,omitempty"`
+	XXX_unrecognized []byte                  `json:"-"`
+}
+
+func (m *ShortCircuitShmResponseProto) Reset()         { *m = ShortCircuitShmResponseProto{} }
+func (m *ShortCircuitShmResponseProto) String() string { return proto.CompactTextString(m) }
+func (*ShortCircuitShmResponseProto) ProtoMessage()    {}
+
+func (m *ShortCircuitShmResponseProto) GetStatus() Status {
+	if m != nil && m.Status != nil {
+		return *m.Status
+	}
+	return Status_SUCCESS
+}
+
+func (m *ShortCircuitShmResponseProto) GetError() string {
+	if m != nil && m.Error != nil {
+		return *m.Error
+	}
+	return ""
+}
+
+func (m *ShortCircuitShmResponseProto) GetId() *ShortCircuitShmIdProto {
+	if m != nil {
+		return m.Id
+	}
+	return nil
 }
 
 type PacketHeaderProto struct {
@@ -598,8 +978,9 @@ func (m *PacketHeaderProto) GetSyncBlock() bool {
 
 type PipelineAckProto struct {
 	Seqno                  *int64   `protobuf:"zigzag64,1,req,name=seqno" json:"seqno,omitempty"`
-	Status                 []Status `protobuf:"varint,2,rep,name=status,enum=hadoop.hdfs.Status" json:"status,omitempty"`
+	Reply                  []Status `protobuf:"varint,2,rep,name=reply,enum=hadoop.hdfs.Status" json:"reply,omitempty"`
 	DownstreamAckTimeNanos *uint64  `protobuf:"varint,3,opt,name=downstreamAckTimeNanos,def=0" json:"downstreamAckTimeNanos,omitempty"`
+	Flag                   []uint32 `protobuf:"varint,4,rep,packed,name=flag" json:"flag,omitempty"`
 	XXX_unrecognized       []byte   `json:"-"`
 }
 
@@ -616,9 +997,9 @@ func (m *PipelineAckProto) GetSeqno() int64 {
 	return 0
 }
 
-func (m *PipelineAckProto) GetStatus() []Status {
+func (m *PipelineAckProto) GetReply() []Status {
 	if m != nil {
-		return m.Status
+		return m.Reply
 	}
 	return nil
 }
@@ -628,6 +1009,13 @@ func (m *PipelineAckProto) GetDownstreamAckTimeNanos() uint64 {
 		return *m.DownstreamAckTimeNanos
 	}
 	return Default_PipelineAckProto_DownstreamAckTimeNanos
+}
+
+func (m *PipelineAckProto) GetFlag() []uint32 {
+	if m != nil {
+		return m.Flag
+	}
+	return nil
 }
 
 // *
@@ -800,8 +1188,25 @@ func (m *OpBlockChecksumResponseProto) GetCrcType() ChecksumTypeProto {
 	return ChecksumTypeProto_CHECKSUM_NULL
 }
 
+type OpCustomProto struct {
+	CustomId         *string `protobuf:"bytes,1,req,name=customId" json:"customId,omitempty"`
+	XXX_unrecognized []byte  `json:"-"`
+}
+
+func (m *OpCustomProto) Reset()         { *m = OpCustomProto{} }
+func (m *OpCustomProto) String() string { return proto.CompactTextString(m) }
+func (*OpCustomProto) ProtoMessage()    {}
+
+func (m *OpCustomProto) GetCustomId() string {
+	if m != nil && m.CustomId != nil {
+		return *m.CustomId
+	}
+	return ""
+}
+
 func init() {
 	proto.RegisterEnum("hadoop.hdfs.Status", Status_name, Status_value)
+	proto.RegisterEnum("hadoop.hdfs.ShortCircuitFdResponse", ShortCircuitFdResponse_name, ShortCircuitFdResponse_value)
 	proto.RegisterEnum("hadoop.hdfs.DataTransferEncryptorMessageProto_DataTransferEncryptorStatus", DataTransferEncryptorMessageProto_DataTransferEncryptorStatus_name, DataTransferEncryptorMessageProto_DataTransferEncryptorStatus_value)
 	proto.RegisterEnum("hadoop.hdfs.OpWriteBlockProto_BlockConstructionStage", OpWriteBlockProto_BlockConstructionStage_name, OpWriteBlockProto_BlockConstructionStage_value)
 }

@@ -219,7 +219,7 @@ func (s *blockWriteStream) ackPackets() {
 		}
 
 		seqno := int(ack.GetSeqno())
-		for i, status := range ack.GetStatus() {
+		for i, status := range ack.GetReply() {
 			if status != hdfs.Status_SUCCESS {
 				s.ackError = ackError{status: status, seqno: seqno, pipelineIndex: i}
 				break

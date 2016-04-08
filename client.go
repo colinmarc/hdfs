@@ -41,6 +41,11 @@ func New(address string) (*Client, error) {
 	return NewForUser(address, username)
 }
 
+// Return a New Client with auto config
+func AutoConfigClient() (*Client, error) {
+	return GetAutoConfigClient()
+}
+
 // NewForUser returns a connected Client with the user specified, or an error if
 // it can't connect.
 func NewForUser(address string, user string) (*Client, error) {

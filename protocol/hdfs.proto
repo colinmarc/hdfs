@@ -50,11 +50,23 @@ message ExtendedBlockProto {
 message DatanodeIDProto {
   required string ipAddr = 1;    // IP address
   required string hostName = 2;  // hostname
-  required string storageID = 3; // unique storage id
+  required string datanodeUuid = 3;     // UUID assigned to the Datanode. For
+                                        // upgraded clusters this is the same
+                                        // as the original StorageID of the
+                                        // Datanode.
   required uint32 xferPort = 4;  // data streaming port
   required uint32 infoPort = 5;  // datanode http port
   required uint32 ipcPort = 6;   // ipc server port
   optional uint32 infoSecurePort = 7 [default = 0]; // datanode https port
+}
+
+/**
+ * Datanode local information
+ */
+message DatanodeLocalInfoProto {
+  required string softwareVersion = 1;
+  required string configVersion = 2;
+  required uint64 uptime = 3;
 }
 
 /**
@@ -83,6 +95,33 @@ message DatanodeInfoProto {
   }
 
   optional AdminState adminState = 10 [default = NORMAL];
+  optional uint64 cacheCapacity = 11 [default = 0];
+  optional uint64 cacheUsed = 12 [default = 0];
+  optional uint64 lastUpdateMonotonic = 13 [default = 0];
+}
+
+/**
+ * Represents a storage available on the datanode
+ */
+message DatanodeStorageProto {
+  enum StorageState {
+    NORMAL = 0;
+    READ_ONLY_SHARED = 1;
+  }
+
+  required string storageUuid = 1;
+  optional StorageState state = 2 [default = NORMAL];
+  optional StorageTypeProto storageType = 3 [default = DISK];
+}
+
+message StorageReportProto {
+  required string storageUuid = 1 [ deprecated = true ];
+  optional bool failed = 2 [ default = false ];
+  optional uint64 capacity = 3 [ default = 0 ];
+  optional uint64 dfsUsed = 4 [ default = 0 ];
+  optional uint64 remaining = 5 [ default = 0 ];
+  optional uint64 blockPoolUsed = 6 [ default = 0 ];
+  optional DatanodeStorageProto storage = 7; // supersedes StorageUuid
 }
 
 /**
@@ -95,6 +134,20 @@ message ContentSummaryProto {
   required uint64 quota = 4;
   required uint64 spaceConsumed = 5;
   required uint64 spaceQuota = 6;
+  optional StorageTypeQuotaInfosProto typeQuotaInfos = 7;
+}
+
+/**
+ * Storage type quota and usage information of a file or directory
+ */
+message StorageTypeQuotaInfosProto {
+  repeated StorageTypeQuotaInfoProto typeQuotaInfo = 1;
+}
+
+message StorageTypeQuotaInfoProto {
+  required StorageTypeProto type = 1;
+  required uint64 quota = 2;
+  required uint64 consumed = 3;
 }
 
 /**
@@ -114,6 +167,43 @@ message FsPermissionProto {
   required uint32 perm = 1;       // Actually a short - only 16bits used
 }
 
+/**
+ * Types of recognized storage media.
+ */
+enum StorageTypeProto {
+  DISK = 1;
+  SSD = 2;
+  ARCHIVE = 3;
+  RAM_DISK = 4;
+}
+
+/**
+ * A list of storage types. 
+ */
+message StorageTypesProto {
+  repeated StorageTypeProto storageTypes = 1;
+}
+
+/**
+ * Block replica storage policy.
+ */
+message BlockStoragePolicyProto {
+  required uint32 policyId = 1;
+  required string name = 2;
+  // a list of storage types for storing the block replicas when creating a
+  // block.
+  required StorageTypesProto creationPolicy = 3;
+  // A list of storage types for creation fallback storage.
+  optional StorageTypesProto creationFallbackPolicy = 4;
+  optional StorageTypesProto replicationFallbackPolicy = 5;
+}
+
+/**
+ * A list of storage IDs. 
+ */
+message StorageUuidsProto {
+  repeated string storageUuids = 1;
+}
 
 /**
  * A LocatedBlock gives information about a block and its location.
@@ -127,6 +217,9 @@ message LocatedBlockProto {
                                         // their locations are not part of this object
 
   required hadoop.common.TokenProto blockToken = 5;
+  repeated bool isCached = 6 [packed=true]; // if a location in locs is cached
+  repeated StorageTypeProto storageTypes = 7;
+  repeated string storageIDs = 8;
 }
 
 message DataEncryptionKeyProto {
@@ -138,6 +231,64 @@ message DataEncryptionKeyProto {
   optional string encryptionAlgorithm = 6;
 }
 
+/**
+ * Cipher suite.
+ */
+enum CipherSuiteProto {
+    UNKNOWN = 1;
+    AES_CTR_NOPADDING = 2;
+}
+
+/**
+ * Crypto protocol version used to access encrypted files.
+ */
+enum CryptoProtocolVersionProto {
+    UNKNOWN_PROTOCOL_VERSION = 1;
+    ENCRYPTION_ZONES = 2;
+}
+
+/**
+ * Encryption information for a file.
+ */
+message FileEncryptionInfoProto {
+  required CipherSuiteProto suite = 1;
+  required CryptoProtocolVersionProto cryptoProtocolVersion = 2;
+  required bytes key = 3;
+  required bytes iv = 4;
+  required string keyName = 5;
+  required string ezKeyVersionName = 6;
+}
+
+/**
+ * Encryption information for an individual
+ * file within an encryption zone
+ */
+message PerFileEncryptionInfoProto {
+  required bytes key = 1;
+  required bytes iv = 2;
+  required string ezKeyVersionName = 3;
+}
+
+/**
+ * Encryption information for an encryption
+ * zone
+ */
+message ZoneEncryptionInfoProto {
+  required CipherSuiteProto suite = 1;
+  required CryptoProtocolVersionProto cryptoProtocolVersion = 2;
+  required string keyName = 3;
+}
+
+/**
+ * Cipher option
+ */
+message CipherOptionProto {
+  required CipherSuiteProto suite = 1;
+  optional bytes inKey = 2;
+  optional bytes inIv = 3;
+  optional bytes outKey = 4;
+  optional bytes outIv = 5;
+}
 
 /**
  * A set of file blocks and their locations.
@@ -148,8 +299,8 @@ message LocatedBlocksProto {
   required bool underConstruction = 3;
   optional LocatedBlockProto lastBlock = 4;
   required bool isLastBlockComplete = 5;
+  optional FileEncryptionInfoProto fileEncryptionInfo = 6;
 }
-
 
 /**
  * Status of a file, directory or symlink
@@ -181,6 +332,10 @@ message HdfsFileStatusProto {
   // Optional field for fileId
   optional uint64 fileId = 13 [default = 0]; // default as an invalid id
   optional int32 childrenNum = 14 [default = -1];
+  // Optional field for file encryption
+  optional FileEncryptionInfoProto fileEncryptionInfo = 15;
+
+  optional uint32 storagePolicy = 16 [default = 0]; // block storage policy id
 } 
 
 /**
@@ -244,6 +399,7 @@ message SnapshottableDirectoryListingProto {
 message SnapshotDiffReportEntryProto {
   required bytes fullpath = 1;
   required string modificationLabel = 2;
+  optional bytes targetPath = 3;
 }
 
 /**
@@ -321,6 +477,12 @@ message CheckpointCommandProto {
 
 /**
  * Block information
+ *
+ * Please be wary of adding additional fields here, since INodeFiles
+ * need to fit in PB's default max message size of 64MB.
+ * We restrict the max # of blocks per file
+ * (dfs.namenode.fs-limits.max-blocks-per-file), but it's better
+ * to avoid changing this.
  */
 message BlockProto {
   required uint64 blockId = 1;
@@ -333,7 +495,9 @@ message BlockProto {
  */
 message BlockWithLocationsProto {
   required BlockProto block = 1;   // Block
-  repeated string storageIDs = 2;  // Datanodes with replicas of the block
+  repeated string datanodeUuids = 2; // Datanodes with replicas of the block
+  repeated string storageUuids = 3;  // Storages with replicas of the block
+  repeated StorageTypeProto storageTypes = 4;
 }
 
 /**
@@ -368,6 +532,7 @@ message NamespaceInfoProto {
   required string blockPoolID = 3;          // block pool used by the namespace
   required StorageInfoProto storageInfo = 4;// Node information
   required string softwareVersion = 5;      // Software version number (e.g. 2.0.0)
+  optional uint64 capabilities = 6 [default = 0]; // feature flags
 }
 
 /**
@@ -405,8 +570,9 @@ enum ReplicaStateProto {
  * Block that needs to be recovered with at a given location
  */
 message RecoveringBlockProto {
-  required uint64 newGenStamp = 1;      // New genstamp post recovery
-  required LocatedBlockProto block = 2; // Block to be recovered
+  required uint64 newGenStamp = 1;        // New genstamp post recovery
+  required LocatedBlockProto block = 2;   // Block to be recovered
+  optional BlockProto truncateBlock = 3;  // New block for recovery (truncate)
 }
 
 /**
@@ -436,3 +602,10 @@ message SnapshotInfoProto {
   // TODO: do we need access time?
 }
 
+/**
+ * Rolling upgrade status
+ */
+message RollingUpgradeStatusProto {
+  required string blockPoolId = 1;
+  optional bool finalized = 2 [default = false];
+}

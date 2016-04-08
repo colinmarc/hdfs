@@ -5,13 +5,16 @@
 package hadoop_hdfs
 
 import proto "github.com/golang/protobuf/proto"
+import fmt "fmt"
 import math "math"
 import hadoop_common "github.com/colinmarc/hdfs/protocol/hadoop_common"
 
 // Reference imports to suppress errors if they are not otherwise used.
 var _ = proto.Marshal
+var _ = fmt.Errorf
 var _ = math.Inf
 
+// Status is a 4-bit enum
 type Status int32
 
 const (
@@ -23,17 +26,27 @@ const (
 	Status_ERROR_ACCESS_TOKEN Status = 5
 	Status_CHECKSUM_OK        Status = 6
 	Status_ERROR_UNSUPPORTED  Status = 7
+	Status_OOB_RESTART        Status = 8
+	Status_OOB_RESERVED1      Status = 9
+	Status_OOB_RESERVED2      Status = 10
+	Status_OOB_RESERVED3      Status = 11
+	Status_IN_PROGRESS        Status = 12
 )
 
 var Status_name = map[int32]string{
-	0: "SUCCESS",
-	1: "ERROR",
-	2: "ERROR_CHECKSUM",
-	3: "ERROR_INVALID",
-	4: "ERROR_EXISTS",
-	5: "ERROR_ACCESS_TOKEN",
-	6: "CHECKSUM_OK",
-	7: "ERROR_UNSUPPORTED",
+	0:  "SUCCESS",
+	1:  "ERROR",
+	2:  "ERROR_CHECKSUM",
+	3:  "ERROR_INVALID",
+	4:  "ERROR_EXISTS",
+	5:  "ERROR_ACCESS_TOKEN",
+	6:  "CHECKSUM_OK",
+	7:  "ERROR_UNSUPPORTED",
+	8:  "OOB_RESTART",
+	9:  "OOB_RESERVED1",
+	10: "OOB_RESERVED2",
+	11: "OOB_RESERVED3",
+	12: "IN_PROGRESS",
 }
 var Status_value = map[string]int32{
 	"SUCCESS":            0,
@@ -44,6 +57,11 @@ var Status_value = map[string]int32{
 	"ERROR_ACCESS_TOKEN": 5,
 	"CHECKSUM_OK":        6,
 	"ERROR_UNSUPPORTED":  7,
+	"OOB_RESTART":        8,
+	"OOB_RESERVED1":      9,
+	"OOB_RESERVED2":      10,
+	"OOB_RESERVED3":      11,
+	"IN_PROGRESS":        12,
 }
 
 func (x Status) Enum() *Status {
@@ -62,6 +80,41 @@ func (x *Status) UnmarshalJSON(data []byte) error {
 	*x = Status(value)
 	return nil
 }
+func (Status) EnumDescriptor() ([]byte, []int) { return fileDescriptor1, []int{0} }
+
+type ShortCircuitFdResponse int32
+
+const (
+	ShortCircuitFdResponse_DO_NOT_USE_RECEIPT_VERIFICATION ShortCircuitFdResponse = 0
+	ShortCircuitFdResponse_USE_RECEIPT_VERIFICATION        ShortCircuitFdResponse = 1
+)
+
+var ShortCircuitFdResponse_name = map[int32]string{
+	0: "DO_NOT_USE_RECEIPT_VERIFICATION",
+	1: "USE_RECEIPT_VERIFICATION",
+}
+var ShortCircuitFdResponse_value = map[string]int32{
+	"DO_NOT_USE_RECEIPT_VERIFICATION": 0,
+	"USE_RECEIPT_VERIFICATION":        1,
+}
+
+func (x ShortCircuitFdResponse) Enum() *ShortCircuitFdResponse {
+	p := new(ShortCircuitFdResponse)
+	*p = x
+	return p
+}
+func (x ShortCircuitFdResponse) String() string {
+	return proto.EnumName(ShortCircuitFdResponse_name, int32(x))
+}
+func (x *ShortCircuitFdResponse) UnmarshalJSON(data []byte) error {
+	value, err := proto.UnmarshalJSONEnum(ShortCircuitFdResponse_value, data, "ShortCircuitFdResponse")
+	if err != nil {
+		return err
+	}
+	*x = ShortCircuitFdResponse(value)
+	return nil
+}
+func (ShortCircuitFdResponse) EnumDescriptor() ([]byte, []int) { return fileDescriptor1, []int{1} }
 
 type DataTransferEncryptorMessageProto_DataTransferEncryptorStatus int32
 
@@ -97,6 +150,9 @@ func (x *DataTransferEncryptorMessageProto_DataTransferEncryptorStatus) Unmarsha
 	}
 	*x = DataTransferEncryptorMessageProto_DataTransferEncryptorStatus(value)
 	return nil
+}
+func (DataTransferEncryptorMessageProto_DataTransferEncryptorStatus) EnumDescriptor() ([]byte, []int) {
+	return fileDescriptor1, []int{0, 0}
 }
 
 type OpWriteBlockProto_BlockConstructionStage int32
@@ -160,17 +216,24 @@ func (x *OpWriteBlockProto_BlockConstructionStage) UnmarshalJSON(data []byte) er
 	*x = OpWriteBlockProto_BlockConstructionStage(value)
 	return nil
 }
+func (OpWriteBlockProto_BlockConstructionStage) EnumDescriptor() ([]byte, []int) {
+	return fileDescriptor1, []int{7, 0}
+}
 
 type DataTransferEncryptorMessageProto struct {
 	Status           *DataTransferEncryptorMessageProto_DataTransferEncryptorStatus `protobuf:"varint,1,req,name=status,enum=hadoop.hdfs.DataTransferEncryptorMessageProto_DataTransferEncryptorStatus" json:"status,omitempty"`
 	Payload          []byte                                                         `protobuf:"bytes,2,opt,name=payload" json:"payload,omitempty"`
 	Message          *string                                                        `protobuf:"bytes,3,opt,name=message" json:"message,omitempty"`
+	CipherOption     []*CipherOptionProto                                           `protobuf:"bytes,4,rep,name=cipherOption" json:"cipherOption,omitempty"`
 	XXX_unrecognized []byte                                                         `json:"-"`
 }
 
 func (m *DataTransferEncryptorMessageProto) Reset()         { *m = DataTransferEncryptorMessageProto{} }
 func (m *DataTransferEncryptorMessageProto) String() string { return proto.CompactTextString(m) }
 func (*DataTransferEncryptorMessageProto) ProtoMessage()    {}
+func (*DataTransferEncryptorMessageProto) Descriptor() ([]byte, []int) {
+	return fileDescriptor1, []int{0}
+}
 
 func (m *DataTransferEncryptorMessageProto) GetStatus() DataTransferEncryptorMessageProto_DataTransferEncryptorStatus {
 	if m != nil && m.Status != nil {
@@ -193,15 +256,24 @@ func (m *DataTransferEncryptorMessageProto) GetMessage() string {
 	return ""
 }
 
-type BaseHeaderProto struct {
-	Block            *ExtendedBlockProto       `protobuf:"bytes,1,req,name=block" json:"block,omitempty"`
-	Token            *hadoop_common.TokenProto `protobuf:"bytes,2,opt,name=token" json:"token,omitempty"`
-	XXX_unrecognized []byte                    `json:"-"`
+func (m *DataTransferEncryptorMessageProto) GetCipherOption() []*CipherOptionProto {
+	if m != nil {
+		return m.CipherOption
+	}
+	return nil
 }
 
-func (m *BaseHeaderProto) Reset()         { *m = BaseHeaderProto{} }
-func (m *BaseHeaderProto) String() string { return proto.CompactTextString(m) }
-func (*BaseHeaderProto) ProtoMessage()    {}
+type BaseHeaderProto struct {
+	Block            *ExtendedBlockProto         `protobuf:"bytes,1,req,name=block" json:"block,omitempty"`
+	Token            *hadoop_common.TokenProto   `protobuf:"bytes,2,opt,name=token" json:"token,omitempty"`
+	TraceInfo        *DataTransferTraceInfoProto `protobuf:"bytes,3,opt,name=traceInfo" json:"traceInfo,omitempty"`
+	XXX_unrecognized []byte                      `json:"-"`
+}
+
+func (m *BaseHeaderProto) Reset()                    { *m = BaseHeaderProto{} }
+func (m *BaseHeaderProto) String() string            { return proto.CompactTextString(m) }
+func (*BaseHeaderProto) ProtoMessage()               {}
+func (*BaseHeaderProto) Descriptor() ([]byte, []int) { return fileDescriptor1, []int{1} }
 
 func (m *BaseHeaderProto) GetBlock() *ExtendedBlockProto {
 	if m != nil {
@@ -217,15 +289,48 @@ func (m *BaseHeaderProto) GetToken() *hadoop_common.TokenProto {
 	return nil
 }
 
+func (m *BaseHeaderProto) GetTraceInfo() *DataTransferTraceInfoProto {
+	if m != nil {
+		return m.TraceInfo
+	}
+	return nil
+}
+
+type DataTransferTraceInfoProto struct {
+	TraceId          *uint64 `protobuf:"varint,1,req,name=traceId" json:"traceId,omitempty"`
+	ParentId         *uint64 `protobuf:"varint,2,req,name=parentId" json:"parentId,omitempty"`
+	XXX_unrecognized []byte  `json:"-"`
+}
+
+func (m *DataTransferTraceInfoProto) Reset()                    { *m = DataTransferTraceInfoProto{} }
+func (m *DataTransferTraceInfoProto) String() string            { return proto.CompactTextString(m) }
+func (*DataTransferTraceInfoProto) ProtoMessage()               {}
+func (*DataTransferTraceInfoProto) Descriptor() ([]byte, []int) { return fileDescriptor1, []int{2} }
+
+func (m *DataTransferTraceInfoProto) GetTraceId() uint64 {
+	if m != nil && m.TraceId != nil {
+		return *m.TraceId
+	}
+	return 0
+}
+
+func (m *DataTransferTraceInfoProto) GetParentId() uint64 {
+	if m != nil && m.ParentId != nil {
+		return *m.ParentId
+	}
+	return 0
+}
+
 type ClientOperationHeaderProto struct {
 	BaseHeader       *BaseHeaderProto `protobuf:"bytes,1,req,name=baseHeader" json:"baseHeader,omitempty"`
 	ClientName       *string          `protobuf:"bytes,2,req,name=clientName" json:"clientName,omitempty"`
 	XXX_unrecognized []byte           `json:"-"`
 }
 
-func (m *ClientOperationHeaderProto) Reset()         { *m = ClientOperationHeaderProto{} }
-func (m *ClientOperationHeaderProto) String() string { return proto.CompactTextString(m) }
-func (*ClientOperationHeaderProto) ProtoMessage()    {}
+func (m *ClientOperationHeaderProto) Reset()                    { *m = ClientOperationHeaderProto{} }
+func (m *ClientOperationHeaderProto) String() string            { return proto.CompactTextString(m) }
+func (*ClientOperationHeaderProto) ProtoMessage()               {}
+func (*ClientOperationHeaderProto) Descriptor() ([]byte, []int) { return fileDescriptor1, []int{3} }
 
 func (m *ClientOperationHeaderProto) GetBaseHeader() *BaseHeaderProto {
 	if m != nil {
@@ -247,9 +352,10 @@ type CachingStrategyProto struct {
 	XXX_unrecognized []byte `json:"-"`
 }
 
-func (m *CachingStrategyProto) Reset()         { *m = CachingStrategyProto{} }
-func (m *CachingStrategyProto) String() string { return proto.CompactTextString(m) }
-func (*CachingStrategyProto) ProtoMessage()    {}
+func (m *CachingStrategyProto) Reset()                    { *m = CachingStrategyProto{} }
+func (m *CachingStrategyProto) String() string            { return proto.CompactTextString(m) }
+func (*CachingStrategyProto) ProtoMessage()               {}
+func (*CachingStrategyProto) Descriptor() ([]byte, []int) { return fileDescriptor1, []int{4} }
 
 func (m *CachingStrategyProto) GetDropBehind() bool {
 	if m != nil && m.DropBehind != nil {
@@ -274,9 +380,10 @@ type OpReadBlockProto struct {
 	XXX_unrecognized []byte                      `json:"-"`
 }
 
-func (m *OpReadBlockProto) Reset()         { *m = OpReadBlockProto{} }
-func (m *OpReadBlockProto) String() string { return proto.CompactTextString(m) }
-func (*OpReadBlockProto) ProtoMessage()    {}
+func (m *OpReadBlockProto) Reset()                    { *m = OpReadBlockProto{} }
+func (m *OpReadBlockProto) String() string            { return proto.CompactTextString(m) }
+func (*OpReadBlockProto) ProtoMessage()               {}
+func (*OpReadBlockProto) Descriptor() ([]byte, []int) { return fileDescriptor1, []int{5} }
 
 const Default_OpReadBlockProto_SendChecksums bool = true
 
@@ -321,9 +428,10 @@ type ChecksumProto struct {
 	XXX_unrecognized []byte             `json:"-"`
 }
 
-func (m *ChecksumProto) Reset()         { *m = ChecksumProto{} }
-func (m *ChecksumProto) String() string { return proto.CompactTextString(m) }
-func (*ChecksumProto) ProtoMessage()    {}
+func (m *ChecksumProto) Reset()                    { *m = ChecksumProto{} }
+func (m *ChecksumProto) String() string            { return proto.CompactTextString(m) }
+func (*ChecksumProto) ProtoMessage()               {}
+func (*ChecksumProto) Descriptor() ([]byte, []int) { return fileDescriptor1, []int{6} }
 
 func (m *ChecksumProto) GetType() ChecksumTypeProto {
 	if m != nil && m.Type != nil {
@@ -350,14 +458,29 @@ type OpWriteBlockProto struct {
 	LatestGenerationStamp *uint64                                   `protobuf:"varint,8,req,name=latestGenerationStamp" json:"latestGenerationStamp,omitempty"`
 	// *
 	// The requested checksum mechanism for this block write.
-	RequestedChecksum *ChecksumProto        `protobuf:"bytes,9,req,name=requestedChecksum" json:"requestedChecksum,omitempty"`
-	CachingStrategy   *CachingStrategyProto `protobuf:"bytes,10,opt,name=cachingStrategy" json:"cachingStrategy,omitempty"`
-	XXX_unrecognized  []byte                `json:"-"`
+	RequestedChecksum  *ChecksumProto        `protobuf:"bytes,9,req,name=requestedChecksum" json:"requestedChecksum,omitempty"`
+	CachingStrategy    *CachingStrategyProto `protobuf:"bytes,10,opt,name=cachingStrategy" json:"cachingStrategy,omitempty"`
+	StorageType        *StorageTypeProto     `protobuf:"varint,11,opt,name=storageType,enum=hadoop.hdfs.StorageTypeProto,def=1" json:"storageType,omitempty"`
+	TargetStorageTypes []StorageTypeProto    `protobuf:"varint,12,rep,name=targetStorageTypes,enum=hadoop.hdfs.StorageTypeProto" json:"targetStorageTypes,omitempty"`
+	// *
+	// Hint to the DataNode that the block can be allocated on transient
+	// storage i.e. memory and written to disk lazily. The DataNode is free
+	// to ignore this hint.
+	AllowLazyPersist *bool `protobuf:"varint,13,opt,name=allowLazyPersist,def=0" json:"allowLazyPersist,omitempty"`
+	// whether to pin the block, so Balancer won't move it.
+	Pinning          *bool  `protobuf:"varint,14,opt,name=pinning,def=0" json:"pinning,omitempty"`
+	TargetPinnings   []bool `protobuf:"varint,15,rep,name=targetPinnings" json:"targetPinnings,omitempty"`
+	XXX_unrecognized []byte `json:"-"`
 }
 
-func (m *OpWriteBlockProto) Reset()         { *m = OpWriteBlockProto{} }
-func (m *OpWriteBlockProto) String() string { return proto.CompactTextString(m) }
-func (*OpWriteBlockProto) ProtoMessage()    {}
+func (m *OpWriteBlockProto) Reset()                    { *m = OpWriteBlockProto{} }
+func (m *OpWriteBlockProto) String() string            { return proto.CompactTextString(m) }
+func (*OpWriteBlockProto) ProtoMessage()               {}
+func (*OpWriteBlockProto) Descriptor() ([]byte, []int) { return fileDescriptor1, []int{7} }
+
+const Default_OpWriteBlockProto_StorageType StorageTypeProto = StorageTypeProto_DISK
+const Default_OpWriteBlockProto_AllowLazyPersist bool = false
+const Default_OpWriteBlockProto_Pinning bool = false
 
 func (m *OpWriteBlockProto) GetHeader() *ClientOperationHeaderProto {
 	if m != nil {
@@ -429,15 +552,52 @@ func (m *OpWriteBlockProto) GetCachingStrategy() *CachingStrategyProto {
 	return nil
 }
 
-type OpTransferBlockProto struct {
-	Header           *ClientOperationHeaderProto `protobuf:"bytes,1,req,name=header" json:"header,omitempty"`
-	Targets          []*DatanodeInfoProto        `protobuf:"bytes,2,rep,name=targets" json:"targets,omitempty"`
-	XXX_unrecognized []byte                      `json:"-"`
+func (m *OpWriteBlockProto) GetStorageType() StorageTypeProto {
+	if m != nil && m.StorageType != nil {
+		return *m.StorageType
+	}
+	return Default_OpWriteBlockProto_StorageType
 }
 
-func (m *OpTransferBlockProto) Reset()         { *m = OpTransferBlockProto{} }
-func (m *OpTransferBlockProto) String() string { return proto.CompactTextString(m) }
-func (*OpTransferBlockProto) ProtoMessage()    {}
+func (m *OpWriteBlockProto) GetTargetStorageTypes() []StorageTypeProto {
+	if m != nil {
+		return m.TargetStorageTypes
+	}
+	return nil
+}
+
+func (m *OpWriteBlockProto) GetAllowLazyPersist() bool {
+	if m != nil && m.AllowLazyPersist != nil {
+		return *m.AllowLazyPersist
+	}
+	return Default_OpWriteBlockProto_AllowLazyPersist
+}
+
+func (m *OpWriteBlockProto) GetPinning() bool {
+	if m != nil && m.Pinning != nil {
+		return *m.Pinning
+	}
+	return Default_OpWriteBlockProto_Pinning
+}
+
+func (m *OpWriteBlockProto) GetTargetPinnings() []bool {
+	if m != nil {
+		return m.TargetPinnings
+	}
+	return nil
+}
+
+type OpTransferBlockProto struct {
+	Header             *ClientOperationHeaderProto `protobuf:"bytes,1,req,name=header" json:"header,omitempty"`
+	Targets            []*DatanodeInfoProto        `protobuf:"bytes,2,rep,name=targets" json:"targets,omitempty"`
+	TargetStorageTypes []StorageTypeProto          `protobuf:"varint,3,rep,name=targetStorageTypes,enum=hadoop.hdfs.StorageTypeProto" json:"targetStorageTypes,omitempty"`
+	XXX_unrecognized   []byte                      `json:"-"`
+}
+
+func (m *OpTransferBlockProto) Reset()                    { *m = OpTransferBlockProto{} }
+func (m *OpTransferBlockProto) String() string            { return proto.CompactTextString(m) }
+func (*OpTransferBlockProto) ProtoMessage()               {}
+func (*OpTransferBlockProto) Descriptor() ([]byte, []int) { return fileDescriptor1, []int{8} }
 
 func (m *OpTransferBlockProto) GetHeader() *ClientOperationHeaderProto {
 	if m != nil {
@@ -453,16 +613,27 @@ func (m *OpTransferBlockProto) GetTargets() []*DatanodeInfoProto {
 	return nil
 }
 
+func (m *OpTransferBlockProto) GetTargetStorageTypes() []StorageTypeProto {
+	if m != nil {
+		return m.TargetStorageTypes
+	}
+	return nil
+}
+
 type OpReplaceBlockProto struct {
 	Header           *BaseHeaderProto   `protobuf:"bytes,1,req,name=header" json:"header,omitempty"`
 	DelHint          *string            `protobuf:"bytes,2,req,name=delHint" json:"delHint,omitempty"`
 	Source           *DatanodeInfoProto `protobuf:"bytes,3,req,name=source" json:"source,omitempty"`
+	StorageType      *StorageTypeProto  `protobuf:"varint,4,opt,name=storageType,enum=hadoop.hdfs.StorageTypeProto,def=1" json:"storageType,omitempty"`
 	XXX_unrecognized []byte             `json:"-"`
 }
 
-func (m *OpReplaceBlockProto) Reset()         { *m = OpReplaceBlockProto{} }
-func (m *OpReplaceBlockProto) String() string { return proto.CompactTextString(m) }
-func (*OpReplaceBlockProto) ProtoMessage()    {}
+func (m *OpReplaceBlockProto) Reset()                    { *m = OpReplaceBlockProto{} }
+func (m *OpReplaceBlockProto) String() string            { return proto.CompactTextString(m) }
+func (*OpReplaceBlockProto) ProtoMessage()               {}
+func (*OpReplaceBlockProto) Descriptor() ([]byte, []int) { return fileDescriptor1, []int{9} }
+
+const Default_OpReplaceBlockProto_StorageType StorageTypeProto = StorageTypeProto_DISK
 
 func (m *OpReplaceBlockProto) GetHeader() *BaseHeaderProto {
 	if m != nil {
@@ -485,14 +656,22 @@ func (m *OpReplaceBlockProto) GetSource() *DatanodeInfoProto {
 	return nil
 }
 
+func (m *OpReplaceBlockProto) GetStorageType() StorageTypeProto {
+	if m != nil && m.StorageType != nil {
+		return *m.StorageType
+	}
+	return Default_OpReplaceBlockProto_StorageType
+}
+
 type OpCopyBlockProto struct {
 	Header           *BaseHeaderProto `protobuf:"bytes,1,req,name=header" json:"header,omitempty"`
 	XXX_unrecognized []byte           `json:"-"`
 }
 
-func (m *OpCopyBlockProto) Reset()         { *m = OpCopyBlockProto{} }
-func (m *OpCopyBlockProto) String() string { return proto.CompactTextString(m) }
-func (*OpCopyBlockProto) ProtoMessage()    {}
+func (m *OpCopyBlockProto) Reset()                    { *m = OpCopyBlockProto{} }
+func (m *OpCopyBlockProto) String() string            { return proto.CompactTextString(m) }
+func (*OpCopyBlockProto) ProtoMessage()               {}
+func (*OpCopyBlockProto) Descriptor() ([]byte, []int) { return fileDescriptor1, []int{10} }
 
 func (m *OpCopyBlockProto) GetHeader() *BaseHeaderProto {
 	if m != nil {
@@ -506,9 +685,10 @@ type OpBlockChecksumProto struct {
 	XXX_unrecognized []byte           `json:"-"`
 }
 
-func (m *OpBlockChecksumProto) Reset()         { *m = OpBlockChecksumProto{} }
-func (m *OpBlockChecksumProto) String() string { return proto.CompactTextString(m) }
-func (*OpBlockChecksumProto) ProtoMessage()    {}
+func (m *OpBlockChecksumProto) Reset()                    { *m = OpBlockChecksumProto{} }
+func (m *OpBlockChecksumProto) String() string            { return proto.CompactTextString(m) }
+func (*OpBlockChecksumProto) ProtoMessage()               {}
+func (*OpBlockChecksumProto) Descriptor() ([]byte, []int) { return fileDescriptor1, []int{11} }
 
 func (m *OpBlockChecksumProto) GetHeader() *BaseHeaderProto {
 	if m != nil {
@@ -517,19 +697,85 @@ func (m *OpBlockChecksumProto) GetHeader() *BaseHeaderProto {
 	return nil
 }
 
+// *
+// An ID uniquely identifying a shared memory segment.
+type ShortCircuitShmIdProto struct {
+	Hi               *int64 `protobuf:"varint,1,req,name=hi" json:"hi,omitempty"`
+	Lo               *int64 `protobuf:"varint,2,req,name=lo" json:"lo,omitempty"`
+	XXX_unrecognized []byte `json:"-"`
+}
+
+func (m *ShortCircuitShmIdProto) Reset()                    { *m = ShortCircuitShmIdProto{} }
+func (m *ShortCircuitShmIdProto) String() string            { return proto.CompactTextString(m) }
+func (*ShortCircuitShmIdProto) ProtoMessage()               {}
+func (*ShortCircuitShmIdProto) Descriptor() ([]byte, []int) { return fileDescriptor1, []int{12} }
+
+func (m *ShortCircuitShmIdProto) GetHi() int64 {
+	if m != nil && m.Hi != nil {
+		return *m.Hi
+	}
+	return 0
+}
+
+func (m *ShortCircuitShmIdProto) GetLo() int64 {
+	if m != nil && m.Lo != nil {
+		return *m.Lo
+	}
+	return 0
+}
+
+// *
+// An ID uniquely identifying a slot within a shared memory segment.
+type ShortCircuitShmSlotProto struct {
+	ShmId            *ShortCircuitShmIdProto `protobuf:"bytes,1,req,name=shmId" json:"shmId,omitempty"`
+	SlotIdx          *int32                  `protobuf:"varint,2,req,name=slotIdx" json:"slotIdx,omitempty"`
+	XXX_unrecognized []byte                  `json:"-"`
+}
+
+func (m *ShortCircuitShmSlotProto) Reset()                    { *m = ShortCircuitShmSlotProto{} }
+func (m *ShortCircuitShmSlotProto) String() string            { return proto.CompactTextString(m) }
+func (*ShortCircuitShmSlotProto) ProtoMessage()               {}
+func (*ShortCircuitShmSlotProto) Descriptor() ([]byte, []int) { return fileDescriptor1, []int{13} }
+
+func (m *ShortCircuitShmSlotProto) GetShmId() *ShortCircuitShmIdProto {
+	if m != nil {
+		return m.ShmId
+	}
+	return nil
+}
+
+func (m *ShortCircuitShmSlotProto) GetSlotIdx() int32 {
+	if m != nil && m.SlotIdx != nil {
+		return *m.SlotIdx
+	}
+	return 0
+}
+
 type OpRequestShortCircuitAccessProto struct {
 	Header *BaseHeaderProto `protobuf:"bytes,1,req,name=header" json:"header,omitempty"`
 	// * In order to get short-circuit access to block data, clients must set this
 	// to the highest version of the block data that they can understand.
 	// Currently 1 is the only version, but more versions may exist in the future
 	// if the on-disk format changes.
-	MaxVersion       *uint32 `protobuf:"varint,2,req,name=maxVersion" json:"maxVersion,omitempty"`
-	XXX_unrecognized []byte  `json:"-"`
+	MaxVersion *uint32 `protobuf:"varint,2,req,name=maxVersion" json:"maxVersion,omitempty"`
+	// *
+	// The shared memory slot to use, if we are using one.
+	SlotId *ShortCircuitShmSlotProto `protobuf:"bytes,3,opt,name=slotId" json:"slotId,omitempty"`
+	// *
+	// True if the client supports verifying that the file descriptor has been
+	// sent successfully.
+	SupportsReceiptVerification *bool  `protobuf:"varint,4,opt,name=supportsReceiptVerification,def=0" json:"supportsReceiptVerification,omitempty"`
+	XXX_unrecognized            []byte `json:"-"`
 }
 
 func (m *OpRequestShortCircuitAccessProto) Reset()         { *m = OpRequestShortCircuitAccessProto{} }
 func (m *OpRequestShortCircuitAccessProto) String() string { return proto.CompactTextString(m) }
 func (*OpRequestShortCircuitAccessProto) ProtoMessage()    {}
+func (*OpRequestShortCircuitAccessProto) Descriptor() ([]byte, []int) {
+	return fileDescriptor1, []int{14}
+}
+
+const Default_OpRequestShortCircuitAccessProto_SupportsReceiptVerification bool = false
 
 func (m *OpRequestShortCircuitAccessProto) GetHeader() *BaseHeaderProto {
 	if m != nil {
@@ -545,6 +791,136 @@ func (m *OpRequestShortCircuitAccessProto) GetMaxVersion() uint32 {
 	return 0
 }
 
+func (m *OpRequestShortCircuitAccessProto) GetSlotId() *ShortCircuitShmSlotProto {
+	if m != nil {
+		return m.SlotId
+	}
+	return nil
+}
+
+func (m *OpRequestShortCircuitAccessProto) GetSupportsReceiptVerification() bool {
+	if m != nil && m.SupportsReceiptVerification != nil {
+		return *m.SupportsReceiptVerification
+	}
+	return Default_OpRequestShortCircuitAccessProto_SupportsReceiptVerification
+}
+
+type ReleaseShortCircuitAccessRequestProto struct {
+	SlotId           *ShortCircuitShmSlotProto   `protobuf:"bytes,1,req,name=slotId" json:"slotId,omitempty"`
+	TraceInfo        *DataTransferTraceInfoProto `protobuf:"bytes,2,opt,name=traceInfo" json:"traceInfo,omitempty"`
+	XXX_unrecognized []byte                      `json:"-"`
+}
+
+func (m *ReleaseShortCircuitAccessRequestProto) Reset()         { *m = ReleaseShortCircuitAccessRequestProto{} }
+func (m *ReleaseShortCircuitAccessRequestProto) String() string { return proto.CompactTextString(m) }
+func (*ReleaseShortCircuitAccessRequestProto) ProtoMessage()    {}
+func (*ReleaseShortCircuitAccessRequestProto) Descriptor() ([]byte, []int) {
+	return fileDescriptor1, []int{15}
+}
+
+func (m *ReleaseShortCircuitAccessRequestProto) GetSlotId() *ShortCircuitShmSlotProto {
+	if m != nil {
+		return m.SlotId
+	}
+	return nil
+}
+
+func (m *ReleaseShortCircuitAccessRequestProto) GetTraceInfo() *DataTransferTraceInfoProto {
+	if m != nil {
+		return m.TraceInfo
+	}
+	return nil
+}
+
+type ReleaseShortCircuitAccessResponseProto struct {
+	Status           *Status `protobuf:"varint,1,req,name=status,enum=hadoop.hdfs.Status" json:"status,omitempty"`
+	Error            *string `protobuf:"bytes,2,opt,name=error" json:"error,omitempty"`
+	XXX_unrecognized []byte  `json:"-"`
+}
+
+func (m *ReleaseShortCircuitAccessResponseProto) Reset() {
+	*m = ReleaseShortCircuitAccessResponseProto{}
+}
+func (m *ReleaseShortCircuitAccessResponseProto) String() string { return proto.CompactTextString(m) }
+func (*ReleaseShortCircuitAccessResponseProto) ProtoMessage()    {}
+func (*ReleaseShortCircuitAccessResponseProto) Descriptor() ([]byte, []int) {
+	return fileDescriptor1, []int{16}
+}
+
+func (m *ReleaseShortCircuitAccessResponseProto) GetStatus() Status {
+	if m != nil && m.Status != nil {
+		return *m.Status
+	}
+	return Status_SUCCESS
+}
+
+func (m *ReleaseShortCircuitAccessResponseProto) GetError() string {
+	if m != nil && m.Error != nil {
+		return *m.Error
+	}
+	return ""
+}
+
+type ShortCircuitShmRequestProto struct {
+	// The name of the client requesting the shared memory segment.  This is
+	// purely for logging / debugging purposes.
+	ClientName       *string                     `protobuf:"bytes,1,req,name=clientName" json:"clientName,omitempty"`
+	TraceInfo        *DataTransferTraceInfoProto `protobuf:"bytes,2,opt,name=traceInfo" json:"traceInfo,omitempty"`
+	XXX_unrecognized []byte                      `json:"-"`
+}
+
+func (m *ShortCircuitShmRequestProto) Reset()                    { *m = ShortCircuitShmRequestProto{} }
+func (m *ShortCircuitShmRequestProto) String() string            { return proto.CompactTextString(m) }
+func (*ShortCircuitShmRequestProto) ProtoMessage()               {}
+func (*ShortCircuitShmRequestProto) Descriptor() ([]byte, []int) { return fileDescriptor1, []int{17} }
+
+func (m *ShortCircuitShmRequestProto) GetClientName() string {
+	if m != nil && m.ClientName != nil {
+		return *m.ClientName
+	}
+	return ""
+}
+
+func (m *ShortCircuitShmRequestProto) GetTraceInfo() *DataTransferTraceInfoProto {
+	if m != nil {
+		return m.TraceInfo
+	}
+	return nil
+}
+
+type ShortCircuitShmResponseProto struct {
+	Status           *Status                 `protobuf:"varint,1,req,name=status,enum=hadoop.hdfs.Status" json:"status,omitempty"`
+	Error            *string                 `protobuf:"bytes,2,opt,name=error" json:"error,omitempty"`
+	Id               *ShortCircuitShmIdProto `protobuf:"bytes,3,opt,name=id" json:"id,omitempty"`
+	XXX_unrecognized []byte                  `json:"-"`
+}
+
+func (m *ShortCircuitShmResponseProto) Reset()                    { *m = ShortCircuitShmResponseProto{} }
+func (m *ShortCircuitShmResponseProto) String() string            { return proto.CompactTextString(m) }
+func (*ShortCircuitShmResponseProto) ProtoMessage()               {}
+func (*ShortCircuitShmResponseProto) Descriptor() ([]byte, []int) { return fileDescriptor1, []int{18} }
+
+func (m *ShortCircuitShmResponseProto) GetStatus() Status {
+	if m != nil && m.Status != nil {
+		return *m.Status
+	}
+	return Status_SUCCESS
+}
+
+func (m *ShortCircuitShmResponseProto) GetError() string {
+	if m != nil && m.Error != nil {
+		return *m.Error
+	}
+	return ""
+}
+
+func (m *ShortCircuitShmResponseProto) GetId() *ShortCircuitShmIdProto {
+	if m != nil {
+		return m.Id
+	}
+	return nil
+}
+
 type PacketHeaderProto struct {
 	// All fields must be fixed-length!
 	OffsetInBlock     *int64 `protobuf:"fixed64,1,req,name=offsetInBlock" json:"offsetInBlock,omitempty"`
@@ -555,9 +931,10 @@ type PacketHeaderProto struct {
 	XXX_unrecognized  []byte `json:"-"`
 }
 
-func (m *PacketHeaderProto) Reset()         { *m = PacketHeaderProto{} }
-func (m *PacketHeaderProto) String() string { return proto.CompactTextString(m) }
-func (*PacketHeaderProto) ProtoMessage()    {}
+func (m *PacketHeaderProto) Reset()                    { *m = PacketHeaderProto{} }
+func (m *PacketHeaderProto) String() string            { return proto.CompactTextString(m) }
+func (*PacketHeaderProto) ProtoMessage()               {}
+func (*PacketHeaderProto) Descriptor() ([]byte, []int) { return fileDescriptor1, []int{19} }
 
 const Default_PacketHeaderProto_SyncBlock bool = false
 
@@ -598,14 +975,16 @@ func (m *PacketHeaderProto) GetSyncBlock() bool {
 
 type PipelineAckProto struct {
 	Seqno                  *int64   `protobuf:"zigzag64,1,req,name=seqno" json:"seqno,omitempty"`
-	Status                 []Status `protobuf:"varint,2,rep,name=status,enum=hadoop.hdfs.Status" json:"status,omitempty"`
+	Reply                  []Status `protobuf:"varint,2,rep,name=reply,enum=hadoop.hdfs.Status" json:"reply,omitempty"`
 	DownstreamAckTimeNanos *uint64  `protobuf:"varint,3,opt,name=downstreamAckTimeNanos,def=0" json:"downstreamAckTimeNanos,omitempty"`
+	Flag                   []uint32 `protobuf:"varint,4,rep,packed,name=flag" json:"flag,omitempty"`
 	XXX_unrecognized       []byte   `json:"-"`
 }
 
-func (m *PipelineAckProto) Reset()         { *m = PipelineAckProto{} }
-func (m *PipelineAckProto) String() string { return proto.CompactTextString(m) }
-func (*PipelineAckProto) ProtoMessage()    {}
+func (m *PipelineAckProto) Reset()                    { *m = PipelineAckProto{} }
+func (m *PipelineAckProto) String() string            { return proto.CompactTextString(m) }
+func (*PipelineAckProto) ProtoMessage()               {}
+func (*PipelineAckProto) Descriptor() ([]byte, []int) { return fileDescriptor1, []int{20} }
 
 const Default_PipelineAckProto_DownstreamAckTimeNanos uint64 = 0
 
@@ -616,9 +995,9 @@ func (m *PipelineAckProto) GetSeqno() int64 {
 	return 0
 }
 
-func (m *PipelineAckProto) GetStatus() []Status {
+func (m *PipelineAckProto) GetReply() []Status {
 	if m != nil {
-		return m.Status
+		return m.Reply
 	}
 	return nil
 }
@@ -628,6 +1007,13 @@ func (m *PipelineAckProto) GetDownstreamAckTimeNanos() uint64 {
 		return *m.DownstreamAckTimeNanos
 	}
 	return Default_PipelineAckProto_DownstreamAckTimeNanos
+}
+
+func (m *PipelineAckProto) GetFlag() []uint32 {
+	if m != nil {
+		return m.Flag
+	}
+	return nil
 }
 
 // *
@@ -643,9 +1029,10 @@ type ReadOpChecksumInfoProto struct {
 	XXX_unrecognized []byte  `json:"-"`
 }
 
-func (m *ReadOpChecksumInfoProto) Reset()         { *m = ReadOpChecksumInfoProto{} }
-func (m *ReadOpChecksumInfoProto) String() string { return proto.CompactTextString(m) }
-func (*ReadOpChecksumInfoProto) ProtoMessage()    {}
+func (m *ReadOpChecksumInfoProto) Reset()                    { *m = ReadOpChecksumInfoProto{} }
+func (m *ReadOpChecksumInfoProto) String() string            { return proto.CompactTextString(m) }
+func (*ReadOpChecksumInfoProto) ProtoMessage()               {}
+func (*ReadOpChecksumInfoProto) Descriptor() ([]byte, []int) { return fileDescriptor1, []int{21} }
 
 func (m *ReadOpChecksumInfoProto) GetChecksum() *ChecksumProto {
 	if m != nil {
@@ -679,9 +1066,10 @@ type BlockOpResponseProto struct {
 	XXX_unrecognized          []byte  `json:"-"`
 }
 
-func (m *BlockOpResponseProto) Reset()         { *m = BlockOpResponseProto{} }
-func (m *BlockOpResponseProto) String() string { return proto.CompactTextString(m) }
-func (*BlockOpResponseProto) ProtoMessage()    {}
+func (m *BlockOpResponseProto) Reset()                    { *m = BlockOpResponseProto{} }
+func (m *BlockOpResponseProto) String() string            { return proto.CompactTextString(m) }
+func (*BlockOpResponseProto) ProtoMessage()               {}
+func (*BlockOpResponseProto) Descriptor() ([]byte, []int) { return fileDescriptor1, []int{22} }
 
 func (m *BlockOpResponseProto) GetStatus() Status {
 	if m != nil && m.Status != nil {
@@ -733,9 +1121,10 @@ type ClientReadStatusProto struct {
 	XXX_unrecognized []byte  `json:"-"`
 }
 
-func (m *ClientReadStatusProto) Reset()         { *m = ClientReadStatusProto{} }
-func (m *ClientReadStatusProto) String() string { return proto.CompactTextString(m) }
-func (*ClientReadStatusProto) ProtoMessage()    {}
+func (m *ClientReadStatusProto) Reset()                    { *m = ClientReadStatusProto{} }
+func (m *ClientReadStatusProto) String() string            { return proto.CompactTextString(m) }
+func (*ClientReadStatusProto) ProtoMessage()               {}
+func (*ClientReadStatusProto) Descriptor() ([]byte, []int) { return fileDescriptor1, []int{23} }
 
 func (m *ClientReadStatusProto) GetStatus() Status {
 	if m != nil && m.Status != nil {
@@ -749,9 +1138,10 @@ type DNTransferAckProto struct {
 	XXX_unrecognized []byte  `json:"-"`
 }
 
-func (m *DNTransferAckProto) Reset()         { *m = DNTransferAckProto{} }
-func (m *DNTransferAckProto) String() string { return proto.CompactTextString(m) }
-func (*DNTransferAckProto) ProtoMessage()    {}
+func (m *DNTransferAckProto) Reset()                    { *m = DNTransferAckProto{} }
+func (m *DNTransferAckProto) String() string            { return proto.CompactTextString(m) }
+func (*DNTransferAckProto) ProtoMessage()               {}
+func (*DNTransferAckProto) Descriptor() ([]byte, []int) { return fileDescriptor1, []int{24} }
 
 func (m *DNTransferAckProto) GetStatus() Status {
 	if m != nil && m.Status != nil {
@@ -768,9 +1158,10 @@ type OpBlockChecksumResponseProto struct {
 	XXX_unrecognized []byte             `json:"-"`
 }
 
-func (m *OpBlockChecksumResponseProto) Reset()         { *m = OpBlockChecksumResponseProto{} }
-func (m *OpBlockChecksumResponseProto) String() string { return proto.CompactTextString(m) }
-func (*OpBlockChecksumResponseProto) ProtoMessage()    {}
+func (m *OpBlockChecksumResponseProto) Reset()                    { *m = OpBlockChecksumResponseProto{} }
+func (m *OpBlockChecksumResponseProto) String() string            { return proto.CompactTextString(m) }
+func (*OpBlockChecksumResponseProto) ProtoMessage()               {}
+func (*OpBlockChecksumResponseProto) Descriptor() ([]byte, []int) { return fileDescriptor1, []int{25} }
 
 func (m *OpBlockChecksumResponseProto) GetBytesPerCrc() uint32 {
 	if m != nil && m.BytesPerCrc != nil {
@@ -801,7 +1192,148 @@ func (m *OpBlockChecksumResponseProto) GetCrcType() ChecksumTypeProto {
 }
 
 func init() {
+	proto.RegisterType((*DataTransferEncryptorMessageProto)(nil), "hadoop.hdfs.DataTransferEncryptorMessageProto")
+	proto.RegisterType((*BaseHeaderProto)(nil), "hadoop.hdfs.BaseHeaderProto")
+	proto.RegisterType((*DataTransferTraceInfoProto)(nil), "hadoop.hdfs.DataTransferTraceInfoProto")
+	proto.RegisterType((*ClientOperationHeaderProto)(nil), "hadoop.hdfs.ClientOperationHeaderProto")
+	proto.RegisterType((*CachingStrategyProto)(nil), "hadoop.hdfs.CachingStrategyProto")
+	proto.RegisterType((*OpReadBlockProto)(nil), "hadoop.hdfs.OpReadBlockProto")
+	proto.RegisterType((*ChecksumProto)(nil), "hadoop.hdfs.ChecksumProto")
+	proto.RegisterType((*OpWriteBlockProto)(nil), "hadoop.hdfs.OpWriteBlockProto")
+	proto.RegisterType((*OpTransferBlockProto)(nil), "hadoop.hdfs.OpTransferBlockProto")
+	proto.RegisterType((*OpReplaceBlockProto)(nil), "hadoop.hdfs.OpReplaceBlockProto")
+	proto.RegisterType((*OpCopyBlockProto)(nil), "hadoop.hdfs.OpCopyBlockProto")
+	proto.RegisterType((*OpBlockChecksumProto)(nil), "hadoop.hdfs.OpBlockChecksumProto")
+	proto.RegisterType((*ShortCircuitShmIdProto)(nil), "hadoop.hdfs.ShortCircuitShmIdProto")
+	proto.RegisterType((*ShortCircuitShmSlotProto)(nil), "hadoop.hdfs.ShortCircuitShmSlotProto")
+	proto.RegisterType((*OpRequestShortCircuitAccessProto)(nil), "hadoop.hdfs.OpRequestShortCircuitAccessProto")
+	proto.RegisterType((*ReleaseShortCircuitAccessRequestProto)(nil), "hadoop.hdfs.ReleaseShortCircuitAccessRequestProto")
+	proto.RegisterType((*ReleaseShortCircuitAccessResponseProto)(nil), "hadoop.hdfs.ReleaseShortCircuitAccessResponseProto")
+	proto.RegisterType((*ShortCircuitShmRequestProto)(nil), "hadoop.hdfs.ShortCircuitShmRequestProto")
+	proto.RegisterType((*ShortCircuitShmResponseProto)(nil), "hadoop.hdfs.ShortCircuitShmResponseProto")
+	proto.RegisterType((*PacketHeaderProto)(nil), "hadoop.hdfs.PacketHeaderProto")
+	proto.RegisterType((*PipelineAckProto)(nil), "hadoop.hdfs.PipelineAckProto")
+	proto.RegisterType((*ReadOpChecksumInfoProto)(nil), "hadoop.hdfs.ReadOpChecksumInfoProto")
+	proto.RegisterType((*BlockOpResponseProto)(nil), "hadoop.hdfs.BlockOpResponseProto")
+	proto.RegisterType((*ClientReadStatusProto)(nil), "hadoop.hdfs.ClientReadStatusProto")
+	proto.RegisterType((*DNTransferAckProto)(nil), "hadoop.hdfs.DNTransferAckProto")
+	proto.RegisterType((*OpBlockChecksumResponseProto)(nil), "hadoop.hdfs.OpBlockChecksumResponseProto")
 	proto.RegisterEnum("hadoop.hdfs.Status", Status_name, Status_value)
+	proto.RegisterEnum("hadoop.hdfs.ShortCircuitFdResponse", ShortCircuitFdResponse_name, ShortCircuitFdResponse_value)
 	proto.RegisterEnum("hadoop.hdfs.DataTransferEncryptorMessageProto_DataTransferEncryptorStatus", DataTransferEncryptorMessageProto_DataTransferEncryptorStatus_name, DataTransferEncryptorMessageProto_DataTransferEncryptorStatus_value)
 	proto.RegisterEnum("hadoop.hdfs.OpWriteBlockProto_BlockConstructionStage", OpWriteBlockProto_BlockConstructionStage_name, OpWriteBlockProto_BlockConstructionStage_value)
+}
+
+var fileDescriptor1 = []byte{
+	// 1749 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x09, 0x6e, 0x88, 0x02, 0xff, 0xc4, 0x58, 0x5b, 0x8f, 0xdb, 0x5a,
+	0x15, 0xc6, 0xb9, 0xcc, 0x4c, 0x56, 0x26, 0x33, 0x1e, 0xb7, 0xd3, 0x93, 0x4e, 0x7b, 0x4e, 0x3b,
+	0x3e, 0x14, 0x86, 0xaa, 0x0a, 0x25, 0x50, 0x01, 0x15, 0x97, 0x93, 0x8b, 0xdb, 0x9a, 0x99, 0xc6,
+	0x91, 0xed, 0x69, 0xe1, 0x80, 0x14, 0x79, 0xec, 0x9d, 0x89, 0x35, 0x8e, 0xed, 0x63, 0x3b, 0x9c,
+	0xa6, 0x2f, 0x3c, 0x20, 0x21, 0x1e, 0xf8, 0x01, 0x88, 0x27, 0x5e, 0x10, 0x3f, 0x02, 0x09, 0x89,
+	0x27, 0xfe, 0x10, 0x3f, 0x80, 0xb5, 0xf7, 0xb6, 0x13, 0x3b, 0x73, 0xed, 0x39, 0x48, 0xbc, 0x39,
+	0x6b, 0xaf, 0xb5, 0xf6, 0xba, 0xed, 0x6f, 0x7f, 0x3b, 0x20, 0x39, 0x56, 0x62, 0x25, 0x91, 0xe5,
+	0xc7, 0x63, 0x12, 0xb5, 0xc2, 0x28, 0x48, 0x02, 0xa9, 0x3e, 0xb1, 0x9c, 0x20, 0x08, 0x5b, 0x13,
+	0x67, 0x1c, 0xef, 0x6d, 0x19, 0xc4, 0x9e, 0x45, 0x6e, 0x32, 0xe7, 0x8b, 0x7b, 0x40, 0xa5, 0xfc,
+	0x5b, 0xfe, 0x5b, 0x09, 0xf6, 0xfb, 0x68, 0x6f, 0xa6, 0xf6, 0x8a, 0x6f, 0x47, 0xf3, 0x30, 0x09,
+	0xa2, 0xd7, 0x24, 0x8e, 0xad, 0x53, 0x32, 0x64, 0xee, 0x3e, 0x87, 0xb5, 0x18, 0xf7, 0x98, 0xc5,
+	0x4d, 0xe1, 0x61, 0xe9, 0x60, 0xab, 0xfd, 0x8b, 0x56, 0xce, 0x7f, 0xeb, 0x5a, 0xfb, 0x8b, 0x35,
+	0x0c, 0xe6, 0x51, 0xda, 0x86, 0xf5, 0xd0, 0x9a, 0x7b, 0x81, 0xe5, 0x34, 0x4b, 0x0f, 0x85, 0x83,
+	0x4d, 0x2a, 0x98, 0x72, 0xe3, 0x66, 0x19, 0x05, 0x35, 0xe9, 0x07, 0xb0, 0x69, 0xbb, 0xe1, 0x84,
+	0x44, 0x5a, 0x98, 0xb8, 0x81, 0xdf, 0xac, 0x3c, 0x2c, 0x1f, 0xd4, 0xdb, 0x9f, 0x14, 0x62, 0xe8,
+	0xe5, 0x14, 0xd8, 0x9e, 0xf2, 0x11, 0xdc, 0xbb, 0x6a, 0xdb, 0x3a, 0xac, 0x1b, 0xc7, 0xbd, 0x9e,
+	0x62, 0x18, 0xe2, 0x37, 0xa4, 0x5d, 0xd8, 0x51, 0x74, 0x5d, 0xd3, 0x47, 0xc7, 0x83, 0xc3, 0x81,
+	0xf6, 0x76, 0x30, 0x3a, 0x54, 0x7e, 0x25, 0x0a, 0x52, 0x0d, 0xaa, 0x4c, 0x2c, 0x96, 0xe4, 0xbf,
+	0x0b, 0xb0, 0xdd, 0xb5, 0x62, 0xf2, 0x8a, 0x58, 0x0e, 0x89, 0x78, 0x55, 0x5a, 0x50, 0x3d, 0xf1,
+	0x02, 0xfb, 0x8c, 0x15, 0xa5, 0xde, 0x7e, 0x50, 0x08, 0x48, 0x79, 0x97, 0x10, 0xdf, 0x21, 0x4e,
+	0x97, 0x6a, 0x70, 0xfd, 0x03, 0xa8, 0x26, 0xc1, 0x19, 0xf1, 0x59, 0x9e, 0xf5, 0xf6, 0xdd, 0x4c,
+	0xdf, 0x0e, 0xa6, 0xd3, 0xc0, 0x6f, 0x99, 0x74, 0x8d, 0x6b, 0x3e, 0x87, 0x1a, 0x36, 0xd4, 0x26,
+	0xaa, 0x3f, 0x0e, 0x58, 0x11, 0xea, 0xed, 0x6f, 0x5f, 0x5a, 0x72, 0x33, 0xd3, 0xe4, 0x79, 0xff,
+	0x1c, 0xf6, 0x2e, 0x5f, 0xa5, 0xc5, 0xe5, 0x9e, 0x1d, 0x16, 0x75, 0x45, 0x12, 0x61, 0x23, 0xb4,
+	0x22, 0xe2, 0x27, 0x2a, 0xad, 0x3f, 0x4a, 0xe4, 0x13, 0xd8, 0xeb, 0x79, 0x2e, 0x4a, 0xb4, 0x90,
+	0x44, 0x16, 0x2d, 0x68, 0x3e, 0xe9, 0xa7, 0x00, 0x27, 0x8b, 0x3a, 0xa4, 0x99, 0xdf, 0x2f, 0xc4,
+	0xb6, 0x5a, 0x26, 0x09, 0xc0, 0x66, 0xfe, 0x06, 0xd6, 0x94, 0xb0, 0x3d, 0x6a, 0xf2, 0x4f, 0xe1,
+	0x76, 0xcf, 0xb2, 0x27, 0xae, 0x7f, 0x6a, 0x60, 0x38, 0x09, 0x39, 0x9d, 0x2f, 0x74, 0x9d, 0x28,
+	0x08, 0xbb, 0x04, 0x97, 0x68, 0x84, 0xc2, 0xc1, 0x86, 0xb4, 0x03, 0xb5, 0x08, 0xdd, 0x59, 0x13,
+	0x92, 0x8e, 0x48, 0x59, 0xfe, 0x97, 0x00, 0xa2, 0x16, 0xea, 0x28, 0xc8, 0x95, 0xf7, 0x87, 0xb0,
+	0x36, 0xc9, 0x47, 0x55, 0xac, 0xd8, 0x15, 0x29, 0x6d, 0xc1, 0x5a, 0x30, 0x1e, 0xc7, 0x24, 0xe1,
+	0x05, 0xc0, 0xd1, 0x28, 0x7b, 0xd8, 0xa5, 0x32, 0xfb, 0x71, 0x0f, 0x1a, 0x31, 0x36, 0xb2, 0x37,
+	0x21, 0xf6, 0x59, 0x3c, 0x9b, 0xc6, 0x38, 0x7d, 0x18, 0xd4, 0xf3, 0x4a, 0x12, 0xcd, 0x08, 0xf6,
+	0x69, 0xdb, 0x2e, 0xa6, 0xd1, 0xac, 0xb2, 0x6e, 0xed, 0x17, 0xf7, 0xbe, 0x20, 0x55, 0xf9, 0x2d,
+	0x34, 0x32, 0xa7, 0x3c, 0x8c, 0x27, 0x50, 0x49, 0xe6, 0x21, 0x49, 0x8f, 0xd8, 0xca, 0x78, 0xa7,
+	0x9a, 0x26, 0x2a, 0x70, 0xed, 0x26, 0x88, 0x27, 0xf3, 0x84, 0xc4, 0x43, 0x12, 0x65, 0x8b, 0x2c,
+	0xfc, 0x86, 0xfc, 0xe7, 0x75, 0xd8, 0xd1, 0xc2, 0xb7, 0x78, 0xe0, 0xc9, 0xff, 0xa2, 0x3a, 0xdf,
+	0xc5, 0x89, 0xb1, 0xa2, 0x53, 0x92, 0xc4, 0xe8, 0xff, 0xfc, 0xc1, 0xa3, 0xb3, 0xe6, 0x07, 0x4e,
+	0x6e, 0xc4, 0x5a, 0x08, 0x16, 0xc1, 0x2c, 0xb2, 0x49, 0x3a, 0xb9, 0xd7, 0xe9, 0xf7, 0xa1, 0x8a,
+	0xe0, 0x82, 0xa7, 0xbd, 0xc2, 0x12, 0x7f, 0x56, 0x50, 0x3f, 0x97, 0x48, 0x8b, 0x7d, 0xf6, 0x02,
+	0x3f, 0xc6, 0x0e, 0xd8, 0x34, 0x58, 0x83, 0x1a, 0x4b, 0xb7, 0x61, 0x33, 0x74, 0x43, 0xe2, 0xb9,
+	0x3e, 0x31, 0xdc, 0xf7, 0x04, 0xfb, 0x80, 0xb5, 0xa0, 0xd2, 0xa9, 0xeb, 0x77, 0x69, 0xa1, 0x74,
+	0xfb, 0xb7, 0x4e, 0x73, 0x8d, 0xf5, 0x94, 0x4a, 0xad, 0x77, 0x4b, 0xe9, 0x3a, 0x93, 0x7e, 0x0c,
+	0xbb, 0x1e, 0xf6, 0x27, 0x4e, 0x5e, 0x12, 0x3f, 0xad, 0x03, 0xba, 0x9e, 0x86, 0xcd, 0x0d, 0xb6,
+	0xfc, 0x0c, 0x76, 0x22, 0xf2, 0xc5, 0x0c, 0xd7, 0xc9, 0x62, 0x1a, 0x9a, 0x35, 0x56, 0xcb, 0xbd,
+	0x0b, 0x7b, 0x95, 0x1d, 0xe5, 0x73, 0x23, 0x02, 0x37, 0x1c, 0x11, 0xe9, 0x47, 0x50, 0x8f, 0x11,
+	0xb1, 0x30, 0x3d, 0xda, 0xf7, 0x66, 0x1d, 0xed, 0xb6, 0xda, 0x1f, 0x17, 0xec, 0x8c, 0xe5, 0x3a,
+	0xb3, 0x79, 0x5e, 0xe9, 0xab, 0xc6, 0xa1, 0xf4, 0x63, 0x90, 0x78, 0xd3, 0x72, 0xeb, 0x71, 0x73,
+	0x13, 0xfb, 0x77, 0x9d, 0x03, 0xe9, 0x01, 0x88, 0x96, 0xe7, 0x05, 0x5f, 0x1e, 0x59, 0xef, 0xe7,
+	0x38, 0x5c, 0xb1, 0x1b, 0x27, 0xcd, 0x06, 0x9b, 0xf9, 0xea, 0xd8, 0xf2, 0x62, 0x22, 0xdd, 0x41,
+	0xc0, 0x76, 0x7d, 0x1f, 0xa3, 0x6d, 0x6e, 0x15, 0xe5, 0x5b, 0x7c, 0xcf, 0x21, 0x5f, 0x8d, 0x9b,
+	0xdb, 0xb8, 0xdf, 0x86, 0xfc, 0xc7, 0x12, 0xdc, 0xb9, 0xa4, 0x69, 0x77, 0x61, 0x77, 0xa8, 0x0e,
+	0x95, 0x23, 0x75, 0xa0, 0x8c, 0x0c, 0xc5, 0x3c, 0x1e, 0x8e, 0x3a, 0xc3, 0xa1, 0x32, 0xe8, 0x23,
+	0x24, 0xcb, 0xf0, 0xc9, 0x85, 0x4b, 0x23, 0x5d, 0xe9, 0x69, 0x6f, 0x14, 0x9d, 0xe2, 0xb3, 0x04,
+	0x5b, 0xfd, 0x8e, 0xd9, 0x19, 0x19, 0xa6, 0xae, 0x74, 0x5e, 0xab, 0x83, 0x97, 0x62, 0x49, 0x7a,
+	0x04, 0xfb, 0x2b, 0x76, 0x8b, 0xd5, 0xa5, 0x69, 0x99, 0x9a, 0x2e, 0xd4, 0x7a, 0x47, 0x9a, 0xa1,
+	0x88, 0xf4, 0xa8, 0x7f, 0x54, 0x94, 0x2d, 0x0d, 0xaa, 0x17, 0x84, 0xda, 0x43, 0xb7, 0xa6, 0x22,
+	0xae, 0x21, 0x84, 0x6e, 0x9a, 0x7a, 0x67, 0x60, 0xbc, 0x50, 0xf4, 0x91, 0xde, 0x7d, 0x2b, 0xae,
+	0x63, 0x29, 0xa4, 0x85, 0xe4, 0x85, 0x3a, 0xe8, 0x1c, 0xa9, 0x9f, 0x2b, 0x7d, 0x71, 0x43, 0xfe,
+	0x87, 0x00, 0xb7, 0xb5, 0x30, 0x83, 0xe6, 0xff, 0xcb, 0xe9, 0xbc, 0x78, 0x32, 0xca, 0x37, 0x98,
+	0x0c, 0xf9, 0x9f, 0x02, 0xdc, 0xa2, 0xa8, 0x1b, 0x7a, 0x78, 0x81, 0xe4, 0x82, 0x7f, 0xb2, 0x12,
+	0xfc, 0xd5, 0xd7, 0x01, 0xde, 0x40, 0x0e, 0xf1, 0x5e, 0xb9, 0x3e, 0x87, 0xdb, 0x5a, 0x01, 0x2f,
+	0x4a, 0x37, 0xc8, 0x60, 0xe5, 0x54, 0x54, 0x6e, 0x7c, 0x2a, 0xe4, 0xcf, 0xe8, 0xad, 0xd1, 0x0b,
+	0xc2, 0xf9, 0x57, 0x0d, 0x5e, 0xee, 0xd3, 0xfe, 0xf1, 0x61, 0x5e, 0xc1, 0xee, 0x0f, 0xf1, 0xf2,
+	0x14, 0xee, 0x18, 0x93, 0x20, 0x4a, 0x7a, 0x6e, 0x64, 0xcf, 0xdc, 0xc4, 0x98, 0x4c, 0x55, 0x87,
+	0xfb, 0x01, 0x28, 0x4d, 0x5c, 0xe6, 0xa3, 0x4c, 0xbf, 0xbd, 0x80, 0xd5, 0xa8, 0x2c, 0x8f, 0xa0,
+	0xb9, 0x62, 0x61, 0x78, 0x41, 0xc2, 0x6d, 0xda, 0x88, 0x9f, 0xd4, 0x43, 0xba, 0xf5, 0xa7, 0xc5,
+	0x4a, 0x5c, 0xbc, 0x0f, 0x36, 0x21, 0x46, 0x07, 0xaa, 0xf3, 0x8e, 0x6d, 0x50, 0x95, 0xff, 0x2d,
+	0xc0, 0x43, 0xda, 0x5b, 0x06, 0x70, 0x79, 0xa3, 0x8e, 0x6d, 0x23, 0x19, 0xfb, 0x2a, 0x8d, 0xc6,
+	0x04, 0x10, 0x65, 0xdf, 0x50, 0x08, 0x09, 0x7c, 0x7e, 0x37, 0x21, 0x88, 0xae, 0xf1, 0x7d, 0xd3,
+	0xbb, 0xe1, 0xd1, 0x55, 0xc1, 0x2e, 0x53, 0x7c, 0x0c, 0xf7, 0xe2, 0x59, 0x18, 0xe2, 0x6a, 0xac,
+	0x13, 0x9b, 0xb8, 0x61, 0x82, 0x6e, 0xdd, 0xb1, 0x6b, 0x5b, 0x29, 0x21, 0x5c, 0xc2, 0x90, 0xfc,
+	0x17, 0x01, 0x1e, 0xe9, 0xc4, 0x23, 0x18, 0xcd, 0xf9, 0x3c, 0xd2, 0x04, 0xb9, 0xd7, 0x65, 0x30,
+	0x3c, 0x9d, 0x1b, 0x06, 0x53, 0x20, 0x67, 0xa5, 0x0f, 0x23, 0x67, 0xbf, 0x81, 0x6f, 0x5d, 0x11,
+	0x5b, 0x1c, 0x22, 0x42, 0xa6, 0x30, 0xfc, 0xe9, 0x0a, 0xe5, 0xbe, 0xb5, 0x32, 0xe0, 0x8c, 0xc4,
+	0x36, 0xa0, 0x4a, 0xa2, 0x28, 0x88, 0x58, 0x18, 0x35, 0x79, 0x0a, 0xf7, 0x56, 0xa2, 0x2e, 0xe4,
+	0x5b, 0x24, 0x62, 0x02, 0x3b, 0x7c, 0x5f, 0x27, 0x99, 0xdf, 0x0b, 0x70, 0xff, 0xdc, 0x7e, 0x5f,
+	0x33, 0x07, 0x04, 0xb4, 0x92, 0x9b, 0x4d, 0xc7, 0x4d, 0x46, 0x59, 0xfe, 0x1d, 0xec, 0x0c, 0x2d,
+	0xfb, 0x8c, 0x24, 0xf9, 0xd9, 0xdb, 0x85, 0x06, 0xa7, 0x74, 0xaa, 0xdf, 0x5d, 0x50, 0x74, 0x91,
+	0xee, 0x15, 0x93, 0x2f, 0x7c, 0x7e, 0xaa, 0x44, 0xc4, 0xf4, 0x1d, 0xcf, 0xc2, 0xea, 0x30, 0xf3,
+	0x4c, 0x93, 0x82, 0xd0, 0x06, 0x43, 0x29, 0xcc, 0xfc, 0x88, 0xf8, 0x8c, 0x96, 0x6c, 0x23, 0xdf,
+	0xaa, 0xc5, 0x73, 0xdf, 0xe6, 0x3a, 0xd5, 0xfc, 0xc0, 0xbd, 0x07, 0x71, 0x98, 0x32, 0x8f, 0x4e,
+	0x86, 0x2a, 0x8b, 0x8d, 0xe8, 0xbe, 0x12, 0x5e, 0x66, 0xd5, 0x08, 0x61, 0x73, 0xce, 0x30, 0xfa,
+	0x92, 0x3a, 0xec, 0xc3, 0x1d, 0x27, 0xf8, 0x92, 0xde, 0x90, 0xc4, 0x9a, 0xa2, 0x23, 0xd3, 0x9d,
+	0x92, 0x01, 0x42, 0x5f, 0xcc, 0x8a, 0x51, 0x79, 0x2e, 0x3c, 0xc5, 0x8b, 0xa6, 0x32, 0xf6, 0xac,
+	0x53, 0xf6, 0x00, 0x6a, 0x74, 0x4b, 0xa2, 0x80, 0xf3, 0xf4, 0x11, 0x65, 0xc1, 0x88, 0x6a, 0x29,
+	0x1c, 0x2d, 0x61, 0xf2, 0x09, 0x6c, 0xd8, 0x19, 0x4d, 0x11, 0xae, 0xa5, 0x29, 0xb7, 0xa0, 0x6e,
+	0x4f, 0x66, 0xfe, 0x99, 0x96, 0x23, 0xc2, 0xf2, 0x9f, 0x4a, 0x70, 0x9b, 0x25, 0x4c, 0x91, 0xe1,
+	0x83, 0x1b, 0x8b, 0x2c, 0x6b, 0xec, 0x46, 0x71, 0xd2, 0xb5, 0x9c, 0x23, 0xd7, 0x3f, 0x4b, 0xfb,
+	0xdb, 0x03, 0x31, 0x0b, 0x2b, 0xf3, 0x99, 0x76, 0xfb, 0x3b, 0x2b, 0xc4, 0xaf, 0x00, 0xb3, 0xc5,
+	0xfd, 0x3f, 0x03, 0x29, 0x3a, 0x97, 0x36, 0x83, 0x81, 0x7a, 0xfb, 0x9b, 0x05, 0x37, 0x97, 0x55,
+	0x27, 0xf7, 0xc8, 0xac, 0xb2, 0xb8, 0xf6, 0xe1, 0x6e, 0x7c, 0xee, 0x48, 0x66, 0xe0, 0xb5, 0x86,
+	0x2a, 0x0d, 0xf9, 0x27, 0xb0, 0xcb, 0x6f, 0x62, 0xea, 0x94, 0x27, 0x79, 0xf3, 0x72, 0xc8, 0x78,
+	0xf1, 0xf6, 0x07, 0xd9, 0x49, 0x5a, 0x0c, 0xca, 0x8d, 0x4c, 0xff, 0x80, 0x07, 0xed, 0xca, 0x7a,
+	0x60, 0xf7, 0x16, 0x8f, 0x81, 0xc8, 0x66, 0xae, 0x1a, 0xac, 0xa5, 0x91, 0x3d, 0x4c, 0x79, 0xc6,
+	0xf2, 0x6d, 0x33, 0x75, 0x9e, 0xb1, 0x21, 0xdf, 0xa4, 0xe4, 0x01, 0x35, 0x72, 0xb7, 0xe8, 0x35,
+	0x8f, 0x8e, 0xc7, 0xff, 0x11, 0x60, 0xed, 0xa2, 0xf7, 0xf3, 0xe2, 0xa1, 0xcc, 0x38, 0x19, 0x7f,
+	0x4a, 0xf7, 0x5e, 0x29, 0xbd, 0x43, 0xe3, 0xf8, 0x35, 0x72, 0xb2, 0x1d, 0x68, 0x70, 0x99, 0x3a,
+	0x78, 0x83, 0x5c, 0xa8, 0x8f, 0xfc, 0x0b, 0x39, 0x13, 0x17, 0x29, 0xbf, 0x54, 0x0d, 0xd3, 0x40,
+	0xf6, 0x85, 0x9c, 0x89, 0x4b, 0x3a, 0xcc, 0xeb, 0xc8, 0xd4, 0x0e, 0x95, 0x01, 0x12, 0xaf, 0x6d,
+	0xa8, 0x67, 0xae, 0x46, 0xda, 0x21, 0xd2, 0xad, 0xdc, 0x63, 0xdd, 0x38, 0x1e, 0x0e, 0x35, 0xdd,
+	0x44, 0x6e, 0xb5, 0x4e, 0xf5, 0x34, 0xad, 0x8b, 0x94, 0xcd, 0x30, 0x3b, 0xba, 0x29, 0xd2, 0x77,
+	0x63, 0x23, 0x15, 0x28, 0xfa, 0x1b, 0xa5, 0xff, 0x3d, 0xb1, 0xb6, 0x2a, 0x6a, 0x8b, 0xb0, 0x2a,
+	0xfa, 0xbe, 0x58, 0xa7, 0x9e, 0xd4, 0xc1, 0x68, 0xa8, 0x6b, 0x2f, 0x75, 0x9a, 0xde, 0xe6, 0xe3,
+	0x5f, 0x17, 0xef, 0xeb, 0x17, 0x4e, 0x56, 0x7d, 0x6c, 0xdf, 0x83, 0xbe, 0x36, 0x1a, 0x68, 0xe6,
+	0xe8, 0x98, 0xd3, 0x45, 0x45, 0x1d, 0x9a, 0x23, 0xa4, 0x8c, 0xea, 0x0b, 0xb5, 0xd7, 0x31, 0x55,
+	0x6d, 0x80, 0xd5, 0xb9, 0x0f, 0xcd, 0x4b, 0x57, 0x85, 0xee, 0xcf, 0xe0, 0x51, 0x10, 0x9d, 0xb6,
+	0xac, 0x10, 0x5f, 0x00, 0xa4, 0x50, 0x7f, 0xf6, 0x0f, 0x8d, 0x1d, 0x78, 0xfc, 0xa3, 0x2b, 0xe5,
+	0xa1, 0x98, 0xf5, 0x23, 0xfe, 0xab, 0x20, 0xfc, 0x37, 0x00, 0x00, 0xff, 0xff, 0x27, 0x5c, 0xd3,
+	0xeb, 0xff, 0x11, 0x00, 0x00,
 }

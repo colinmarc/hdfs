@@ -119,7 +119,7 @@ package hadoop_hdfs
 import proto "github.com/golang/protobuf/proto"
 import math "math"
 
-// discarding unused import hadoop_common "Security.pb"
+// discarding unused import hadoop_common "github.com/colinmarc/hdfs/protocol/hadoop_common"
 
 // Reference imports to suppress errors if they are not otherwise used.
 var _ = proto.Marshal

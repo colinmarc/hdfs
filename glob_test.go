@@ -20,8 +20,7 @@ func TestGlobFindWildcard(t *testing.T) {
 	require.NoError(t, err)
 	require.Equal(t, 4, len(res))
 
-	assert.EqualValues(t, "1", res[0].Name())
-	assert.False(t, res[0].IsDir())
+	assert.EqualValues(t, "/_test/glob1/1", res[0])
 }
 
 func TestGlobFindBraces(t *testing.T) {
@@ -38,8 +37,7 @@ func TestGlobFindBraces(t *testing.T) {
 	require.NoError(t, err)
 	require.Equal(t, 2, len(res))
 
-	assert.EqualValues(t, "1", res[0].Name())
-	assert.False(t, res[0].IsDir())
+	assert.EqualValues(t, "/_test/glob2/1", res[0])
 }
 
 func TestGlobFindBracesTwice(t *testing.T) {
@@ -80,4 +78,3 @@ func TestGlobFindRegexWildcard(t *testing.T) {
 	require.NoError(t, err)
 	require.Equal(t, 2, len(res))
 }
-

@@ -2,7 +2,6 @@ package hdfs
 
 import (
 	"fmt"
-	"os"
 	"path"
 	"regexp"
 	"strings"
@@ -41,11 +40,11 @@ func GlobHasMagic(element string) bool {
 	return matched
 }
 
-func (c *Client) GlobFind(globPath string) ([]os.FileInfo, error) {
-	return c.GetGlob(globPath, []os.FileInfo{})
+func (c *Client) GlobFind(globPath string) ([]string, error) {
+	return c.GetGlob(globPath, []string{})
 }
 
-func (c *Client) GetGlob(originalGlobPath string, pathsArray []os.FileInfo) ([]os.FileInfo, error) {
+func (c *Client) GetGlob(originalGlobPath string, pathsArray []string) ([]string, error) {
 	var firstMagic int
 	var checkPath string
 	var rest string
@@ -83,7 +82,6 @@ func (c *Client) GetGlob(originalGlobPath string, pathsArray []os.FileInfo) ([]o
 				dirInfo, _ := c.ReadDir(checkPath)
 				for _, node := range dirInfo {
 					var nextPathArray []string
-					var nextPathStat os.FileInfo
 
 					if len(rest) > 0 {
 						nextPathArray = []string{checkPath, node.Name(), rest}
@@ -94,17 +92,16 @@ func (c *Client) GetGlob(originalGlobPath string, pathsArray []os.FileInfo) ([]o
 
 					fileNameMatched, _ := path.Match(magicString, node.Name())
 
-					if (fileNameMatched) {
-						if (len(rest) > 0 && GlobHasMagic(rest)) {
+					if fileNameMatched {
+						if len(rest) > 0 && GlobHasMagic(rest) {
 							pathsArray, _ = c.GetGlob(nextPath, pathsArray)
 						} else {
-							nextPathStat, _ = c.Stat(nextPath)
-							pathsArray = append(pathsArray, nextPathStat)
+							pathsArray = append(pathsArray, nextPath)
 						}
 					}
 				}
 			} else if len(restElements) > 0 {
-				pathsArray = append(pathsArray, fileInfo)
+				pathsArray = append(pathsArray, checkPath)
 			}
 		}
 	}

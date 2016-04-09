@@ -2,6 +2,7 @@ package hdfs
 
 import (
 	"encoding/xml"
+	"fmt"
 	"io/ioutil"
 	"net/url"
 	"os"
@@ -25,7 +26,16 @@ type NameNode struct {
 	Port int
 }
 
-// Get Hadoop Properties
+type nameNodeError struct {
+	Message string
+}
+
+func (e *nameNodeError) Error() string {
+	return fmt.Sprintf("%s", e.Message)
+}
+
+// Get Hadoop Properties - try to open a conf file, marshal the results
+// into a Result object and return the Properties of that object.
 func GetHadoopProperties(path string) ([]Property, error) {
 	result := Result{}
 	f, err := ioutil.ReadFile(path)
@@ -50,8 +60,7 @@ func GetNamenodesFromHDFSConfig(path string) []string {
 	var nns []string
 	for _, prop := range props {
 		if strings.HasPrefix(prop.Name, "dfs.namenode.rpc-address") {
-			nnUrl, _ := url.Parse(prop.Value)
-			nns = append(nns, nnUrl.Host)
+			nns = append(nns, prop.Value)
 		}
 	}
 	return nns
@@ -74,6 +83,7 @@ func GetNamenodesFromSiteConfig(path string) []string {
 }
 
 // AutoConfigClient to create a client by trying to read the hadoop config
+// and returning the first if no namenodes are found look for HADOOP_NAMENODE env var
 func GetAutoConfigClient() (*Client, error) {
 	hadoopHome := os.Getenv("HADOOP_HOME")
 	hadoopConfDir := os.Getenv("HADOOP_CONF_DIR")
@@ -99,7 +109,15 @@ func GetAutoConfigClient() (*Client, error) {
 		nameNodes = append(nameNodes, GetNamenodesFromSiteConfig(confPath)...)
 	}
 
-	address := nameNodes[0]
+	var address string
+	if len(nameNodes) > 0 {
+		address = nameNodes[0]
+	} else if os.Getenv("HADOOP_NAMENODE") != "" {
+		address = os.Getenv("HADOOP_NAMENODE")
+	} else {
+		return nil, &nameNodeError{"Could not determine namenode address."}
+	}
+
 	username, err := Username()
 	if err != nil {
 		return nil, err

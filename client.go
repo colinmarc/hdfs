@@ -31,7 +31,9 @@ func Username() (string, error) {
 }
 
 // New returns a connected Client, or an error if it can't connect. The user
-// will be the user the code is running under.
+// will be the user the code is running under. If address is an empty string
+// it will try and get the namenode address from the hadoop configuration
+// files.
 func New(address string) (*Client, error) {
 	username, err := Username()
 	if err != nil {
@@ -40,13 +42,24 @@ func New(address string) (*Client, error) {
 
 	if address == "" {
 		var nnErr error
-		address, nnErr = GetNamenodeFromConfig()
-
+		address, nnErr = getNameNodeFromConf()
 		if nnErr != nil {
 			return nil, nnErr
 		}
 	}
+
 	return NewForUser(address, username)
+}
+
+// getNameNodeFromConf return a datanode from the system hadoop configuration
+func getNameNodeFromConf() (string, error) {
+	hadoopConf := LoadHadoopConf("")
+
+	namenodes, nnErr := hadoopConf.Namenodes()
+	if nnErr != nil {
+		return "", nnErr
+	}
+	return namenodes[len(namenodes)-1], nil
 }
 
 // NewForUser returns a connected Client with the user specified, or an error if

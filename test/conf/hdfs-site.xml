@@ -40,6 +40,10 @@
         <value>hadoop-namenode-02:8020</value>
     </property>
     <property>
+        <name>dfs.namenode.rpc-address.tests.nn3</name>
+        <value>testnode:9000</value>
+    </property>
+    <property>
         <name>dfs.namenode.http-address.tests.nn1</name>
         <value>hadoop-namenode-01:50070</value>
     </property>

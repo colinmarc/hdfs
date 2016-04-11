@@ -1,7 +1,6 @@
 package hdfs
 
 import (
-	//"fmt"
 	"os"
 	"sort"
 	"strings"

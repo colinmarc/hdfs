@@ -6,6 +6,7 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 )
 
 func TestAutoClientEnvVar(t *testing.T) {
@@ -17,7 +18,7 @@ func TestAutoClientHadoopHome(t *testing.T) {
 	pwd, _ := os.Getwd()
 	os.Setenv("HADOOP_HOME", strings.Join([]string{pwd, "test"}, "/"))
 	nn, _ := GetNamenodeFromConfig()
-	assert.EqualValues(t, "hadoop-namenode-01:8020", nn)
+	require.Contains(t, []string{"hadoop-namenode-01:8020", "hadoop-namenode-02:8020"}, nn)
 	os.Setenv("HADOOP_HOME", "")
 }
 

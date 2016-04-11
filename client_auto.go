@@ -2,14 +2,12 @@ package hdfs
 
 import (
 	"encoding/xml"
-	"fmt"
+	"errors"
 	"io/ioutil"
 	"net/url"
 	"os"
 	"path"
 	"strings"
-
-	"github.com/colinmarc/hdfs/rpc"
 )
 
 type Property struct {
@@ -21,22 +19,13 @@ type Result struct {
 	Property []Property `xml:"property"`
 }
 
-type NameNode struct {
-	Host string
-	Port int
-}
+type HadoopConf map[string]string
 
-type nameNodeError struct {
-	Message string
-}
-
-func (e *nameNodeError) Error() string {
-	return fmt.Sprintf("%s", e.Message)
-}
+var ErrUnresolvedNamenode = errors.New("Couldn't find a namenode address in any config.")
 
 // Get Hadoop Properties - try to open a conf file, marshal the results
 // into a Result object and return the Properties of that object.
-func GetHadoopProperties(path string) ([]Property, error) {
+func LoadHadoopConfig(path string) (HadoopConf, error) {
 	result := Result{}
 	f, err := ioutil.ReadFile(path)
 	if err != nil {
@@ -48,65 +37,49 @@ func GetHadoopProperties(path string) ([]Property, error) {
 		return nil, xmlErr
 	}
 
-	return result.Property, nil
+	hadoopConf := make(HadoopConf)
+	for _, prop := range result.Property {
+		hadoopConf[prop.Name] = prop.Value
+	}
+	return hadoopConf, nil
 }
 
-// Get Namenode server name(s) from HDFS config
-func GetNamenodesFromHDFSConfig(path string) []string {
-	props, err := GetHadoopProperties(path)
-	if err != nil {
-		return []string{}
-	}
+func (conf HadoopConf) Namenodes() []string {
 	var nns []string
-	for _, prop := range props {
-		if strings.HasPrefix(prop.Name, "dfs.namenode.rpc-address") {
-			nns = append(nns, prop.Value)
-		}
-	}
-	return nns
-}
-
-// Get Namenode server name(s) from site config
-func GetNamenodesFromSiteConfig(path string) []string {
-	props, err := GetHadoopProperties(path)
-	if err != nil {
-		return []string{}
-	}
-	var nns []string
-	for _, prop := range props {
-		if strings.Contains(prop.Name, "fs.defaultFS") || strings.Contains(prop.Name, "fs.defaultFS") {
-			nnUrl, _ := url.Parse(prop.Value)
+	for key, value := range conf {
+		if strings.Contains(key, "fs.defaultFS") {
+			nnUrl, _ := url.Parse(value)
 			nns = append(nns, nnUrl.Host)
 		}
+		if strings.HasPrefix(key, "dfs.namenode.rpc-address") {
+			nns = append(nns, value)
+		}
 	}
 	return nns
 }
 
-// AutoConfigClient to create a client by trying to read the hadoop config
-// and returning the first if no namenodes are found look for HADOOP_NAMENODE env var
-func GetAutoConfigClient() (*Client, error) {
+// Return first namenode address we find in the hadoop config files
+// else we try and return HADOOP_NAMENODE env var value else err
+func GetNamenodeFromConfig() (string, error) {
 	hadoopHome := os.Getenv("HADOOP_HOME")
 	hadoopConfDir := os.Getenv("HADOOP_CONF_DIR")
 	var tryPaths []string
-	var confPaths []string
 	if hadoopHome != "" {
 		hdfsPath := path.Join(hadoopHome, "conf", "hdfs-site.xml")
-		tryPaths = append(tryPaths, hdfsPath)
 		corePath := path.Join(hadoopHome, "conf", "core-site.xml")
-		confPaths = append(confPaths, corePath)
+		tryPaths = append(tryPaths, []string{hdfsPath, corePath}...)
 	}
 	if hadoopConfDir != "" {
 		confHdfsPath := path.Join(hadoopConfDir, "hdfs-site.xml")
-		tryPaths = append(tryPaths, confHdfsPath)
 		confCorePath := path.Join(hadoopConfDir, "core-site.xml")
-		confPaths = append(confPaths, confCorePath)
+		tryPaths = append(tryPaths, []string{confHdfsPath, confCorePath}...)
 	}
 	var nameNodes []string
 	for _, tryPath := range tryPaths {
-		nameNodes = append(nameNodes, GetNamenodesFromHDFSConfig(tryPath)...)
-	}
-	for _, confPath := range confPaths {
-		nameNodes = append(nameNodes, GetNamenodesFromSiteConfig(confPath)...)
+		hadoopConf, err := LoadHadoopConfig(tryPath)
+		if err == nil {
+			nameNodes = append(nameNodes, hadoopConf.Namenodes()...)
+		}
 	}
 
 	var address string
@@ -115,17 +88,8 @@ func GetAutoConfigClient() (*Client, error) {
 	} else if os.Getenv("HADOOP_NAMENODE") != "" {
 		address = os.Getenv("HADOOP_NAMENODE")
 	} else {
-		return nil, &nameNodeError{"Could not determine namenode address."}
+		return "", ErrUnresolvedNamenode
 	}
 
-	username, err := Username()
-	if err != nil {
-		return nil, err
-	}
-	namenode, err := rpc.NewNamenodeConnection(address, username)
-	if err != nil {
-		return nil, err
-	}
-
-	return &Client{namenode: namenode}, nil
+	return address, nil
 }

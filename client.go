@@ -38,6 +38,14 @@ func New(address string) (*Client, error) {
 		return nil, err
 	}
 
+	if address == "" {
+		var nnErr error
+		address, nnErr = GetNamenodeFromConfig()
+
+		if nnErr != nil {
+			return nil, nnErr
+		}
+	}
 	return NewForUser(address, username)
 }
 

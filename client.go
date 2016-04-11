@@ -38,12 +38,15 @@ func New(address string) (*Client, error) {
 		return nil, err
 	}
 
-	return NewForUser(address, username)
-}
+	if address == "" {
+		var nnErr error
+		address, nnErr = GetNamenodeFromConfig()
 
-// Return a New Client with auto config
-func AutoConfigClient() (*Client, error) {
-	return GetAutoConfigClient()
+		if nnErr != nil {
+			return nil, nnErr
+		}
+	}
+	return NewForUser(address, username)
 }
 
 // NewForUser returns a connected Client with the user specified, or an error if

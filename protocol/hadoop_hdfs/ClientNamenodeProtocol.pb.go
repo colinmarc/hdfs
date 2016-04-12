@@ -2,124 +2,12 @@
 // source: ClientNamenodeProtocol.proto
 // DO NOT EDIT!
 
-/*
-Package hadoop_hdfs is a generated protocol buffer package.
-
-It is generated from these files:
-	ClientNamenodeProtocol.proto
-	datatransfer.proto
-	hdfs.proto
-
-It has these top-level messages:
-	GetBlockLocationsRequestProto
-	GetBlockLocationsResponseProto
-	GetServerDefaultsRequestProto
-	GetServerDefaultsResponseProto
-	CreateRequestProto
-	CreateResponseProto
-	AppendRequestProto
-	AppendResponseProto
-	SetReplicationRequestProto
-	SetReplicationResponseProto
-	SetPermissionRequestProto
-	SetPermissionResponseProto
-	SetOwnerRequestProto
-	SetOwnerResponseProto
-	AbandonBlockRequestProto
-	AbandonBlockResponseProto
-	AddBlockRequestProto
-	AddBlockResponseProto
-	GetAdditionalDatanodeRequestProto
-	GetAdditionalDatanodeResponseProto
-	CompleteRequestProto
-	CompleteResponseProto
-	ReportBadBlocksRequestProto
-	ReportBadBlocksResponseProto
-	ConcatRequestProto
-	ConcatResponseProto
-	RenameRequestProto
-	RenameResponseProto
-	Rename2RequestProto
-	Rename2ResponseProto
-	DeleteRequestProto
-	DeleteResponseProto
-	MkdirsRequestProto
-	MkdirsResponseProto
-	GetListingRequestProto
-	GetListingResponseProto
-	GetSnapshottableDirListingRequestProto
-	GetSnapshottableDirListingResponseProto
-	GetSnapshotDiffReportRequestProto
-	GetSnapshotDiffReportResponseProto
-	RenewLeaseRequestProto
-	RenewLeaseResponseProto
-	RecoverLeaseRequestProto
-	RecoverLeaseResponseProto
-	GetFsStatusRequestProto
-	GetFsStatsResponseProto
-	GetDatanodeReportRequestProto
-	GetDatanodeReportResponseProto
-	GetPreferredBlockSizeRequestProto
-	GetPreferredBlockSizeResponseProto
-	SetSafeModeRequestProto
-	SetSafeModeResponseProto
-	SaveNamespaceRequestProto
-	SaveNamespaceResponseProto
-	RollEditsRequestProto
-	RollEditsResponseProto
-	RestoreFailedStorageRequestProto
-	RestoreFailedStorageResponseProto
-	RefreshNodesRequestProto
-	RefreshNodesResponseProto
-	FinalizeUpgradeRequestProto
-	FinalizeUpgradeResponseProto
-	ListCorruptFileBlocksRequestProto
-	ListCorruptFileBlocksResponseProto
-	MetaSaveRequestProto
-	MetaSaveResponseProto
-	GetFileInfoRequestProto
-	GetFileInfoResponseProto
-	IsFileClosedRequestProto
-	IsFileClosedResponseProto
-	GetFileLinkInfoRequestProto
-	GetFileLinkInfoResponseProto
-	GetContentSummaryRequestProto
-	GetContentSummaryResponseProto
-	SetQuotaRequestProto
-	SetQuotaResponseProto
-	FsyncRequestProto
-	FsyncResponseProto
-	SetTimesRequestProto
-	SetTimesResponseProto
-	CreateSymlinkRequestProto
-	CreateSymlinkResponseProto
-	GetLinkTargetRequestProto
-	GetLinkTargetResponseProto
-	UpdateBlockForPipelineRequestProto
-	UpdateBlockForPipelineResponseProto
-	UpdatePipelineRequestProto
-	UpdatePipelineResponseProto
-	SetBalancerBandwidthRequestProto
-	SetBalancerBandwidthResponseProto
-	GetDataEncryptionKeyRequestProto
-	GetDataEncryptionKeyResponseProto
-	CreateSnapshotRequestProto
-	CreateSnapshotResponseProto
-	RenameSnapshotRequestProto
-	RenameSnapshotResponseProto
-	AllowSnapshotRequestProto
-	AllowSnapshotResponseProto
-	DisallowSnapshotRequestProto
-	DisallowSnapshotResponseProto
-	DeleteSnapshotRequestProto
-	DeleteSnapshotResponseProto
-*/
 package hadoop_hdfs
 
 import proto "github.com/golang/protobuf/proto"
 import math "math"
 
-// discarding unused import hadoop_common "Security.pb"
+// discarding unused import hadoop_common "github.com/colinmarc/hdfs/protocol/hadoop_common"
 
 // Reference imports to suppress errors if they are not otherwise used.
 var _ = proto.Marshal
@@ -128,20 +16,26 @@ var _ = math.Inf
 type CreateFlagProto int32
 
 const (
-	CreateFlagProto_CREATE    CreateFlagProto = 1
-	CreateFlagProto_OVERWRITE CreateFlagProto = 2
-	CreateFlagProto_APPEND    CreateFlagProto = 4
+	CreateFlagProto_CREATE       CreateFlagProto = 1
+	CreateFlagProto_OVERWRITE    CreateFlagProto = 2
+	CreateFlagProto_APPEND       CreateFlagProto = 4
+	CreateFlagProto_LAZY_PERSIST CreateFlagProto = 16
+	CreateFlagProto_NEW_BLOCK    CreateFlagProto = 32
 )
 
 var CreateFlagProto_name = map[int32]string{
-	1: "CREATE",
-	2: "OVERWRITE",
-	4: "APPEND",
+	1:  "CREATE",
+	2:  "OVERWRITE",
+	4:  "APPEND",
+	16: "LAZY_PERSIST",
+	32: "NEW_BLOCK",
 }
 var CreateFlagProto_value = map[string]int32{
-	"CREATE":    1,
-	"OVERWRITE": 2,
-	"APPEND":    4,
+	"CREATE":       1,
+	"OVERWRITE":    2,
+	"APPEND":       4,
+	"LAZY_PERSIST": 16,
+	"NEW_BLOCK":    32,
 }
 
 func (x CreateFlagProto) Enum() *CreateFlagProto {
@@ -164,20 +58,23 @@ func (x *CreateFlagProto) UnmarshalJSON(data []byte) error {
 type DatanodeReportTypeProto int32
 
 const (
-	DatanodeReportTypeProto_ALL  DatanodeReportTypeProto = 1
-	DatanodeReportTypeProto_LIVE DatanodeReportTypeProto = 2
-	DatanodeReportTypeProto_DEAD DatanodeReportTypeProto = 3
+	DatanodeReportTypeProto_ALL             DatanodeReportTypeProto = 1
+	DatanodeReportTypeProto_LIVE            DatanodeReportTypeProto = 2
+	DatanodeReportTypeProto_DEAD            DatanodeReportTypeProto = 3
+	DatanodeReportTypeProto_DECOMMISSIONING DatanodeReportTypeProto = 4
 )
 
 var DatanodeReportTypeProto_name = map[int32]string{
 	1: "ALL",
 	2: "LIVE",
 	3: "DEAD",
+	4: "DECOMMISSIONING",
 }
 var DatanodeReportTypeProto_value = map[string]int32{
-	"ALL":  1,
-	"LIVE": 2,
-	"DEAD": 3,
+	"ALL":             1,
+	"LIVE":            2,
+	"DEAD":            3,
+	"DECOMMISSIONING": 4,
 }
 
 func (x DatanodeReportTypeProto) Enum() *DatanodeReportTypeProto {
@@ -200,20 +97,23 @@ func (x *DatanodeReportTypeProto) UnmarshalJSON(data []byte) error {
 type SafeModeActionProto int32
 
 const (
-	SafeModeActionProto_SAFEMODE_LEAVE SafeModeActionProto = 1
-	SafeModeActionProto_SAFEMODE_ENTER SafeModeActionProto = 2
-	SafeModeActionProto_SAFEMODE_GET   SafeModeActionProto = 3
+	SafeModeActionProto_SAFEMODE_LEAVE      SafeModeActionProto = 1
+	SafeModeActionProto_SAFEMODE_ENTER      SafeModeActionProto = 2
+	SafeModeActionProto_SAFEMODE_GET        SafeModeActionProto = 3
+	SafeModeActionProto_SAFEMODE_FORCE_EXIT SafeModeActionProto = 4
 )
 
 var SafeModeActionProto_name = map[int32]string{
 	1: "SAFEMODE_LEAVE",
 	2: "SAFEMODE_ENTER",
 	3: "SAFEMODE_GET",
+	4: "SAFEMODE_FORCE_EXIT",
 }
 var SafeModeActionProto_value = map[string]int32{
-	"SAFEMODE_LEAVE": 1,
-	"SAFEMODE_ENTER": 2,
-	"SAFEMODE_GET":   3,
+	"SAFEMODE_LEAVE":      1,
+	"SAFEMODE_ENTER":      2,
+	"SAFEMODE_GET":        3,
+	"SAFEMODE_FORCE_EXIT": 4,
 }
 
 func (x SafeModeActionProto) Enum() *SafeModeActionProto {
@@ -230,6 +130,72 @@ func (x *SafeModeActionProto) UnmarshalJSON(data []byte) error {
 		return err
 	}
 	*x = SafeModeActionProto(value)
+	return nil
+}
+
+type RollingUpgradeActionProto int32
+
+const (
+	RollingUpgradeActionProto_QUERY    RollingUpgradeActionProto = 1
+	RollingUpgradeActionProto_START    RollingUpgradeActionProto = 2
+	RollingUpgradeActionProto_FINALIZE RollingUpgradeActionProto = 3
+)
+
+var RollingUpgradeActionProto_name = map[int32]string{
+	1: "QUERY",
+	2: "START",
+	3: "FINALIZE",
+}
+var RollingUpgradeActionProto_value = map[string]int32{
+	"QUERY":    1,
+	"START":    2,
+	"FINALIZE": 3,
+}
+
+func (x RollingUpgradeActionProto) Enum() *RollingUpgradeActionProto {
+	p := new(RollingUpgradeActionProto)
+	*p = x
+	return p
+}
+func (x RollingUpgradeActionProto) String() string {
+	return proto.EnumName(RollingUpgradeActionProto_name, int32(x))
+}
+func (x *RollingUpgradeActionProto) UnmarshalJSON(data []byte) error {
+	value, err := proto.UnmarshalJSONEnum(RollingUpgradeActionProto_value, data, "RollingUpgradeActionProto")
+	if err != nil {
+		return err
+	}
+	*x = RollingUpgradeActionProto(value)
+	return nil
+}
+
+type CacheFlagProto int32
+
+const (
+	CacheFlagProto_FORCE CacheFlagProto = 1
+)
+
+var CacheFlagProto_name = map[int32]string{
+	1: "FORCE",
+}
+var CacheFlagProto_value = map[string]int32{
+	"FORCE": 1,
+}
+
+func (x CacheFlagProto) Enum() *CacheFlagProto {
+	p := new(CacheFlagProto)
+	*p = x
+	return p
+}
+func (x CacheFlagProto) String() string {
+	return proto.EnumName(CacheFlagProto_name, int32(x))
+}
+func (x *CacheFlagProto) UnmarshalJSON(data []byte) error {
+	value, err := proto.UnmarshalJSONEnum(CacheFlagProto_value, data, "CacheFlagProto")
+	if err != nil {
+		return err
+	}
+	*x = CacheFlagProto(value)
 	return nil
 }
 
@@ -306,14 +272,15 @@ func (m *GetServerDefaultsResponseProto) GetServerDefaults() *FsServerDefaultsPr
 }
 
 type CreateRequestProto struct {
-	Src              *string            `protobuf:"bytes,1,req,name=src" json:"src,omitempty"`
-	Masked           *FsPermissionProto `protobuf:"bytes,2,req,name=masked" json:"masked,omitempty"`
-	ClientName       *string            `protobuf:"bytes,3,req,name=clientName" json:"clientName,omitempty"`
-	CreateFlag       *uint32            `protobuf:"varint,4,req,name=createFlag" json:"createFlag,omitempty"`
-	CreateParent     *bool              `protobuf:"varint,5,req,name=createParent" json:"createParent,omitempty"`
-	Replication      *uint32            `protobuf:"varint,6,req,name=replication" json:"replication,omitempty"`
-	BlockSize        *uint64            `protobuf:"varint,7,req,name=blockSize" json:"blockSize,omitempty"`
-	XXX_unrecognized []byte             `json:"-"`
+	Src                   *string                      `protobuf:"bytes,1,req,name=src" json:"src,omitempty"`
+	Masked                *FsPermissionProto           `protobuf:"bytes,2,req,name=masked" json:"masked,omitempty"`
+	ClientName            *string                      `protobuf:"bytes,3,req,name=clientName" json:"clientName,omitempty"`
+	CreateFlag            *uint32                      `protobuf:"varint,4,req,name=createFlag" json:"createFlag,omitempty"`
+	CreateParent          *bool                        `protobuf:"varint,5,req,name=createParent" json:"createParent,omitempty"`
+	Replication           *uint32                      `protobuf:"varint,6,req,name=replication" json:"replication,omitempty"`
+	BlockSize             *uint64                      `protobuf:"varint,7,req,name=blockSize" json:"blockSize,omitempty"`
+	CryptoProtocolVersion []CryptoProtocolVersionProto `protobuf:"varint,8,rep,name=cryptoProtocolVersion,enum=hadoop.hdfs.CryptoProtocolVersionProto" json:"cryptoProtocolVersion,omitempty"`
+	XXX_unrecognized      []byte                       `json:"-"`
 }
 
 func (m *CreateRequestProto) Reset()         { *m = CreateRequestProto{} }
@@ -369,6 +336,13 @@ func (m *CreateRequestProto) GetBlockSize() uint64 {
 	return 0
 }
 
+func (m *CreateRequestProto) GetCryptoProtocolVersion() []CryptoProtocolVersionProto {
+	if m != nil {
+		return m.CryptoProtocolVersion
+	}
+	return nil
+}
+
 type CreateResponseProto struct {
 	Fs               *HdfsFileStatusProto `protobuf:"bytes,1,opt,name=fs" json:"fs,omitempty"`
 	XXX_unrecognized []byte               `json:"-"`
@@ -388,6 +362,7 @@ func (m *CreateResponseProto) GetFs() *HdfsFileStatusProto {
 type AppendRequestProto struct {
 	Src              *string `protobuf:"bytes,1,req,name=src" json:"src,omitempty"`
 	ClientName       *string `protobuf:"bytes,2,req,name=clientName" json:"clientName,omitempty"`
+	Flag             *uint32 `protobuf:"varint,3,opt,name=flag" json:"flag,omitempty"`
 	XXX_unrecognized []byte  `json:"-"`
 }
 
@@ -409,9 +384,17 @@ func (m *AppendRequestProto) GetClientName() string {
 	return ""
 }
 
+func (m *AppendRequestProto) GetFlag() uint32 {
+	if m != nil && m.Flag != nil {
+		return *m.Flag
+	}
+	return 0
+}
+
 type AppendResponseProto struct {
-	Block            *LocatedBlockProto `protobuf:"bytes,1,opt,name=block" json:"block,omitempty"`
-	XXX_unrecognized []byte             `json:"-"`
+	Block            *LocatedBlockProto   `protobuf:"bytes,1,opt,name=block" json:"block,omitempty"`
+	Stat             *HdfsFileStatusProto `protobuf:"bytes,2,opt,name=stat" json:"stat,omitempty"`
+	XXX_unrecognized []byte               `json:"-"`
 }
 
 func (m *AppendResponseProto) Reset()         { *m = AppendResponseProto{} }
@@ -421,6 +404,13 @@ func (*AppendResponseProto) ProtoMessage()    {}
 func (m *AppendResponseProto) GetBlock() *LocatedBlockProto {
 	if m != nil {
 		return m.Block
+	}
+	return nil
+}
+
+func (m *AppendResponseProto) GetStat() *HdfsFileStatusProto {
+	if m != nil {
+		return m.Stat
 	}
 	return nil
 }
@@ -463,6 +453,118 @@ func (m *SetReplicationResponseProto) GetResult() bool {
 		return *m.Result
 	}
 	return false
+}
+
+type SetStoragePolicyRequestProto struct {
+	Src              *string `protobuf:"bytes,1,req,name=src" json:"src,omitempty"`
+	PolicyName       *string `protobuf:"bytes,2,req,name=policyName" json:"policyName,omitempty"`
+	XXX_unrecognized []byte  `json:"-"`
+}
+
+func (m *SetStoragePolicyRequestProto) Reset()         { *m = SetStoragePolicyRequestProto{} }
+func (m *SetStoragePolicyRequestProto) String() string { return proto.CompactTextString(m) }
+func (*SetStoragePolicyRequestProto) ProtoMessage()    {}
+
+func (m *SetStoragePolicyRequestProto) GetSrc() string {
+	if m != nil && m.Src != nil {
+		return *m.Src
+	}
+	return ""
+}
+
+func (m *SetStoragePolicyRequestProto) GetPolicyName() string {
+	if m != nil && m.PolicyName != nil {
+		return *m.PolicyName
+	}
+	return ""
+}
+
+type SetStoragePolicyResponseProto struct {
+	XXX_unrecognized []byte `json:"-"`
+}
+
+func (m *SetStoragePolicyResponseProto) Reset()         { *m = SetStoragePolicyResponseProto{} }
+func (m *SetStoragePolicyResponseProto) String() string { return proto.CompactTextString(m) }
+func (*SetStoragePolicyResponseProto) ProtoMessage()    {}
+
+type UnsetStoragePolicyRequestProto struct {
+	Src              *string `protobuf:"bytes,1,req,name=src" json:"src,omitempty"`
+	XXX_unrecognized []byte  `json:"-"`
+}
+
+func (m *UnsetStoragePolicyRequestProto) Reset()         { *m = UnsetStoragePolicyRequestProto{} }
+func (m *UnsetStoragePolicyRequestProto) String() string { return proto.CompactTextString(m) }
+func (*UnsetStoragePolicyRequestProto) ProtoMessage()    {}
+
+func (m *UnsetStoragePolicyRequestProto) GetSrc() string {
+	if m != nil && m.Src != nil {
+		return *m.Src
+	}
+	return ""
+}
+
+type UnsetStoragePolicyResponseProto struct {
+	XXX_unrecognized []byte `json:"-"`
+}
+
+func (m *UnsetStoragePolicyResponseProto) Reset()         { *m = UnsetStoragePolicyResponseProto{} }
+func (m *UnsetStoragePolicyResponseProto) String() string { return proto.CompactTextString(m) }
+func (*UnsetStoragePolicyResponseProto) ProtoMessage()    {}
+
+type GetStoragePolicyRequestProto struct {
+	Path             *string `protobuf:"bytes,1,req,name=path" json:"path,omitempty"`
+	XXX_unrecognized []byte  `json:"-"`
+}
+
+func (m *GetStoragePolicyRequestProto) Reset()         { *m = GetStoragePolicyRequestProto{} }
+func (m *GetStoragePolicyRequestProto) String() string { return proto.CompactTextString(m) }
+func (*GetStoragePolicyRequestProto) ProtoMessage()    {}
+
+func (m *GetStoragePolicyRequestProto) GetPath() string {
+	if m != nil && m.Path != nil {
+		return *m.Path
+	}
+	return ""
+}
+
+type GetStoragePolicyResponseProto struct {
+	StoragePolicy    *BlockStoragePolicyProto `protobuf:"bytes,1,req,name=storagePolicy" json:"storagePolicy,omitempty"`
+	XXX_unrecognized []byte                   `json:"-"`
+}
+
+func (m *GetStoragePolicyResponseProto) Reset()         { *m = GetStoragePolicyResponseProto{} }
+func (m *GetStoragePolicyResponseProto) String() string { return proto.CompactTextString(m) }
+func (*GetStoragePolicyResponseProto) ProtoMessage()    {}
+
+func (m *GetStoragePolicyResponseProto) GetStoragePolicy() *BlockStoragePolicyProto {
+	if m != nil {
+		return m.StoragePolicy
+	}
+	return nil
+}
+
+type GetStoragePoliciesRequestProto struct {
+	XXX_unrecognized []byte `json:"-"`
+}
+
+func (m *GetStoragePoliciesRequestProto) Reset()         { *m = GetStoragePoliciesRequestProto{} }
+func (m *GetStoragePoliciesRequestProto) String() string { return proto.CompactTextString(m) }
+func (*GetStoragePoliciesRequestProto) ProtoMessage()    {}
+
+type GetStoragePoliciesResponseProto struct {
+	Policies         []*BlockStoragePolicyProto `protobuf:"bytes,1,rep,name=policies" json:"policies,omitempty"`
+	XXX_unrecognized []byte                     `json:"-"`
+}
+
+func (m *GetStoragePoliciesResponseProto) Reset()         { *m = GetStoragePoliciesResponseProto{} }
+func (m *GetStoragePoliciesResponseProto) String() string { return proto.CompactTextString(m) }
+func (*GetStoragePoliciesResponseProto) ProtoMessage()    {}
+
+func (m *GetStoragePoliciesResponseProto) GetPolicies() []*BlockStoragePolicyProto {
+	if m != nil {
+		return m.Policies
+	}
+	return nil
 }
 
 type SetPermissionRequestProto struct {
@@ -541,12 +643,15 @@ type AbandonBlockRequestProto struct {
 	B                *ExtendedBlockProto `protobuf:"bytes,1,req,name=b" json:"b,omitempty"`
 	Src              *string             `protobuf:"bytes,2,req,name=src" json:"src,omitempty"`
 	Holder           *string             `protobuf:"bytes,3,req,name=holder" json:"holder,omitempty"`
+	FileId           *uint64             `protobuf:"varint,4,opt,name=fileId,def=0" json:"fileId,omitempty"`
 	XXX_unrecognized []byte              `json:"-"`
 }
 
 func (m *AbandonBlockRequestProto) Reset()         { *m = AbandonBlockRequestProto{} }
 func (m *AbandonBlockRequestProto) String() string { return proto.CompactTextString(m) }
 func (*AbandonBlockRequestProto) ProtoMessage()    {}
+
+const Default_AbandonBlockRequestProto_FileId uint64 = 0
 
 func (m *AbandonBlockRequestProto) GetB() *ExtendedBlockProto {
 	if m != nil {
@@ -567,6 +672,13 @@ func (m *AbandonBlockRequestProto) GetHolder() string {
 		return *m.Holder
 	}
 	return ""
+}
+
+func (m *AbandonBlockRequestProto) GetFileId() uint64 {
+	if m != nil && m.FileId != nil {
+		return *m.FileId
+	}
+	return Default_AbandonBlockRequestProto_FileId
 }
 
 type AbandonBlockResponseProto struct {
@@ -652,18 +764,22 @@ func (m *AddBlockResponseProto) GetBlock() *LocatedBlockProto {
 }
 
 type GetAdditionalDatanodeRequestProto struct {
-	Src                *string              `protobuf:"bytes,1,req,name=src" json:"src,omitempty"`
-	Blk                *ExtendedBlockProto  `protobuf:"bytes,2,req,name=blk" json:"blk,omitempty"`
-	Existings          []*DatanodeInfoProto `protobuf:"bytes,3,rep,name=existings" json:"existings,omitempty"`
-	Excludes           []*DatanodeInfoProto `protobuf:"bytes,4,rep,name=excludes" json:"excludes,omitempty"`
-	NumAdditionalNodes *uint32              `protobuf:"varint,5,req,name=numAdditionalNodes" json:"numAdditionalNodes,omitempty"`
-	ClientName         *string              `protobuf:"bytes,6,req,name=clientName" json:"clientName,omitempty"`
-	XXX_unrecognized   []byte               `json:"-"`
+	Src                  *string              `protobuf:"bytes,1,req,name=src" json:"src,omitempty"`
+	Blk                  *ExtendedBlockProto  `protobuf:"bytes,2,req,name=blk" json:"blk,omitempty"`
+	Existings            []*DatanodeInfoProto `protobuf:"bytes,3,rep,name=existings" json:"existings,omitempty"`
+	Excludes             []*DatanodeInfoProto `protobuf:"bytes,4,rep,name=excludes" json:"excludes,omitempty"`
+	NumAdditionalNodes   *uint32              `protobuf:"varint,5,req,name=numAdditionalNodes" json:"numAdditionalNodes,omitempty"`
+	ClientName           *string              `protobuf:"bytes,6,req,name=clientName" json:"clientName,omitempty"`
+	ExistingStorageUuids []string             `protobuf:"bytes,7,rep,name=existingStorageUuids" json:"existingStorageUuids,omitempty"`
+	FileId               *uint64              `protobuf:"varint,8,opt,name=fileId,def=0" json:"fileId,omitempty"`
+	XXX_unrecognized     []byte               `json:"-"`
 }
 
 func (m *GetAdditionalDatanodeRequestProto) Reset()         { *m = GetAdditionalDatanodeRequestProto{} }
 func (m *GetAdditionalDatanodeRequestProto) String() string { return proto.CompactTextString(m) }
 func (*GetAdditionalDatanodeRequestProto) ProtoMessage()    {}
+
+const Default_GetAdditionalDatanodeRequestProto_FileId uint64 = 0
 
 func (m *GetAdditionalDatanodeRequestProto) GetSrc() string {
 	if m != nil && m.Src != nil {
@@ -705,6 +821,20 @@ func (m *GetAdditionalDatanodeRequestProto) GetClientName() string {
 		return *m.ClientName
 	}
 	return ""
+}
+
+func (m *GetAdditionalDatanodeRequestProto) GetExistingStorageUuids() []string {
+	if m != nil {
+		return m.ExistingStorageUuids
+	}
+	return nil
+}
+
+func (m *GetAdditionalDatanodeRequestProto) GetFileId() uint64 {
+	if m != nil && m.FileId != nil {
+		return *m.FileId
+	}
+	return Default_GetAdditionalDatanodeRequestProto_FileId
 }
 
 type GetAdditionalDatanodeResponseProto struct {
@@ -836,6 +966,54 @@ type ConcatResponseProto struct {
 func (m *ConcatResponseProto) Reset()         { *m = ConcatResponseProto{} }
 func (m *ConcatResponseProto) String() string { return proto.CompactTextString(m) }
 func (*ConcatResponseProto) ProtoMessage()    {}
+
+type TruncateRequestProto struct {
+	Src              *string `protobuf:"bytes,1,req,name=src" json:"src,omitempty"`
+	NewLength        *uint64 `protobuf:"varint,2,req,name=newLength" json:"newLength,omitempty"`
+	ClientName       *string `protobuf:"bytes,3,req,name=clientName" json:"clientName,omitempty"`
+	XXX_unrecognized []byte  `json:"-"`
+}
+
+func (m *TruncateRequestProto) Reset()         { *m = TruncateRequestProto{} }
+func (m *TruncateRequestProto) String() string { return proto.CompactTextString(m) }
+func (*TruncateRequestProto) ProtoMessage()    {}
+
+func (m *TruncateRequestProto) GetSrc() string {
+	if m != nil && m.Src != nil {
+		return *m.Src
+	}
+	return ""
+}
+
+func (m *TruncateRequestProto) GetNewLength() uint64 {
+	if m != nil && m.NewLength != nil {
+		return *m.NewLength
+	}
+	return 0
+}
+
+func (m *TruncateRequestProto) GetClientName() string {
+	if m != nil && m.ClientName != nil {
+		return *m.ClientName
+	}
+	return ""
+}
+
+type TruncateResponseProto struct {
+	Result           *bool  `protobuf:"varint,1,req,name=result" json:"result,omitempty"`
+	XXX_unrecognized []byte `json:"-"`
+}
+
+func (m *TruncateResponseProto) Reset()         { *m = TruncateResponseProto{} }
+func (m *TruncateResponseProto) String() string { return proto.CompactTextString(m) }
+func (*TruncateResponseProto) ProtoMessage()    {}
+
+func (m *TruncateResponseProto) GetResult() bool {
+	if m != nil && m.Result != nil {
+		return *m.Result
+	}
+	return false
+}
 
 type RenameRequestProto struct {
 	Src              *string `protobuf:"bytes,1,req,name=src" json:"src,omitempty"`
@@ -1202,13 +1380,16 @@ func (m *GetFsStatusRequestProto) String() string { return proto.CompactTextStri
 func (*GetFsStatusRequestProto) ProtoMessage()    {}
 
 type GetFsStatsResponseProto struct {
-	Capacity         *uint64 `protobuf:"varint,1,req,name=capacity" json:"capacity,omitempty"`
-	Used             *uint64 `protobuf:"varint,2,req,name=used" json:"used,omitempty"`
-	Remaining        *uint64 `protobuf:"varint,3,req,name=remaining" json:"remaining,omitempty"`
-	UnderReplicated  *uint64 `protobuf:"varint,4,req,name=under_replicated" json:"under_replicated,omitempty"`
-	CorruptBlocks    *uint64 `protobuf:"varint,5,req,name=corrupt_blocks" json:"corrupt_blocks,omitempty"`
-	MissingBlocks    *uint64 `protobuf:"varint,6,req,name=missing_blocks" json:"missing_blocks,omitempty"`
-	XXX_unrecognized []byte  `json:"-"`
+	Capacity              *uint64 `protobuf:"varint,1,req,name=capacity" json:"capacity,omitempty"`
+	Used                  *uint64 `protobuf:"varint,2,req,name=used" json:"used,omitempty"`
+	Remaining             *uint64 `protobuf:"varint,3,req,name=remaining" json:"remaining,omitempty"`
+	UnderReplicated       *uint64 `protobuf:"varint,4,req,name=under_replicated" json:"under_replicated,omitempty"`
+	CorruptBlocks         *uint64 `protobuf:"varint,5,req,name=corrupt_blocks" json:"corrupt_blocks,omitempty"`
+	MissingBlocks         *uint64 `protobuf:"varint,6,req,name=missing_blocks" json:"missing_blocks,omitempty"`
+	MissingReplOneBlocks  *uint64 `protobuf:"varint,7,opt,name=missing_repl_one_blocks" json:"missing_repl_one_blocks,omitempty"`
+	BlocksInFuture        *uint64 `protobuf:"varint,8,opt,name=blocks_in_future" json:"blocks_in_future,omitempty"`
+	PendingDeletionBlocks *uint64 `protobuf:"varint,9,opt,name=pending_deletion_blocks" json:"pending_deletion_blocks,omitempty"`
+	XXX_unrecognized      []byte  `json:"-"`
 }
 
 func (m *GetFsStatsResponseProto) Reset()         { *m = GetFsStatsResponseProto{} }
@@ -1257,6 +1438,27 @@ func (m *GetFsStatsResponseProto) GetMissingBlocks() uint64 {
 	return 0
 }
 
+func (m *GetFsStatsResponseProto) GetMissingReplOneBlocks() uint64 {
+	if m != nil && m.MissingReplOneBlocks != nil {
+		return *m.MissingReplOneBlocks
+	}
+	return 0
+}
+
+func (m *GetFsStatsResponseProto) GetBlocksInFuture() uint64 {
+	if m != nil && m.BlocksInFuture != nil {
+		return *m.BlocksInFuture
+	}
+	return 0
+}
+
+func (m *GetFsStatsResponseProto) GetPendingDeletionBlocks() uint64 {
+	if m != nil && m.PendingDeletionBlocks != nil {
+		return *m.PendingDeletionBlocks
+	}
+	return 0
+}
+
 type GetDatanodeReportRequestProto struct {
 	Type             *DatanodeReportTypeProto `protobuf:"varint,1,req,name=type,enum=hadoop.hdfs.DatanodeReportTypeProto" json:"type,omitempty"`
 	XXX_unrecognized []byte                   `json:"-"`
@@ -1285,6 +1487,62 @@ func (*GetDatanodeReportResponseProto) ProtoMessage()    {}
 func (m *GetDatanodeReportResponseProto) GetDi() []*DatanodeInfoProto {
 	if m != nil {
 		return m.Di
+	}
+	return nil
+}
+
+type GetDatanodeStorageReportRequestProto struct {
+	Type             *DatanodeReportTypeProto `protobuf:"varint,1,req,name=type,enum=hadoop.hdfs.DatanodeReportTypeProto" json:"type,omitempty"`
+	XXX_unrecognized []byte                   `json:"-"`
+}
+
+func (m *GetDatanodeStorageReportRequestProto) Reset()         { *m = GetDatanodeStorageReportRequestProto{} }
+func (m *GetDatanodeStorageReportRequestProto) String() string { return proto.CompactTextString(m) }
+func (*GetDatanodeStorageReportRequestProto) ProtoMessage()    {}
+
+func (m *GetDatanodeStorageReportRequestProto) GetType() DatanodeReportTypeProto {
+	if m != nil && m.Type != nil {
+		return *m.Type
+	}
+	return DatanodeReportTypeProto_ALL
+}
+
+type DatanodeStorageReportProto struct {
+	DatanodeInfo     *DatanodeInfoProto    `protobuf:"bytes,1,req,name=datanodeInfo" json:"datanodeInfo,omitempty"`
+	StorageReports   []*StorageReportProto `protobuf:"bytes,2,rep,name=storageReports" json:"storageReports,omitempty"`
+	XXX_unrecognized []byte                `json:"-"`
+}
+
+func (m *DatanodeStorageReportProto) Reset()         { *m = DatanodeStorageReportProto{} }
+func (m *DatanodeStorageReportProto) String() string { return proto.CompactTextString(m) }
+func (*DatanodeStorageReportProto) ProtoMessage()    {}
+
+func (m *DatanodeStorageReportProto) GetDatanodeInfo() *DatanodeInfoProto {
+	if m != nil {
+		return m.DatanodeInfo
+	}
+	return nil
+}
+
+func (m *DatanodeStorageReportProto) GetStorageReports() []*StorageReportProto {
+	if m != nil {
+		return m.StorageReports
+	}
+	return nil
+}
+
+type GetDatanodeStorageReportResponseProto struct {
+	DatanodeStorageReports []*DatanodeStorageReportProto `protobuf:"bytes,1,rep,name=datanodeStorageReports" json:"datanodeStorageReports,omitempty"`
+	XXX_unrecognized       []byte                        `json:"-"`
+}
+
+func (m *GetDatanodeStorageReportResponseProto) Reset()         { *m = GetDatanodeStorageReportResponseProto{} }
+func (m *GetDatanodeStorageReportResponseProto) String() string { return proto.CompactTextString(m) }
+func (*GetDatanodeStorageReportResponseProto) ProtoMessage()    {}
+
+func (m *GetDatanodeStorageReportResponseProto) GetDatanodeStorageReports() []*DatanodeStorageReportProto {
+	if m != nil {
+		return m.DatanodeStorageReports
 	}
 	return nil
 }
@@ -1364,20 +1622,49 @@ func (m *SetSafeModeResponseProto) GetResult() bool {
 }
 
 type SaveNamespaceRequestProto struct {
-	XXX_unrecognized []byte `json:"-"`
+	TimeWindow       *uint64 `protobuf:"varint,1,opt,name=timeWindow,def=0" json:"timeWindow,omitempty"`
+	TxGap            *uint64 `protobuf:"varint,2,opt,name=txGap,def=0" json:"txGap,omitempty"`
+	XXX_unrecognized []byte  `json:"-"`
 }
 
 func (m *SaveNamespaceRequestProto) Reset()         { *m = SaveNamespaceRequestProto{} }
 func (m *SaveNamespaceRequestProto) String() string { return proto.CompactTextString(m) }
 func (*SaveNamespaceRequestProto) ProtoMessage()    {}
 
+const Default_SaveNamespaceRequestProto_TimeWindow uint64 = 0
+const Default_SaveNamespaceRequestProto_TxGap uint64 = 0
+
+func (m *SaveNamespaceRequestProto) GetTimeWindow() uint64 {
+	if m != nil && m.TimeWindow != nil {
+		return *m.TimeWindow
+	}
+	return Default_SaveNamespaceRequestProto_TimeWindow
+}
+
+func (m *SaveNamespaceRequestProto) GetTxGap() uint64 {
+	if m != nil && m.TxGap != nil {
+		return *m.TxGap
+	}
+	return Default_SaveNamespaceRequestProto_TxGap
+}
+
 type SaveNamespaceResponseProto struct {
+	Saved            *bool  `protobuf:"varint,1,opt,name=saved,def=1" json:"saved,omitempty"`
 	XXX_unrecognized []byte `json:"-"`
 }
 
 func (m *SaveNamespaceResponseProto) Reset()         { *m = SaveNamespaceResponseProto{} }
 func (m *SaveNamespaceResponseProto) String() string { return proto.CompactTextString(m) }
 func (*SaveNamespaceResponseProto) ProtoMessage()    {}
+
+const Default_SaveNamespaceResponseProto_Saved bool = true
+
+func (m *SaveNamespaceResponseProto) GetSaved() bool {
+	if m != nil && m.Saved != nil {
+		return *m.Saved
+	}
+	return Default_SaveNamespaceResponseProto_Saved
+}
 
 type RollEditsRequestProto struct {
 	XXX_unrecognized []byte `json:"-"`
@@ -1466,6 +1753,78 @@ type FinalizeUpgradeResponseProto struct {
 func (m *FinalizeUpgradeResponseProto) Reset()         { *m = FinalizeUpgradeResponseProto{} }
 func (m *FinalizeUpgradeResponseProto) String() string { return proto.CompactTextString(m) }
 func (*FinalizeUpgradeResponseProto) ProtoMessage()    {}
+
+type RollingUpgradeRequestProto struct {
+	Action           *RollingUpgradeActionProto `protobuf:"varint,1,req,name=action,enum=hadoop.hdfs.RollingUpgradeActionProto" json:"action,omitempty"`
+	XXX_unrecognized []byte                     `json:"-"`
+}
+
+func (m *RollingUpgradeRequestProto) Reset()         { *m = RollingUpgradeRequestProto{} }
+func (m *RollingUpgradeRequestProto) String() string { return proto.CompactTextString(m) }
+func (*RollingUpgradeRequestProto) ProtoMessage()    {}
+
+func (m *RollingUpgradeRequestProto) GetAction() RollingUpgradeActionProto {
+	if m != nil && m.Action != nil {
+		return *m.Action
+	}
+	return RollingUpgradeActionProto_QUERY
+}
+
+type RollingUpgradeInfoProto struct {
+	Status                *RollingUpgradeStatusProto `protobuf:"bytes,1,req,name=status" json:"status,omitempty"`
+	StartTime             *uint64                    `protobuf:"varint,2,req,name=startTime" json:"startTime,omitempty"`
+	FinalizeTime          *uint64                    `protobuf:"varint,3,req,name=finalizeTime" json:"finalizeTime,omitempty"`
+	CreatedRollbackImages *bool                      `protobuf:"varint,4,req,name=createdRollbackImages" json:"createdRollbackImages,omitempty"`
+	XXX_unrecognized      []byte                     `json:"-"`
+}
+
+func (m *RollingUpgradeInfoProto) Reset()         { *m = RollingUpgradeInfoProto{} }
+func (m *RollingUpgradeInfoProto) String() string { return proto.CompactTextString(m) }
+func (*RollingUpgradeInfoProto) ProtoMessage()    {}
+
+func (m *RollingUpgradeInfoProto) GetStatus() *RollingUpgradeStatusProto {
+	if m != nil {
+		return m.Status
+	}
+	return nil
+}
+
+func (m *RollingUpgradeInfoProto) GetStartTime() uint64 {
+	if m != nil && m.StartTime != nil {
+		return *m.StartTime
+	}
+	return 0
+}
+
+func (m *RollingUpgradeInfoProto) GetFinalizeTime() uint64 {
+	if m != nil && m.FinalizeTime != nil {
+		return *m.FinalizeTime
+	}
+	return 0
+}
+
+func (m *RollingUpgradeInfoProto) GetCreatedRollbackImages() bool {
+	if m != nil && m.CreatedRollbackImages != nil {
+		return *m.CreatedRollbackImages
+	}
+	return false
+}
+
+type RollingUpgradeResponseProto struct {
+	RollingUpgradeInfo *RollingUpgradeInfoProto `protobuf:"bytes,1,opt,name=rollingUpgradeInfo" json:"rollingUpgradeInfo,omitempty"`
+	XXX_unrecognized   []byte                   `json:"-"`
+}
+
+func (m *RollingUpgradeResponseProto) Reset()         { *m = RollingUpgradeResponseProto{} }
+func (m *RollingUpgradeResponseProto) String() string { return proto.CompactTextString(m) }
+func (*RollingUpgradeResponseProto) ProtoMessage()    {}
+
+func (m *RollingUpgradeResponseProto) GetRollingUpgradeInfo() *RollingUpgradeInfoProto {
+	if m != nil {
+		return m.RollingUpgradeInfo
+	}
+	return nil
+}
 
 type ListCorruptFileBlocksRequestProto struct {
 	Path             *string `protobuf:"bytes,1,req,name=path" json:"path,omitempty"`
@@ -1595,6 +1954,534 @@ func (m *IsFileClosedResponseProto) GetResult() bool {
 	return false
 }
 
+type CacheDirectiveInfoProto struct {
+	Id               *int64                             `protobuf:"varint,1,opt,name=id" json:"id,omitempty"`
+	Path             *string                            `protobuf:"bytes,2,opt,name=path" json:"path,omitempty"`
+	Replication      *uint32                            `protobuf:"varint,3,opt,name=replication" json:"replication,omitempty"`
+	Pool             *string                            `protobuf:"bytes,4,opt,name=pool" json:"pool,omitempty"`
+	Expiration       *CacheDirectiveInfoExpirationProto `protobuf:"bytes,5,opt,name=expiration" json:"expiration,omitempty"`
+	XXX_unrecognized []byte                             `json:"-"`
+}
+
+func (m *CacheDirectiveInfoProto) Reset()         { *m = CacheDirectiveInfoProto{} }
+func (m *CacheDirectiveInfoProto) String() string { return proto.CompactTextString(m) }
+func (*CacheDirectiveInfoProto) ProtoMessage()    {}
+
+func (m *CacheDirectiveInfoProto) GetId() int64 {
+	if m != nil && m.Id != nil {
+		return *m.Id
+	}
+	return 0
+}
+
+func (m *CacheDirectiveInfoProto) GetPath() string {
+	if m != nil && m.Path != nil {
+		return *m.Path
+	}
+	return ""
+}
+
+func (m *CacheDirectiveInfoProto) GetReplication() uint32 {
+	if m != nil && m.Replication != nil {
+		return *m.Replication
+	}
+	return 0
+}
+
+func (m *CacheDirectiveInfoProto) GetPool() string {
+	if m != nil && m.Pool != nil {
+		return *m.Pool
+	}
+	return ""
+}
+
+func (m *CacheDirectiveInfoProto) GetExpiration() *CacheDirectiveInfoExpirationProto {
+	if m != nil {
+		return m.Expiration
+	}
+	return nil
+}
+
+type CacheDirectiveInfoExpirationProto struct {
+	Millis           *int64 `protobuf:"varint,1,req,name=millis" json:"millis,omitempty"`
+	IsRelative       *bool  `protobuf:"varint,2,req,name=isRelative" json:"isRelative,omitempty"`
+	XXX_unrecognized []byte `json:"-"`
+}
+
+func (m *CacheDirectiveInfoExpirationProto) Reset()         { *m = CacheDirectiveInfoExpirationProto{} }
+func (m *CacheDirectiveInfoExpirationProto) String() string { return proto.CompactTextString(m) }
+func (*CacheDirectiveInfoExpirationProto) ProtoMessage()    {}
+
+func (m *CacheDirectiveInfoExpirationProto) GetMillis() int64 {
+	if m != nil && m.Millis != nil {
+		return *m.Millis
+	}
+	return 0
+}
+
+func (m *CacheDirectiveInfoExpirationProto) GetIsRelative() bool {
+	if m != nil && m.IsRelative != nil {
+		return *m.IsRelative
+	}
+	return false
+}
+
+type CacheDirectiveStatsProto struct {
+	BytesNeeded      *int64 `protobuf:"varint,1,req,name=bytesNeeded" json:"bytesNeeded,omitempty"`
+	BytesCached      *int64 `protobuf:"varint,2,req,name=bytesCached" json:"bytesCached,omitempty"`
+	FilesNeeded      *int64 `protobuf:"varint,3,req,name=filesNeeded" json:"filesNeeded,omitempty"`
+	FilesCached      *int64 `protobuf:"varint,4,req,name=filesCached" json:"filesCached,omitempty"`
+	HasExpired       *bool  `protobuf:"varint,5,req,name=hasExpired" json:"hasExpired,omitempty"`
+	XXX_unrecognized []byte `json:"-"`
+}
+
+func (m *CacheDirectiveStatsProto) Reset()         { *m = CacheDirectiveStatsProto{} }
+func (m *CacheDirectiveStatsProto) String() string { return proto.CompactTextString(m) }
+func (*CacheDirectiveStatsProto) ProtoMessage()    {}
+
+func (m *CacheDirectiveStatsProto) GetBytesNeeded() int64 {
+	if m != nil && m.BytesNeeded != nil {
+		return *m.BytesNeeded
+	}
+	return 0
+}
+
+func (m *CacheDirectiveStatsProto) GetBytesCached() int64 {
+	if m != nil && m.BytesCached != nil {
+		return *m.BytesCached
+	}
+	return 0
+}
+
+func (m *CacheDirectiveStatsProto) GetFilesNeeded() int64 {
+	if m != nil && m.FilesNeeded != nil {
+		return *m.FilesNeeded
+	}
+	return 0
+}
+
+func (m *CacheDirectiveStatsProto) GetFilesCached() int64 {
+	if m != nil && m.FilesCached != nil {
+		return *m.FilesCached
+	}
+	return 0
+}
+
+func (m *CacheDirectiveStatsProto) GetHasExpired() bool {
+	if m != nil && m.HasExpired != nil {
+		return *m.HasExpired
+	}
+	return false
+}
+
+type AddCacheDirectiveRequestProto struct {
+	Info             *CacheDirectiveInfoProto `protobuf:"bytes,1,req,name=info" json:"info,omitempty"`
+	CacheFlags       *uint32                  `protobuf:"varint,2,opt,name=cacheFlags" json:"cacheFlags,omitempty"`
+	XXX_unrecognized []byte                   `json:"-"`
+}
+
+func (m *AddCacheDirectiveRequestProto) Reset()         { *m = AddCacheDirectiveRequestProto{} }
+func (m *AddCacheDirectiveRequestProto) String() string { return proto.CompactTextString(m) }
+func (*AddCacheDirectiveRequestProto) ProtoMessage()    {}
+
+func (m *AddCacheDirectiveRequestProto) GetInfo() *CacheDirectiveInfoProto {
+	if m != nil {
+		return m.Info
+	}
+	return nil
+}
+
+func (m *AddCacheDirectiveRequestProto) GetCacheFlags() uint32 {
+	if m != nil && m.CacheFlags != nil {
+		return *m.CacheFlags
+	}
+	return 0
+}
+
+type AddCacheDirectiveResponseProto struct {
+	Id               *int64 `protobuf:"varint,1,req,name=id" json:"id,omitempty"`
+	XXX_unrecognized []byte `json:"-"`
+}
+
+func (m *AddCacheDirectiveResponseProto) Reset()         { *m = AddCacheDirectiveResponseProto{} }
+func (m *AddCacheDirectiveResponseProto) String() string { return proto.CompactTextString(m) }
+func (*AddCacheDirectiveResponseProto) ProtoMessage()    {}
+
+func (m *AddCacheDirectiveResponseProto) GetId() int64 {
+	if m != nil && m.Id != nil {
+		return *m.Id
+	}
+	return 0
+}
+
+type ModifyCacheDirectiveRequestProto struct {
+	Info             *CacheDirectiveInfoProto `protobuf:"bytes,1,req,name=info" json:"info,omitempty"`
+	CacheFlags       *uint32                  `protobuf:"varint,2,opt,name=cacheFlags" json:"cacheFlags,omitempty"`
+	XXX_unrecognized []byte                   `json:"-"`
+}
+
+func (m *ModifyCacheDirectiveRequestProto) Reset()         { *m = ModifyCacheDirectiveRequestProto{} }
+func (m *ModifyCacheDirectiveRequestProto) String() string { return proto.CompactTextString(m) }
+func (*ModifyCacheDirectiveRequestProto) ProtoMessage()    {}
+
+func (m *ModifyCacheDirectiveRequestProto) GetInfo() *CacheDirectiveInfoProto {
+	if m != nil {
+		return m.Info
+	}
+	return nil
+}
+
+func (m *ModifyCacheDirectiveRequestProto) GetCacheFlags() uint32 {
+	if m != nil && m.CacheFlags != nil {
+		return *m.CacheFlags
+	}
+	return 0
+}
+
+type ModifyCacheDirectiveResponseProto struct {
+	XXX_unrecognized []byte `json:"-"`
+}
+
+func (m *ModifyCacheDirectiveResponseProto) Reset()         { *m = ModifyCacheDirectiveResponseProto{} }
+func (m *ModifyCacheDirectiveResponseProto) String() string { return proto.CompactTextString(m) }
+func (*ModifyCacheDirectiveResponseProto) ProtoMessage()    {}
+
+type RemoveCacheDirectiveRequestProto struct {
+	Id               *int64 `protobuf:"varint,1,req,name=id" json:"id,omitempty"`
+	XXX_unrecognized []byte `json:"-"`
+}
+
+func (m *RemoveCacheDirectiveRequestProto) Reset()         { *m = RemoveCacheDirectiveRequestProto{} }
+func (m *RemoveCacheDirectiveRequestProto) String() string { return proto.CompactTextString(m) }
+func (*RemoveCacheDirectiveRequestProto) ProtoMessage()    {}
+
+func (m *RemoveCacheDirectiveRequestProto) GetId() int64 {
+	if m != nil && m.Id != nil {
+		return *m.Id
+	}
+	return 0
+}
+
+type RemoveCacheDirectiveResponseProto struct {
+	XXX_unrecognized []byte `json:"-"`
+}
+
+func (m *RemoveCacheDirectiveResponseProto) Reset()         { *m = RemoveCacheDirectiveResponseProto{} }
+func (m *RemoveCacheDirectiveResponseProto) String() string { return proto.CompactTextString(m) }
+func (*RemoveCacheDirectiveResponseProto) ProtoMessage()    {}
+
+type ListCacheDirectivesRequestProto struct {
+	PrevId           *int64                   `protobuf:"varint,1,req,name=prevId" json:"prevId,omitempty"`
+	Filter           *CacheDirectiveInfoProto `protobuf:"bytes,2,req,name=filter" json:"filter,omitempty"`
+	XXX_unrecognized []byte                   `json:"-"`
+}
+
+func (m *ListCacheDirectivesRequestProto) Reset()         { *m = ListCacheDirectivesRequestProto{} }
+func (m *ListCacheDirectivesRequestProto) String() string { return proto.CompactTextString(m) }
+func (*ListCacheDirectivesRequestProto) ProtoMessage()    {}
+
+func (m *ListCacheDirectivesRequestProto) GetPrevId() int64 {
+	if m != nil && m.PrevId != nil {
+		return *m.PrevId
+	}
+	return 0
+}
+
+func (m *ListCacheDirectivesRequestProto) GetFilter() *CacheDirectiveInfoProto {
+	if m != nil {
+		return m.Filter
+	}
+	return nil
+}
+
+type CacheDirectiveEntryProto struct {
+	Info             *CacheDirectiveInfoProto  `protobuf:"bytes,1,req,name=info" json:"info,omitempty"`
+	Stats            *CacheDirectiveStatsProto `protobuf:"bytes,2,req,name=stats" json:"stats,omitempty"`
+	XXX_unrecognized []byte                    `json:"-"`
+}
+
+func (m *CacheDirectiveEntryProto) Reset()         { *m = CacheDirectiveEntryProto{} }
+func (m *CacheDirectiveEntryProto) String() string { return proto.CompactTextString(m) }
+func (*CacheDirectiveEntryProto) ProtoMessage()    {}
+
+func (m *CacheDirectiveEntryProto) GetInfo() *CacheDirectiveInfoProto {
+	if m != nil {
+		return m.Info
+	}
+	return nil
+}
+
+func (m *CacheDirectiveEntryProto) GetStats() *CacheDirectiveStatsProto {
+	if m != nil {
+		return m.Stats
+	}
+	return nil
+}
+
+type ListCacheDirectivesResponseProto struct {
+	Elements         []*CacheDirectiveEntryProto `protobuf:"bytes,1,rep,name=elements" json:"elements,omitempty"`
+	HasMore          *bool                       `protobuf:"varint,2,req,name=hasMore" json:"hasMore,omitempty"`
+	XXX_unrecognized []byte                      `json:"-"`
+}
+
+func (m *ListCacheDirectivesResponseProto) Reset()         { *m = ListCacheDirectivesResponseProto{} }
+func (m *ListCacheDirectivesResponseProto) String() string { return proto.CompactTextString(m) }
+func (*ListCacheDirectivesResponseProto) ProtoMessage()    {}
+
+func (m *ListCacheDirectivesResponseProto) GetElements() []*CacheDirectiveEntryProto {
+	if m != nil {
+		return m.Elements
+	}
+	return nil
+}
+
+func (m *ListCacheDirectivesResponseProto) GetHasMore() bool {
+	if m != nil && m.HasMore != nil {
+		return *m.HasMore
+	}
+	return false
+}
+
+type CachePoolInfoProto struct {
+	PoolName          *string `protobuf:"bytes,1,opt,name=poolName" json:"poolName,omitempty"`
+	OwnerName         *string `protobuf:"bytes,2,opt,name=ownerName" json:"ownerName,omitempty"`
+	GroupName         *string `protobuf:"bytes,3,opt,name=groupName" json:"groupName,omitempty"`
+	Mode              *int32  `protobuf:"varint,4,opt,name=mode" json:"mode,omitempty"`
+	Limit             *int64  `protobuf:"varint,5,opt,name=limit" json:"limit,omitempty"`
+	MaxRelativeExpiry *int64  `protobuf:"varint,6,opt,name=maxRelativeExpiry" json:"maxRelativeExpiry,omitempty"`
+	XXX_unrecognized  []byte  `json:"-"`
+}
+
+func (m *CachePoolInfoProto) Reset()         { *m = CachePoolInfoProto{} }
+func (m *CachePoolInfoProto) String() string { return proto.CompactTextString(m) }
+func (*CachePoolInfoProto) ProtoMessage()    {}
+
+func (m *CachePoolInfoProto) GetPoolName() string {
+	if m != nil && m.PoolName != nil {
+		return *m.PoolName
+	}
+	return ""
+}
+
+func (m *CachePoolInfoProto) GetOwnerName() string {
+	if m != nil && m.OwnerName != nil {
+		return *m.OwnerName
+	}
+	return ""
+}
+
+func (m *CachePoolInfoProto) GetGroupName() string {
+	if m != nil && m.GroupName != nil {
+		return *m.GroupName
+	}
+	return ""
+}
+
+func (m *CachePoolInfoProto) GetMode() int32 {
+	if m != nil && m.Mode != nil {
+		return *m.Mode
+	}
+	return 0
+}
+
+func (m *CachePoolInfoProto) GetLimit() int64 {
+	if m != nil && m.Limit != nil {
+		return *m.Limit
+	}
+	return 0
+}
+
+func (m *CachePoolInfoProto) GetMaxRelativeExpiry() int64 {
+	if m != nil && m.MaxRelativeExpiry != nil {
+		return *m.MaxRelativeExpiry
+	}
+	return 0
+}
+
+type CachePoolStatsProto struct {
+	BytesNeeded      *int64 `protobuf:"varint,1,req,name=bytesNeeded" json:"bytesNeeded,omitempty"`
+	BytesCached      *int64 `protobuf:"varint,2,req,name=bytesCached" json:"bytesCached,omitempty"`
+	BytesOverlimit   *int64 `protobuf:"varint,3,req,name=bytesOverlimit" json:"bytesOverlimit,omitempty"`
+	FilesNeeded      *int64 `protobuf:"varint,4,req,name=filesNeeded" json:"filesNeeded,omitempty"`
+	FilesCached      *int64 `protobuf:"varint,5,req,name=filesCached" json:"filesCached,omitempty"`
+	XXX_unrecognized []byte `json:"-"`
+}
+
+func (m *CachePoolStatsProto) Reset()         { *m = CachePoolStatsProto{} }
+func (m *CachePoolStatsProto) String() string { return proto.CompactTextString(m) }
+func (*CachePoolStatsProto) ProtoMessage()    {}
+
+func (m *CachePoolStatsProto) GetBytesNeeded() int64 {
+	if m != nil && m.BytesNeeded != nil {
+		return *m.BytesNeeded
+	}
+	return 0
+}
+
+func (m *CachePoolStatsProto) GetBytesCached() int64 {
+	if m != nil && m.BytesCached != nil {
+		return *m.BytesCached
+	}
+	return 0
+}
+
+func (m *CachePoolStatsProto) GetBytesOverlimit() int64 {
+	if m != nil && m.BytesOverlimit != nil {
+		return *m.BytesOverlimit
+	}
+	return 0
+}
+
+func (m *CachePoolStatsProto) GetFilesNeeded() int64 {
+	if m != nil && m.FilesNeeded != nil {
+		return *m.FilesNeeded
+	}
+	return 0
+}
+
+func (m *CachePoolStatsProto) GetFilesCached() int64 {
+	if m != nil && m.FilesCached != nil {
+		return *m.FilesCached
+	}
+	return 0
+}
+
+type AddCachePoolRequestProto struct {
+	Info             *CachePoolInfoProto `protobuf:"bytes,1,req,name=info" json:"info,omitempty"`
+	XXX_unrecognized []byte              `json:"-"`
+}
+
+func (m *AddCachePoolRequestProto) Reset()         { *m = AddCachePoolRequestProto{} }
+func (m *AddCachePoolRequestProto) String() string { return proto.CompactTextString(m) }
+func (*AddCachePoolRequestProto) ProtoMessage()    {}
+
+func (m *AddCachePoolRequestProto) GetInfo() *CachePoolInfoProto {
+	if m != nil {
+		return m.Info
+	}
+	return nil
+}
+
+type AddCachePoolResponseProto struct {
+	XXX_unrecognized []byte `json:"-"`
+}
+
+func (m *AddCachePoolResponseProto) Reset()         { *m = AddCachePoolResponseProto{} }
+func (m *AddCachePoolResponseProto) String() string { return proto.CompactTextString(m) }
+func (*AddCachePoolResponseProto) ProtoMessage()    {}
+
+type ModifyCachePoolRequestProto struct {
+	Info             *CachePoolInfoProto `protobuf:"bytes,1,req,name=info" json:"info,omitempty"`
+	XXX_unrecognized []byte              `json:"-"`
+}
+
+func (m *ModifyCachePoolRequestProto) Reset()         { *m = ModifyCachePoolRequestProto{} }
+func (m *ModifyCachePoolRequestProto) String() string { return proto.CompactTextString(m) }
+func (*ModifyCachePoolRequestProto) ProtoMessage()    {}
+
+func (m *ModifyCachePoolRequestProto) GetInfo() *CachePoolInfoProto {
+	if m != nil {
+		return m.Info
+	}
+	return nil
+}
+
+type ModifyCachePoolResponseProto struct {
+	XXX_unrecognized []byte `json:"-"`
+}
+
+func (m *ModifyCachePoolResponseProto) Reset()         { *m = ModifyCachePoolResponseProto{} }
+func (m *ModifyCachePoolResponseProto) String() string { return proto.CompactTextString(m) }
+func (*ModifyCachePoolResponseProto) ProtoMessage()    {}
+
+type RemoveCachePoolRequestProto struct {
+	PoolName         *string `protobuf:"bytes,1,req,name=poolName" json:"poolName,omitempty"`
+	XXX_unrecognized []byte  `json:"-"`
+}
+
+func (m *RemoveCachePoolRequestProto) Reset()         { *m = RemoveCachePoolRequestProto{} }
+func (m *RemoveCachePoolRequestProto) String() string { return proto.CompactTextString(m) }
+func (*RemoveCachePoolRequestProto) ProtoMessage()    {}
+
+func (m *RemoveCachePoolRequestProto) GetPoolName() string {
+	if m != nil && m.PoolName != nil {
+		return *m.PoolName
+	}
+	return ""
+}
+
+type RemoveCachePoolResponseProto struct {
+	XXX_unrecognized []byte `json:"-"`
+}
+
+func (m *RemoveCachePoolResponseProto) Reset()         { *m = RemoveCachePoolResponseProto{} }
+func (m *RemoveCachePoolResponseProto) String() string { return proto.CompactTextString(m) }
+func (*RemoveCachePoolResponseProto) ProtoMessage()    {}
+
+type ListCachePoolsRequestProto struct {
+	PrevPoolName     *string `protobuf:"bytes,1,req,name=prevPoolName" json:"prevPoolName,omitempty"`
+	XXX_unrecognized []byte  `json:"-"`
+}
+
+func (m *ListCachePoolsRequestProto) Reset()         { *m = ListCachePoolsRequestProto{} }
+func (m *ListCachePoolsRequestProto) String() string { return proto.CompactTextString(m) }
+func (*ListCachePoolsRequestProto) ProtoMessage()    {}
+
+func (m *ListCachePoolsRequestProto) GetPrevPoolName() string {
+	if m != nil && m.PrevPoolName != nil {
+		return *m.PrevPoolName
+	}
+	return ""
+}
+
+type ListCachePoolsResponseProto struct {
+	Entries          []*CachePoolEntryProto `protobuf:"bytes,1,rep,name=entries" json:"entries,omitempty"`
+	HasMore          *bool                  `protobuf:"varint,2,req,name=hasMore" json:"hasMore,omitempty"`
+	XXX_unrecognized []byte                 `json:"-"`
+}
+
+func (m *ListCachePoolsResponseProto) Reset()         { *m = ListCachePoolsResponseProto{} }
+func (m *ListCachePoolsResponseProto) String() string { return proto.CompactTextString(m) }
+func (*ListCachePoolsResponseProto) ProtoMessage()    {}
+
+func (m *ListCachePoolsResponseProto) GetEntries() []*CachePoolEntryProto {
+	if m != nil {
+		return m.Entries
+	}
+	return nil
+}
+
+func (m *ListCachePoolsResponseProto) GetHasMore() bool {
+	if m != nil && m.HasMore != nil {
+		return *m.HasMore
+	}
+	return false
+}
+
+type CachePoolEntryProto struct {
+	Info             *CachePoolInfoProto  `protobuf:"bytes,1,req,name=info" json:"info,omitempty"`
+	Stats            *CachePoolStatsProto `protobuf:"bytes,2,req,name=stats" json:"stats,omitempty"`
+	XXX_unrecognized []byte               `json:"-"`
+}
+
+func (m *CachePoolEntryProto) Reset()         { *m = CachePoolEntryProto{} }
+func (m *CachePoolEntryProto) String() string { return proto.CompactTextString(m) }
+func (*CachePoolEntryProto) ProtoMessage()    {}
+
+func (m *CachePoolEntryProto) GetInfo() *CachePoolInfoProto {
+	if m != nil {
+		return m.Info
+	}
+	return nil
+}
+
+func (m *CachePoolEntryProto) GetStats() *CachePoolStatsProto {
+	if m != nil {
+		return m.Stats
+	}
+	return nil
+}
+
 type GetFileLinkInfoRequestProto struct {
 	Src              *string `protobuf:"bytes,1,req,name=src" json:"src,omitempty"`
 	XXX_unrecognized []byte  `json:"-"`
@@ -1659,11 +2546,44 @@ func (m *GetContentSummaryResponseProto) GetSummary() *ContentSummaryProto {
 	return nil
 }
 
-type SetQuotaRequestProto struct {
+type GetQuotaUsageRequestProto struct {
 	Path             *string `protobuf:"bytes,1,req,name=path" json:"path,omitempty"`
-	NamespaceQuota   *uint64 `protobuf:"varint,2,req,name=namespaceQuota" json:"namespaceQuota,omitempty"`
-	DiskspaceQuota   *uint64 `protobuf:"varint,3,req,name=diskspaceQuota" json:"diskspaceQuota,omitempty"`
 	XXX_unrecognized []byte  `json:"-"`
+}
+
+func (m *GetQuotaUsageRequestProto) Reset()         { *m = GetQuotaUsageRequestProto{} }
+func (m *GetQuotaUsageRequestProto) String() string { return proto.CompactTextString(m) }
+func (*GetQuotaUsageRequestProto) ProtoMessage()    {}
+
+func (m *GetQuotaUsageRequestProto) GetPath() string {
+	if m != nil && m.Path != nil {
+		return *m.Path
+	}
+	return ""
+}
+
+type GetQuotaUsageResponseProto struct {
+	Usage            *QuotaUsageProto `protobuf:"bytes,1,req,name=usage" json:"usage,omitempty"`
+	XXX_unrecognized []byte           `json:"-"`
+}
+
+func (m *GetQuotaUsageResponseProto) Reset()         { *m = GetQuotaUsageResponseProto{} }
+func (m *GetQuotaUsageResponseProto) String() string { return proto.CompactTextString(m) }
+func (*GetQuotaUsageResponseProto) ProtoMessage()    {}
+
+func (m *GetQuotaUsageResponseProto) GetUsage() *QuotaUsageProto {
+	if m != nil {
+		return m.Usage
+	}
+	return nil
+}
+
+type SetQuotaRequestProto struct {
+	Path              *string           `protobuf:"bytes,1,req,name=path" json:"path,omitempty"`
+	NamespaceQuota    *uint64           `protobuf:"varint,2,req,name=namespaceQuota" json:"namespaceQuota,omitempty"`
+	StoragespaceQuota *uint64           `protobuf:"varint,3,req,name=storagespaceQuota" json:"storagespaceQuota,omitempty"`
+	StorageType       *StorageTypeProto `protobuf:"varint,4,opt,name=storageType,enum=hadoop.hdfs.StorageTypeProto" json:"storageType,omitempty"`
+	XXX_unrecognized  []byte            `json:"-"`
 }
 
 func (m *SetQuotaRequestProto) Reset()         { *m = SetQuotaRequestProto{} }
@@ -1684,11 +2604,18 @@ func (m *SetQuotaRequestProto) GetNamespaceQuota() uint64 {
 	return 0
 }
 
-func (m *SetQuotaRequestProto) GetDiskspaceQuota() uint64 {
-	if m != nil && m.DiskspaceQuota != nil {
-		return *m.DiskspaceQuota
+func (m *SetQuotaRequestProto) GetStoragespaceQuota() uint64 {
+	if m != nil && m.StoragespaceQuota != nil {
+		return *m.StoragespaceQuota
 	}
 	return 0
+}
+
+func (m *SetQuotaRequestProto) GetStorageType() StorageTypeProto {
+	if m != nil && m.StorageType != nil {
+		return *m.StorageType
+	}
+	return StorageTypeProto_DISK
 }
 
 type SetQuotaResponseProto struct {
@@ -1703,6 +2630,7 @@ type FsyncRequestProto struct {
 	Src              *string `protobuf:"bytes,1,req,name=src" json:"src,omitempty"`
 	Client           *string `protobuf:"bytes,2,req,name=client" json:"client,omitempty"`
 	LastBlockLength  *int64  `protobuf:"zigzag64,3,opt,name=lastBlockLength,def=-1" json:"lastBlockLength,omitempty"`
+	FileId           *uint64 `protobuf:"varint,4,opt,name=fileId,def=0" json:"fileId,omitempty"`
 	XXX_unrecognized []byte  `json:"-"`
 }
 
@@ -1711,6 +2639,7 @@ func (m *FsyncRequestProto) String() string { return proto.CompactTextString(m) 
 func (*FsyncRequestProto) ProtoMessage()    {}
 
 const Default_FsyncRequestProto_LastBlockLength int64 = -1
+const Default_FsyncRequestProto_FileId uint64 = 0
 
 func (m *FsyncRequestProto) GetSrc() string {
 	if m != nil && m.Src != nil {
@@ -1731,6 +2660,13 @@ func (m *FsyncRequestProto) GetLastBlockLength() int64 {
 		return *m.LastBlockLength
 	}
 	return Default_FsyncRequestProto_LastBlockLength
+}
+
+func (m *FsyncRequestProto) GetFileId() uint64 {
+	if m != nil && m.FileId != nil {
+		return *m.FileId
+	}
+	return Default_FsyncRequestProto_FileId
 }
 
 type FsyncResponseProto struct {
@@ -1906,6 +2842,7 @@ type UpdatePipelineRequestProto struct {
 	OldBlock         *ExtendedBlockProto `protobuf:"bytes,2,req,name=oldBlock" json:"oldBlock,omitempty"`
 	NewBlock         *ExtendedBlockProto `protobuf:"bytes,3,req,name=newBlock" json:"newBlock,omitempty"`
 	NewNodes         []*DatanodeIDProto  `protobuf:"bytes,4,rep,name=newNodes" json:"newNodes,omitempty"`
+	StorageIDs       []string            `protobuf:"bytes,5,rep,name=storageIDs" json:"storageIDs,omitempty"`
 	XXX_unrecognized []byte              `json:"-"`
 }
 
@@ -1937,6 +2874,13 @@ func (m *UpdatePipelineRequestProto) GetNewBlock() *ExtendedBlockProto {
 func (m *UpdatePipelineRequestProto) GetNewNodes() []*DatanodeIDProto {
 	if m != nil {
 		return m.NewNodes
+	}
+	return nil
+}
+
+func (m *UpdatePipelineRequestProto) GetStorageIDs() []string {
+	if m != nil {
+		return m.StorageIDs
 	}
 	return nil
 }
@@ -2157,8 +3101,98 @@ func (m *DeleteSnapshotResponseProto) Reset()         { *m = DeleteSnapshotRespo
 func (m *DeleteSnapshotResponseProto) String() string { return proto.CompactTextString(m) }
 func (*DeleteSnapshotResponseProto) ProtoMessage()    {}
 
+type CheckAccessRequestProto struct {
+	Path             *string                      `protobuf:"bytes,1,req,name=path" json:"path,omitempty"`
+	Mode             *AclEntryProto_FsActionProto `protobuf:"varint,2,req,name=mode,enum=hadoop.hdfs.AclEntryProto_FsActionProto" json:"mode,omitempty"`
+	XXX_unrecognized []byte                       `json:"-"`
+}
+
+func (m *CheckAccessRequestProto) Reset()         { *m = CheckAccessRequestProto{} }
+func (m *CheckAccessRequestProto) String() string { return proto.CompactTextString(m) }
+func (*CheckAccessRequestProto) ProtoMessage()    {}
+
+func (m *CheckAccessRequestProto) GetPath() string {
+	if m != nil && m.Path != nil {
+		return *m.Path
+	}
+	return ""
+}
+
+func (m *CheckAccessRequestProto) GetMode() AclEntryProto_FsActionProto {
+	if m != nil && m.Mode != nil {
+		return *m.Mode
+	}
+	return AclEntryProto_NONE
+}
+
+type CheckAccessResponseProto struct {
+	XXX_unrecognized []byte `json:"-"`
+}
+
+func (m *CheckAccessResponseProto) Reset()         { *m = CheckAccessResponseProto{} }
+func (m *CheckAccessResponseProto) String() string { return proto.CompactTextString(m) }
+func (*CheckAccessResponseProto) ProtoMessage()    {}
+
+type GetCurrentEditLogTxidRequestProto struct {
+	XXX_unrecognized []byte `json:"-"`
+}
+
+func (m *GetCurrentEditLogTxidRequestProto) Reset()         { *m = GetCurrentEditLogTxidRequestProto{} }
+func (m *GetCurrentEditLogTxidRequestProto) String() string { return proto.CompactTextString(m) }
+func (*GetCurrentEditLogTxidRequestProto) ProtoMessage()    {}
+
+type GetCurrentEditLogTxidResponseProto struct {
+	Txid             *int64 `protobuf:"varint,1,req,name=txid" json:"txid,omitempty"`
+	XXX_unrecognized []byte `json:"-"`
+}
+
+func (m *GetCurrentEditLogTxidResponseProto) Reset()         { *m = GetCurrentEditLogTxidResponseProto{} }
+func (m *GetCurrentEditLogTxidResponseProto) String() string { return proto.CompactTextString(m) }
+func (*GetCurrentEditLogTxidResponseProto) ProtoMessage()    {}
+
+func (m *GetCurrentEditLogTxidResponseProto) GetTxid() int64 {
+	if m != nil && m.Txid != nil {
+		return *m.Txid
+	}
+	return 0
+}
+
+type GetEditsFromTxidRequestProto struct {
+	Txid             *int64 `protobuf:"varint,1,req,name=txid" json:"txid,omitempty"`
+	XXX_unrecognized []byte `json:"-"`
+}
+
+func (m *GetEditsFromTxidRequestProto) Reset()         { *m = GetEditsFromTxidRequestProto{} }
+func (m *GetEditsFromTxidRequestProto) String() string { return proto.CompactTextString(m) }
+func (*GetEditsFromTxidRequestProto) ProtoMessage()    {}
+
+func (m *GetEditsFromTxidRequestProto) GetTxid() int64 {
+	if m != nil && m.Txid != nil {
+		return *m.Txid
+	}
+	return 0
+}
+
+type GetEditsFromTxidResponseProto struct {
+	EventsList       *EventsListProto `protobuf:"bytes,1,req,name=eventsList" json:"eventsList,omitempty"`
+	XXX_unrecognized []byte           `json:"-"`
+}
+
+func (m *GetEditsFromTxidResponseProto) Reset()         { *m = GetEditsFromTxidResponseProto{} }
+func (m *GetEditsFromTxidResponseProto) String() string { return proto.CompactTextString(m) }
+func (*GetEditsFromTxidResponseProto) ProtoMessage()    {}
+
+func (m *GetEditsFromTxidResponseProto) GetEventsList() *EventsListProto {
+	if m != nil {
+		return m.EventsList
+	}
+	return nil
+}
+
 func init() {
 	proto.RegisterEnum("hadoop.hdfs.CreateFlagProto", CreateFlagProto_name, CreateFlagProto_value)
 	proto.RegisterEnum("hadoop.hdfs.DatanodeReportTypeProto", DatanodeReportTypeProto_name, DatanodeReportTypeProto_value)
 	proto.RegisterEnum("hadoop.hdfs.SafeModeActionProto", SafeModeActionProto_name, SafeModeActionProto_value)
+	proto.RegisterEnum("hadoop.hdfs.RollingUpgradeActionProto", RollingUpgradeActionProto_name, RollingUpgradeActionProto_value)
+	proto.RegisterEnum("hadoop.hdfs.CacheFlagProto", CacheFlagProto_name, CacheFlagProto_value)
 }

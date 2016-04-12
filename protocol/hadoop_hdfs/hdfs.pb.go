@@ -13,6 +13,117 @@ var _ = proto.Marshal
 var _ = math.Inf
 
 // *
+// Types of recognized storage media.
+type StorageTypeProto int32
+
+const (
+	StorageTypeProto_DISK     StorageTypeProto = 1
+	StorageTypeProto_SSD      StorageTypeProto = 2
+	StorageTypeProto_ARCHIVE  StorageTypeProto = 3
+	StorageTypeProto_RAM_DISK StorageTypeProto = 4
+)
+
+var StorageTypeProto_name = map[int32]string{
+	1: "DISK",
+	2: "SSD",
+	3: "ARCHIVE",
+	4: "RAM_DISK",
+}
+var StorageTypeProto_value = map[string]int32{
+	"DISK":     1,
+	"SSD":      2,
+	"ARCHIVE":  3,
+	"RAM_DISK": 4,
+}
+
+func (x StorageTypeProto) Enum() *StorageTypeProto {
+	p := new(StorageTypeProto)
+	*p = x
+	return p
+}
+func (x StorageTypeProto) String() string {
+	return proto.EnumName(StorageTypeProto_name, int32(x))
+}
+func (x *StorageTypeProto) UnmarshalJSON(data []byte) error {
+	value, err := proto.UnmarshalJSONEnum(StorageTypeProto_value, data, "StorageTypeProto")
+	if err != nil {
+		return err
+	}
+	*x = StorageTypeProto(value)
+	return nil
+}
+
+// *
+// Cipher suite.
+type CipherSuiteProto int32
+
+const (
+	CipherSuiteProto_UNKNOWN           CipherSuiteProto = 1
+	CipherSuiteProto_AES_CTR_NOPADDING CipherSuiteProto = 2
+)
+
+var CipherSuiteProto_name = map[int32]string{
+	1: "UNKNOWN",
+	2: "AES_CTR_NOPADDING",
+}
+var CipherSuiteProto_value = map[string]int32{
+	"UNKNOWN":           1,
+	"AES_CTR_NOPADDING": 2,
+}
+
+func (x CipherSuiteProto) Enum() *CipherSuiteProto {
+	p := new(CipherSuiteProto)
+	*p = x
+	return p
+}
+func (x CipherSuiteProto) String() string {
+	return proto.EnumName(CipherSuiteProto_name, int32(x))
+}
+func (x *CipherSuiteProto) UnmarshalJSON(data []byte) error {
+	value, err := proto.UnmarshalJSONEnum(CipherSuiteProto_value, data, "CipherSuiteProto")
+	if err != nil {
+		return err
+	}
+	*x = CipherSuiteProto(value)
+	return nil
+}
+
+// *
+// Crypto protocol version used to access encrypted files.
+type CryptoProtocolVersionProto int32
+
+const (
+	CryptoProtocolVersionProto_UNKNOWN_PROTOCOL_VERSION CryptoProtocolVersionProto = 1
+	CryptoProtocolVersionProto_ENCRYPTION_ZONES         CryptoProtocolVersionProto = 2
+)
+
+var CryptoProtocolVersionProto_name = map[int32]string{
+	1: "UNKNOWN_PROTOCOL_VERSION",
+	2: "ENCRYPTION_ZONES",
+}
+var CryptoProtocolVersionProto_value = map[string]int32{
+	"UNKNOWN_PROTOCOL_VERSION": 1,
+	"ENCRYPTION_ZONES":         2,
+}
+
+func (x CryptoProtocolVersionProto) Enum() *CryptoProtocolVersionProto {
+	p := new(CryptoProtocolVersionProto)
+	*p = x
+	return p
+}
+func (x CryptoProtocolVersionProto) String() string {
+	return proto.EnumName(CryptoProtocolVersionProto_name, int32(x))
+}
+func (x *CryptoProtocolVersionProto) UnmarshalJSON(data []byte) error {
+	value, err := proto.UnmarshalJSONEnum(CryptoProtocolVersionProto_value, data, "CryptoProtocolVersionProto")
+	if err != nil {
+		return err
+	}
+	*x = CryptoProtocolVersionProto(value)
+	return nil
+}
+
+// *
 // Checksum algorithms/types used in HDFS
 // Make sure this enum's integer values match enum values' id properties defined
 // in org.apache.hadoop.util.DataChecksum.Type
@@ -52,50 +163,6 @@ func (x *ChecksumTypeProto) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
-// *
-// State of a block replica at a datanode
-type ReplicaStateProto int32
-
-const (
-	ReplicaStateProto_FINALIZED ReplicaStateProto = 0
-	ReplicaStateProto_RBW       ReplicaStateProto = 1
-	ReplicaStateProto_RWR       ReplicaStateProto = 2
-	ReplicaStateProto_RUR       ReplicaStateProto = 3
-	ReplicaStateProto_TEMPORARY ReplicaStateProto = 4
-)
-
-var ReplicaStateProto_name = map[int32]string{
-	0: "FINALIZED",
-	1: "RBW",
-	2: "RWR",
-	3: "RUR",
-	4: "TEMPORARY",
-}
-var ReplicaStateProto_value = map[string]int32{
-	"FINALIZED": 0,
-	"RBW":       1,
-	"RWR":       2,
-	"RUR":       3,
-	"TEMPORARY": 4,
-}
-
-func (x ReplicaStateProto) Enum() *ReplicaStateProto {
-	p := new(ReplicaStateProto)
-	*p = x
-	return p
-}
-func (x ReplicaStateProto) String() string {
-	return proto.EnumName(ReplicaStateProto_name, int32(x))
-}
-func (x *ReplicaStateProto) UnmarshalJSON(data []byte) error {
-	value, err := proto.UnmarshalJSONEnum(ReplicaStateProto_value, data, "ReplicaStateProto")
-	if err != nil {
-		return err
-	}
-	*x = ReplicaStateProto(value)
-	return nil
-}
-
 type DatanodeInfoProto_AdminState int32
 
 const (
@@ -132,6 +199,39 @@ func (x *DatanodeInfoProto_AdminState) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
+type DatanodeStorageProto_StorageState int32
+
+const (
+	DatanodeStorageProto_NORMAL           DatanodeStorageProto_StorageState = 0
+	DatanodeStorageProto_READ_ONLY_SHARED DatanodeStorageProto_StorageState = 1
+)
+
+var DatanodeStorageProto_StorageState_name = map[int32]string{
+	0: "NORMAL",
+	1: "READ_ONLY_SHARED",
+}
+var DatanodeStorageProto_StorageState_value = map[string]int32{
+	"NORMAL":           0,
+	"READ_ONLY_SHARED": 1,
+}
+
+func (x DatanodeStorageProto_StorageState) Enum() *DatanodeStorageProto_StorageState {
+	p := new(DatanodeStorageProto_StorageState)
+	*p = x
+	return p
+}
+func (x DatanodeStorageProto_StorageState) String() string {
+	return proto.EnumName(DatanodeStorageProto_StorageState_name, int32(x))
+}
+func (x *DatanodeStorageProto_StorageState) UnmarshalJSON(data []byte) error {
+	value, err := proto.UnmarshalJSONEnum(DatanodeStorageProto_StorageState_value, data, "DatanodeStorageProto_StorageState")
+	if err != nil {
+		return err
+	}
+	*x = DatanodeStorageProto_StorageState(value)
+	return nil
+}
+
 type HdfsFileStatusProto_FileType int32
 
 const (
@@ -165,75 +265,6 @@ func (x *HdfsFileStatusProto_FileType) UnmarshalJSON(data []byte) error {
 		return err
 	}
 	*x = HdfsFileStatusProto_FileType(value)
-	return nil
-}
-
-type NamenodeRegistrationProto_NamenodeRoleProto int32
-
-const (
-	NamenodeRegistrationProto_NAMENODE   NamenodeRegistrationProto_NamenodeRoleProto = 1
-	NamenodeRegistrationProto_BACKUP     NamenodeRegistrationProto_NamenodeRoleProto = 2
-	NamenodeRegistrationProto_CHECKPOINT NamenodeRegistrationProto_NamenodeRoleProto = 3
-)
-
-var NamenodeRegistrationProto_NamenodeRoleProto_name = map[int32]string{
-	1: "NAMENODE",
-	2: "BACKUP",
-	3: "CHECKPOINT",
-}
-var NamenodeRegistrationProto_NamenodeRoleProto_value = map[string]int32{
-	"NAMENODE":   1,
-	"BACKUP":     2,
-	"CHECKPOINT": 3,
-}
-
-func (x NamenodeRegistrationProto_NamenodeRoleProto) Enum() *NamenodeRegistrationProto_NamenodeRoleProto {
-	p := new(NamenodeRegistrationProto_NamenodeRoleProto)
-	*p = x
-	return p
-}
-func (x NamenodeRegistrationProto_NamenodeRoleProto) String() string {
-	return proto.EnumName(NamenodeRegistrationProto_NamenodeRoleProto_name, int32(x))
-}
-func (x *NamenodeRegistrationProto_NamenodeRoleProto) UnmarshalJSON(data []byte) error {
-	value, err := proto.UnmarshalJSONEnum(NamenodeRegistrationProto_NamenodeRoleProto_value, data, "NamenodeRegistrationProto_NamenodeRoleProto")
-	if err != nil {
-		return err
-	}
-	*x = NamenodeRegistrationProto_NamenodeRoleProto(value)
-	return nil
-}
-
-type NamenodeCommandProto_Type int32
-
-const (
-	NamenodeCommandProto_NamenodeCommand   NamenodeCommandProto_Type = 0
-	NamenodeCommandProto_CheckPointCommand NamenodeCommandProto_Type = 1
-)
-
-var NamenodeCommandProto_Type_name = map[int32]string{
-	0: "NamenodeCommand",
-	1: "CheckPointCommand",
-}
-var NamenodeCommandProto_Type_value = map[string]int32{
-	"NamenodeCommand":   0,
-	"CheckPointCommand": 1,
-}
-
-func (x NamenodeCommandProto_Type) Enum() *NamenodeCommandProto_Type {
-	p := new(NamenodeCommandProto_Type)
-	*p = x
-	return p
-}
-func (x NamenodeCommandProto_Type) String() string {
-	return proto.EnumName(NamenodeCommandProto_Type_name, int32(x))
-}
-func (x *NamenodeCommandProto_Type) UnmarshalJSON(data []byte) error {
-	value, err := proto.UnmarshalJSONEnum(NamenodeCommandProto_Type_value, data, "NamenodeCommandProto_Type")
-	if err != nil {
-		return err
-	}
-	*x = NamenodeCommandProto_Type(value)
 	return nil
 }
 
@@ -284,9 +315,12 @@ func (m *ExtendedBlockProto) GetNumBytes() uint64 {
 // *
 // Identifies a Datanode
 type DatanodeIDProto struct {
-	IpAddr           *string `protobuf:"bytes,1,req,name=ipAddr" json:"ipAddr,omitempty"`
-	HostName         *string `protobuf:"bytes,2,req,name=hostName" json:"hostName,omitempty"`
-	StorageID        *string `protobuf:"bytes,3,req,name=storageID" json:"storageID,omitempty"`
+	IpAddr       *string `protobuf:"bytes,1,req,name=ipAddr" json:"ipAddr,omitempty"`
+	HostName     *string `protobuf:"bytes,2,req,name=hostName" json:"hostName,omitempty"`
+	DatanodeUuid *string `protobuf:"bytes,3,req,name=datanodeUuid" json:"datanodeUuid,omitempty"`
+	// upgraded clusters this is the same
+	// as the original StorageID of the
+	// Datanode.
 	XferPort         *uint32 `protobuf:"varint,4,req,name=xferPort" json:"xferPort,omitempty"`
 	InfoPort         *uint32 `protobuf:"varint,5,req,name=infoPort" json:"infoPort,omitempty"`
 	IpcPort          *uint32 `protobuf:"varint,6,req,name=ipcPort" json:"ipcPort,omitempty"`
@@ -314,9 +348,9 @@ func (m *DatanodeIDProto) GetHostName() string {
 	return ""
 }
 
-func (m *DatanodeIDProto) GetStorageID() string {
-	if m != nil && m.StorageID != nil {
-		return *m.StorageID
+func (m *DatanodeIDProto) GetDatanodeUuid() string {
+	if m != nil && m.DatanodeUuid != nil {
+		return *m.DatanodeUuid
 	}
 	return ""
 }
@@ -350,6 +384,40 @@ func (m *DatanodeIDProto) GetInfoSecurePort() uint32 {
 }
 
 // *
+// Datanode local information
+type DatanodeLocalInfoProto struct {
+	SoftwareVersion  *string `protobuf:"bytes,1,req,name=softwareVersion" json:"softwareVersion,omitempty"`
+	ConfigVersion    *string `protobuf:"bytes,2,req,name=configVersion" json:"configVersion,omitempty"`
+	Uptime           *uint64 `protobuf:"varint,3,req,name=uptime" json:"uptime,omitempty"`
+	XXX_unrecognized []byte  `json:"-"`
+}
+
+func (m *DatanodeLocalInfoProto) Reset()         { *m = DatanodeLocalInfoProto{} }
+func (m *DatanodeLocalInfoProto) String() string { return proto.CompactTextString(m) }
+func (*DatanodeLocalInfoProto) ProtoMessage()    {}
+
+func (m *DatanodeLocalInfoProto) GetSoftwareVersion() string {
+	if m != nil && m.SoftwareVersion != nil {
+		return *m.SoftwareVersion
+	}
+	return ""
+}
+
+func (m *DatanodeLocalInfoProto) GetConfigVersion() string {
+	if m != nil && m.ConfigVersion != nil {
+		return *m.ConfigVersion
+	}
+	return ""
+}
+
+func (m *DatanodeLocalInfoProto) GetUptime() uint64 {
+	if m != nil && m.Uptime != nil {
+		return *m.Uptime
+	}
+	return 0
+}
+
+// *
 // DatanodeInfo array
 type DatanodeInfosProto struct {
 	Datanodes        []*DatanodeInfoProto `protobuf:"bytes,1,rep,name=datanodes" json:"datanodes,omitempty"`
@@ -370,16 +438,20 @@ func (m *DatanodeInfosProto) GetDatanodes() []*DatanodeInfoProto {
 // *
 // The status of a Datanode
 type DatanodeInfoProto struct {
-	Id               *DatanodeIDProto              `protobuf:"bytes,1,req,name=id" json:"id,omitempty"`
-	Capacity         *uint64                       `protobuf:"varint,2,opt,name=capacity,def=0" json:"capacity,omitempty"`
-	DfsUsed          *uint64                       `protobuf:"varint,3,opt,name=dfsUsed,def=0" json:"dfsUsed,omitempty"`
-	Remaining        *uint64                       `protobuf:"varint,4,opt,name=remaining,def=0" json:"remaining,omitempty"`
-	BlockPoolUsed    *uint64                       `protobuf:"varint,5,opt,name=blockPoolUsed,def=0" json:"blockPoolUsed,omitempty"`
-	LastUpdate       *uint64                       `protobuf:"varint,6,opt,name=lastUpdate,def=0" json:"lastUpdate,omitempty"`
-	XceiverCount     *uint32                       `protobuf:"varint,7,opt,name=xceiverCount,def=0" json:"xceiverCount,omitempty"`
-	Location         *string                       `protobuf:"bytes,8,opt,name=location" json:"location,omitempty"`
-	AdminState       *DatanodeInfoProto_AdminState `protobuf:"varint,10,opt,name=adminState,enum=hadoop.hdfs.DatanodeInfoProto_AdminState,def=0" json:"adminState,omitempty"`
-	XXX_unrecognized []byte                        `json:"-"`
+	Id                  *DatanodeIDProto              `protobuf:"bytes,1,req,name=id" json:"id,omitempty"`
+	Capacity            *uint64                       `protobuf:"varint,2,opt,name=capacity,def=0" json:"capacity,omitempty"`
+	DfsUsed             *uint64                       `protobuf:"varint,3,opt,name=dfsUsed,def=0" json:"dfsUsed,omitempty"`
+	Remaining           *uint64                       `protobuf:"varint,4,opt,name=remaining,def=0" json:"remaining,omitempty"`
+	BlockPoolUsed       *uint64                       `protobuf:"varint,5,opt,name=blockPoolUsed,def=0" json:"blockPoolUsed,omitempty"`
+	LastUpdate          *uint64                       `protobuf:"varint,6,opt,name=lastUpdate,def=0" json:"lastUpdate,omitempty"`
+	XceiverCount        *uint32                       `protobuf:"varint,7,opt,name=xceiverCount,def=0" json:"xceiverCount,omitempty"`
+	Location            *string                       `protobuf:"bytes,8,opt,name=location" json:"location,omitempty"`
+	AdminState          *DatanodeInfoProto_AdminState `protobuf:"varint,10,opt,name=adminState,enum=hadoop.hdfs.DatanodeInfoProto_AdminState,def=0" json:"adminState,omitempty"`
+	CacheCapacity       *uint64                       `protobuf:"varint,11,opt,name=cacheCapacity,def=0" json:"cacheCapacity,omitempty"`
+	CacheUsed           *uint64                       `protobuf:"varint,12,opt,name=cacheUsed,def=0" json:"cacheUsed,omitempty"`
+	LastUpdateMonotonic *uint64                       `protobuf:"varint,13,opt,name=lastUpdateMonotonic,def=0" json:"lastUpdateMonotonic,omitempty"`
+	UpgradeDomain       *string                       `protobuf:"bytes,14,opt,name=upgradeDomain" json:"upgradeDomain,omitempty"`
+	XXX_unrecognized    []byte                        `json:"-"`
 }
 
 func (m *DatanodeInfoProto) Reset()         { *m = DatanodeInfoProto{} }
@@ -393,6 +465,9 @@ const Default_DatanodeInfoProto_BlockPoolUsed uint64 = 0
 const Default_DatanodeInfoProto_LastUpdate uint64 = 0
 const Default_DatanodeInfoProto_XceiverCount uint32 = 0
 const Default_DatanodeInfoProto_AdminState DatanodeInfoProto_AdminState = DatanodeInfoProto_NORMAL
+const Default_DatanodeInfoProto_CacheCapacity uint64 = 0
+const Default_DatanodeInfoProto_CacheUsed uint64 = 0
+const Default_DatanodeInfoProto_LastUpdateMonotonic uint64 = 0
 
 func (m *DatanodeInfoProto) GetId() *DatanodeIDProto {
 	if m != nil {
@@ -457,16 +532,152 @@ func (m *DatanodeInfoProto) GetAdminState() DatanodeInfoProto_AdminState {
 	return Default_DatanodeInfoProto_AdminState
 }
 
+func (m *DatanodeInfoProto) GetCacheCapacity() uint64 {
+	if m != nil && m.CacheCapacity != nil {
+		return *m.CacheCapacity
+	}
+	return Default_DatanodeInfoProto_CacheCapacity
+}
+
+func (m *DatanodeInfoProto) GetCacheUsed() uint64 {
+	if m != nil && m.CacheUsed != nil {
+		return *m.CacheUsed
+	}
+	return Default_DatanodeInfoProto_CacheUsed
+}
+
+func (m *DatanodeInfoProto) GetLastUpdateMonotonic() uint64 {
+	if m != nil && m.LastUpdateMonotonic != nil {
+		return *m.LastUpdateMonotonic
+	}
+	return Default_DatanodeInfoProto_LastUpdateMonotonic
+}
+
+func (m *DatanodeInfoProto) GetUpgradeDomain() string {
+	if m != nil && m.UpgradeDomain != nil {
+		return *m.UpgradeDomain
+	}
+	return ""
+}
+
+// *
+// Represents a storage available on the datanode
+type DatanodeStorageProto struct {
+	StorageUuid      *string                            `protobuf:"bytes,1,req,name=storageUuid" json:"storageUuid,omitempty"`
+	State            *DatanodeStorageProto_StorageState `protobuf:"varint,2,opt,name=state,enum=hadoop.hdfs.DatanodeStorageProto_StorageState,def=0" json:"state,omitempty"`
+	StorageType      *StorageTypeProto                  `protobuf:"varint,3,opt,name=storageType,enum=hadoop.hdfs.StorageTypeProto,def=1" json:"storageType,omitempty"`
+	XXX_unrecognized []byte                             `json:"-"`
+}
+
+func (m *DatanodeStorageProto) Reset()         { *m = DatanodeStorageProto{} }
+func (m *DatanodeStorageProto) String() string { return proto.CompactTextString(m) }
+func (*DatanodeStorageProto) ProtoMessage()    {}
+
+const Default_DatanodeStorageProto_State DatanodeStorageProto_StorageState = DatanodeStorageProto_NORMAL
+const Default_DatanodeStorageProto_StorageType StorageTypeProto = StorageTypeProto_DISK
+
+func (m *DatanodeStorageProto) GetStorageUuid() string {
+	if m != nil && m.StorageUuid != nil {
+		return *m.StorageUuid
+	}
+	return ""
+}
+
+func (m *DatanodeStorageProto) GetState() DatanodeStorageProto_StorageState {
+	if m != nil && m.State != nil {
+		return *m.State
+	}
+	return Default_DatanodeStorageProto_State
+}
+
+func (m *DatanodeStorageProto) GetStorageType() StorageTypeProto {
+	if m != nil && m.StorageType != nil {
+		return *m.StorageType
+	}
+	return Default_DatanodeStorageProto_StorageType
+}
+
+type StorageReportProto struct {
+	StorageUuid      *string               `protobuf:"bytes,1,req,name=storageUuid" json:"storageUuid,omitempty"`
+	Failed           *bool                 `protobuf:"varint,2,opt,name=failed,def=0" json:"failed,omitempty"`
+	Capacity         *uint64               `protobuf:"varint,3,opt,name=capacity,def=0" json:"capacity,omitempty"`
+	DfsUsed          *uint64               `protobuf:"varint,4,opt,name=dfsUsed,def=0" json:"dfsUsed,omitempty"`
+	Remaining        *uint64               `protobuf:"varint,5,opt,name=remaining,def=0" json:"remaining,omitempty"`
+	BlockPoolUsed    *uint64               `protobuf:"varint,6,opt,name=blockPoolUsed,def=0" json:"blockPoolUsed,omitempty"`
+	Storage          *DatanodeStorageProto `protobuf:"bytes,7,opt,name=storage" json:"storage,omitempty"`
+	XXX_unrecognized []byte                `json:"-"`
+}
+
+func (m *StorageReportProto) Reset()         { *m = StorageReportProto{} }
+func (m *StorageReportProto) String() string { return proto.CompactTextString(m) }
+func (*StorageReportProto) ProtoMessage()    {}
+
+const Default_StorageReportProto_Failed bool = false
+const Default_StorageReportProto_Capacity uint64 = 0
+const Default_StorageReportProto_DfsUsed uint64 = 0
+const Default_StorageReportProto_Remaining uint64 = 0
+const Default_StorageReportProto_BlockPoolUsed uint64 = 0
+
+func (m *StorageReportProto) GetStorageUuid() string {
+	if m != nil && m.StorageUuid != nil {
+		return *m.StorageUuid
+	}
+	return ""
+}
+
+func (m *StorageReportProto) GetFailed() bool {
+	if m != nil && m.Failed != nil {
+		return *m.Failed
+	}
+	return Default_StorageReportProto_Failed
+}
+
+func (m *StorageReportProto) GetCapacity() uint64 {
+	if m != nil && m.Capacity != nil {
+		return *m.Capacity
+	}
+	return Default_StorageReportProto_Capacity
+}
+
+func (m *StorageReportProto) GetDfsUsed() uint64 {
+	if m != nil && m.DfsUsed != nil {
+		return *m.DfsUsed
+	}
+	return Default_StorageReportProto_DfsUsed
+}
+
+func (m *StorageReportProto) GetRemaining() uint64 {
+	if m != nil && m.Remaining != nil {
+		return *m.Remaining
+	}
+	return Default_StorageReportProto_Remaining
+}
+
+func (m *StorageReportProto) GetBlockPoolUsed() uint64 {
+	if m != nil && m.BlockPoolUsed != nil {
+		return *m.BlockPoolUsed
+	}
+	return Default_StorageReportProto_BlockPoolUsed
+}
+
+func (m *StorageReportProto) GetStorage() *DatanodeStorageProto {
+	if m != nil {
+		return m.Storage
+	}
+	return nil
+}
+
 // *
 // Summary of a file or directory
 type ContentSummaryProto struct {
-	Length           *uint64 `protobuf:"varint,1,req,name=length" json:"length,omitempty"`
-	FileCount        *uint64 `protobuf:"varint,2,req,name=fileCount" json:"fileCount,omitempty"`
-	DirectoryCount   *uint64 `protobuf:"varint,3,req,name=directoryCount" json:"directoryCount,omitempty"`
-	Quota            *uint64 `protobuf:"varint,4,req,name=quota" json:"quota,omitempty"`
-	SpaceConsumed    *uint64 `protobuf:"varint,5,req,name=spaceConsumed" json:"spaceConsumed,omitempty"`
-	SpaceQuota       *uint64 `protobuf:"varint,6,req,name=spaceQuota" json:"spaceQuota,omitempty"`
-	XXX_unrecognized []byte  `json:"-"`
+	Length           *uint64                     `protobuf:"varint,1,req,name=length" json:"length,omitempty"`
+	FileCount        *uint64                     `protobuf:"varint,2,req,name=fileCount" json:"fileCount,omitempty"`
+	DirectoryCount   *uint64                     `protobuf:"varint,3,req,name=directoryCount" json:"directoryCount,omitempty"`
+	Quota            *uint64                     `protobuf:"varint,4,req,name=quota" json:"quota,omitempty"`
+	SpaceConsumed    *uint64                     `protobuf:"varint,5,req,name=spaceConsumed" json:"spaceConsumed,omitempty"`
+	SpaceQuota       *uint64                     `protobuf:"varint,6,req,name=spaceQuota" json:"spaceQuota,omitempty"`
+	TypeQuotaInfos   *StorageTypeQuotaInfosProto `protobuf:"bytes,7,opt,name=typeQuotaInfos" json:"typeQuotaInfos,omitempty"`
+	XXX_unrecognized []byte                      `json:"-"`
 }
 
 func (m *ContentSummaryProto) Reset()         { *m = ContentSummaryProto{} }
@@ -511,6 +722,113 @@ func (m *ContentSummaryProto) GetSpaceConsumed() uint64 {
 func (m *ContentSummaryProto) GetSpaceQuota() uint64 {
 	if m != nil && m.SpaceQuota != nil {
 		return *m.SpaceQuota
+	}
+	return 0
+}
+
+func (m *ContentSummaryProto) GetTypeQuotaInfos() *StorageTypeQuotaInfosProto {
+	if m != nil {
+		return m.TypeQuotaInfos
+	}
+	return nil
+}
+
+// *
+// Summary of quota usage of a directory
+type QuotaUsageProto struct {
+	FileAndDirectoryCount *uint64                     `protobuf:"varint,1,req,name=fileAndDirectoryCount" json:"fileAndDirectoryCount,omitempty"`
+	Quota                 *uint64                     `protobuf:"varint,2,req,name=quota" json:"quota,omitempty"`
+	SpaceConsumed         *uint64                     `protobuf:"varint,3,req,name=spaceConsumed" json:"spaceConsumed,omitempty"`
+	SpaceQuota            *uint64                     `protobuf:"varint,4,req,name=spaceQuota" json:"spaceQuota,omitempty"`
+	TypeQuotaInfos        *StorageTypeQuotaInfosProto `protobuf:"bytes,5,opt,name=typeQuotaInfos" json:"typeQuotaInfos,omitempty"`
+	XXX_unrecognized      []byte                      `json:"-"`
+}
+
+func (m *QuotaUsageProto) Reset()         { *m = QuotaUsageProto{} }
+func (m *QuotaUsageProto) String() string { return proto.CompactTextString(m) }
+func (*QuotaUsageProto) ProtoMessage()    {}
+
+func (m *QuotaUsageProto) GetFileAndDirectoryCount() uint64 {
+	if m != nil && m.FileAndDirectoryCount != nil {
+		return *m.FileAndDirectoryCount
+	}
+	return 0
+}
+
+func (m *QuotaUsageProto) GetQuota() uint64 {
+	if m != nil && m.Quota != nil {
+		return *m.Quota
+	}
+	return 0
+}
+
+func (m *QuotaUsageProto) GetSpaceConsumed() uint64 {
+	if m != nil && m.SpaceConsumed != nil {
+		return *m.SpaceConsumed
+	}
+	return 0
+}
+
+func (m *QuotaUsageProto) GetSpaceQuota() uint64 {
+	if m != nil && m.SpaceQuota != nil {
+		return *m.SpaceQuota
+	}
+	return 0
+}
+
+func (m *QuotaUsageProto) GetTypeQuotaInfos() *StorageTypeQuotaInfosProto {
+	if m != nil {
+		return m.TypeQuotaInfos
+	}
+	return nil
+}
+
+// *
+// Storage type quota and usage information of a file or directory
+type StorageTypeQuotaInfosProto struct {
+	TypeQuotaInfo    []*StorageTypeQuotaInfoProto `protobuf:"bytes,1,rep,name=typeQuotaInfo" json:"typeQuotaInfo,omitempty"`
+	XXX_unrecognized []byte                       `json:"-"`
+}
+
+func (m *StorageTypeQuotaInfosProto) Reset()         { *m = StorageTypeQuotaInfosProto{} }
+func (m *StorageTypeQuotaInfosProto) String() string { return proto.CompactTextString(m) }
+func (*StorageTypeQuotaInfosProto) ProtoMessage()    {}
+
+func (m *StorageTypeQuotaInfosProto) GetTypeQuotaInfo() []*StorageTypeQuotaInfoProto {
+	if m != nil {
+		return m.TypeQuotaInfo
+	}
+	return nil
+}
+
+type StorageTypeQuotaInfoProto struct {
+	Type             *StorageTypeProto `protobuf:"varint,1,req,name=type,enum=hadoop.hdfs.StorageTypeProto" json:"type,omitempty"`
+	Quota            *uint64           `protobuf:"varint,2,req,name=quota" json:"quota,omitempty"`
+	Consumed         *uint64           `protobuf:"varint,3,req,name=consumed" json:"consumed,omitempty"`
+	XXX_unrecognized []byte            `json:"-"`
+}
+
+func (m *StorageTypeQuotaInfoProto) Reset()         { *m = StorageTypeQuotaInfoProto{} }
+func (m *StorageTypeQuotaInfoProto) String() string { return proto.CompactTextString(m) }
+func (*StorageTypeQuotaInfoProto) ProtoMessage()    {}
+
+func (m *StorageTypeQuotaInfoProto) GetType() StorageTypeProto {
+	if m != nil && m.Type != nil {
+		return *m.Type
+	}
+	return StorageTypeProto_DISK
+}
+
+func (m *StorageTypeQuotaInfoProto) GetQuota() uint64 {
+	if m != nil && m.Quota != nil {
+		return *m.Quota
+	}
+	return 0
+}
+
+func (m *StorageTypeQuotaInfoProto) GetConsumed() uint64 {
+	if m != nil && m.Consumed != nil {
+		return *m.Consumed
 	}
 	return 0
 }
@@ -562,14 +880,91 @@ func (m *FsPermissionProto) GetPerm() uint32 {
 }
 
 // *
+// A list of storage types.
+type StorageTypesProto struct {
+	StorageTypes     []StorageTypeProto `protobuf:"varint,1,rep,name=storageTypes,enum=hadoop.hdfs.StorageTypeProto" json:"storageTypes,omitempty"`
+	XXX_unrecognized []byte             `json:"-"`
+}
+
+func (m *StorageTypesProto) Reset()         { *m = StorageTypesProto{} }
+func (m *StorageTypesProto) String() string { return proto.CompactTextString(m) }
+func (*StorageTypesProto) ProtoMessage()    {}
+
+func (m *StorageTypesProto) GetStorageTypes() []StorageTypeProto {
+	if m != nil {
+		return m.StorageTypes
+	}
+	return nil
+}
+
+// *
+// Block replica storage policy.
+type BlockStoragePolicyProto struct {
+	PolicyId *uint32 `protobuf:"varint,1,req,name=policyId" json:"policyId,omitempty"`
+	Name     *string `protobuf:"bytes,2,req,name=name" json:"name,omitempty"`
+	// a list of storage types for storing the block replicas when creating a
+	// block.
+	CreationPolicy *StorageTypesProto `protobuf:"bytes,3,req,name=creationPolicy" json:"creationPolicy,omitempty"`
+	// A list of storage types for creation fallback storage.
+	CreationFallbackPolicy    *StorageTypesProto `protobuf:"bytes,4,opt,name=creationFallbackPolicy" json:"creationFallbackPolicy,omitempty"`
+	ReplicationFallbackPolicy *StorageTypesProto `protobuf:"bytes,5,opt,name=replicationFallbackPolicy" json:"replicationFallbackPolicy,omitempty"`
+	XXX_unrecognized          []byte             `json:"-"`
+}
+
+func (m *BlockStoragePolicyProto) Reset()         { *m = BlockStoragePolicyProto{} }
+func (m *BlockStoragePolicyProto) String() string { return proto.CompactTextString(m) }
+func (*BlockStoragePolicyProto) ProtoMessage()    {}
+
+func (m *BlockStoragePolicyProto) GetPolicyId() uint32 {
+	if m != nil && m.PolicyId != nil {
+		return *m.PolicyId
+	}
+	return 0
+}
+
+func (m *BlockStoragePolicyProto) GetName() string {
+	if m != nil && m.Name != nil {
+		return *m.Name
+	}
+	return ""
+}
+
+func (m *BlockStoragePolicyProto) GetCreationPolicy() *StorageTypesProto {
+	if m != nil {
+		return m.CreationPolicy
+	}
+	return nil
+}
+
+func (m *BlockStoragePolicyProto) GetCreationFallbackPolicy() *StorageTypesProto {
+	if m != nil {
+		return m.CreationFallbackPolicy
+	}
+	return nil
+}
+
+func (m *BlockStoragePolicyProto) GetReplicationFallbackPolicy() *StorageTypesProto {
+	if m != nil {
+		return m.ReplicationFallbackPolicy
+	}
+	return nil
+}
+
+// *
 // A LocatedBlock gives information about a block and its location.
 type LocatedBlockProto struct {
-	B                *ExtendedBlockProto       `protobuf:"bytes,1,req,name=b" json:"b,omitempty"`
-	Offset           *uint64                   `protobuf:"varint,2,req,name=offset" json:"offset,omitempty"`
-	Locs             []*DatanodeInfoProto      `protobuf:"bytes,3,rep,name=locs" json:"locs,omitempty"`
-	Corrupt          *bool                     `protobuf:"varint,4,req,name=corrupt" json:"corrupt,omitempty"`
-	BlockToken       *hadoop_common.TokenProto `protobuf:"bytes,5,req,name=blockToken" json:"blockToken,omitempty"`
-	XXX_unrecognized []byte                    `json:"-"`
+	B            *ExtendedBlockProto       `protobuf:"bytes,1,req,name=b" json:"b,omitempty"`
+	Offset       *uint64                   `protobuf:"varint,2,req,name=offset" json:"offset,omitempty"`
+	Locs         []*DatanodeInfoProto      `protobuf:"bytes,3,rep,name=locs" json:"locs,omitempty"`
+	Corrupt      *bool                     `protobuf:"varint,4,req,name=corrupt" json:"corrupt,omitempty"`
+	BlockToken   *hadoop_common.TokenProto `protobuf:"bytes,5,req,name=blockToken" json:"blockToken,omitempty"`
+	IsCached     []bool                    `protobuf:"varint,6,rep,packed,name=isCached" json:"isCached,omitempty"`
+	StorageTypes []StorageTypeProto        `protobuf:"varint,7,rep,name=storageTypes,enum=hadoop.hdfs.StorageTypeProto" json:"storageTypes,omitempty"`
+	StorageIDs   []string                  `protobuf:"bytes,8,rep,name=storageIDs" json:"storageIDs,omitempty"`
+	// striped block related fields
+	BlockIndices     []byte                      `protobuf:"bytes,9,opt,name=blockIndices" json:"blockIndices,omitempty"`
+	BlockTokens      []*hadoop_common.TokenProto `protobuf:"bytes,10,rep,name=blockTokens" json:"blockTokens,omitempty"`
+	XXX_unrecognized []byte                      `json:"-"`
 }
 
 func (m *LocatedBlockProto) Reset()         { *m = LocatedBlockProto{} }
@@ -607,6 +1002,41 @@ func (m *LocatedBlockProto) GetCorrupt() bool {
 func (m *LocatedBlockProto) GetBlockToken() *hadoop_common.TokenProto {
 	if m != nil {
 		return m.BlockToken
+	}
+	return nil
+}
+
+func (m *LocatedBlockProto) GetIsCached() []bool {
+	if m != nil {
+		return m.IsCached
+	}
+	return nil
+}
+
+func (m *LocatedBlockProto) GetStorageTypes() []StorageTypeProto {
+	if m != nil {
+		return m.StorageTypes
+	}
+	return nil
+}
+
+func (m *LocatedBlockProto) GetStorageIDs() []string {
+	if m != nil {
+		return m.StorageIDs
+	}
+	return nil
+}
+
+func (m *LocatedBlockProto) GetBlockIndices() []byte {
+	if m != nil {
+		return m.BlockIndices
+	}
+	return nil
+}
+
+func (m *LocatedBlockProto) GetBlockTokens() []*hadoop_common.TokenProto {
+	if m != nil {
+		return m.BlockTokens
 	}
 	return nil
 }
@@ -668,14 +1098,195 @@ func (m *DataEncryptionKeyProto) GetEncryptionAlgorithm() string {
 }
 
 // *
+// Encryption information for a file.
+type FileEncryptionInfoProto struct {
+	Suite                 *CipherSuiteProto           `protobuf:"varint,1,req,name=suite,enum=hadoop.hdfs.CipherSuiteProto" json:"suite,omitempty"`
+	CryptoProtocolVersion *CryptoProtocolVersionProto `protobuf:"varint,2,req,name=cryptoProtocolVersion,enum=hadoop.hdfs.CryptoProtocolVersionProto" json:"cryptoProtocolVersion,omitempty"`
+	Key                   []byte                      `protobuf:"bytes,3,req,name=key" json:"key,omitempty"`
+	Iv                    []byte                      `protobuf:"bytes,4,req,name=iv" json:"iv,omitempty"`
+	KeyName               *string                     `protobuf:"bytes,5,req,name=keyName" json:"keyName,omitempty"`
+	EzKeyVersionName      *string                     `protobuf:"bytes,6,req,name=ezKeyVersionName" json:"ezKeyVersionName,omitempty"`
+	XXX_unrecognized      []byte                      `json:"-"`
+}
+
+func (m *FileEncryptionInfoProto) Reset()         { *m = FileEncryptionInfoProto{} }
+func (m *FileEncryptionInfoProto) String() string { return proto.CompactTextString(m) }
+func (*FileEncryptionInfoProto) ProtoMessage()    {}
+
+func (m *FileEncryptionInfoProto) GetSuite() CipherSuiteProto {
+	if m != nil && m.Suite != nil {
+		return *m.Suite
+	}
+	return CipherSuiteProto_UNKNOWN
+}
+
+func (m *FileEncryptionInfoProto) GetCryptoProtocolVersion() CryptoProtocolVersionProto {
+	if m != nil && m.CryptoProtocolVersion != nil {
+		return *m.CryptoProtocolVersion
+	}
+	return CryptoProtocolVersionProto_UNKNOWN_PROTOCOL_VERSION
+}
+
+func (m *FileEncryptionInfoProto) GetKey() []byte {
+	if m != nil {
+		return m.Key
+	}
+	return nil
+}
+
+func (m *FileEncryptionInfoProto) GetIv() []byte {
+	if m != nil {
+		return m.Iv
+	}
+	return nil
+}
+
+func (m *FileEncryptionInfoProto) GetKeyName() string {
+	if m != nil && m.KeyName != nil {
+		return *m.KeyName
+	}
+	return ""
+}
+
+func (m *FileEncryptionInfoProto) GetEzKeyVersionName() string {
+	if m != nil && m.EzKeyVersionName != nil {
+		return *m.EzKeyVersionName
+	}
+	return ""
+}
+
+// *
+// Encryption information for an individual
+// file within an encryption zone
+type PerFileEncryptionInfoProto struct {
+	Key              []byte  `protobuf:"bytes,1,req,name=key" json:"key,omitempty"`
+	Iv               []byte  `protobuf:"bytes,2,req,name=iv" json:"iv,omitempty"`
+	EzKeyVersionName *string `protobuf:"bytes,3,req,name=ezKeyVersionName" json:"ezKeyVersionName,omitempty"`
+	XXX_unrecognized []byte  `json:"-"`
+}
+
+func (m *PerFileEncryptionInfoProto) Reset()         { *m = PerFileEncryptionInfoProto{} }
+func (m *PerFileEncryptionInfoProto) String() string { return proto.CompactTextString(m) }
+func (*PerFileEncryptionInfoProto) ProtoMessage()    {}
+
+func (m *PerFileEncryptionInfoProto) GetKey() []byte {
+	if m != nil {
+		return m.Key
+	}
+	return nil
+}
+
+func (m *PerFileEncryptionInfoProto) GetIv() []byte {
+	if m != nil {
+		return m.Iv
+	}
+	return nil
+}
+
+func (m *PerFileEncryptionInfoProto) GetEzKeyVersionName() string {
+	if m != nil && m.EzKeyVersionName != nil {
+		return *m.EzKeyVersionName
+	}
+	return ""
+}
+
+// *
+// Encryption information for an encryption
+// zone
+type ZoneEncryptionInfoProto struct {
+	Suite                 *CipherSuiteProto           `protobuf:"varint,1,req,name=suite,enum=hadoop.hdfs.CipherSuiteProto" json:"suite,omitempty"`
+	CryptoProtocolVersion *CryptoProtocolVersionProto `protobuf:"varint,2,req,name=cryptoProtocolVersion,enum=hadoop.hdfs.CryptoProtocolVersionProto" json:"cryptoProtocolVersion,omitempty"`
+	KeyName               *string                     `protobuf:"bytes,3,req,name=keyName" json:"keyName,omitempty"`
+	XXX_unrecognized      []byte                      `json:"-"`
+}
+
+func (m *ZoneEncryptionInfoProto) Reset()         { *m = ZoneEncryptionInfoProto{} }
+func (m *ZoneEncryptionInfoProto) String() string { return proto.CompactTextString(m) }
+func (*ZoneEncryptionInfoProto) ProtoMessage()    {}
+
+func (m *ZoneEncryptionInfoProto) GetSuite() CipherSuiteProto {
+	if m != nil && m.Suite != nil {
+		return *m.Suite
+	}
+	return CipherSuiteProto_UNKNOWN
+}
+
+func (m *ZoneEncryptionInfoProto) GetCryptoProtocolVersion() CryptoProtocolVersionProto {
+	if m != nil && m.CryptoProtocolVersion != nil {
+		return *m.CryptoProtocolVersion
+	}
+	return CryptoProtocolVersionProto_UNKNOWN_PROTOCOL_VERSION
+}
+
+func (m *ZoneEncryptionInfoProto) GetKeyName() string {
+	if m != nil && m.KeyName != nil {
+		return *m.KeyName
+	}
+	return ""
+}
+
+// *
+// Cipher option
+type CipherOptionProto struct {
+	Suite            *CipherSuiteProto `protobuf:"varint,1,req,name=suite,enum=hadoop.hdfs.CipherSuiteProto" json:"suite,omitempty"`
+	InKey            []byte            `protobuf:"bytes,2,opt,name=inKey" json:"inKey,omitempty"`
+	InIv             []byte            `protobuf:"bytes,3,opt,name=inIv" json:"inIv,omitempty"`
+	OutKey           []byte            `protobuf:"bytes,4,opt,name=outKey" json:"outKey,omitempty"`
+	OutIv            []byte            `protobuf:"bytes,5,opt,name=outIv" json:"outIv,omitempty"`
+	XXX_unrecognized []byte            `json:"-"`
+}
+
+func (m *CipherOptionProto) Reset()         { *m = CipherOptionProto{} }
+func (m *CipherOptionProto) String() string { return proto.CompactTextString(m) }
+func (*CipherOptionProto) ProtoMessage()    {}
+
+func (m *CipherOptionProto) GetSuite() CipherSuiteProto {
+	if m != nil && m.Suite != nil {
+		return *m.Suite
+	}
+	return CipherSuiteProto_UNKNOWN
+}
+
+func (m *CipherOptionProto) GetInKey() []byte {
+	if m != nil {
+		return m.InKey
+	}
+	return nil
+}
+
+func (m *CipherOptionProto) GetInIv() []byte {
+	if m != nil {
+		return m.InIv
+	}
+	return nil
+}
+
+func (m *CipherOptionProto) GetOutKey() []byte {
+	if m != nil {
+		return m.OutKey
+	}
+	return nil
+}
+
+func (m *CipherOptionProto) GetOutIv() []byte {
+	if m != nil {
+		return m.OutIv
+	}
+	return nil
+}
+
+// *
 // A set of file blocks and their locations.
 type LocatedBlocksProto struct {
-	FileLength          *uint64              `protobuf:"varint,1,req,name=fileLength" json:"fileLength,omitempty"`
-	Blocks              []*LocatedBlockProto `protobuf:"bytes,2,rep,name=blocks" json:"blocks,omitempty"`
-	UnderConstruction   *bool                `protobuf:"varint,3,req,name=underConstruction" json:"underConstruction,omitempty"`
-	LastBlock           *LocatedBlockProto   `protobuf:"bytes,4,opt,name=lastBlock" json:"lastBlock,omitempty"`
-	IsLastBlockComplete *bool                `protobuf:"varint,5,req,name=isLastBlockComplete" json:"isLastBlockComplete,omitempty"`
-	XXX_unrecognized    []byte               `json:"-"`
+	FileLength          *uint64                  `protobuf:"varint,1,req,name=fileLength" json:"fileLength,omitempty"`
+	Blocks              []*LocatedBlockProto     `protobuf:"bytes,2,rep,name=blocks" json:"blocks,omitempty"`
+	UnderConstruction   *bool                    `protobuf:"varint,3,req,name=underConstruction" json:"underConstruction,omitempty"`
+	LastBlock           *LocatedBlockProto       `protobuf:"bytes,4,opt,name=lastBlock" json:"lastBlock,omitempty"`
+	IsLastBlockComplete *bool                    `protobuf:"varint,5,req,name=isLastBlockComplete" json:"isLastBlockComplete,omitempty"`
+	FileEncryptionInfo  *FileEncryptionInfoProto `protobuf:"bytes,6,opt,name=fileEncryptionInfo" json:"fileEncryptionInfo,omitempty"`
+	// Optional field for erasure coding
+	EcPolicy         *ErasureCodingPolicyProto `protobuf:"bytes,7,opt,name=ecPolicy" json:"ecPolicy,omitempty"`
+	XXX_unrecognized []byte                    `json:"-"`
 }
 
 func (m *LocatedBlocksProto) Reset()         { *m = LocatedBlocksProto{} }
@@ -717,6 +1328,128 @@ func (m *LocatedBlocksProto) GetIsLastBlockComplete() bool {
 	return false
 }
 
+func (m *LocatedBlocksProto) GetFileEncryptionInfo() *FileEncryptionInfoProto {
+	if m != nil {
+		return m.FileEncryptionInfo
+	}
+	return nil
+}
+
+func (m *LocatedBlocksProto) GetEcPolicy() *ErasureCodingPolicyProto {
+	if m != nil {
+		return m.EcPolicy
+	}
+	return nil
+}
+
+// *
+// ECSchema options entry
+type ECSchemaOptionEntryProto struct {
+	Key              *string `protobuf:"bytes,1,req,name=key" json:"key,omitempty"`
+	Value            *string `protobuf:"bytes,2,req,name=value" json:"value,omitempty"`
+	XXX_unrecognized []byte  `json:"-"`
+}
+
+func (m *ECSchemaOptionEntryProto) Reset()         { *m = ECSchemaOptionEntryProto{} }
+func (m *ECSchemaOptionEntryProto) String() string { return proto.CompactTextString(m) }
+func (*ECSchemaOptionEntryProto) ProtoMessage()    {}
+
+func (m *ECSchemaOptionEntryProto) GetKey() string {
+	if m != nil && m.Key != nil {
+		return *m.Key
+	}
+	return ""
+}
+
+func (m *ECSchemaOptionEntryProto) GetValue() string {
+	if m != nil && m.Value != nil {
+		return *m.Value
+	}
+	return ""
+}
+
+// *
+// ECSchema for erasurecoding
+type ECSchemaProto struct {
+	CodecName        *string                     `protobuf:"bytes,1,req,name=codecName" json:"codecName,omitempty"`
+	DataUnits        *uint32                     `protobuf:"varint,2,req,name=dataUnits" json:"dataUnits,omitempty"`
+	ParityUnits      *uint32                     `protobuf:"varint,3,req,name=parityUnits" json:"parityUnits,omitempty"`
+	Options          []*ECSchemaOptionEntryProto `protobuf:"bytes,4,rep,name=options" json:"options,omitempty"`
+	XXX_unrecognized []byte                      `json:"-"`
+}
+
+func (m *ECSchemaProto) Reset()         { *m = ECSchemaProto{} }
+func (m *ECSchemaProto) String() string { return proto.CompactTextString(m) }
+func (*ECSchemaProto) ProtoMessage()    {}
+
+func (m *ECSchemaProto) GetCodecName() string {
+	if m != nil && m.CodecName != nil {
+		return *m.CodecName
+	}
+	return ""
+}
+
+func (m *ECSchemaProto) GetDataUnits() uint32 {
+	if m != nil && m.DataUnits != nil {
+		return *m.DataUnits
+	}
+	return 0
+}
+
+func (m *ECSchemaProto) GetParityUnits() uint32 {
+	if m != nil && m.ParityUnits != nil {
+		return *m.ParityUnits
+	}
+	return 0
+}
+
+func (m *ECSchemaProto) GetOptions() []*ECSchemaOptionEntryProto {
+	if m != nil {
+		return m.Options
+	}
+	return nil
+}
+
+type ErasureCodingPolicyProto struct {
+	Name             *string        `protobuf:"bytes,1,req,name=name" json:"name,omitempty"`
+	Schema           *ECSchemaProto `protobuf:"bytes,2,req,name=schema" json:"schema,omitempty"`
+	CellSize         *uint32        `protobuf:"varint,3,req,name=cellSize" json:"cellSize,omitempty"`
+	Id               *uint32        `protobuf:"varint,4,req,name=id" json:"id,omitempty"`
+	XXX_unrecognized []byte         `json:"-"`
+}
+
+func (m *ErasureCodingPolicyProto) Reset()         { *m = ErasureCodingPolicyProto{} }
+func (m *ErasureCodingPolicyProto) String() string { return proto.CompactTextString(m) }
+func (*ErasureCodingPolicyProto) ProtoMessage()    {}
+
+func (m *ErasureCodingPolicyProto) GetName() string {
+	if m != nil && m.Name != nil {
+		return *m.Name
+	}
+	return ""
+}
+
+func (m *ErasureCodingPolicyProto) GetSchema() *ECSchemaProto {
+	if m != nil {
+		return m.Schema
+	}
+	return nil
+}
+
+func (m *ErasureCodingPolicyProto) GetCellSize() uint32 {
+	if m != nil && m.CellSize != nil {
+		return *m.CellSize
+	}
+	return 0
+}
+
+func (m *ErasureCodingPolicyProto) GetId() uint32 {
+	if m != nil && m.Id != nil {
+		return *m.Id
+	}
+	return 0
+}
+
 // *
 // Status of a file, directory or symlink
 // Optionally includes a file's block locations if requested by client on the rpc call.
@@ -736,9 +1469,14 @@ type HdfsFileStatusProto struct {
 	Blocksize        *uint64             `protobuf:"varint,11,opt,name=blocksize,def=0" json:"blocksize,omitempty"`
 	Locations        *LocatedBlocksProto `protobuf:"bytes,12,opt,name=locations" json:"locations,omitempty"`
 	// Optional field for fileId
-	FileId           *uint64 `protobuf:"varint,13,opt,name=fileId,def=0" json:"fileId,omitempty"`
-	ChildrenNum      *int32  `protobuf:"varint,14,opt,name=childrenNum,def=-1" json:"childrenNum,omitempty"`
-	XXX_unrecognized []byte  `json:"-"`
+	FileId      *uint64 `protobuf:"varint,13,opt,name=fileId,def=0" json:"fileId,omitempty"`
+	ChildrenNum *int32  `protobuf:"varint,14,opt,name=childrenNum,def=-1" json:"childrenNum,omitempty"`
+	// Optional field for file encryption
+	FileEncryptionInfo *FileEncryptionInfoProto `protobuf:"bytes,15,opt,name=fileEncryptionInfo" json:"fileEncryptionInfo,omitempty"`
+	StoragePolicy      *uint32                  `protobuf:"varint,16,opt,name=storagePolicy,def=0" json:"storagePolicy,omitempty"`
+	// Optional field for erasure coding
+	EcPolicy         *ErasureCodingPolicyProto `protobuf:"bytes,17,opt,name=ecPolicy" json:"ecPolicy,omitempty"`
+	XXX_unrecognized []byte                    `json:"-"`
 }
 
 func (m *HdfsFileStatusProto) Reset()         { *m = HdfsFileStatusProto{} }
@@ -749,6 +1487,7 @@ const Default_HdfsFileStatusProto_BlockReplication uint32 = 0
 const Default_HdfsFileStatusProto_Blocksize uint64 = 0
 const Default_HdfsFileStatusProto_FileId uint64 = 0
 const Default_HdfsFileStatusProto_ChildrenNum int32 = -1
+const Default_HdfsFileStatusProto_StoragePolicy uint32 = 0
 
 func (m *HdfsFileStatusProto) GetFileType() HdfsFileStatusProto_FileType {
 	if m != nil && m.FileType != nil {
@@ -846,6 +1585,27 @@ func (m *HdfsFileStatusProto) GetChildrenNum() int32 {
 		return *m.ChildrenNum
 	}
 	return Default_HdfsFileStatusProto_ChildrenNum
+}
+
+func (m *HdfsFileStatusProto) GetFileEncryptionInfo() *FileEncryptionInfoProto {
+	if m != nil {
+		return m.FileEncryptionInfo
+	}
+	return nil
+}
+
+func (m *HdfsFileStatusProto) GetStoragePolicy() uint32 {
+	if m != nil && m.StoragePolicy != nil {
+		return *m.StoragePolicy
+	}
+	return Default_HdfsFileStatusProto_StoragePolicy
+}
+
+func (m *HdfsFileStatusProto) GetEcPolicy() *ErasureCodingPolicyProto {
+	if m != nil {
+		return m.EcPolicy
+	}
+	return nil
 }
 
 // *
@@ -1020,6 +1780,7 @@ func (m *SnapshottableDirectoryListingProto) GetSnapshottableDirListing() []*Sna
 type SnapshotDiffReportEntryProto struct {
 	Fullpath          []byte  `protobuf:"bytes,1,req,name=fullpath" json:"fullpath,omitempty"`
 	ModificationLabel *string `protobuf:"bytes,2,req,name=modificationLabel" json:"modificationLabel,omitempty"`
+	TargetPath        []byte  `protobuf:"bytes,3,opt,name=targetPath" json:"targetPath,omitempty"`
 	XXX_unrecognized  []byte  `json:"-"`
 }
 
@@ -1039,6 +1800,13 @@ func (m *SnapshotDiffReportEntryProto) GetModificationLabel() string {
 		return *m.ModificationLabel
 	}
 	return ""
+}
+
+func (m *SnapshotDiffReportEntryProto) GetTargetPath() []byte {
+	if m != nil {
+		return m.TargetPath
+	}
+	return nil
 }
 
 // *
@@ -1085,200 +1853,13 @@ func (m *SnapshotDiffReportProto) GetDiffReportEntries() []*SnapshotDiffReportEn
 }
 
 // *
-// Common node information shared by all the nodes in the cluster
-type StorageInfoProto struct {
-	LayoutVersion    *uint32 `protobuf:"varint,1,req,name=layoutVersion" json:"layoutVersion,omitempty"`
-	NamespceID       *uint32 `protobuf:"varint,2,req,name=namespceID" json:"namespceID,omitempty"`
-	ClusterID        *string `protobuf:"bytes,3,req,name=clusterID" json:"clusterID,omitempty"`
-	CTime            *uint64 `protobuf:"varint,4,req,name=cTime" json:"cTime,omitempty"`
-	XXX_unrecognized []byte  `json:"-"`
-}
-
-func (m *StorageInfoProto) Reset()         { *m = StorageInfoProto{} }
-func (m *StorageInfoProto) String() string { return proto.CompactTextString(m) }
-func (*StorageInfoProto) ProtoMessage()    {}
-
-func (m *StorageInfoProto) GetLayoutVersion() uint32 {
-	if m != nil && m.LayoutVersion != nil {
-		return *m.LayoutVersion
-	}
-	return 0
-}
-
-func (m *StorageInfoProto) GetNamespceID() uint32 {
-	if m != nil && m.NamespceID != nil {
-		return *m.NamespceID
-	}
-	return 0
-}
-
-func (m *StorageInfoProto) GetClusterID() string {
-	if m != nil && m.ClusterID != nil {
-		return *m.ClusterID
-	}
-	return ""
-}
-
-func (m *StorageInfoProto) GetCTime() uint64 {
-	if m != nil && m.CTime != nil {
-		return *m.CTime
-	}
-	return 0
-}
-
-// *
-// Information sent by a namenode to identify itself to the primary namenode.
-type NamenodeRegistrationProto struct {
-	RpcAddress       *string                                      `protobuf:"bytes,1,req,name=rpcAddress" json:"rpcAddress,omitempty"`
-	HttpAddress      *string                                      `protobuf:"bytes,2,req,name=httpAddress" json:"httpAddress,omitempty"`
-	StorageInfo      *StorageInfoProto                            `protobuf:"bytes,3,req,name=storageInfo" json:"storageInfo,omitempty"`
-	Role             *NamenodeRegistrationProto_NamenodeRoleProto `protobuf:"varint,4,opt,name=role,enum=hadoop.hdfs.NamenodeRegistrationProto_NamenodeRoleProto,def=1" json:"role,omitempty"`
-	XXX_unrecognized []byte                                       `json:"-"`
-}
-
-func (m *NamenodeRegistrationProto) Reset()         { *m = NamenodeRegistrationProto{} }
-func (m *NamenodeRegistrationProto) String() string { return proto.CompactTextString(m) }
-func (*NamenodeRegistrationProto) ProtoMessage()    {}
-
-const Default_NamenodeRegistrationProto_Role NamenodeRegistrationProto_NamenodeRoleProto = NamenodeRegistrationProto_NAMENODE
-
-func (m *NamenodeRegistrationProto) GetRpcAddress() string {
-	if m != nil && m.RpcAddress != nil {
-		return *m.RpcAddress
-	}
-	return ""
-}
-
-func (m *NamenodeRegistrationProto) GetHttpAddress() string {
-	if m != nil && m.HttpAddress != nil {
-		return *m.HttpAddress
-	}
-	return ""
-}
-
-func (m *NamenodeRegistrationProto) GetStorageInfo() *StorageInfoProto {
-	if m != nil {
-		return m.StorageInfo
-	}
-	return nil
-}
-
-func (m *NamenodeRegistrationProto) GetRole() NamenodeRegistrationProto_NamenodeRoleProto {
-	if m != nil && m.Role != nil {
-		return *m.Role
-	}
-	return Default_NamenodeRegistrationProto_Role
-}
-
-// *
-// Unique signature to identify checkpoint transactions.
-type CheckpointSignatureProto struct {
-	BlockPoolId              *string           `protobuf:"bytes,1,req,name=blockPoolId" json:"blockPoolId,omitempty"`
-	MostRecentCheckpointTxId *uint64           `protobuf:"varint,2,req,name=mostRecentCheckpointTxId" json:"mostRecentCheckpointTxId,omitempty"`
-	CurSegmentTxId           *uint64           `protobuf:"varint,3,req,name=curSegmentTxId" json:"curSegmentTxId,omitempty"`
-	StorageInfo              *StorageInfoProto `protobuf:"bytes,4,req,name=storageInfo" json:"storageInfo,omitempty"`
-	XXX_unrecognized         []byte            `json:"-"`
-}
-
-func (m *CheckpointSignatureProto) Reset()         { *m = CheckpointSignatureProto{} }
-func (m *CheckpointSignatureProto) String() string { return proto.CompactTextString(m) }
-func (*CheckpointSignatureProto) ProtoMessage()    {}
-
-func (m *CheckpointSignatureProto) GetBlockPoolId() string {
-	if m != nil && m.BlockPoolId != nil {
-		return *m.BlockPoolId
-	}
-	return ""
-}
-
-func (m *CheckpointSignatureProto) GetMostRecentCheckpointTxId() uint64 {
-	if m != nil && m.MostRecentCheckpointTxId != nil {
-		return *m.MostRecentCheckpointTxId
-	}
-	return 0
-}
-
-func (m *CheckpointSignatureProto) GetCurSegmentTxId() uint64 {
-	if m != nil && m.CurSegmentTxId != nil {
-		return *m.CurSegmentTxId
-	}
-	return 0
-}
-
-func (m *CheckpointSignatureProto) GetStorageInfo() *StorageInfoProto {
-	if m != nil {
-		return m.StorageInfo
-	}
-	return nil
-}
-
-// *
-// Command sent from one namenode to another namenode.
-type NamenodeCommandProto struct {
-	Action           *uint32                    `protobuf:"varint,1,req,name=action" json:"action,omitempty"`
-	Type             *NamenodeCommandProto_Type `protobuf:"varint,2,req,name=type,enum=hadoop.hdfs.NamenodeCommandProto_Type" json:"type,omitempty"`
-	CheckpointCmd    *CheckpointCommandProto    `protobuf:"bytes,3,opt,name=checkpointCmd" json:"checkpointCmd,omitempty"`
-	XXX_unrecognized []byte                     `json:"-"`
-}
-
-func (m *NamenodeCommandProto) Reset()         { *m = NamenodeCommandProto{} }
-func (m *NamenodeCommandProto) String() string { return proto.CompactTextString(m) }
-func (*NamenodeCommandProto) ProtoMessage()    {}
-
-func (m *NamenodeCommandProto) GetAction() uint32 {
-	if m != nil && m.Action != nil {
-		return *m.Action
-	}
-	return 0
-}
-
-func (m *NamenodeCommandProto) GetType() NamenodeCommandProto_Type {
-	if m != nil && m.Type != nil {
-		return *m.Type
-	}
-	return NamenodeCommandProto_NamenodeCommand
-}
-
-func (m *NamenodeCommandProto) GetCheckpointCmd() *CheckpointCommandProto {
-	if m != nil {
-		return m.CheckpointCmd
-	}
-	return nil
-}
-
-// *
-// Command returned from primary to checkpointing namenode.
-// This command has checkpoint signature that identifies
-// checkpoint transaction and is needed for further
-// communication related to checkpointing.
-type CheckpointCommandProto struct {
-	// Unique signature to identify checkpoint transation
-	Signature *CheckpointSignatureProto `protobuf:"bytes,1,req,name=signature" json:"signature,omitempty"`
-	// If true, return transfer image to primary upon the completion of checkpoint
-	NeedToReturnImage *bool  `protobuf:"varint,2,req,name=needToReturnImage" json:"needToReturnImage,omitempty"`
-	XXX_unrecognized  []byte `json:"-"`
-}
-
-func (m *CheckpointCommandProto) Reset()         { *m = CheckpointCommandProto{} }
-func (m *CheckpointCommandProto) String() string { return proto.CompactTextString(m) }
-func (*CheckpointCommandProto) ProtoMessage()    {}
-
-func (m *CheckpointCommandProto) GetSignature() *CheckpointSignatureProto {
-	if m != nil {
-		return m.Signature
-	}
-	return nil
-}
-
-func (m *CheckpointCommandProto) GetNeedToReturnImage() bool {
-	if m != nil && m.NeedToReturnImage != nil {
-		return *m.NeedToReturnImage
-	}
-	return false
-}
-
-// *
 // Block information
+//
+// Please be wary of adding additional fields here, since INodeFiles
+// need to fit in PB's default max message size of 64MB.
+// We restrict the max # of blocks per file
+// (dfs.namenode.fs-limits.max-blocks-per-file), but it's better
+// to avoid changing this.
 type BlockProto struct {
 	BlockId          *uint64 `protobuf:"varint,1,req,name=blockId" json:"blockId,omitempty"`
 	GenStamp         *uint64 `protobuf:"varint,2,req,name=genStamp" json:"genStamp,omitempty"`
@@ -1311,292 +1892,6 @@ func (m *BlockProto) GetNumBytes() uint64 {
 		return *m.NumBytes
 	}
 	return Default_BlockProto_NumBytes
-}
-
-// *
-// Block and datanodes where is it located
-type BlockWithLocationsProto struct {
-	Block            *BlockProto `protobuf:"bytes,1,req,name=block" json:"block,omitempty"`
-	StorageIDs       []string    `protobuf:"bytes,2,rep,name=storageIDs" json:"storageIDs,omitempty"`
-	XXX_unrecognized []byte      `json:"-"`
-}
-
-func (m *BlockWithLocationsProto) Reset()         { *m = BlockWithLocationsProto{} }
-func (m *BlockWithLocationsProto) String() string { return proto.CompactTextString(m) }
-func (*BlockWithLocationsProto) ProtoMessage()    {}
-
-func (m *BlockWithLocationsProto) GetBlock() *BlockProto {
-	if m != nil {
-		return m.Block
-	}
-	return nil
-}
-
-func (m *BlockWithLocationsProto) GetStorageIDs() []string {
-	if m != nil {
-		return m.StorageIDs
-	}
-	return nil
-}
-
-// *
-// List of block with locations
-type BlocksWithLocationsProto struct {
-	Blocks           []*BlockWithLocationsProto `protobuf:"bytes,1,rep,name=blocks" json:"blocks,omitempty"`
-	XXX_unrecognized []byte                     `json:"-"`
-}
-
-func (m *BlocksWithLocationsProto) Reset()         { *m = BlocksWithLocationsProto{} }
-func (m *BlocksWithLocationsProto) String() string { return proto.CompactTextString(m) }
-func (*BlocksWithLocationsProto) ProtoMessage()    {}
-
-func (m *BlocksWithLocationsProto) GetBlocks() []*BlockWithLocationsProto {
-	if m != nil {
-		return m.Blocks
-	}
-	return nil
-}
-
-// *
-// Editlog information with available transactions
-type RemoteEditLogProto struct {
-	StartTxId        *uint64 `protobuf:"varint,1,req,name=startTxId" json:"startTxId,omitempty"`
-	EndTxId          *uint64 `protobuf:"varint,2,req,name=endTxId" json:"endTxId,omitempty"`
-	IsInProgress     *bool   `protobuf:"varint,3,opt,name=isInProgress,def=0" json:"isInProgress,omitempty"`
-	XXX_unrecognized []byte  `json:"-"`
-}
-
-func (m *RemoteEditLogProto) Reset()         { *m = RemoteEditLogProto{} }
-func (m *RemoteEditLogProto) String() string { return proto.CompactTextString(m) }
-func (*RemoteEditLogProto) ProtoMessage()    {}
-
-const Default_RemoteEditLogProto_IsInProgress bool = false
-
-func (m *RemoteEditLogProto) GetStartTxId() uint64 {
-	if m != nil && m.StartTxId != nil {
-		return *m.StartTxId
-	}
-	return 0
-}
-
-func (m *RemoteEditLogProto) GetEndTxId() uint64 {
-	if m != nil && m.EndTxId != nil {
-		return *m.EndTxId
-	}
-	return 0
-}
-
-func (m *RemoteEditLogProto) GetIsInProgress() bool {
-	if m != nil && m.IsInProgress != nil {
-		return *m.IsInProgress
-	}
-	return Default_RemoteEditLogProto_IsInProgress
-}
-
-// *
-// Enumeration of editlogs available on a remote namenode
-type RemoteEditLogManifestProto struct {
-	Logs             []*RemoteEditLogProto `protobuf:"bytes,1,rep,name=logs" json:"logs,omitempty"`
-	XXX_unrecognized []byte                `json:"-"`
-}
-
-func (m *RemoteEditLogManifestProto) Reset()         { *m = RemoteEditLogManifestProto{} }
-func (m *RemoteEditLogManifestProto) String() string { return proto.CompactTextString(m) }
-func (*RemoteEditLogManifestProto) ProtoMessage()    {}
-
-func (m *RemoteEditLogManifestProto) GetLogs() []*RemoteEditLogProto {
-	if m != nil {
-		return m.Logs
-	}
-	return nil
-}
-
-// *
-// Namespace information that describes namespace on a namenode
-type NamespaceInfoProto struct {
-	BuildVersion     *string           `protobuf:"bytes,1,req,name=buildVersion" json:"buildVersion,omitempty"`
-	Unused           *uint32           `protobuf:"varint,2,req,name=unused" json:"unused,omitempty"`
-	BlockPoolID      *string           `protobuf:"bytes,3,req,name=blockPoolID" json:"blockPoolID,omitempty"`
-	StorageInfo      *StorageInfoProto `protobuf:"bytes,4,req,name=storageInfo" json:"storageInfo,omitempty"`
-	SoftwareVersion  *string           `protobuf:"bytes,5,req,name=softwareVersion" json:"softwareVersion,omitempty"`
-	XXX_unrecognized []byte            `json:"-"`
-}
-
-func (m *NamespaceInfoProto) Reset()         { *m = NamespaceInfoProto{} }
-func (m *NamespaceInfoProto) String() string { return proto.CompactTextString(m) }
-func (*NamespaceInfoProto) ProtoMessage()    {}
-
-func (m *NamespaceInfoProto) GetBuildVersion() string {
-	if m != nil && m.BuildVersion != nil {
-		return *m.BuildVersion
-	}
-	return ""
-}
-
-func (m *NamespaceInfoProto) GetUnused() uint32 {
-	if m != nil && m.Unused != nil {
-		return *m.Unused
-	}
-	return 0
-}
-
-func (m *NamespaceInfoProto) GetBlockPoolID() string {
-	if m != nil && m.BlockPoolID != nil {
-		return *m.BlockPoolID
-	}
-	return ""
-}
-
-func (m *NamespaceInfoProto) GetStorageInfo() *StorageInfoProto {
-	if m != nil {
-		return m.StorageInfo
-	}
-	return nil
-}
-
-func (m *NamespaceInfoProto) GetSoftwareVersion() string {
-	if m != nil && m.SoftwareVersion != nil {
-		return *m.SoftwareVersion
-	}
-	return ""
-}
-
-// *
-// Block access token information
-type BlockKeyProto struct {
-	KeyId            *uint32 `protobuf:"varint,1,req,name=keyId" json:"keyId,omitempty"`
-	ExpiryDate       *uint64 `protobuf:"varint,2,req,name=expiryDate" json:"expiryDate,omitempty"`
-	KeyBytes         []byte  `protobuf:"bytes,3,opt,name=keyBytes" json:"keyBytes,omitempty"`
-	XXX_unrecognized []byte  `json:"-"`
-}
-
-func (m *BlockKeyProto) Reset()         { *m = BlockKeyProto{} }
-func (m *BlockKeyProto) String() string { return proto.CompactTextString(m) }
-func (*BlockKeyProto) ProtoMessage()    {}
-
-func (m *BlockKeyProto) GetKeyId() uint32 {
-	if m != nil && m.KeyId != nil {
-		return *m.KeyId
-	}
-	return 0
-}
-
-func (m *BlockKeyProto) GetExpiryDate() uint64 {
-	if m != nil && m.ExpiryDate != nil {
-		return *m.ExpiryDate
-	}
-	return 0
-}
-
-func (m *BlockKeyProto) GetKeyBytes() []byte {
-	if m != nil {
-		return m.KeyBytes
-	}
-	return nil
-}
-
-// *
-// Current key and set of block keys at the namenode.
-type ExportedBlockKeysProto struct {
-	IsBlockTokenEnabled *bool            `protobuf:"varint,1,req,name=isBlockTokenEnabled" json:"isBlockTokenEnabled,omitempty"`
-	KeyUpdateInterval   *uint64          `protobuf:"varint,2,req,name=keyUpdateInterval" json:"keyUpdateInterval,omitempty"`
-	TokenLifeTime       *uint64          `protobuf:"varint,3,req,name=tokenLifeTime" json:"tokenLifeTime,omitempty"`
-	CurrentKey          *BlockKeyProto   `protobuf:"bytes,4,req,name=currentKey" json:"currentKey,omitempty"`
-	AllKeys             []*BlockKeyProto `protobuf:"bytes,5,rep,name=allKeys" json:"allKeys,omitempty"`
-	XXX_unrecognized    []byte           `json:"-"`
-}
-
-func (m *ExportedBlockKeysProto) Reset()         { *m = ExportedBlockKeysProto{} }
-func (m *ExportedBlockKeysProto) String() string { return proto.CompactTextString(m) }
-func (*ExportedBlockKeysProto) ProtoMessage()    {}
-
-func (m *ExportedBlockKeysProto) GetIsBlockTokenEnabled() bool {
-	if m != nil && m.IsBlockTokenEnabled != nil {
-		return *m.IsBlockTokenEnabled
-	}
-	return false
-}
-
-func (m *ExportedBlockKeysProto) GetKeyUpdateInterval() uint64 {
-	if m != nil && m.KeyUpdateInterval != nil {
-		return *m.KeyUpdateInterval
-	}
-	return 0
-}
-
-func (m *ExportedBlockKeysProto) GetTokenLifeTime() uint64 {
-	if m != nil && m.TokenLifeTime != nil {
-		return *m.TokenLifeTime
-	}
-	return 0
-}
-
-func (m *ExportedBlockKeysProto) GetCurrentKey() *BlockKeyProto {
-	if m != nil {
-		return m.CurrentKey
-	}
-	return nil
-}
-
-func (m *ExportedBlockKeysProto) GetAllKeys() []*BlockKeyProto {
-	if m != nil {
-		return m.AllKeys
-	}
-	return nil
-}
-
-// *
-// Block that needs to be recovered with at a given location
-type RecoveringBlockProto struct {
-	NewGenStamp      *uint64            `protobuf:"varint,1,req,name=newGenStamp" json:"newGenStamp,omitempty"`
-	Block            *LocatedBlockProto `protobuf:"bytes,2,req,name=block" json:"block,omitempty"`
-	XXX_unrecognized []byte             `json:"-"`
-}
-
-func (m *RecoveringBlockProto) Reset()         { *m = RecoveringBlockProto{} }
-func (m *RecoveringBlockProto) String() string { return proto.CompactTextString(m) }
-func (*RecoveringBlockProto) ProtoMessage()    {}
-
-func (m *RecoveringBlockProto) GetNewGenStamp() uint64 {
-	if m != nil && m.NewGenStamp != nil {
-		return *m.NewGenStamp
-	}
-	return 0
-}
-
-func (m *RecoveringBlockProto) GetBlock() *LocatedBlockProto {
-	if m != nil {
-		return m.Block
-	}
-	return nil
-}
-
-// *
-// void request
-type VersionRequestProto struct {
-	XXX_unrecognized []byte `json:"-"`
-}
-
-func (m *VersionRequestProto) Reset()         { *m = VersionRequestProto{} }
-func (m *VersionRequestProto) String() string { return proto.CompactTextString(m) }
-func (*VersionRequestProto) ProtoMessage()    {}
-
-// *
-// Version response from namenode.
-type VersionResponseProto struct {
-	Info             *NamespaceInfoProto `protobuf:"bytes,1,req,name=info" json:"info,omitempty"`
-	XXX_unrecognized []byte              `json:"-"`
-}
-
-func (m *VersionResponseProto) Reset()         { *m = VersionResponseProto{} }
-func (m *VersionResponseProto) String() string { return proto.CompactTextString(m) }
-func (*VersionResponseProto) ProtoMessage()    {}
-
-func (m *VersionResponseProto) GetInfo() *NamespaceInfoProto {
-	if m != nil {
-		return m.Info
-	}
-	return nil
 }
 
 // *
@@ -1658,11 +1953,58 @@ func (m *SnapshotInfoProto) GetCreateTime() string {
 	return ""
 }
 
+// *
+// Rolling upgrade status
+type RollingUpgradeStatusProto struct {
+	BlockPoolId      *string `protobuf:"bytes,1,req,name=blockPoolId" json:"blockPoolId,omitempty"`
+	Finalized        *bool   `protobuf:"varint,2,opt,name=finalized,def=0" json:"finalized,omitempty"`
+	XXX_unrecognized []byte  `json:"-"`
+}
+
+func (m *RollingUpgradeStatusProto) Reset()         { *m = RollingUpgradeStatusProto{} }
+func (m *RollingUpgradeStatusProto) String() string { return proto.CompactTextString(m) }
+func (*RollingUpgradeStatusProto) ProtoMessage()    {}
+
+const Default_RollingUpgradeStatusProto_Finalized bool = false
+
+func (m *RollingUpgradeStatusProto) GetBlockPoolId() string {
+	if m != nil && m.BlockPoolId != nil {
+		return *m.BlockPoolId
+	}
+	return ""
+}
+
+func (m *RollingUpgradeStatusProto) GetFinalized() bool {
+	if m != nil && m.Finalized != nil {
+		return *m.Finalized
+	}
+	return Default_RollingUpgradeStatusProto_Finalized
+}
+
+// *
+// A list of storage IDs.
+type StorageUuidsProto struct {
+	StorageUuids     []string `protobuf:"bytes,1,rep,name=storageUuids" json:"storageUuids,omitempty"`
+	XXX_unrecognized []byte   `json:"-"`
+}
+
+func (m *StorageUuidsProto) Reset()         { *m = StorageUuidsProto{} }
+func (m *StorageUuidsProto) String() string { return proto.CompactTextString(m) }
+func (*StorageUuidsProto) ProtoMessage()    {}
+
+func (m *StorageUuidsProto) GetStorageUuids() []string {
+	if m != nil {
+		return m.StorageUuids
+	}
+	return nil
+}
+
 func init() {
+	proto.RegisterEnum("hadoop.hdfs.StorageTypeProto", StorageTypeProto_name, StorageTypeProto_value)
+	proto.RegisterEnum("hadoop.hdfs.CipherSuiteProto", CipherSuiteProto_name, CipherSuiteProto_value)
+	proto.RegisterEnum("hadoop.hdfs.CryptoProtocolVersionProto", CryptoProtocolVersionProto_name, CryptoProtocolVersionProto_value)
 	proto.RegisterEnum("hadoop.hdfs.ChecksumTypeProto", ChecksumTypeProto_name, ChecksumTypeProto_value)
-	proto.RegisterEnum("hadoop.hdfs.ReplicaStateProto", ReplicaStateProto_name, ReplicaStateProto_value)
 	proto.RegisterEnum("hadoop.hdfs.DatanodeInfoProto_AdminState", DatanodeInfoProto_AdminState_name, DatanodeInfoProto_AdminState_value)
+	proto.RegisterEnum("hadoop.hdfs.DatanodeStorageProto_StorageState", DatanodeStorageProto_StorageState_name, DatanodeStorageProto_StorageState_value)
 	proto.RegisterEnum("hadoop.hdfs.HdfsFileStatusProto_FileType", HdfsFileStatusProto_FileType_name, HdfsFileStatusProto_FileType_value)
-	proto.RegisterEnum("hadoop.hdfs.NamenodeRegistrationProto_NamenodeRoleProto", NamenodeRegistrationProto_NamenodeRoleProto_name, NamenodeRegistrationProto_NamenodeRoleProto_value)
-	proto.RegisterEnum("hadoop.hdfs.NamenodeCommandProto_Type", NamenodeCommandProto_Type_name, NamenodeCommandProto_Type_value)
 }

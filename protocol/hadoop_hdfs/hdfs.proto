@@ -50,11 +50,23 @@ message ExtendedBlockProto {
 message DatanodeIDProto {
   required string ipAddr = 1;    // IP address
   required string hostName = 2;  // hostname
-  required string storageID = 3; // unique storage id
+  required string datanodeUuid = 3;     // UUID assigned to the Datanode. For
+                                        // upgraded clusters this is the same
+                                        // as the original StorageID of the
+                                        // Datanode.
   required uint32 xferPort = 4;  // data streaming port
   required uint32 infoPort = 5;  // datanode http port
   required uint32 ipcPort = 6;   // ipc server port
   optional uint32 infoSecurePort = 7 [default = 0]; // datanode https port
+}
+
+/**
+ * Datanode local information
+ */
+message DatanodeLocalInfoProto {
+  required string softwareVersion = 1;
+  required string configVersion = 2;
+  required uint64 uptime = 3;
 }
 
 /**
@@ -83,6 +95,34 @@ message DatanodeInfoProto {
   }
 
   optional AdminState adminState = 10 [default = NORMAL];
+  optional uint64 cacheCapacity = 11 [default = 0];
+  optional uint64 cacheUsed = 12 [default = 0];
+  optional uint64 lastUpdateMonotonic = 13 [default = 0];
+  optional string upgradeDomain = 14;
+}
+
+/**
+ * Represents a storage available on the datanode
+ */
+message DatanodeStorageProto {
+  enum StorageState {
+    NORMAL = 0;
+    READ_ONLY_SHARED = 1;
+  }
+
+  required string storageUuid = 1;
+  optional StorageState state = 2 [default = NORMAL];
+  optional StorageTypeProto storageType = 3 [default = DISK];
+}
+
+message StorageReportProto {
+  required string storageUuid = 1 [ deprecated = true ];
+  optional bool failed = 2 [ default = false ];
+  optional uint64 capacity = 3 [ default = 0 ];
+  optional uint64 dfsUsed = 4 [ default = 0 ];
+  optional uint64 remaining = 5 [ default = 0 ];
+  optional uint64 blockPoolUsed = 6 [ default = 0 ];
+  optional DatanodeStorageProto storage = 7; // supersedes StorageUuid
 }
 
 /**
@@ -95,6 +135,31 @@ message ContentSummaryProto {
   required uint64 quota = 4;
   required uint64 spaceConsumed = 5;
   required uint64 spaceQuota = 6;
+  optional StorageTypeQuotaInfosProto typeQuotaInfos = 7;
+}
+
+/**
+ * Summary of quota usage of a directory
+ */
+message QuotaUsageProto {
+  required uint64 fileAndDirectoryCount = 1;
+  required uint64 quota = 2;
+  required uint64 spaceConsumed = 3;
+  required uint64 spaceQuota = 4;
+  optional StorageTypeQuotaInfosProto typeQuotaInfos = 5;
+}
+
+/**
+ * Storage type quota and usage information of a file or directory
+ */
+message StorageTypeQuotaInfosProto {
+  repeated StorageTypeQuotaInfoProto typeQuotaInfo = 1;
+}
+
+message StorageTypeQuotaInfoProto {
+  required StorageTypeProto type = 1;
+  required uint64 quota = 2;
+  required uint64 consumed = 3;
 }
 
 /**
@@ -114,6 +179,37 @@ message FsPermissionProto {
   required uint32 perm = 1;       // Actually a short - only 16bits used
 }
 
+/**
+ * Types of recognized storage media.
+ */
+enum StorageTypeProto {
+  DISK = 1;
+  SSD = 2;
+  ARCHIVE = 3;
+  RAM_DISK = 4;
+}
+
+/**
+ * A list of storage types. 
+ */
+message StorageTypesProto {
+  repeated StorageTypeProto storageTypes = 1;
+}
+
+/**
+ * Block replica storage policy.
+ */
+message BlockStoragePolicyProto {
+  required uint32 policyId = 1;
+  required string name = 2;
+  // a list of storage types for storing the block replicas when creating a
+  // block.
+  required StorageTypesProto creationPolicy = 3;
+  // A list of storage types for creation fallback storage.
+  optional StorageTypesProto creationFallbackPolicy = 4;
+  optional StorageTypesProto replicationFallbackPolicy = 5;
+}
+
 
 /**
  * A LocatedBlock gives information about a block and its location.
@@ -127,6 +223,13 @@ message LocatedBlockProto {
                                         // their locations are not part of this object
 
   required hadoop.common.TokenProto blockToken = 5;
+  repeated bool isCached = 6 [packed=true]; // if a location in locs is cached
+  repeated StorageTypeProto storageTypes = 7;
+  repeated string storageIDs = 8;
+
+  // striped block related fields
+  optional bytes blockIndices = 9; // used for striped block to indicate block index for each storage
+  repeated hadoop.common.TokenProto blockTokens = 10; // each internal block has a block token
 }
 
 message DataEncryptionKeyProto {
@@ -138,6 +241,64 @@ message DataEncryptionKeyProto {
   optional string encryptionAlgorithm = 6;
 }
 
+/**
+ * Cipher suite.
+ */
+enum CipherSuiteProto {
+    UNKNOWN = 1;
+    AES_CTR_NOPADDING = 2;
+}
+
+/**
+ * Crypto protocol version used to access encrypted files.
+ */
+enum CryptoProtocolVersionProto {
+    UNKNOWN_PROTOCOL_VERSION = 1;
+    ENCRYPTION_ZONES = 2;
+}
+
+/**
+ * Encryption information for a file.
+ */
+message FileEncryptionInfoProto {
+  required CipherSuiteProto suite = 1;
+  required CryptoProtocolVersionProto cryptoProtocolVersion = 2;
+  required bytes key = 3;
+  required bytes iv = 4;
+  required string keyName = 5;
+  required string ezKeyVersionName = 6;
+}
+
+/**
+ * Encryption information for an individual
+ * file within an encryption zone
+ */
+message PerFileEncryptionInfoProto {
+  required bytes key = 1;
+  required bytes iv = 2;
+  required string ezKeyVersionName = 3;
+}
+
+/**
+ * Encryption information for an encryption
+ * zone
+ */
+message ZoneEncryptionInfoProto {
+  required CipherSuiteProto suite = 1;
+  required CryptoProtocolVersionProto cryptoProtocolVersion = 2;
+  required string keyName = 3;
+}
+
+/**
+ * Cipher option
+ */
+message CipherOptionProto {
+  required CipherSuiteProto suite = 1;
+  optional bytes inKey = 2;
+  optional bytes inIv = 3;
+  optional bytes outKey = 4;
+  optional bytes outIv = 5;
+}
 
 /**
  * A set of file blocks and their locations.
@@ -148,8 +309,36 @@ message LocatedBlocksProto {
   required bool underConstruction = 3;
   optional LocatedBlockProto lastBlock = 4;
   required bool isLastBlockComplete = 5;
+  optional FileEncryptionInfoProto fileEncryptionInfo = 6;
+
+  // Optional field for erasure coding
+  optional ErasureCodingPolicyProto ecPolicy = 7;
 }
 
+/**
+ * ECSchema options entry
+ */
+message ECSchemaOptionEntryProto {
+  required string key = 1;
+  required string value = 2;
+}
+
+/**
+ * ECSchema for erasurecoding
+ */
+message ECSchemaProto {
+  required string codecName = 1;
+  required uint32 dataUnits = 2;
+  required uint32 parityUnits = 3;
+  repeated ECSchemaOptionEntryProto options = 4;
+}
+
+message ErasureCodingPolicyProto {
+  required string name = 1;
+  required ECSchemaProto schema = 2;
+  required uint32 cellSize = 3;
+  required uint32 id = 4; // Actually a byte - only 8 bits used
+}
 
 /**
  * Status of a file, directory or symlink
@@ -181,7 +370,14 @@ message HdfsFileStatusProto {
   // Optional field for fileId
   optional uint64 fileId = 13 [default = 0]; // default as an invalid id
   optional int32 childrenNum = 14 [default = -1];
-} 
+  // Optional field for file encryption
+  optional FileEncryptionInfoProto fileEncryptionInfo = 15;
+
+  optional uint32 storagePolicy = 16 [default = 0]; // block storage policy id
+
+  // Optional field for erasure coding
+  optional ErasureCodingPolicyProto ecPolicy = 17;
+}
 
 /**
  * Checksum algorithms/types used in HDFS
@@ -244,6 +440,7 @@ message SnapshottableDirectoryListingProto {
 message SnapshotDiffReportEntryProto {
   required bytes fullpath = 1;
   required string modificationLabel = 2;
+  optional bytes targetPath = 3;
 }
 
 /**
@@ -258,168 +455,18 @@ message SnapshotDiffReportProto {
 }
 
 /**
- * Common node information shared by all the nodes in the cluster
- */
-message StorageInfoProto {
-  required uint32 layoutVersion = 1; // Layout version of the file system
-  required uint32 namespceID = 2;    // File system namespace ID
-  required string clusterID = 3;     // ID of the cluster
-  required uint64 cTime = 4;         // File system creation time
-}
-
-/**
- * Information sent by a namenode to identify itself to the primary namenode.
- */
-message NamenodeRegistrationProto {
-  required string rpcAddress = 1;    // host:port of the namenode RPC address
-  required string httpAddress = 2;   // host:port of the namenode http server
-  enum NamenodeRoleProto {
-    NAMENODE = 1;
-    BACKUP = 2;
-    CHECKPOINT = 3;
-  }
-  required StorageInfoProto storageInfo = 3;  // Node information
-  optional NamenodeRoleProto role = 4 [default = NAMENODE];        // Namenode role
-}
-
-/**
- * Unique signature to identify checkpoint transactions.
- */
-message CheckpointSignatureProto {
-  required string blockPoolId = 1;
-  required uint64 mostRecentCheckpointTxId = 2;
-  required uint64 curSegmentTxId = 3;
-  required StorageInfoProto storageInfo = 4;
-}
-
-/**
- * Command sent from one namenode to another namenode.
- */
-message NamenodeCommandProto {
-  enum Type {
-    NamenodeCommand = 0;      // Base command
-    CheckPointCommand = 1;    // Check point command
-  }
-  required uint32 action = 1;
-  required Type type = 2;
-  optional CheckpointCommandProto checkpointCmd = 3;
-}
-
-/**
- * Command returned from primary to checkpointing namenode.
- * This command has checkpoint signature that identifies
- * checkpoint transaction and is needed for further
- * communication related to checkpointing.
- */
-message CheckpointCommandProto {
-  // Unique signature to identify checkpoint transation
-  required CheckpointSignatureProto signature = 1; 
-
-  // If true, return transfer image to primary upon the completion of checkpoint
-  required bool needToReturnImage = 2;
-}
-
-/**
  * Block information
+ *
+ * Please be wary of adding additional fields here, since INodeFiles
+ * need to fit in PB's default max message size of 64MB.
+ * We restrict the max # of blocks per file
+ * (dfs.namenode.fs-limits.max-blocks-per-file), but it's better
+ * to avoid changing this.
  */
 message BlockProto {
   required uint64 blockId = 1;
   required uint64 genStamp = 2;
   optional uint64 numBytes = 3 [default = 0];
-}
-
-/**
- * Block and datanodes where is it located
- */
-message BlockWithLocationsProto {
-  required BlockProto block = 1;   // Block
-  repeated string storageIDs = 2;  // Datanodes with replicas of the block
-}
-
-/**
- * List of block with locations
- */
-message BlocksWithLocationsProto {
-  repeated BlockWithLocationsProto blocks = 1;
-}
-
-/**
- * Editlog information with available transactions
- */
-message RemoteEditLogProto {
-  required uint64 startTxId = 1;  // Starting available edit log transaction
-  required uint64 endTxId = 2;    // Ending available edit log transaction
-  optional bool isInProgress = 3 [default = false];
-}
-
-/**
- * Enumeration of editlogs available on a remote namenode
- */
-message RemoteEditLogManifestProto {
-  repeated RemoteEditLogProto logs = 1;
-}
-
-/**
- * Namespace information that describes namespace on a namenode
- */
-message NamespaceInfoProto {
-  required string buildVersion = 1;         // Software revision version (e.g. an svn or git revision)
-  required uint32 unused = 2;               // Retained for backward compatibility
-  required string blockPoolID = 3;          // block pool used by the namespace
-  required StorageInfoProto storageInfo = 4;// Node information
-  required string softwareVersion = 5;      // Software version number (e.g. 2.0.0)
-}
-
-/**
- * Block access token information
- */
-message BlockKeyProto {
-  required uint32 keyId = 1;      // Key identifier
-  required uint64 expiryDate = 2; // Expiry time in milliseconds
-  optional bytes keyBytes = 3;    // Key secret
-}
-
-/**
- * Current key and set of block keys at the namenode.
- */
-message ExportedBlockKeysProto {
-  required bool isBlockTokenEnabled = 1;
-  required uint64 keyUpdateInterval = 2;
-  required uint64 tokenLifeTime = 3;
-  required BlockKeyProto currentKey = 4;
-  repeated BlockKeyProto allKeys = 5;
-}
-
-/**
- * State of a block replica at a datanode
- */
-enum ReplicaStateProto {
-  FINALIZED = 0;  // State of a replica when it is not modified
-  RBW = 1;        // State of replica that is being written to
-  RWR = 2;        // State of replica that is waiting to be recovered
-  RUR = 3;        // State of replica that is under recovery
-  TEMPORARY = 4;  // State of replica that is created for replication
-}
-
-/**
- * Block that needs to be recovered with at a given location
- */
-message RecoveringBlockProto {
-  required uint64 newGenStamp = 1;      // New genstamp post recovery
-  required LocatedBlockProto block = 2; // Block to be recovered
-}
-
-/**
- * void request
- */
-message VersionRequestProto {
-}
-
-/**
- * Version response from namenode.
- */
-message VersionResponseProto {
-  required NamespaceInfoProto info = 1;
 }
 
 /**
@@ -436,3 +483,18 @@ message SnapshotInfoProto {
   // TODO: do we need access time?
 }
 
+/**
+ * Rolling upgrade status
+ */
+message RollingUpgradeStatusProto {
+  required string blockPoolId = 1;
+  optional bool finalized = 2 [default = false];
+}
+
+
+/**
+ * A list of storage IDs.
+ */
+message StorageUuidsProto {
+  repeated string storageUuids = 1;
+}

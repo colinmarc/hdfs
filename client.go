@@ -59,7 +59,7 @@ func getNameNodeFromConf() (string, error) {
 	if nnErr != nil {
 		return "", nnErr
 	}
-	return namenodes[len(namenodes)-1], nil
+	return namenodes[0], nil
 }
 
 // NewForUser returns a connected Client with the user specified, or an error if

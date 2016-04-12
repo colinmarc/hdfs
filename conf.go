@@ -6,7 +6,7 @@ import (
 	"io/ioutil"
 	"net/url"
 	"os"
-	"path"
+	"path/filepath"
 	"strings"
 )
 
@@ -39,14 +39,14 @@ func LoadHadoopConf(inputPath string) HadoopConf {
 		hadoopConfDir := os.Getenv("HADOOP_CONF_DIR")
 		hadoopHome := os.Getenv("HADOOP_HOME")
 		if hadoopConfDir != "" {
-			confHdfsPath := path.Join(hadoopConfDir, "hdfs-site.xml")
-			confCorePath := path.Join(hadoopConfDir, "core-site.xml")
-			tryPaths = append(tryPaths, []string{confHdfsPath, confCorePath}...)
+			confHdfsPath := filepath.Join(hadoopConfDir, "hdfs-site.xml")
+			confCorePath := filepath.Join(hadoopConfDir, "core-site.xml")
+			tryPaths = append(tryPaths, confHdfsPath, confCorePath)
 		}
 		if hadoopHome != "" {
-			hdfsPath := path.Join(hadoopHome, "conf", "hdfs-site.xml")
-			corePath := path.Join(hadoopHome, "conf", "core-site.xml")
-			tryPaths = append(tryPaths, []string{hdfsPath, corePath}...)
+			hdfsPath := filepath.Join(hadoopHome, "conf", "hdfs-site.xml")
+			corePath := filepath.Join(hadoopHome, "conf", "core-site.xml")
+			tryPaths = append(tryPaths, hdfsPath, corePath)
 		}
 	}
 	hadoopConf := make(HadoopConf)

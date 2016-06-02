@@ -5,11 +5,13 @@
 package hadoop_hdfs
 
 import proto "github.com/golang/protobuf/proto"
+import json "encoding/json"
 import math "math"
 import hadoop_common "github.com/colinmarc/hdfs/protocol/hadoop_common"
 
-// Reference imports to suppress errors if they are not otherwise used.
+// Reference proto, json, and math imports to suppress error if they are not otherwise used.
 var _ = proto.Marshal
+var _ = &json.SyntaxError{}
 var _ = math.Inf
 
 // Status is a 4-bit enum
@@ -70,6 +72,9 @@ func (x Status) Enum() *Status {
 func (x Status) String() string {
 	return proto.EnumName(Status_name, int32(x))
 }
+func (x Status) MarshalJSON() ([]byte, error) {
+	return json.Marshal(x.String())
+}
 func (x *Status) UnmarshalJSON(data []byte) error {
 	value, err := proto.UnmarshalJSONEnum(Status_value, data, "Status")
 	if err != nil {
@@ -102,6 +107,9 @@ func (x ShortCircuitFdResponse) Enum() *ShortCircuitFdResponse {
 }
 func (x ShortCircuitFdResponse) String() string {
 	return proto.EnumName(ShortCircuitFdResponse_name, int32(x))
+}
+func (x ShortCircuitFdResponse) MarshalJSON() ([]byte, error) {
+	return json.Marshal(x.String())
 }
 func (x *ShortCircuitFdResponse) UnmarshalJSON(data []byte) error {
 	value, err := proto.UnmarshalJSONEnum(ShortCircuitFdResponse_value, data, "ShortCircuitFdResponse")
@@ -138,6 +146,9 @@ func (x DataTransferEncryptorMessageProto_DataTransferEncryptorStatus) Enum() *D
 }
 func (x DataTransferEncryptorMessageProto_DataTransferEncryptorStatus) String() string {
 	return proto.EnumName(DataTransferEncryptorMessageProto_DataTransferEncryptorStatus_name, int32(x))
+}
+func (x DataTransferEncryptorMessageProto_DataTransferEncryptorStatus) MarshalJSON() ([]byte, error) {
+	return json.Marshal(x.String())
 }
 func (x *DataTransferEncryptorMessageProto_DataTransferEncryptorStatus) UnmarshalJSON(data []byte) error {
 	value, err := proto.UnmarshalJSONEnum(DataTransferEncryptorMessageProto_DataTransferEncryptorStatus_value, data, "DataTransferEncryptorMessageProto_DataTransferEncryptorStatus")
@@ -201,6 +212,9 @@ func (x OpWriteBlockProto_BlockConstructionStage) Enum() *OpWriteBlockProto_Bloc
 func (x OpWriteBlockProto_BlockConstructionStage) String() string {
 	return proto.EnumName(OpWriteBlockProto_BlockConstructionStage_name, int32(x))
 }
+func (x OpWriteBlockProto_BlockConstructionStage) MarshalJSON() ([]byte, error) {
+	return json.Marshal(x.String())
+}
 func (x *OpWriteBlockProto_BlockConstructionStage) UnmarshalJSON(data []byte) error {
 	value, err := proto.UnmarshalJSONEnum(OpWriteBlockProto_BlockConstructionStage_value, data, "OpWriteBlockProto_BlockConstructionStage")
 	if err != nil {
@@ -226,7 +240,7 @@ func (m *DataTransferEncryptorMessageProto) GetStatus() DataTransferEncryptorMes
 	if m != nil && m.Status != nil {
 		return *m.Status
 	}
-	return DataTransferEncryptorMessageProto_SUCCESS
+	return 0
 }
 
 func (m *DataTransferEncryptorMessageProto) GetPayload() []byte {
@@ -418,7 +432,7 @@ func (m *ChecksumProto) GetType() ChecksumTypeProto {
 	if m != nil && m.Type != nil {
 		return *m.Type
 	}
-	return ChecksumTypeProto_CHECKSUM_NULL
+	return 0
 }
 
 func (m *ChecksumProto) GetBytesPerChecksum() uint32 {
@@ -487,7 +501,7 @@ func (m *OpWriteBlockProto) GetStage() OpWriteBlockProto_BlockConstructionStage 
 	if m != nil && m.Stage != nil {
 		return *m.Stage
 	}
-	return OpWriteBlockProto_PIPELINE_SETUP_APPEND
+	return 0
 }
 
 func (m *OpWriteBlockProto) GetPipelineSize() uint32 {
@@ -857,7 +871,7 @@ func (m *ReleaseShortCircuitAccessResponseProto) GetStatus() Status {
 	if m != nil && m.Status != nil {
 		return *m.Status
 	}
-	return Status_SUCCESS
+	return 0
 }
 
 func (m *ReleaseShortCircuitAccessResponseProto) GetError() string {
@@ -908,7 +922,7 @@ func (m *ShortCircuitShmResponseProto) GetStatus() Status {
 	if m != nil && m.Status != nil {
 		return *m.Status
 	}
-	return Status_SUCCESS
+	return 0
 }
 
 func (m *ShortCircuitShmResponseProto) GetError() string {
@@ -1075,7 +1089,7 @@ func (m *BlockOpResponseProto) GetStatus() Status {
 	if m != nil && m.Status != nil {
 		return *m.Status
 	}
-	return Status_SUCCESS
+	return 0
 }
 
 func (m *BlockOpResponseProto) GetFirstBadLink() string {
@@ -1129,7 +1143,7 @@ func (m *ClientReadStatusProto) GetStatus() Status {
 	if m != nil && m.Status != nil {
 		return *m.Status
 	}
-	return Status_SUCCESS
+	return 0
 }
 
 type DNTransferAckProto struct {
@@ -1145,7 +1159,7 @@ func (m *DNTransferAckProto) GetStatus() Status {
 	if m != nil && m.Status != nil {
 		return *m.Status
 	}
-	return Status_SUCCESS
+	return 0
 }
 
 type OpBlockChecksumResponseProto struct {
@@ -1185,7 +1199,7 @@ func (m *OpBlockChecksumResponseProto) GetCrcType() ChecksumTypeProto {
 	if m != nil && m.CrcType != nil {
 		return *m.CrcType
 	}
-	return ChecksumTypeProto_CHECKSUM_NULL
+	return 0
 }
 
 type OpCustomProto struct {

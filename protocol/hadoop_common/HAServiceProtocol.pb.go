@@ -5,10 +5,12 @@
 package hadoop_common
 
 import proto "github.com/golang/protobuf/proto"
+import json "encoding/json"
 import math "math"
 
-// Reference imports to suppress errors if they are not otherwise used.
+// Reference proto, json, and math imports to suppress error if they are not otherwise used.
 var _ = proto.Marshal
+var _ = &json.SyntaxError{}
 var _ = math.Inf
 
 type HAServiceStateProto int32
@@ -37,6 +39,9 @@ func (x HAServiceStateProto) Enum() *HAServiceStateProto {
 }
 func (x HAServiceStateProto) String() string {
 	return proto.EnumName(HAServiceStateProto_name, int32(x))
+}
+func (x HAServiceStateProto) MarshalJSON() ([]byte, error) {
+	return json.Marshal(x.String())
 }
 func (x *HAServiceStateProto) UnmarshalJSON(data []byte) error {
 	value, err := proto.UnmarshalJSONEnum(HAServiceStateProto_value, data, "HAServiceStateProto")
@@ -74,6 +79,9 @@ func (x HARequestSource) Enum() *HARequestSource {
 func (x HARequestSource) String() string {
 	return proto.EnumName(HARequestSource_name, int32(x))
 }
+func (x HARequestSource) MarshalJSON() ([]byte, error) {
+	return json.Marshal(x.String())
+}
 func (x *HARequestSource) UnmarshalJSON(data []byte) error {
 	value, err := proto.UnmarshalJSONEnum(HARequestSource_value, data, "HARequestSource")
 	if err != nil {
@@ -96,7 +104,7 @@ func (m *HAStateChangeRequestInfoProto) GetReqSource() HARequestSource {
 	if m != nil && m.ReqSource != nil {
 		return *m.ReqSource
 	}
-	return HARequestSource_REQUEST_BY_USER
+	return 0
 }
 
 // *
@@ -205,7 +213,7 @@ func (m *GetServiceStatusResponseProto) GetState() HAServiceStateProto {
 	if m != nil && m.State != nil {
 		return *m.State
 	}
-	return HAServiceStateProto_INITIALIZING
+	return 0
 }
 
 func (m *GetServiceStatusResponseProto) GetReadyToBecomeActive() bool {

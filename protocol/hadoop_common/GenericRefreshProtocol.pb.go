@@ -2,36 +2,15 @@
 // source: GenericRefreshProtocol.proto
 // DO NOT EDIT!
 
-/*
-Package hadoop_common is a generated protocol buffer package.
-
-It is generated from these files:
-	GenericRefreshProtocol.proto
-	GetUserMappingsProtocol.proto
-	HAServiceProtocol.proto
-	IpcConnectionContext.proto
-	ProtobufRpcEngine.proto
-	ProtocolInfo.proto
-	RefreshAuthorizationPolicyProtocol.proto
-	RefreshCallQueueProtocol.proto
-	RefreshUserMappingsProtocol.proto
-	RpcHeader.proto
-	Security.proto
-	TraceAdmin.proto
-	ZKFCProtocol.proto
-
-It has these top-level messages:
-	GenericRefreshRequestProto
-	GenericRefreshResponseProto
-	GenericRefreshResponseCollectionProto
-*/
 package hadoop_common
 
 import proto "github.com/golang/protobuf/proto"
+import json "encoding/json"
 import math "math"
 
-// Reference imports to suppress errors if they are not otherwise used.
+// Reference proto, json, and math imports to suppress error if they are not otherwise used.
 var _ = proto.Marshal
+var _ = &json.SyntaxError{}
 var _ = math.Inf
 
 // *

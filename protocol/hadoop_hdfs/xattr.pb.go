@@ -5,10 +5,12 @@
 package hadoop_hdfs
 
 import proto "github.com/golang/protobuf/proto"
+import json "encoding/json"
 import math "math"
 
-// Reference imports to suppress errors if they are not otherwise used.
+// Reference proto, json, and math imports to suppress error if they are not otherwise used.
 var _ = proto.Marshal
+var _ = &json.SyntaxError{}
 var _ = math.Inf
 
 type XAttrSetFlagProto int32
@@ -34,6 +36,9 @@ func (x XAttrSetFlagProto) Enum() *XAttrSetFlagProto {
 }
 func (x XAttrSetFlagProto) String() string {
 	return proto.EnumName(XAttrSetFlagProto_name, int32(x))
+}
+func (x XAttrSetFlagProto) MarshalJSON() ([]byte, error) {
+	return json.Marshal(x.String())
 }
 func (x *XAttrSetFlagProto) UnmarshalJSON(data []byte) error {
 	value, err := proto.UnmarshalJSONEnum(XAttrSetFlagProto_value, data, "XAttrSetFlagProto")
@@ -77,6 +82,9 @@ func (x XAttrProto_XAttrNamespaceProto) Enum() *XAttrProto_XAttrNamespaceProto {
 func (x XAttrProto_XAttrNamespaceProto) String() string {
 	return proto.EnumName(XAttrProto_XAttrNamespaceProto_name, int32(x))
 }
+func (x XAttrProto_XAttrNamespaceProto) MarshalJSON() ([]byte, error) {
+	return json.Marshal(x.String())
+}
 func (x *XAttrProto_XAttrNamespaceProto) UnmarshalJSON(data []byte) error {
 	value, err := proto.UnmarshalJSONEnum(XAttrProto_XAttrNamespaceProto_value, data, "XAttrProto_XAttrNamespaceProto")
 	if err != nil {
@@ -101,7 +109,7 @@ func (m *XAttrProto) GetNamespace() XAttrProto_XAttrNamespaceProto {
 	if m != nil && m.Namespace != nil {
 		return *m.Namespace
 	}
-	return XAttrProto_USER
+	return 0
 }
 
 func (m *XAttrProto) GetName() string {

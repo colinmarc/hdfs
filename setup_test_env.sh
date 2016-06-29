@@ -11,7 +11,7 @@ if [ ! -d "$HADOOP_HOME" ]; then
   if [ $HADOOP_DISTRO = "cdh" ]; then
       HADOOP_URL="http://archive.cloudera.com/cdh5/cdh/5/hadoop-latest.tar.gz"
   elif [ $HADOOP_DISTRO = "hdp" ]; then
-      HADOOP_URL="http://public-repo-1.hortonworks.com/HDP/centos6/2.x/updates/2.0.6.0/tars/hadoop-2.2.0.2.0.6.0-76.tar.gz"
+      HADOOP_URL="http://public-repo-1.hortonworks.com/HDP/centos6/2.x/updates/2.4.0.0/tars/hadoop-2.7.1.2.4.0.0-169.tar.gz"
   else
       echo "No/bad HADOOP_DISTRO='${HADOOP_DISTRO}' specified"
       exit 1

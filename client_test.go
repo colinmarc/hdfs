@@ -101,6 +101,7 @@ func TestCopyToLocal(t *testing.T) {
 func TestCopyToRemote(t *testing.T) {
 	client := getClient(t)
 
+	baleet(t, "/_test/copytoremote.txt")
 	err := client.CopyToRemote("test/foo.txt", "/_test/copytoremote.txt")
 	require.NoError(t, err)
 

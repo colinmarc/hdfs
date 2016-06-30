@@ -79,6 +79,61 @@ func (c *Client) CreateFile(name string, replication int, blockSize int64, perm 
 	}, nil
 }
 
+// Append opens an existing file in HDFS and returns an io.WriteCloser for
+// writing to it. Because of the way that HDFS writes are buffered and
+// acknowledged asynchronously, it is very important that Close is called after
+// all data has been written.
+func (c *Client) Append(name string) (*FileWriter, error) {
+	info, err := c.getFileInfo(name)
+	if err != nil {
+		return nil, &os.PathError{"append", name, err}
+	}
+
+	appendReq := &hdfs.AppendRequestProto{
+		Src:          proto.String(name),
+		ClientName:   proto.String(c.namenode.ClientName()),
+	}
+	appendResp := &hdfs.AppendResponseProto{}
+
+	err = c.namenode.Execute("append", appendReq, appendResp)
+	if err != nil {
+		if nnErr, ok := err.(*rpc.NamenodeError); ok {
+			err = interpretException(nnErr.Exception, err)
+		}
+
+		return nil, &os.PathError{"append", name, err}
+	}
+
+	req := &hdfs.GetBlockLocationsRequestProto{
+		Src:    proto.String(name),
+		Offset: proto.Uint64(0),
+		Length: proto.Uint64(uint64(info.Size())),
+	}
+	resp := &hdfs.GetBlockLocationsResponseProto{}
+
+	err = c.namenode.Execute("getBlockLocations", req, resp)
+	if err != nil {
+		return nil, err
+	}
+
+	blocks := resp.GetLocations().GetBlocks()
+	f := &FileWriter{
+		client:      c,
+		name:        name,
+		replication: int(appendResp.Stat.GetBlockReplication()),
+		blockSize:   int64(appendResp.Stat.GetBlocksize()),
+	}
+	if len(blocks) == 0 {
+		// This file has no blocks associated with it, we don't need to
+		// bother with setting the current block.
+		return f, nil
+	}
+	// This file has previous blocks, but they are immutable. We must setup
+	// a reference to the last block, then start a new block.
+	f.block = blocks[len(blocks) - 1]
+	return f, f.startNewBlock()
+}
+
 // CreateEmptyFile creates a empty file at the given name, with the
 // permissions 0644.
 func (c *Client) CreateEmptyFile(name string) error {
@@ -159,13 +214,14 @@ func (f *FileWriter) Close() error {
 func (f *FileWriter) startNewBlock() error {
 	// TODO: we don't need to wait for previous blocks to ack before continuing
 
-	var previous *hdfs.ExtendedBlockProto
 	if f.blockWriter != nil {
 		err := f.blockWriter.Close()
 		if err != nil {
 			return err
 		}
-
+	}
+	var previous *hdfs.ExtendedBlockProto
+	if f.block != nil {
 		previous = f.block.GetB()
 	}
 

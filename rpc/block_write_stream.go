@@ -57,10 +57,10 @@ func (ae ackError) Error() string {
 
 var ErrInvalidSeqno = errors.New("Invalid ack sequence number")
 
-func newBlockWriteStream(conn io.ReadWriter) *blockWriteStream {
+func newBlockWriteStream(conn io.ReadWriter, offset int64) *blockWriteStream {
 	s := &blockWriteStream{
 		conn:     conn,
-		offset:   0,
+		offset:   offset,
 		seqno:    1,
 		packets:  make(chan outboundPacket, maxPacketsInQueue),
 		acksDone: make(chan struct{}),

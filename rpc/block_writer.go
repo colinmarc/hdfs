@@ -25,6 +25,7 @@ type BlockWriter struct {
 	stream   *blockWriteStream
 	offset   int64
 	closed   bool
+	append   bool
 }
 
 // NewBlockWriter returns a BlockWriter for the given block. It will lazily
@@ -36,6 +37,12 @@ func NewBlockWriter(block *hdfs.LocatedBlockProto, namenode *NamenodeConnection,
 		block:      block,
 		blockSize:  blockSize,
 		namenode:   namenode,
+	}
+
+	if o := block.B.GetNumBytes(); o > 0 {
+		// The block already contains data; we are appending.
+		s.offset = int64(o)
+		s.append = true
 	}
 
 	return s
@@ -121,7 +128,7 @@ func (bw *BlockWriter) connectNext() error {
 	}
 
 	bw.conn = conn
-	bw.stream = newBlockWriteStream(conn)
+	bw.stream = newBlockWriteStream(conn, bw.offset)
 	return nil
 }
 
@@ -144,12 +151,20 @@ func (bw *BlockWriter) currentPipeline() []*hdfs.DatanodeInfoProto {
 }
 
 func (bw *BlockWriter) currentStage() hdfs.OpWriteBlockProto_BlockConstructionStage {
-	// TODO: this should be PIPELINE_SETUP_STREAMING_RECOVERY for recovery
+	// TODO: this should be PIPELINE_SETUP_STREAMING_RECOVERY or
+	// PIPELINE_SETUP_APPEND_RECOVERY for recovery.
+	if bw.append {
+		return hdfs.OpWriteBlockProto_PIPELINE_SETUP_APPEND
+	}
 	return hdfs.OpWriteBlockProto_PIPELINE_SETUP_CREATE
 }
 
 func (bw *BlockWriter) generationTimestamp() int64 {
-	// TODO: ???
+	// TODO: This needs to be incremented only when appending to
+	// an existing block.
+	if bw.append {
+		return int64(bw.block.B.GetGenerationStamp() + 1)
+	}
 	return 0
 }
 
@@ -169,6 +184,17 @@ func (bw *BlockWriter) finalizeBlock(length int64) error {
 	return nil
 }
 
+// writeBlockWriteRequest creates an OpWriteBlock message and submits it to the
+// datanode. This occurs before any writing actually occurs, and is intended
+// to synchronize the client with the datanode, returning an error if the
+// submitted expected state differs from the actual state on the datanode.
+//
+// The field "MinBytesRcvd" below is used during append operation and should be
+// the block's expected size. The field "MaxBytesRcvd" is used only in the case
+// of PIPELINE_SETUP_STREAMING_RECOVERY.
+//
+// See: https://github.com/apache/hadoop/blob/6314843881b4c67d08215e60293f8b33242b9416/hadoop-hdfs-project/hadoop-hdfs/src/main/java/org/apache/hadoop/hdfs/server/datanode/BlockReceiver.java#L216
+// And: https://github.com/apache/hadoop/blob/6314843881b4c67d08215e60293f8b33242b9416/hadoop-hdfs-project/hadoop-hdfs/src/main/java/org/apache/hadoop/hdfs/server/datanode/fsdataset/impl/FsDatasetImpl.java#L1462
 func (bw *BlockWriter) writeBlockWriteRequest(w io.Writer) error {
 	targets := bw.currentPipeline()[1:]
 
@@ -184,7 +210,7 @@ func (bw *BlockWriter) writeBlockWriteRequest(w io.Writer) error {
 		Stage:                 bw.currentStage().Enum(),
 		PipelineSize:          proto.Uint32(uint32(len(targets))),
 		MinBytesRcvd:          proto.Uint64(bw.block.GetB().GetNumBytes()),
-		MaxBytesRcvd:          proto.Uint64(uint64(bw.offset)), // I don't understand these two fields
+		MaxBytesRcvd:          proto.Uint64(uint64(bw.offset)),
 		LatestGenerationStamp: proto.Uint64(uint64(bw.generationTimestamp())),
 		RequestedChecksum: &hdfs.ChecksumProto{
 			Type:             hdfs.ChecksumTypeProto_CHECKSUM_CRC32.Enum(),

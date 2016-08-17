@@ -90,8 +90,8 @@ func (c *Client) Append(name string) (*FileWriter, error) {
 	}
 
 	appendReq := &hdfs.AppendRequestProto{
-		Src:          proto.String(name),
-		ClientName:   proto.String(c.namenode.ClientName()),
+		Src:        proto.String(name),
+		ClientName: proto.String(c.namenode.ClientName()),
 	}
 	appendResp := &hdfs.AppendResponseProto{}
 
@@ -124,14 +124,11 @@ func (c *Client) Append(name string) (*FileWriter, error) {
 		blockSize:   int64(appendResp.Stat.GetBlocksize()),
 	}
 	if len(blocks) == 0 {
-		// This file has no blocks associated with it, we don't need to
-		// bother with setting the current block.
 		return f, nil
 	}
-	// This file has previous blocks, but they are immutable. We must setup
-	// a reference to the last block, then start a new block.
-	f.block = blocks[len(blocks) - 1]
-	return f, f.startNewBlock()
+	f.block = blocks[len(blocks)-1]
+	f.blockWriter = rpc.NewBlockWriter(f.block, c.namenode, f.blockSize)
+	return f, nil
 }
 
 // CreateEmptyFile creates a empty file at the given name, with the

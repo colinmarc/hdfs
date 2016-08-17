@@ -86,11 +86,16 @@ Or, to install just the commandline client:
 You'll also want to add two lines to your `.bashrc` or `.profile`:
 
     source $GOPATH/src/github.com/colinmarc/hdfs/cmd/hdfs/bash_completion
-    HADOOP_NAMENODE="namenode:8020"
+    export HADOOP_NAMENODE="namenode:8020"
 
 Or, to install tab completion globally on linux:
 
     ln -sT $GOPATH/src/github.com/colinmarc/hdfs/cmd/hdfs/bash_completion /etc/bash_completion.d/gohdfs
+
+By default, the HDFS user is set to the currently-logged-in user. You can
+override this in your `.bashrc` or `.profile`:
+
+    export HADOOP_USER_NAME=username
 
 Compatibility
 -------------

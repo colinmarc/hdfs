@@ -88,6 +88,10 @@ You'll also want to add two lines to your `.bashrc` or `.profile`:
     source $GOPATH/src/github.com/colinmarc/hdfs/cmd/hdfs/bash_completion
     HADOOP_NAMENODE="namenode:8020"
 
+To configure a different user, add the following to `.bashrc` / etc.:
+
+    export HADOOP_USER_NAME=some_username
+
 Or, to install tab completion globally on linux:
 
     ln -sT $GOPATH/src/github.com/colinmarc/hdfs/cmd/hdfs/bash_completion /etc/bash_completion.d/gohdfs

@@ -163,7 +163,7 @@ func (bw *BlockWriter) generationTimestamp() int64 {
 	// TODO: This needs to be incremented only when appending to
 	// an existing block.
 	if bw.append {
-		return int64(bw.block.B.GetGenerationStamp() + 1)
+		return int64(bw.block.B.GetGenerationStamp())
 	}
 	return 0
 }

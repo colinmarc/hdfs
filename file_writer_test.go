@@ -304,3 +304,46 @@ func TestFileAppendLastBlockFull(t *testing.T) {
 
 	assert.Equal(t, "\nfoo", string(buf))
 }
+
+func TestFileAppendTwice(t *testing.T) {
+	client := getClient(t)
+
+	baleet(t, "/_test/append/4.txt")
+	mkdirp(t, "/_test/append")
+	writer, err := client.Create("/_test/append/4.txt")
+	require.NoError(t, err)
+
+	n, err := writer.Write([]byte("foo"))
+	require.NoError(t, err)
+	assert.Equal(t, 3, n)
+
+	err = writer.Close()
+	require.NoError(t, err)
+
+	writer, err = client.Append("/_test/append/4.txt")
+	require.NoError(t, err)
+
+	n, err = writer.Write([]byte("bar"))
+	require.NoError(t, err)
+	assert.Equal(t, 3, n)
+
+	err = writer.Close()
+	require.NoError(t, err)
+
+	writer, err = client.Append("/_test/append/4.txt")
+	require.NoError(t, err)
+
+	n, err = writer.Write([]byte("baz"))
+	require.NoError(t, err)
+	assert.Equal(t, 3, n)
+
+	err = writer.Close()
+	require.NoError(t, err)
+
+	reader, err := client.Open("/_test/append/4.txt")
+	require.NoError(t, err)
+
+	bytes, err := ioutil.ReadAll(reader)
+	require.NoError(t, err)
+	assert.Equal(t, "foobarbaz", string(bytes))
+}

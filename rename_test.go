@@ -42,7 +42,7 @@ func TestRenameDestExists(t *testing.T) {
 	touch(t, "/_test/tomovedest2")
 
 	err := client.Rename("/_test/tomove2", "/_test/tomovedest2")
-	assertPathError(t, err, "rename", "/_test/tomovedest2", os.ErrExist)
+	require.NoError(t, err)
 }
 
 func TestRenameWithoutPermissionForSrc(t *testing.T) {

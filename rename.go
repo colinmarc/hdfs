@@ -11,9 +11,7 @@ import (
 // Rename renames (moves) a file.
 func (c *Client) Rename(oldpath, newpath string) error {
 	_, err := c.getFileInfo(newpath)
-	if err == nil {
-		return &os.PathError{"rename", newpath, os.ErrExist}
-	} else if !os.IsNotExist(err) {
+	if err != nil && !os.IsNotExist(err) {
 		return &os.PathError{"rename", newpath, err}
 	}
 

@@ -57,14 +57,18 @@ func moveInto(client *hdfs.Client, sources []string, dest string, force bool) {
 }
 
 func moveTo(client *hdfs.Client, source, dest string, force bool) {
+	resp, err := client.Stat(dest)
 	if force {
-		err := client.Remove(dest)
-		if err != nil && !os.IsNotExist(err) {
-			fatal(err)
+		if err == nil && resp.IsDir() {
+			if err = client.Remove(dest); err != nil {
+				fatal(err)
+			}
 		}
+	} else if err == nil {
+		fatal(&os.PathError{"rename", dest, os.ErrExist})
 	}
 
-	err := client.Rename(source, dest)
+	err = client.Rename(source, dest)
 	if err != nil {
 		fatal(err)
 	}

@@ -18,7 +18,7 @@ The flags available are a subset of the POSIX ones, but should behave similarly.
 Valid commands:
   ls [-lah] [FILE]...
   rm [-rf] FILE...
-  mv [-fT] SOURCE... DEST
+  mv [-nT] SOURCE... DEST
   mkdir [-p] FILE...
   touch [-amc] FILE...
   chmod [-R] OCTAL-MODE FILE...
@@ -43,7 +43,7 @@ Valid commands:
 	rmf    = rmOpts.Bool('f')
 
 	mvOpts = getopt.New()
-	mvf    = mvOpts.Bool('f')
+	mvn    = mvOpts.Bool('n')
 	mvT    = mvOpts.Bool('T')
 
 	mkdirOpts = getopt.New()
@@ -101,7 +101,7 @@ func main() {
 		rm(rmOpts.Args(), *rmr, *rmf)
 	case "mv":
 		mvOpts.Parse(argv)
-		mv(mvOpts.Args(), *mvf, *mvT)
+		mv(mvOpts.Args(), !*mvn, *mvT)
 	case "mkdir":
 		mkdirOpts.Parse(argv)
 		mkdir(mkdirOpts.Args(), *mkdirp)

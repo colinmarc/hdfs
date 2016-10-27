@@ -5,9 +5,15 @@ import (
 	"io/ioutil"
 	"os"
 	"os/user"
+	"strings"
+	"time"
 
 	hdfs "github.com/colinmarc/hdfs/protocol/hadoop_hdfs"
+	ha "github.com/colinmarc/hdfs/protocol/hadoop_ha"
 	"github.com/colinmarc/hdfs/rpc"
+	"github.com/golang/protobuf/proto"
+	"github.com/samuel/go-zookeeper/zk"
+	"fmt"
 )
 
 // A Client represents a connection to an HDFS cluster
@@ -71,6 +77,33 @@ func NewForUser(address string, user string) (*Client, error) {
 	}
 
 	return &Client{namenode: namenode}, nil
+}
+
+func NewHA(zkAddresses string, nameservice string) (*Client, error) {
+	username, err := Username()
+	if err != nil {
+		return nil, err
+	}
+	return NewForUserHA(zkAddresses, nameservice, username)
+}
+
+func NewForUserHA(zkAddresses string, nameservice string, user string) (*Client, error) {
+	zkConnection, _, err := zk.Connect(strings.Split(zkAddresses, ","), 5 * time.Second)
+	if err != nil {
+		return nil, err
+	}
+	defer zkConnection.Close()
+	zkBreadCrumbPath := "/hadoop-ha/" + nameservice + "/ActiveBreadCrumb"
+	data, _, err := zkConnection.Get(zkBreadCrumbPath)
+	if err != nil {
+		return nil, err
+	}
+	info := &ha.ActiveNodeInfo{}
+	if err = proto.Unmarshal(data, info); err != nil {
+		return nil, err
+	}
+	client, err := NewForUser(fmt.Sprint(*info.Hostname, ":", *info.Port), user)
+	return client, err
 }
 
 // ReadFile reads the file named by filename and returns the contents.

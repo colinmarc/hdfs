@@ -41,7 +41,7 @@ func createBlock(t *testing.T, name string) *BlockWriter {
 	require.NoError(t, err)
 
 	block := addBlockResp.GetBlock()
-	return NewBlockWriter(block, namenode, blockSize)
+	return NewBlockWriter(block, namenode, blockSize, name)
 }
 
 func finishBlock(t *testing.T, name string, bw *BlockWriter) {
@@ -76,8 +76,6 @@ func baleet(t *testing.T, name string) {
 }
 
 func TestWriteFailsOver(t *testing.T) {
-	t.Skip("Write failover isn't implemented")
-
 	name := "/_test/create/6.txt"
 	baleet(t, name)
 

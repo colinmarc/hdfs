@@ -19,6 +19,7 @@ type BlockWriter struct {
 	clientName string
 	block      *hdfs.LocatedBlockProto
 	blockSize  int64
+	src        string
 
 	namenode *NamenodeConnection
 	conn     net.Conn
@@ -31,12 +32,13 @@ type BlockWriter struct {
 // NewBlockWriter returns a BlockWriter for the given block. It will lazily
 // set up a replication pipeline, and connect to the "best" datanode based on
 // any previously seen failures.
-func NewBlockWriter(block *hdfs.LocatedBlockProto, namenode *NamenodeConnection, blockSize int64) *BlockWriter {
+func NewBlockWriter(block *hdfs.LocatedBlockProto, namenode *NamenodeConnection, blockSize int64, filename string) *BlockWriter {
 	s := &BlockWriter{
 		clientName: namenode.ClientName(),
 		block:      block,
 		blockSize:  blockSize,
 		namenode:   namenode,
+		src:        filename,
 	}
 
 	if o := block.B.GetNumBytes(); o > 0 {
@@ -108,7 +110,12 @@ func (bw *BlockWriter) Close() error {
 }
 
 func (bw *BlockWriter) connectNext() error {
-	address := getDatanodeAddress(bw.currentPipeline()[0])
+	locs, err := bw.currentPipeline()
+	if err != nil {
+		return err
+	}
+
+	address := getDatanodeAddress(locs[0])
 
 	conn, err := net.DialTimeout("tcp", address, connectTimeout)
 	if err != nil {
@@ -132,22 +139,59 @@ func (bw *BlockWriter) connectNext() error {
 	return nil
 }
 
-func (bw *BlockWriter) currentPipeline() []*hdfs.DatanodeInfoProto {
-	// TODO: we need to be able to reconfigure the pipeline when a node fails.
-	//
-	// targets := make([]*hdfs.DatanodeInfoProto, 0, len(br.pipeline))
-	// for _, loc := range s.block.GetLocs() {
-	// 	addr := getDatanodeAddress(loc)
-	// 	for _, pipelineAddr := range br.pipeline {
-	// 		if ipAddr == addr {
-	// 			append(targets, loc)
-	// 		}
-	// 	}
-	// }
-	//
-	// return targets
+func (bw *BlockWriter) Getblock() *hdfs.LocatedBlockProto {
+	return bw.block
+}
 
-	return bw.block.GetLocs()
+func (bw *BlockWriter) currentPipeline() ([]*hdfs.DatanodeInfoProto, error) {
+	// If one datanode failed, reconstruct the pipeline.
+	var failed uint32
+	failed = 0
+
+	for _, locs := range bw.block.GetLocs() {
+		address := getDatanodeAddress(locs)
+		if _, ok := net.DialTimeout("tcp", address, connectTimeout); ok != nil {
+			failed = failed + 1
+		}
+	}
+
+	if failed > 0 {
+		failedDatanodes := make([]*hdfs.DatanodeInfoProto, 0, failed)
+		for _, loc := range bw.block.GetLocs() {
+			address := getDatanodeAddress(loc)
+			_, err := net.DialTimeout("tcp", address, connectTimeout)
+			if err != nil {
+				failedDatanodes = append(failedDatanodes, loc)
+				continue
+			}
+		}
+
+		abandonreq := &hdfs.AbandonBlockRequestProto{
+			B:       bw.block.GetB(),
+			Src:     proto.String(bw.src),
+			Holder:  proto.String(bw.clientName),
+		}
+		abandonresp := &hdfs.AbandonBlockResponseProto{}
+		err := bw.namenode.Execute("abandonBlock", abandonreq, abandonresp)
+		if err != nil {
+			return nil, err
+		}
+
+		req := &hdfs.AddBlockRequestProto{
+			Src:           proto.String(bw.src),
+			ClientName:    proto.String(bw.clientName),
+			ExcludeNodes:  failedDatanodes,
+		}
+		resp := &hdfs.AddBlockResponseProto{}
+		err = bw.namenode.Execute("addBlock", req, resp)
+		if err != nil || resp.GetBlock() == nil {
+			return nil, err
+		}
+
+		bw.block = resp.GetBlock()
+	}
+
+	return bw.block.GetLocs(), nil
 }
 
 func (bw *BlockWriter) currentStage() hdfs.OpWriteBlockProto_BlockConstructionStage {
@@ -194,7 +238,8 @@ func (bw *BlockWriter) finalizeBlock(length int64) error {
 // See: https://github.com/apache/hadoop/blob/6314843881b4c67d08215e60293f8b33242b9416/hadoop-hdfs-project/hadoop-hdfs/src/main/java/org/apache/hadoop/hdfs/server/datanode/BlockReceiver.java#L216
 // And: https://github.com/apache/hadoop/blob/6314843881b4c67d08215e60293f8b33242b9416/hadoop-hdfs-project/hadoop-hdfs/src/main/java/org/apache/hadoop/hdfs/server/datanode/fsdataset/impl/FsDatasetImpl.java#L1462
 func (bw *BlockWriter) writeBlockWriteRequest(w io.Writer) error {
-	targets := bw.currentPipeline()[1:]
+	pipeline, _ := bw.currentPipeline()
+	targets := pipeline[1:]
 
 	op := &hdfs.OpWriteBlockProto{
 		Header: &hdfs.ClientOperationHeaderProto{

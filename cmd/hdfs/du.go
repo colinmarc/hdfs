@@ -10,7 +10,7 @@ import (
 	"github.com/colinmarc/hdfs"
 )
 
-func du(args []string, summarize, humanReadable bool) {
+func du(args []string, summarize, humanReadable, withCount bool) {
 	if len(args) == 0 {
 		printHelp()
 	}
@@ -32,6 +32,7 @@ func du(args []string, summarize, humanReadable bool) {
 		}
 
 		var size int64
+		var dc, fc int
 		if info.IsDir() {
 			if summarize {
 				cs, err := client.GetContentSummary(p)
@@ -42,30 +43,35 @@ func du(args []string, summarize, humanReadable bool) {
 				}
 
 				size = cs.Size()
+				dc = cs.DirectoryCount()
+				fc = cs.FileCount()
 			} else {
-				size = duDir(client, tw, p, humanReadable)
+				size, dc, fc = duDir(client, tw, p, humanReadable, withCount)
 			}
 		} else {
 			size = info.Size()
+			dc = 0
+			fc = 1
 		}
 
-		printSize(tw, size, p, humanReadable)
+		printSize(tw, size, dc, fc, p, humanReadable, withCount)
 	}
 }
 
-func duDir(client *hdfs.Client, tw *tabwriter.Writer, dir string, humanReadable bool) int64 {
+func duDir(client *hdfs.Client, tw *tabwriter.Writer, dir string, humanReadable, withCount bool) (int64, int, int) {
 	dirReader, err := client.Open(dir)
 	if err != nil {
 		fmt.Fprintln(os.Stderr, err)
-		return 0
+		return 0, 0, 0
 	}
 
 	var partial []os.FileInfo
 	var dirSize int64
+	var ddc, dfc int
 	for ; err != io.EOF; partial, err = dirReader.Readdir(100) {
 		if err != nil {
 			fmt.Fprintln(os.Stderr, err)
-			return dirSize
+			return dirSize, ddc, dfc
 		}
 
 		for _, child := range partial {
@@ -73,29 +79,40 @@ func duDir(client *hdfs.Client, tw *tabwriter.Writer, dir string, humanReadable 
 			info, err := client.Stat(childPath)
 			if err != nil {
 				fmt.Fprintln(os.Stderr, err)
-				return 0
+				return 0, 0, 0
 			}
 
 			var size int64
+			var dc, fc int
 			if info.IsDir() {
-				size = duDir(client, tw, childPath, humanReadable)
+				size, dc, fc = duDir(client, tw, childPath, humanReadable, withCount)
 			} else {
 				size = info.Size()
+				fc = 1
+				dc = 0
 			}
 
-			printSize(tw, size, childPath, humanReadable)
+			printSize(tw, size, dc, fc, childPath, humanReadable, withCount)
 			dirSize += size
+			ddc += dc
+			dfc += fc
 		}
 	}
 
-	return dirSize
+	return dirSize, ddc, dfc
 }
 
-func printSize(tw *tabwriter.Writer, size int64, name string, humanReadable bool) {
+func printSize(tw *tabwriter.Writer, size int64, dc, fc int, name string, humanReadable, withCount bool) {
+	var c string
+	if withCount {
+		c = fmt.Sprintf("%d\t%d\t", dc, fc)
+	} else {
+		c = ""
+	}
 	if humanReadable {
 		formattedSize := formatBytes(size)
-		fmt.Fprintf(tw, "%s \t%s\n", formattedSize, name)
+		fmt.Fprintf(tw, "%s%s \t%s\n", c, formattedSize, name)
 	} else {
-		fmt.Fprintf(tw, "%d \t%s\n", size, name)
+		fmt.Fprintf(tw, "%s%d \t%s\n", c, size, name)
 	}
 }

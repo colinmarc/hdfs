@@ -65,6 +65,7 @@ Valid commands:
 	duOpts = getopt.New()
 	dus    = duOpts.Bool('s')
 	duh    = duOpts.Bool('h')
+	duc    = duOpts.Bool('c')
 
 	getmergeOpts = getopt.New()
 	getmergen    = getmergeOpts.Bool('n')
@@ -121,7 +122,7 @@ func main() {
 		printSection(headTailOpts.Args(), *headtailn, *headtailc, (command == "tail"))
 	case "du":
 		duOpts.Parse(argv)
-		du(duOpts.Args(), *dus, *duh)
+		du(duOpts.Args(), *dus, *duh, *duc)
 	case "checksum":
 		checksum(argv[1:])
 	case "get":

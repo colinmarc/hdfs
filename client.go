@@ -73,6 +73,12 @@ func NewForUser(address string, user string) (*Client, error) {
 	return &Client{namenode: namenode}, nil
 }
 
+// NewForConnection returns Client with the specified, underlying rpc.NamenodeConnection.
+// You can use rpc.WrapNamenodeConnection to wrap your own net.Conn.
+func NewForConnection(namenode *rpc.NamenodeConnection) *Client {
+	return &Client{namenode: namenode}
+}
+
 // ReadFile reads the file named by filename and returns the contents.
 func (c *Client) ReadFile(filename string) ([]byte, error) {
 	f, err := c.Open(filename)

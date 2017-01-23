@@ -20,7 +20,7 @@ clean-protos:
 	find . -name *.pb.go | xargs rm
 
 hdfs: clean $(SOURCES)
-	go build ./cmd/hdfs
+	go build -ldflags "-X main.version=$(TRAVIS_TAG)" ./cmd/hdfs
 
 install: get-deps
 	go install ./...

@@ -12,7 +12,8 @@ import (
 // TODO: cp, df, tree, test, trash
 
 var (
-	usage = fmt.Sprintf(`Usage: %s COMMAND
+	version string
+	usage   = fmt.Sprintf(`Usage: %s COMMAND
 The flags available are a subset of the POSIX ones, but should behave similarly.
 
 Valid commands:
@@ -93,6 +94,8 @@ func main() {
 	command := os.Args[1]
 	argv := os.Args[1:]
 	switch command {
+	case "-v", "--version":
+		fatal("gohdfs version", version)
 	case "ls":
 		lsOpts.Parse(argv)
 		ls(lsOpts.Args(), *lsl, *lsa, *lsh)

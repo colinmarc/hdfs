@@ -35,7 +35,7 @@ clean:
 
 release: hdfs
 	mkdir -p $(RELEASE_NAME)
-	cp hdfs README.md LICENSE.txt $(RELEASE_NAME)/
+	cp hdfs README.md LICENSE.txt cmd/hdfs/bash_completion $(RELEASE_NAME)/
 	tar -cvzf $(RELEASE_NAME).tar.gz $(RELEASE_NAME)
 
 .PHONY: clean clean-protos install test release

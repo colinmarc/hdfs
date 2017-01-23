@@ -43,3 +43,6 @@ $HADOOP_FS -chmod 777 "hdfs://$HADOOP_NAMENODE/_test"
 
 $HADOOP_FS -put ./test/foo.txt "hdfs://$HADOOP_NAMENODE/_test/foo.txt"
 $HADOOP_FS -put ./test/mobydick.txt "hdfs://$HADOOP_NAMENODE/_test/mobydick.txt"
+
+echo "Please run the following command:"
+echo "export HADOOP_NAMENODE='$HADOOP_NAMENODE'"

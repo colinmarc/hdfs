@@ -15,23 +15,17 @@ all: hdfs
 clean-protos:
 	find . -name *.pb.go | xargs rm
 
-hdfs: get-deps clean $(SOURCES)
+hdfs: clean $(SOURCES)
 	go build ./cmd/hdfs
 
 install: get-deps
 	go install ./...
 
 test: hdfs
-	go test -v -race ./...
+	go test -v -race $(shell go list ./... | grep -v vendor)
 	bats ./cmd/hdfs/test/*.bats
 
 clean:
 	rm -f ./hdfs
 
-get-deps:
-	go get github.com/golang/protobuf/proto
-	go get github.com/pborman/getopt
-	go get github.com/stretchr/testify/assert
-	go get github.com/stretchr/testify/require
-
-.PHONY: clean clean-protos install test get-deps
+.PHONY: clean clean-protos install test

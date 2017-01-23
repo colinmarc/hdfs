@@ -36,3 +36,4 @@ deploy:
     repo: colinmarc/hdfs
     tags: true
     all_branches: true
+    condition: $HADOOP_DISTRO = cdh

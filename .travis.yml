@@ -37,3 +37,6 @@ deploy:
     tags: true
     all_branches: true
     condition: $HADOOP_DISTRO = cdh
+matrix:
+  allow_failures:
+    - os: osx

@@ -81,9 +81,8 @@ To install the library, once you have Go [all set up][2]:
 Installing the commandline client
 ---------------------------------
 
-Grab a tarball from the
-[releasespage](https://github.com/colinmarc/hdfs/releases) and unzip it wherever
-you like.
+Grab a tarball from the [releases page](https://github.com/colinmarc/hdfs/releases)
+and unzip it wherever you like.
 
 You'll want to add the following line to your `.bashrc` or `.profile`:
 

@@ -9,7 +9,6 @@ before_install:
 - mkdir -p $HOME/bats/build
 - "$HOME/bats/install.sh $HOME/bats/build"
 - export PATH="$PATH:$HOME/bats/build/bin"
-install: make get-deps
 env:
 - HADOOP_DISTRO=cdh
 - HADOOP_DISTRO=hdp

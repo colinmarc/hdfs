@@ -1,8 +1,6 @@
 language: go
 go_import_path: github.com/colinmarc/hdfs
-go:
-  - 1.6
-  - 1.5
+go: 1.7
 before_install:
   - git clone https://github.com/sstephenson/bats $HOME/bats
   - mkdir -p $HOME/bats/build

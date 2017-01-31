@@ -93,7 +93,7 @@ func duDir(client *hdfs.Client, tw *tabwriter.Writer, dir string, humanReadable 
 
 func printSize(tw *tabwriter.Writer, size int64, name string, humanReadable bool) {
 	if humanReadable {
-		formattedSize := formatBytes(size)
+		formattedSize := formatBytes(uint64(size))
 		fmt.Fprintf(tw, "%s \t%s\n", formattedSize, name)
 	} else {
 		fmt.Fprintf(tw, "%d \t%s\n", size, name)

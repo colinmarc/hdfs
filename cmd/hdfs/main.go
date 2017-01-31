@@ -9,7 +9,7 @@ import (
 	"github.com/pborman/getopt"
 )
 
-// TODO: cp, df, tree, test, trash
+// TODO: cp, tree, test, trash
 
 var (
 	version string
@@ -32,6 +32,7 @@ Valid commands:
   get SOURCE [DEST]
   getmerge SOURCE DEST
   put SOURCE DEST
+  df [-h]
 `, os.Args[0])
 
 	lsOpts = getopt.New()
@@ -70,6 +71,9 @@ Valid commands:
 	getmergeOpts = getopt.New()
 	getmergen    = getmergeOpts.Bool('n')
 
+	dfOpts = getopt.New()
+	dfh    = dfOpts.Bool('h')
+
 	cachedClient *hdfs.Client
 	status       = 0
 )
@@ -84,6 +88,7 @@ func init() {
 	headTailOpts.SetUsage(printHelp)
 	duOpts.SetUsage(printHelp)
 	getmergeOpts.SetUsage(printHelp)
+	dfOpts.SetUsage(printHelp)
 }
 
 func main() {
@@ -134,6 +139,9 @@ func main() {
 		getmerge(getmergeOpts.Args(), *getmergen)
 	case "put":
 		put(argv[1:])
+	case "df":
+		dfOpts.Parse(argv)
+		df(*dfh)
 	// it's a seeeeecret command
 	case "complete":
 		complete(argv)

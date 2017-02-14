@@ -127,7 +127,7 @@ func (c *Client) Append(name string) (*FileWriter, error) {
 		return f, nil
 	}
 	f.block = blocks[len(blocks)-1]
-	f.blockWriter = rpc.NewBlockWriter(f.block, c.namenode, f.blockSize)
+	f.blockWriter = rpc.NewBlockWriter(f.block, c.namenode, f.blockSize, f.name)
 	return f, nil
 }
 
@@ -190,7 +190,7 @@ func (f *FileWriter) Close() error {
 			return err
 		}
 
-		lastBlock = f.block.GetB()
+		lastBlock = f.blockWriter.Getblock().GetB()
 	}
 
 	completeReq := &hdfs.CompleteRequestProto{
@@ -239,6 +239,6 @@ func (f *FileWriter) startNewBlock() error {
 	}
 
 	f.block = addBlockResp.GetBlock()
-	f.blockWriter = rpc.NewBlockWriter(f.block, f.client.namenode, f.blockSize)
+	f.blockWriter = rpc.NewBlockWriter(f.block, f.client.namenode, f.blockSize, f.name)
 	return nil
 }

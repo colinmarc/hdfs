@@ -41,7 +41,7 @@ func createBlock(t *testing.T, name string) *BlockWriter {
 	require.NoError(t, err)
 
 	block := addBlockResp.GetBlock()
-	return NewBlockWriter(block, namenode, blockSize)
+	return NewBlockWriter(block, namenode, blockSize, name)
 }
 
 func finishBlock(t *testing.T, name string, bw *BlockWriter) {

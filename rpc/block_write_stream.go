@@ -169,6 +169,15 @@ func (s *blockWriteStream) makePacket() outboundPacket {
 		packetLength = s.buf.Len()
 	}
 
+	// If we're starting from a weird offset (usually because of an Append), HDFS
+	// gets unhappy unless we first align to a chunk boundary with a small packet.
+	// Otherwise it yells at us with "a partial chunk must be sent in an
+	// individual packet" or just complains about a corrupted block.
+	alignment := outboundChunkSize - (int(s.offset) % outboundChunkSize)
+	if alignment > 0 && alignment < packetLength {
+		packetLength = alignment
+	}
+
 	numChunks := int(math.Ceil(float64(packetLength) / float64(outboundChunkSize)))
 	packet := outboundPacket{
 		seqno:     s.seqno,

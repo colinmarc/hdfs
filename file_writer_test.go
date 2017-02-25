@@ -4,7 +4,9 @@ import (
 	"hash/crc32"
 	"io"
 	"io/ioutil"
+	"math/rand"
 	"os"
+	"strings"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -305,7 +307,7 @@ func TestFileAppendLastBlockFull(t *testing.T) {
 	assert.Equal(t, "\nfoo", string(buf))
 }
 
-func TestFileAppendTwice(t *testing.T) {
+func TestFileAppendRepeatedly(t *testing.T) {
 	client := getClient(t)
 
 	baleet(t, "/_test/append/4.txt")
@@ -320,30 +322,26 @@ func TestFileAppendTwice(t *testing.T) {
 	err = writer.Close()
 	require.NoError(t, err)
 
-	writer, err = client.Append("/_test/append/4.txt")
-	require.NoError(t, err)
+	expected := "foo"
+	for i := 0; i < 100; i++ {
+		writer, err = client.Append("/_test/append/4.txt")
+		require.NoError(t, err)
 
-	n, err = writer.Write([]byte("bar"))
-	require.NoError(t, err)
-	assert.Equal(t, 3, n)
+		s := strings.Repeat("b", rand.Intn(1024)) + "\n"
+		expected += s
 
-	err = writer.Close()
-	require.NoError(t, err)
+		n, err = writer.Write([]byte(s))
+		require.NoError(t, err, "append #%d of %d bytes", i, len(s))
+		assert.Equal(t, len(s), n)
 
-	writer, err = client.Append("/_test/append/4.txt")
-	require.NoError(t, err)
-
-	n, err = writer.Write([]byte("baz"))
-	require.NoError(t, err)
-	assert.Equal(t, 3, n)
-
-	err = writer.Close()
-	require.NoError(t, err)
+		err = writer.Close()
+		require.NoError(t, err)
+	}
 
 	reader, err := client.Open("/_test/append/4.txt")
 	require.NoError(t, err)
 
 	bytes, err := ioutil.ReadAll(reader)
 	require.NoError(t, err)
-	assert.Equal(t, "foobarbaz", string(bytes))
+	assert.Equal(t, expected, string(bytes))
 }

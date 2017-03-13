@@ -4,63 +4,46 @@ import (
 	"errors"
 
 	hdfs "github.com/colinmarc/hdfs/protocol/hadoop_hdfs"
+	"github.com/colinmarc/hdfs/rpc"
 )
 
 var StatFsError = errors.New("Failed to get HDFS usage")
 
 // FsInfo provides information about HDFS
 type FsInfo struct {
-	capacity              uint64
-	used                  uint64
-	remaining             uint64
-	underReplicated       uint64
-	corruptBlocks         uint64
-	missingBlocks         uint64
-	missingReplOneBlocks  uint64
-	blocksInFuture        uint64
-	pendingDeletionBlocks uint64
+	Capacity              uint64
+	Used                  uint64
+	Remaining             uint64
+	UnderReplicated       uint64
+	CorruptBlocks         uint64
+	MissingBlocks         uint64
+	MissingReplOneBlocks  uint64
+	BlocksInFuture        uint64
+	PendingDeletionBlocks uint64
 }
 
 func (c *Client) StatFs() (FsInfo, error) {
-	fs, err := c.getFsInfo()
-	if err != nil {
-		err = StatFsError
-	}
-
-	return fs, err
-}
-
-func (c *Client) getFsInfo() (FsInfo, error) {
 	req  := &hdfs.GetFsStatusRequestProto{}
 	resp := &hdfs.GetFsStatsResponseProto{}
 
 	err := c.namenode.Execute("getFsStats", req, resp)
 	if err != nil {
+		if nnErr, ok := err.(*rpc.NamenodeError); ok {
+			err = interpretException(nnErr.Exception, err)
+		}
 		return FsInfo{}, err
 	}
 
 	var fs FsInfo
-	fs.capacity              = resp.GetCapacity()
-	fs.used                  = resp.GetUsed()
-	fs.remaining             = resp.GetRemaining()
-	fs.underReplicated       = resp.GetUnderReplicated()
-	fs.corruptBlocks         = resp.GetCorruptBlocks()
-	fs.missingBlocks         = resp.GetMissingBlocks()
-	fs.missingReplOneBlocks  = resp.GetMissingReplOneBlocks()
-	fs.blocksInFuture        = resp.GetBlocksInFuture()
-	fs.pendingDeletionBlocks = resp.GetPendingDeletionBlocks()
+	fs.Capacity              = resp.GetCapacity()
+	fs.Used                  = resp.GetUsed()
+	fs.Remaining             = resp.GetRemaining()
+	fs.UnderReplicated       = resp.GetUnderReplicated()
+	fs.CorruptBlocks         = resp.GetCorruptBlocks()
+	fs.MissingBlocks         = resp.GetMissingBlocks()
+	fs.MissingReplOneBlocks  = resp.GetMissingReplOneBlocks()
+	fs.BlocksInFuture        = resp.GetBlocksInFuture()
+	fs.PendingDeletionBlocks = resp.GetPendingDeletionBlocks()
 
 	return fs, nil
-}
-
-func (fs *FsInfo) Capacity() uint64 {
-	return fs.capacity
-}
-
-func (fs *FsInfo) Used() uint64 {
-	return fs.used
-}
-
-func (fs *FsInfo) Remaining() uint64 {
-	return fs.remaining
 }

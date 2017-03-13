@@ -12,7 +12,6 @@ import (
 )
 
 func TestStatFs(t *testing.T) {
-	t.Skip("Stat FS does not work on Travis CI")
 	client := getClient(t)
 
 	resp, err := client.StatFs()
@@ -28,6 +27,6 @@ func TestStatFs(t *testing.T) {
 	totalsize, _ := strconv.ParseInt(strings.Fields(sizes)[1], 10, 64)
 	usedsize, _ := strconv.ParseInt(strings.Fields(sizes)[2], 10, 64)
 
-	assert.EqualValues(t, totalsize, int64(resp.Capacity()))
-	assert.EqualValues(t, usedsize, int64(resp.Used()))
+	assert.EqualValues(t, totalsize, int64(resp.Capacity))
+	assert.EqualValues(t, usedsize, int64(resp.Used))
 }

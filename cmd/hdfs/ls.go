@@ -136,7 +136,7 @@ func printLong(tw *tabwriter.Writer, name string, info os.FileInfo, humanReadabl
 	group := fi.OwnerGroup()
 	size := strconv.FormatInt(fi.Size(), 10)
 	if humanReadable {
-		size = formatBytes(fi.Size())
+		size = formatBytes(uint64(fi.Size()))
 	}
 
 	modtime := fi.ModTime()

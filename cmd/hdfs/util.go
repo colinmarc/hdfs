@@ -4,7 +4,7 @@ import (
 	"fmt"
 )
 
-func formatBytes(i int64) string {
+func formatBytes(i uint64) string {
 	switch {
 	case i > (1024 * 1024 * 1024 * 1024):
 		return fmt.Sprintf("%#.1fT", float64(i)/1024/1024/1024/1024)

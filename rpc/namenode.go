@@ -7,6 +7,7 @@ import (
 	"io"
 	"net"
 	"sync"
+	"time"
 
 	hadoop "github.com/colinmarc/hdfs/protocol/hadoop_common"
 	"github.com/golang/protobuf/proto"
@@ -23,12 +24,13 @@ const (
 
 // NamenodeConnection represents an open connection to a namenode.
 type NamenodeConnection struct {
-	clientId         []byte
-	clientName       string
-	currentRequestID int
-	user             string
-	conn             net.Conn
-	reqLock          sync.Mutex
+	clientId               []byte
+	clientName             string
+	currentRequestID       int
+	user                   string
+	conn                   net.Conn
+	reqLock                sync.Mutex
+	BlockWriterDialTimeout func(network, address string, timeout time.Duration) (net.Conn, error)
 }
 
 // NamenodeError represents an interepreted error from the Namenode, including

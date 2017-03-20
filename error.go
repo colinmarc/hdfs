@@ -11,6 +11,7 @@ const (
 	pathIsNotEmptyDirException   = "org.apache.hadoop.fs.PathIsNotEmptyDirectoryException"
 	fileAlreadyExistsException   = "org.apache.hadoop.fs.FileAlreadyExistsException"
 	alreadyBeingCreatedException = "org.apache.hadoop.hdfs.protocol.AlreadyBeingCreatedException"
+	illegalArgumentException     = "org.apache.hadoop.HadoopIllegalArgumentException"
 )
 
 // Error represents a remote java exception from an HDFS namenode or datanode.
@@ -50,6 +51,8 @@ func interpretException(err error) error {
 		return syscall.ENOTEMPTY
 	case fileAlreadyExistsException:
 		return os.ErrExist
+	case illegalArgumentException:
+		return os.ErrInvalid
 	default:
 		return err
 	}

@@ -38,6 +38,7 @@ Valid commands:
   getmerge SOURCE DEST
   put SOURCE DEST
   df [-h]
+  truncate SIZE FILE
 `, os.Args[0])
 
 	lsOpts = getopt.New()
@@ -147,6 +148,8 @@ func main() {
 	case "df":
 		dfOpts.Parse(argv)
 		df(*dfh)
+	case "truncate":
+		truncate(argv[1:])
 	// it's a seeeeecret command
 	case "complete":
 		complete(argv)

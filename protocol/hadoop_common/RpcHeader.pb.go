@@ -5,10 +5,12 @@
 package hadoop_common
 
 import proto "github.com/golang/protobuf/proto"
+import json "encoding/json"
 import math "math"
 
-// Reference imports to suppress errors if they are not otherwise used.
+// Reference proto, json, and math imports to suppress error if they are not otherwise used.
 var _ = proto.Marshal
+var _ = &json.SyntaxError{}
 var _ = math.Inf
 
 // *
@@ -39,6 +41,9 @@ func (x RpcKindProto) Enum() *RpcKindProto {
 }
 func (x RpcKindProto) String() string {
 	return proto.EnumName(RpcKindProto_name, int32(x))
+}
+func (x RpcKindProto) MarshalJSON() ([]byte, error) {
+	return json.Marshal(x.String())
 }
 func (x *RpcKindProto) UnmarshalJSON(data []byte) error {
 	value, err := proto.UnmarshalJSONEnum(RpcKindProto_value, data, "RpcKindProto")
@@ -76,6 +81,9 @@ func (x RpcRequestHeaderProto_OperationProto) Enum() *RpcRequestHeaderProto_Oper
 func (x RpcRequestHeaderProto_OperationProto) String() string {
 	return proto.EnumName(RpcRequestHeaderProto_OperationProto_name, int32(x))
 }
+func (x RpcRequestHeaderProto_OperationProto) MarshalJSON() ([]byte, error) {
+	return json.Marshal(x.String())
+}
 func (x *RpcRequestHeaderProto_OperationProto) UnmarshalJSON(data []byte) error {
 	value, err := proto.UnmarshalJSONEnum(RpcRequestHeaderProto_OperationProto_value, data, "RpcRequestHeaderProto_OperationProto")
 	if err != nil {
@@ -111,6 +119,9 @@ func (x RpcResponseHeaderProto_RpcStatusProto) Enum() *RpcResponseHeaderProto_Rp
 }
 func (x RpcResponseHeaderProto_RpcStatusProto) String() string {
 	return proto.EnumName(RpcResponseHeaderProto_RpcStatusProto_name, int32(x))
+}
+func (x RpcResponseHeaderProto_RpcStatusProto) MarshalJSON() ([]byte, error) {
+	return json.Marshal(x.String())
 }
 func (x *RpcResponseHeaderProto_RpcStatusProto) UnmarshalJSON(data []byte) error {
 	value, err := proto.UnmarshalJSONEnum(RpcResponseHeaderProto_RpcStatusProto_value, data, "RpcResponseHeaderProto_RpcStatusProto")
@@ -177,6 +188,9 @@ func (x RpcResponseHeaderProto_RpcErrorCodeProto) Enum() *RpcResponseHeaderProto
 func (x RpcResponseHeaderProto_RpcErrorCodeProto) String() string {
 	return proto.EnumName(RpcResponseHeaderProto_RpcErrorCodeProto_name, int32(x))
 }
+func (x RpcResponseHeaderProto_RpcErrorCodeProto) MarshalJSON() ([]byte, error) {
+	return json.Marshal(x.String())
+}
 func (x *RpcResponseHeaderProto_RpcErrorCodeProto) UnmarshalJSON(data []byte) error {
 	value, err := proto.UnmarshalJSONEnum(RpcResponseHeaderProto_RpcErrorCodeProto_value, data, "RpcResponseHeaderProto_RpcErrorCodeProto")
 	if err != nil {
@@ -221,6 +235,9 @@ func (x RpcSaslProto_SaslState) Enum() *RpcSaslProto_SaslState {
 }
 func (x RpcSaslProto_SaslState) String() string {
 	return proto.EnumName(RpcSaslProto_SaslState_name, int32(x))
+}
+func (x RpcSaslProto_SaslState) MarshalJSON() ([]byte, error) {
+	return json.Marshal(x.String())
 }
 func (x *RpcSaslProto_SaslState) UnmarshalJSON(data []byte) error {
 	value, err := proto.UnmarshalJSONEnum(RpcSaslProto_SaslState_value, data, "RpcSaslProto_SaslState")
@@ -310,14 +327,14 @@ func (m *RpcRequestHeaderProto) GetRpcKind() RpcKindProto {
 	if m != nil && m.RpcKind != nil {
 		return *m.RpcKind
 	}
-	return RpcKindProto_RPC_BUILTIN
+	return 0
 }
 
 func (m *RpcRequestHeaderProto) GetRpcOp() RpcRequestHeaderProto_OperationProto {
 	if m != nil && m.RpcOp != nil {
 		return *m.RpcOp
 	}
-	return RpcRequestHeaderProto_RPC_FINAL_PACKET
+	return 0
 }
 
 func (m *RpcRequestHeaderProto) GetCallId() int32 {
@@ -402,7 +419,7 @@ func (m *RpcResponseHeaderProto) GetStatus() RpcResponseHeaderProto_RpcStatusPro
 	if m != nil && m.Status != nil {
 		return *m.Status
 	}
-	return RpcResponseHeaderProto_SUCCESS
+	return 0
 }
 
 func (m *RpcResponseHeaderProto) GetServerIpcVersionNum() uint32 {
@@ -430,7 +447,7 @@ func (m *RpcResponseHeaderProto) GetErrorDetail() RpcResponseHeaderProto_RpcErro
 	if m != nil && m.ErrorDetail != nil {
 		return *m.ErrorDetail
 	}
-	return RpcResponseHeaderProto_ERROR_APPLICATION
+	return 0
 }
 
 func (m *RpcResponseHeaderProto) GetClientId() []byte {
@@ -470,7 +487,7 @@ func (m *RpcSaslProto) GetState() RpcSaslProto_SaslState {
 	if m != nil && m.State != nil {
 		return *m.State
 	}
-	return RpcSaslProto_SUCCESS
+	return 0
 }
 
 func (m *RpcSaslProto) GetToken() []byte {

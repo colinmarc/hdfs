@@ -5,10 +5,12 @@
 package hadoop_hdfs
 
 import proto "github.com/golang/protobuf/proto"
+import json "encoding/json"
 import math "math"
 
-// Reference imports to suppress errors if they are not otherwise used.
+// Reference proto, json, and math imports to suppress error if they are not otherwise used.
 var _ = proto.Marshal
+var _ = &json.SyntaxError{}
 var _ = math.Inf
 
 type EventType int32
@@ -50,6 +52,9 @@ func (x EventType) Enum() *EventType {
 func (x EventType) String() string {
 	return proto.EnumName(EventType_name, int32(x))
 }
+func (x EventType) MarshalJSON() ([]byte, error) {
+	return json.Marshal(x.String())
+}
 func (x *EventType) UnmarshalJSON(data []byte) error {
 	value, err := proto.UnmarshalJSONEnum(EventType_value, data, "EventType")
 	if err != nil {
@@ -85,6 +90,9 @@ func (x INodeType) Enum() *INodeType {
 }
 func (x INodeType) String() string {
 	return proto.EnumName(INodeType_name, int32(x))
+}
+func (x INodeType) MarshalJSON() ([]byte, error) {
+	return json.Marshal(x.String())
 }
 func (x *INodeType) UnmarshalJSON(data []byte) error {
 	value, err := proto.UnmarshalJSONEnum(INodeType_value, data, "INodeType")
@@ -131,6 +139,9 @@ func (x MetadataUpdateType) Enum() *MetadataUpdateType {
 func (x MetadataUpdateType) String() string {
 	return proto.EnumName(MetadataUpdateType_name, int32(x))
 }
+func (x MetadataUpdateType) MarshalJSON() ([]byte, error) {
+	return json.Marshal(x.String())
+}
 func (x *MetadataUpdateType) UnmarshalJSON(data []byte) error {
 	value, err := proto.UnmarshalJSONEnum(MetadataUpdateType_value, data, "MetadataUpdateType")
 	if err != nil {
@@ -154,7 +165,7 @@ func (m *EventProto) GetType() EventType {
 	if m != nil && m.Type != nil {
 		return *m.Type
 	}
-	return EventType_EVENT_CREATE
+	return 0
 }
 
 func (m *EventProto) GetContents() []byte {
@@ -212,7 +223,7 @@ func (m *CreateEventProto) GetType() INodeType {
 	if m != nil && m.Type != nil {
 		return *m.Type
 	}
-	return INodeType_I_TYPE_FILE
+	return 0
 }
 
 func (m *CreateEventProto) GetPath() string {
@@ -430,7 +441,7 @@ func (m *MetadataUpdateEventProto) GetType() MetadataUpdateType {
 	if m != nil && m.Type != nil {
 		return *m.Type
 	}
-	return MetadataUpdateType_META_TYPE_TIMES
+	return 0
 }
 
 func (m *MetadataUpdateEventProto) GetMtime() int64 {

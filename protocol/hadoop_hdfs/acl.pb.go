@@ -2,44 +2,15 @@
 // source: acl.proto
 // DO NOT EDIT!
 
-/*
-Package hadoop_hdfs is a generated protocol buffer package.
-
-It is generated from these files:
-	acl.proto
-	ClientDatanodeProtocol.proto
-	ClientNamenodeProtocol.proto
-	datatransfer.proto
-	encryption.proto
-	erasurecoding.proto
-	hdfs.proto
-	inotify.proto
-	ReconfigurationProtocol.proto
-	xattr.proto
-
-It has these top-level messages:
-	AclEntryProto
-	AclStatusProto
-	ModifyAclEntriesRequestProto
-	ModifyAclEntriesResponseProto
-	RemoveAclRequestProto
-	RemoveAclResponseProto
-	RemoveAclEntriesRequestProto
-	RemoveAclEntriesResponseProto
-	RemoveDefaultAclRequestProto
-	RemoveDefaultAclResponseProto
-	SetAclRequestProto
-	SetAclResponseProto
-	GetAclStatusRequestProto
-	GetAclStatusResponseProto
-*/
 package hadoop_hdfs
 
 import proto "github.com/golang/protobuf/proto"
+import json "encoding/json"
 import math "math"
 
-// Reference imports to suppress errors if they are not otherwise used.
+// Reference proto, json, and math imports to suppress error if they are not otherwise used.
 var _ = proto.Marshal
+var _ = &json.SyntaxError{}
 var _ = math.Inf
 
 type AclEntryProto_AclEntryScopeProto int32
@@ -65,6 +36,9 @@ func (x AclEntryProto_AclEntryScopeProto) Enum() *AclEntryProto_AclEntryScopePro
 }
 func (x AclEntryProto_AclEntryScopeProto) String() string {
 	return proto.EnumName(AclEntryProto_AclEntryScopeProto_name, int32(x))
+}
+func (x AclEntryProto_AclEntryScopeProto) MarshalJSON() ([]byte, error) {
+	return json.Marshal(x.String())
 }
 func (x *AclEntryProto_AclEntryScopeProto) UnmarshalJSON(data []byte) error {
 	value, err := proto.UnmarshalJSONEnum(AclEntryProto_AclEntryScopeProto_value, data, "AclEntryProto_AclEntryScopeProto")
@@ -104,6 +78,9 @@ func (x AclEntryProto_AclEntryTypeProto) Enum() *AclEntryProto_AclEntryTypeProto
 }
 func (x AclEntryProto_AclEntryTypeProto) String() string {
 	return proto.EnumName(AclEntryProto_AclEntryTypeProto_name, int32(x))
+}
+func (x AclEntryProto_AclEntryTypeProto) MarshalJSON() ([]byte, error) {
+	return json.Marshal(x.String())
 }
 func (x *AclEntryProto_AclEntryTypeProto) UnmarshalJSON(data []byte) error {
 	value, err := proto.UnmarshalJSONEnum(AclEntryProto_AclEntryTypeProto_value, data, "AclEntryProto_AclEntryTypeProto")
@@ -156,6 +133,9 @@ func (x AclEntryProto_FsActionProto) Enum() *AclEntryProto_FsActionProto {
 func (x AclEntryProto_FsActionProto) String() string {
 	return proto.EnumName(AclEntryProto_FsActionProto_name, int32(x))
 }
+func (x AclEntryProto_FsActionProto) MarshalJSON() ([]byte, error) {
+	return json.Marshal(x.String())
+}
 func (x *AclEntryProto_FsActionProto) UnmarshalJSON(data []byte) error {
 	value, err := proto.UnmarshalJSONEnum(AclEntryProto_FsActionProto_value, data, "AclEntryProto_FsActionProto")
 	if err != nil {
@@ -181,21 +161,21 @@ func (m *AclEntryProto) GetType() AclEntryProto_AclEntryTypeProto {
 	if m != nil && m.Type != nil {
 		return *m.Type
 	}
-	return AclEntryProto_USER
+	return 0
 }
 
 func (m *AclEntryProto) GetScope() AclEntryProto_AclEntryScopeProto {
 	if m != nil && m.Scope != nil {
 		return *m.Scope
 	}
-	return AclEntryProto_ACCESS
+	return 0
 }
 
 func (m *AclEntryProto) GetPermissions() AclEntryProto_FsActionProto {
 	if m != nil && m.Permissions != nil {
 		return *m.Permissions
 	}
-	return AclEntryProto_NONE
+	return 0
 }
 
 func (m *AclEntryProto) GetName() string {

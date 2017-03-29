@@ -5,10 +5,12 @@
 package hadoop_hdfs
 
 import proto "github.com/golang/protobuf/proto"
+import json "encoding/json"
 import math "math"
 
-// Reference imports to suppress errors if they are not otherwise used.
+// Reference proto, json, and math imports to suppress error if they are not otherwise used.
 var _ = proto.Marshal
+var _ = &json.SyntaxError{}
 var _ = math.Inf
 
 type CreateEncryptionZoneRequestProto struct {
@@ -90,14 +92,14 @@ func (m *EncryptionZoneProto) GetSuite() CipherSuiteProto {
 	if m != nil && m.Suite != nil {
 		return *m.Suite
 	}
-	return CipherSuiteProto_UNKNOWN
+	return 0
 }
 
 func (m *EncryptionZoneProto) GetCryptoProtocolVersion() CryptoProtocolVersionProto {
 	if m != nil && m.CryptoProtocolVersion != nil {
 		return *m.CryptoProtocolVersion
 	}
-	return CryptoProtocolVersionProto_UNKNOWN_PROTOCOL_VERSION
+	return 0
 }
 
 func (m *EncryptionZoneProto) GetKeyName() string {

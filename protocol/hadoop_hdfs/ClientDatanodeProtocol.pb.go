@@ -5,11 +5,13 @@
 package hadoop_hdfs
 
 import proto "github.com/golang/protobuf/proto"
+import json "encoding/json"
 import math "math"
 import hadoop_common "github.com/colinmarc/hdfs/protocol/hadoop_common"
 
-// Reference imports to suppress errors if they are not otherwise used.
+// Reference proto, json, and math imports to suppress error if they are not otherwise used.
 var _ = proto.Marshal
+var _ = &json.SyntaxError{}
 var _ = math.Inf
 
 // *

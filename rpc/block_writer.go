@@ -211,7 +211,7 @@ func (bw *BlockWriter) writeBlockWriteRequest(w io.Writer) error {
 		MaxBytesRcvd:          proto.Uint64(uint64(bw.offset)),
 		LatestGenerationStamp: proto.Uint64(uint64(bw.generationTimestamp())),
 		RequestedChecksum: &hdfs.ChecksumProto{
-			Type:             hdfs.ChecksumTypeProto_CHECKSUM_CRC32.Enum(),
+			Type:             hdfs.ChecksumTypeProto_CHECKSUM_CRC32C.Enum(),
 			BytesPerChecksum: proto.Uint32(outboundChunkSize),
 		},
 	}

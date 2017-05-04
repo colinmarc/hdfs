@@ -75,6 +75,22 @@ func assertPathError(t *testing.T, err error, op, path string, wrappedErr error)
 	require.Equal(t, expected, err)
 }
 
+func TestNewWithMultipleNodes(t *testing.T) {
+	nn := os.Getenv("HADOOP_NAMENODE")
+	if nn == "" {
+		t.Fatal("HADOOP_NAMENODE not set")
+	}
+	_, err := NewClient(ClientOptions{
+		Addresses: []string{"localhost:80", nn},
+	})
+	assert.Nil(t, err)
+}
+
+func TestNewWithFailingNode(t *testing.T) {
+	_, err := New("localhost:80")
+	assert.NotNil(t, err)
+}
+
 func TestReadFile(t *testing.T) {
 	client := getClient(t)
 

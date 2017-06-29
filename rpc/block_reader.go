@@ -78,6 +78,7 @@ func (br *BlockReader) Read(b []byte) (int, error) {
 		br.offset += int64(n)
 		if err != nil && err != io.EOF {
 			br.stream = nil
+			br.conn.Close()
 			br.datanodes.recordFailure(err)
 			if n > 0 {
 				return n, nil
@@ -116,6 +117,7 @@ func (br *BlockReader) connectNext() error {
 	if err != nil {
 		return err
 	}
+	conn.SetDeadline(datanodeTimeout)
 
 	err = br.writeBlockReadRequest(conn)
 	if err != nil {

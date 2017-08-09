@@ -173,7 +173,7 @@ func (s *blockWriteStream) makePacket() outboundPacket {
 	// gets unhappy unless we first align to a chunk boundary with a small packet.
 	// Otherwise it yells at us with "a partial chunk must be sent in an
 	// individual packet" or just complains about a corrupted block.
-	alignment := outboundChunkSize - (int(s.offset) % outboundChunkSize)
+	alignment := (outboundChunkSize - (int(s.offset) % outboundChunkSize)) % outboundChunkSize
 	if alignment > 0 && alignment < packetLength {
 		packetLength = alignment
 	}

@@ -31,8 +31,8 @@ type NamenodeConnection struct {
 	currentRequestID int
 	user             string
 	conn             net.Conn
-	host             *host
-	hostList         []*host
+	host             *namenodeHost
+	hostList         []*namenodeHost
 	reqLock          sync.Mutex
 }
 
@@ -67,7 +67,7 @@ func (err *NamenodeError) Error() string {
 	return s
 }
 
-type host struct {
+type namenodeHost struct {
 	address     string
 	lastFailure time.Time
 }
@@ -88,9 +88,9 @@ func NewNamenodeConnection(address string, user string) (*NamenodeConnection, er
 // the given options and performs an initial handshake.
 func NewNamenodeConnectionWithOptions(options NamenodeConnectionOptions) (*NamenodeConnection, error) {
 	// Build the list of hosts to be used for failover.
-	hostList := make([]*host, len(options.Addresses))
+	hostList := make([]*namenodeHost, len(options.Addresses))
 	for i, addr := range options.Addresses {
-		hostList[i] = &host{address: addr}
+		hostList[i] = &namenodeHost{address: addr}
 	}
 
 	// The ClientID is reused here both in the RPC headers (which requires a

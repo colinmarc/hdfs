@@ -112,6 +112,32 @@ func NewNamenodeConnectionWithOptions(options NamenodeConnectionOptions) (*Namen
 	return c, nil
 }
 
+// WrapNamenodeConnection wraps an existing net.Conn to a Namenode, and preforms
+// an initial handshake.
+//
+// Deprecated: use the higher-level hdfs.New or NewNamenodeConnection instead.
+func WrapNamenodeConnection(conn net.Conn, user string) (*NamenodeConnection, error) {
+	// The ClientID is reused here both in the RPC headers (which requires a
+	// "globally unique" ID) and as the "client name" in various requests.
+	clientId := newClientID()
+	c := &NamenodeConnection{
+		clientId:   clientId,
+		clientName: "go-hdfs-" + string(clientId),
+		user:       user,
+		conn:       conn,
+		host:       &namenodeHost{},
+		hostList:   make([]*namenodeHost, 0),
+	}
+
+	err := c.writeNamenodeHandshake()
+	if err != nil {
+		conn.Close()
+		return nil, fmt.Errorf("Error performing handshake: %s", err)
+	}
+
+	return c, nil
+}
+
 func (c *NamenodeConnection) resolveConnection() error {
 	if c.conn != nil {
 		return nil

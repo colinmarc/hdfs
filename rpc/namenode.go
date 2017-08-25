@@ -70,7 +70,8 @@ func (err *NamenodeError) Error() string {
 
 type namenodeHost struct {
 	address     string
-	lastFailure time.Time
+	lastError   error
+	lastErrorAt time.Time
 }
 
 // NewNamenodeConnection creates a new connection to a namenode and performs an
@@ -144,12 +145,17 @@ func (c *NamenodeConnection) resolveConnection() error {
 	}
 
 	var err error
+
+	if c.host != nil {
+		err = c.host.lastError
+	}
+
 	for _, host := range c.hostList {
 		if c.host == host {
 			continue
 		}
 
-		if host.lastFailure.After(time.Now().Add(-backoffDuration)) {
+		if host.lastErrorAt.After(time.Now().Add(-backoffDuration)) {
 			continue
 		}
 
@@ -170,7 +176,7 @@ func (c *NamenodeConnection) resolveConnection() error {
 	}
 
 	if c.conn == nil {
-		return fmt.Errorf("no available namenodes: %s", err.Error())
+		return fmt.Errorf("no available namenodes: %s", err)
 	}
 
 	return nil
@@ -181,7 +187,8 @@ func (c *NamenodeConnection) markFailure(err error) {
 		c.conn.Close()
 		c.conn = nil
 	}
-	c.host.lastFailure = time.Now()
+	c.host.lastError = err
+	c.host.lastErrorAt = time.Now()
 }
 
 // ClientName provides a unique identifier for this client, which is required

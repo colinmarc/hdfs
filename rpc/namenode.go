@@ -200,28 +200,31 @@ func (c *NamenodeConnection) Execute(method string, req proto.Message, resp prot
 
 	c.currentRequestID++
 
-R:
-	err := c.resolveConnection()
-	if err != nil {
-		return err
-	}
-
-	err = c.writeRequest(method, req)
-	if err != nil {
-		c.markFailure(err)
-		goto R
-	}
-
-	err = c.readResponse(method, resp)
-	if err != nil {
-		if nerr, ok := err.(*NamenodeError); ok {
-			// if it's not a standby exception, we won't retry
-			if nerr.Exception != standbyExceptionClass {
-				return err
-			}
+	for {
+		err := c.resolveConnection()
+		if err != nil {
+			return err
 		}
-		c.markFailure(err)
-		goto R
+
+		err = c.writeRequest(method, req)
+		if err != nil {
+			c.markFailure(err)
+			continue
+		}
+
+		err = c.readResponse(method, resp)
+		if err != nil {
+			if nerr, ok := err.(*NamenodeError); ok {
+				// if it's not a standby exception, we won't retry
+				if nerr.Exception != standbyExceptionClass {
+					return err
+				}
+			}
+			c.markFailure(err)
+			continue
+		}
+
+		break
 	}
 
 	return nil

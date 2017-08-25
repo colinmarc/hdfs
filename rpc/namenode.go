@@ -117,6 +117,7 @@ func (c *NamenodeConnection) resolveConnection() error {
 		return nil
 	}
 
+	var err error
 	for _, host := range c.hostList {
 		if c.host == host {
 			continue
@@ -126,7 +127,6 @@ func (c *NamenodeConnection) resolveConnection() error {
 			continue
 		}
 
-		var err error
 		c.host = host
 		c.conn, err = net.DialTimeout("tcp", host.address, connectTimeout)
 		if err != nil {
@@ -144,7 +144,7 @@ func (c *NamenodeConnection) resolveConnection() error {
 	}
 
 	if c.conn == nil {
-		return fmt.Errorf("No available namenodes")
+		return fmt.Errorf("no available namenodes: %s", err.Error())
 	}
 
 	return nil

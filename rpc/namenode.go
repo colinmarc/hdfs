@@ -14,12 +14,13 @@ import (
 )
 
 const (
-	rpcVersion           = 0x09
-	serviceClass         = 0x0
-	authProtocol         = 0x0
-	protocolClass        = "org.apache.hadoop.hdfs.protocol.ClientProtocol"
-	protocolClassVersion = 1
-	handshakeCallID      = -3
+	rpcVersion            = 0x09
+	serviceClass          = 0x0
+	authProtocol          = 0x0
+	protocolClass         = "org.apache.hadoop.hdfs.protocol.ClientProtocol"
+	protocolClassVersion  = 1
+	handshakeCallID       = -3
+	standbyExceptionClass = "org.apache.hadoop.ipc.StandbyException"
 )
 
 const backoffDuration = time.Second * 5
@@ -188,7 +189,8 @@ R:
 	err = c.readResponse(method, resp)
 	if err != nil {
 		if nerr, ok := err.(*NamenodeError); ok {
-			if nerr.Exception != "org.apache.hadoop.ipc.StandbyException" {
+			// if it's not a standby exception, we won't retry
+			if nerr.Exception != standbyExceptionClass {
 				return err
 			}
 		}

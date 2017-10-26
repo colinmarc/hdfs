@@ -7,19 +7,23 @@ import (
 	"io"
 	"net"
 	"sync"
+	"time"
 
 	hadoop "github.com/colinmarc/hdfs/protocol/hadoop_common"
 	"github.com/golang/protobuf/proto"
 )
 
 const (
-	rpcVersion           = 0x09
-	serviceClass         = 0x0
-	authProtocol         = 0x0
-	protocolClass        = "org.apache.hadoop.hdfs.protocol.ClientProtocol"
-	protocolClassVersion = 1
-	handshakeCallID      = -3
+	rpcVersion            = 0x09
+	serviceClass          = 0x0
+	authProtocol          = 0x0
+	protocolClass         = "org.apache.hadoop.hdfs.protocol.ClientProtocol"
+	protocolClassVersion  = 1
+	handshakeCallID       = -3
+	standbyExceptionClass = "org.apache.hadoop.ipc.StandbyException"
 )
+
+const backoffDuration = time.Second * 5
 
 // NamenodeConnection represents an open connection to a namenode.
 type NamenodeConnection struct {
@@ -28,7 +32,16 @@ type NamenodeConnection struct {
 	currentRequestID int
 	user             string
 	conn             net.Conn
+	host             *namenodeHost
+	hostList         []*namenodeHost
 	reqLock          sync.Mutex
+}
+
+// NamenodeConnectionOptions represents the configurable options available
+// for a NamenodeConnection.
+type NamenodeConnectionOptions struct {
+	Addresses []string
+	User      string
 }
 
 // NamenodeError represents an interepreted error from the Namenode, including
@@ -55,25 +68,55 @@ func (err *NamenodeError) Error() string {
 	return s
 }
 
-// NewNamenodeConnection creates a new connection to a Namenode, and preforms an
+type namenodeHost struct {
+	address     string
+	lastError   error
+	lastErrorAt time.Time
+}
+
+// NewNamenodeConnection creates a new connection to a namenode and performs an
 // initial handshake.
 //
 // You probably want to use hdfs.New instead, which provides a higher-level
 // interface.
-func NewNamenodeConnection(address, user string) (*NamenodeConnection, error) {
-	conn, err := net.DialTimeout("tcp", address, connectTimeout)
+func NewNamenodeConnection(address string, user string) (*NamenodeConnection, error) {
+	return NewNamenodeConnectionWithOptions(NamenodeConnectionOptions{
+		Addresses: []string{address},
+		User:      user,
+	})
+}
+
+// NewNamenodeConnectionWithOptions creates a new connection to a namenode with
+// the given options and performs an initial handshake.
+func NewNamenodeConnectionWithOptions(options NamenodeConnectionOptions) (*NamenodeConnection, error) {
+	// Build the list of hosts to be used for failover.
+	hostList := make([]*namenodeHost, len(options.Addresses))
+	for i, addr := range options.Addresses {
+		hostList[i] = &namenodeHost{address: addr}
+	}
+
+	// The ClientID is reused here both in the RPC headers (which requires a
+	// "globally unique" ID) and as the "client name" in various requests.
+	clientId := newClientID()
+	c := &NamenodeConnection{
+		clientId:   clientId,
+		clientName: "go-hdfs-" + string(clientId),
+		user:       options.User,
+		hostList:   hostList,
+	}
+
+	err := c.resolveConnection()
 	if err != nil {
 		return nil, err
 	}
 
-	return WrapNamenodeConnection(conn, user)
+	return c, nil
 }
 
 // WrapNamenodeConnection wraps an existing net.Conn to a Namenode, and preforms
 // an initial handshake.
 //
-// You probably want to use hdfs.New instead, which provides a higher-level
-// interface.
+// Deprecated: use the higher-level hdfs.New or NewNamenodeConnection instead.
 func WrapNamenodeConnection(conn net.Conn, user string) (*NamenodeConnection, error) {
 	// The ClientID is reused here both in the RPC headers (which requires a
 	// "globally unique" ID) and as the "client name" in various requests.
@@ -83,6 +126,8 @@ func WrapNamenodeConnection(conn net.Conn, user string) (*NamenodeConnection, er
 		clientName: "go-hdfs-" + string(clientId),
 		user:       user,
 		conn:       conn,
+		host:       &namenodeHost{},
+		hostList:   make([]*namenodeHost, 0),
 	}
 
 	err := c.writeNamenodeHandshake()
@@ -92,6 +137,58 @@ func WrapNamenodeConnection(conn net.Conn, user string) (*NamenodeConnection, er
 	}
 
 	return c, nil
+}
+
+func (c *NamenodeConnection) resolveConnection() error {
+	if c.conn != nil {
+		return nil
+	}
+
+	var err error
+
+	if c.host != nil {
+		err = c.host.lastError
+	}
+
+	for _, host := range c.hostList {
+		if c.host == host {
+			continue
+		}
+
+		if host.lastErrorAt.After(time.Now().Add(-backoffDuration)) {
+			continue
+		}
+
+		c.host = host
+		c.conn, err = net.DialTimeout("tcp", host.address, connectTimeout)
+		if err != nil {
+			c.markFailure(err)
+			continue
+		}
+
+		err = c.writeNamenodeHandshake()
+		if err != nil {
+			c.markFailure(err)
+			continue
+		}
+
+		break
+	}
+
+	if c.conn == nil {
+		return fmt.Errorf("no available namenodes: %s", err)
+	}
+
+	return nil
+}
+
+func (c *NamenodeConnection) markFailure(err error) {
+	if c.conn != nil {
+		c.conn.Close()
+		c.conn = nil
+	}
+	c.host.lastError = err
+	c.host.lastErrorAt = time.Now()
 }
 
 // ClientName provides a unique identifier for this client, which is required
@@ -109,19 +206,32 @@ func (c *NamenodeConnection) Execute(method string, req proto.Message, resp prot
 	defer c.reqLock.Unlock()
 
 	c.currentRequestID++
-	err := c.writeRequest(method, req)
-	if err != nil {
-		c.conn.Close()
-		return err
-	}
 
-	err = c.readResponse(method, resp)
-	if err != nil {
-		if _, ok := err.(*NamenodeError); !ok {
-			c.conn.Close() // TODO don't close on RPC failure
+	for {
+		err := c.resolveConnection()
+		if err != nil {
+			return err
 		}
 
-		return err
+		err = c.writeRequest(method, req)
+		if err != nil {
+			c.markFailure(err)
+			continue
+		}
+
+		err = c.readResponse(method, resp)
+		if err != nil {
+			if nerr, ok := err.(*NamenodeError); ok {
+				// if it's not a standby exception, we won't retry
+				if nerr.Exception != standbyExceptionClass {
+					return err
+				}
+			}
+			c.markFailure(err)
+			continue
+		}
+
+		break
 	}
 
 	return nil
@@ -207,9 +317,6 @@ func (c *NamenodeConnection) readResponse(method string, resp proto.Message) err
 // |  varint length + IpcConnectionContextProto                |
 // +-----------------------------------------------------------+
 func (c *NamenodeConnection) writeNamenodeHandshake() error {
-	c.reqLock.Lock()
-	defer c.reqLock.Unlock()
-
 	rpcHeader := []byte{
 		0x68, 0x72, 0x70, 0x63, // "hrpc"
 		rpcVersion, serviceClass, authProtocol,
@@ -228,7 +335,10 @@ func (c *NamenodeConnection) writeNamenodeHandshake() error {
 
 // Close terminates all underlying socket connections to remote server.
 func (c *NamenodeConnection) Close() error {
-	return c.conn.Close()
+	if c.conn != nil {
+		return c.conn.Close()
+	}
+	return nil
 }
 
 func newRPCRequestHeader(id int, clientID []byte) *hadoop.RpcRequestHeaderProto {

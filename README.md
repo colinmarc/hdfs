@@ -53,6 +53,14 @@ verbs:
       get SOURCE [DEST]
       getmerge SOURCE DEST
       put SOURCE DEST
+      
+      To alter the default locations from which configurations are loaded, 
+      the following environment variables may be used:
+
+        - HADOOP_CONF_DIR     hadoop configuration directory. Default: %s
+        - HADOOP_KRB_CONF     kerberos configuration file. Default: %s
+        - HADOOP_CCACHE       credential cache to use. Defaults: to "/tmp/krb5cc_{user_uid}"
+        - HADOOP_KEYTAB       if set, the specified keytab is used and the credential cache is ignored.
 
 Since it doesn't have to wait for the JVM to start up, it's also a lot faster
 `hadoop -fs`:
@@ -97,6 +105,19 @@ By default, the HDFS user is set to the currently-logged-in user. You can
 override this in your `.bashrc` or `.profile`:
 
     export HADOOP_USER_NAME=username
+
+
+Kerberos support
+----------------
+Authentication via Kerberos (and authentication only) is supported.
+
+The binary will check the default locations for your kerberos and hadoop configurations. These can be overridden via environment variables `HADOOP_KRB_CONF`, and `HADOOP_CONF_DIR`.
+
+You will need either a kinit’ed credential cache, which is expected to live at `/tmp/krb5cc_$(id -u $(whoami))` — override via `HADOOP_CCACHE` — or a keytab specified through `HADOOP_KEYTAB`.
+
+This has only been tested on one or two different kerberized clusters: if you have trouble using it, feedback is more than welcome.
+
+
 
 Compatibility
 -------------

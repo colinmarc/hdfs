@@ -8,6 +8,7 @@ import (
 
 	hdfs "github.com/colinmarc/hdfs/protocol/hadoop_hdfs"
 	"github.com/colinmarc/hdfs/rpc"
+	"gopkg.in/jcmturner/gokrb5.v3/client"
 )
 
 // A Client represents a connection to an HDFS cluster
@@ -18,9 +19,11 @@ type Client struct {
 
 // ClientOptions represents the configurable options for a client.
 type ClientOptions struct {
-	Addresses []string
-	Namenode  *rpc.NamenodeConnection
-	User      string
+	Addresses            []string
+	Namenode             *rpc.NamenodeConnection
+	User                 string
+	KerberosClient       *client.Client // Optional kerberos client, required for kerberized clusters
+	ServicePrincipalName string         // Service part of the SPN (<SERVICE>/<FQDN>, ie, nn/localhost) if Kerberos is enabled
 }
 
 // Username returns the value of HADOOP_USER_NAME in the environment, or
@@ -37,13 +40,23 @@ func Username() (string, error) {
 	return currentUser.Username, nil
 }
 
+// If the kerberos client is set, returns its principal.
+// Otherwise, defers to Username()
+func username(krb5Client *client.Client) (string, error) {
+	if krb5Client == nil {
+		return Username()
+	}
+	creds := krb5Client.Credentials
+	return creds.Username + "@" + creds.Realm, nil
+}
+
 // NewClient returns a connected Client for the given options, or an error if
 // the client could not be created.
 func NewClient(options ClientOptions) (*Client, error) {
 	var err error
 
 	if options.User == "" {
-		options.User, err = Username()
+		options.User, err = username(options.KerberosClient)
 		if err != nil {
 			return nil, err
 		}
@@ -59,8 +72,10 @@ func NewClient(options ClientOptions) (*Client, error) {
 	if options.Namenode == nil {
 		options.Namenode, err = rpc.NewNamenodeConnectionWithOptions(
 			rpc.NamenodeConnectionOptions{
-				Addresses: options.Addresses,
-				User:      options.User,
+				Addresses:            options.Addresses,
+				User:                 options.User,
+				KerberosClient:       options.KerberosClient,
+				ServicePrincipalName: options.ServicePrincipalName,
 			},
 		)
 		if err != nil {

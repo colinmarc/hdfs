@@ -19,12 +19,7 @@ const (
 	writeBlockOp        = 0x50
 	readBlockOp         = 0x51
 	checksumBlockOp     = 0x55
-)
-
-var (
-	connectTimeout  = 1 * time.Second
-	namenodeTimeout = 3 * time.Second
-	datanodeTimeout = 3 * time.Second
+	connectTimeout      = 1 * time.Second
 )
 
 // Used for client ID generation, below.

@@ -150,7 +150,7 @@ func (c *Client) CopyToRemote(src string, dst string) error {
 	}
 	defer local.Close()
 
-	remote, err := c.Create(dst)
+	remote, err := c.CreateAnyway(dst)
 	if err != nil {
 		return err
 	}

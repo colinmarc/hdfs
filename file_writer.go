@@ -46,6 +46,31 @@ func (c *Client) Create(name string) (*FileWriter, error) {
 	return c.CreateFile(name, replication, blockSize, 0644)
 }
 
+// CreateAnyway opens a new file in HDFS with the default replication, block size,
+// and permissions (0644) if the file is already exist, it will remove it first,
+// and returns an io.WriteCloser for writing to it.
+// Because of the way that HDFS writes are buffered and acknowledged asynchronously,
+// it is very important that Close is called after all data has
+// been written.
+func (c *Client) CreateAnyway(name string) (*FileWriter, error) {
+	_, err := c.getFileInfo(name)
+	if err == nil {
+		if err = c.Remove(name); err != nil {
+			return nil, err
+		}
+	} else if !os.IsNotExist(err) {
+		return nil, &os.PathError{"createAnyway", name, err}
+	}
+	defaults, err := c.fetchDefaults()
+	if err != nil {
+		return nil, err
+	}
+
+	replication := int(defaults.GetReplication())
+	blockSize := int64(defaults.GetBlockSize())
+	return c.CreateFile(name, replication, blockSize, 0644)
+}
+
 // CreateFile opens a new file in HDFS with the given replication, block size,
 // and permissions, and returns an io.WriteCloser for writing to it. Because of
 // the way that HDFS writes are buffered and acknowledged asynchronously, it is

@@ -6,6 +6,8 @@ import (
 	"os"
 	"path"
 	"path/filepath"
+
+	"github.com/colinmarc/hdfs"
 )
 
 func put(args []string) {
@@ -29,6 +31,40 @@ func put(args []string) {
 		fatal(err)
 	}
 
+	if filepath.Base(source) == "-" {
+		putFromStdin(client, dest)
+	} else {
+		putFromFile(client, source, dest)
+	}
+}
+
+func putFromStdin(client *hdfs.Client, dest string) {
+	// If the destination exists, regardless of what it is, bail out.
+	_, err := client.Stat(dest)
+	if err == nil {
+		fatal(&os.PathError{"put", dest, os.ErrExist})
+	} else if !os.IsNotExist(err) {
+		fatal(err)
+	}
+
+	mode := 0755 | os.ModeDir
+	parentDir := filepath.Dir(dest)
+	if parentDir != "." && parentDir != "/" {
+		if err := client.MkdirAll(parentDir, mode); err != nil {
+			fatal(err)
+		}
+	}
+
+	writer, err := client.Create(dest)
+	if err != nil {
+		fatal(err)
+	}
+	defer writer.Close()
+
+	io.Copy(writer, os.Stdin)
+}
+
+func putFromFile(client *hdfs.Client, source string, dest string) {
 	// If the destination is an existing directory, place it inside. Otherwise,
 	// the destination is really the parent directory, and we need to rename the
 	// source directory as we copy.

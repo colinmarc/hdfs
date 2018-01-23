@@ -3,7 +3,7 @@ os:
 - osx
 language: go
 go_import_path: github.com/colinmarc/hdfs
-go: 1.7
+go: 1.x
 before_install:
 - git clone https://github.com/sstephenson/bats $HOME/bats
 - mkdir -p $HOME/bats/build

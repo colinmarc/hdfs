@@ -24,7 +24,7 @@ script:
 - cat minicluster.log
 sudo: false
 cache:
-- "$HADOOP_HOME"
+- "$HOME/hadoop-$HADOOP_DISTRO"
 - "$HOME/bats"
 deploy:
   skip_cleanup: true

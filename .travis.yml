@@ -19,6 +19,7 @@ before_script:
 - "./setup_test_env.sh"
 before_deploy: make release
 script:
+- find protocol -name *.pb.go | xargs touch # so make doesn't try to regen protobuf files
 - make test
 - cat minicluster.log
 sudo: false

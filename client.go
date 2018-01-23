@@ -143,7 +143,6 @@ func (c *Client) CopyToLocal(src string, dst string) error {
 }
 
 // CopyToRemote copies the local file specified by src to the HDFS file at dst.
-// If dst already exists, it will be overwritten.
 func (c *Client) CopyToRemote(src string, dst string) error {
 	local, err := os.Open(src)
 	if err != nil {

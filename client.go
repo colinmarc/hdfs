@@ -98,6 +98,8 @@ func getNameNodeFromConf() ([]string, error) {
 
 // NewForUser returns a connected Client with the user specified, or an error if
 // it can't connect.
+//
+// Deprecated: Use NewClient with ClientOptions instead.
 func NewForUser(address string, user string) (*Client, error) {
 	return NewClient(ClientOptions{
 		Addresses: []string{address},
@@ -107,6 +109,8 @@ func NewForUser(address string, user string) (*Client, error) {
 
 // NewForConnection returns Client with the specified, underlying rpc.NamenodeConnection.
 // You can use rpc.WrapNamenodeConnection to wrap your own net.Conn.
+//
+// Deprecated: Use NewClient with ClientOptions instead.
 func NewForConnection(namenode *rpc.NamenodeConnection) *Client {
 	client, _ := NewClient(ClientOptions{Namenode: namenode})
 	return client

@@ -64,6 +64,17 @@ mkdir /_test_cmd/put/existing.txt: file already exists
 OUT
 }
 
+@test "put from stdin" {
+  run bash -c "cat $ROOT_TEST_DIR/test/mobydick.txt | $HDFS put - /_test_cmd/put_stdin/mobydick_stdin.txt"
+  assert_success
+
+  run bash -c "$HDFS cat /_test_cmd/put_stdin/mobydick_stdin.txt > $BATS_TMPDIR/mobydick_stdin_test.txt"
+  assert_success
+
+  SHA=`shasum < $ROOT_TEST_DIR/test/mobydick.txt | awk '{ print $1 }'`
+  assert_equal $SHA `shasum < $BATS_TMPDIR/mobydick_stdin_test.txt | awk '{ print $1 }'`
+}
+
 teardown() {
   $HDFS rm -r /_test_cmd/put
 }

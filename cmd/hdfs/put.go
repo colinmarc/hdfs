@@ -2,11 +2,12 @@ package main
 
 import (
 	"fmt"
-	"github.com/colinmarc/hdfs"
 	"io"
 	"os"
 	"path"
 	"path/filepath"
+
+	"github.com/colinmarc/hdfs"
 )
 
 func put(args []string) {

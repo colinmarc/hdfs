@@ -79,7 +79,7 @@ OUT
   run bash -c "cat $ROOT_TEST_DIR/test/mobydick.txt | $HDFS put - /_test_cmd/put/existing.txt"
   assert_failure
   assert_output <<OUT
-won't write to an existing file: /_test_cmd/put/existing.txt
+put /_test_cmd/put/existing.txt: file already exists
 OUT
 }
 
@@ -87,7 +87,7 @@ OUT
   run bash -c "cat $ROOT_TEST_DIR/test/mobydick.txt | $HDFS put - /_test_cmd/put/"
   assert_failure
   assert_output <<OUT
-can't write from STDIN into a directory: /_test_cmd/put
+put /_test_cmd/put: file already exists
 OUT
 }
 

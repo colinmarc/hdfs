@@ -75,6 +75,22 @@ OUT
   assert_equal $SHA `shasum < $BATS_TMPDIR/mobydick_stdin_test.txt | awk '{ print $1 }'`
 }
 
+@test "put from stdin into existing file" {
+  run bash -c "cat $ROOT_TEST_DIR/test/mobydick.txt | $HDFS put - /_test_cmd/put/existing.txt"
+  assert_failure
+  assert_output <<OUT
+won't write to an existing file: /_test_cmd/put/existing.txt
+OUT
+}
+
+@test "put from stdin into dir" {
+  run bash -c "cat $ROOT_TEST_DIR/test/mobydick.txt | $HDFS put - /_test_cmd/put/"
+  assert_failure
+  assert_output <<OUT
+can't write from STDIN into a directory: /_test_cmd/put
+OUT
+}
+
 teardown() {
   $HDFS rm -r /_test_cmd/put
 }

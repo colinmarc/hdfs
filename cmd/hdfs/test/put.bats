@@ -65,10 +65,18 @@ OUT
 }
 
 @test "put stdin" {
-  run bash -c "cat $ROOT_TEST_DIR/test/mobydick.txt | $HDFS put - /_test_cmd/put_stdin/mobydick_stdin.txt"
+  run bash -c "echo 'foo bar baz' | $HDFS put - /_test_cmd/put/stdin.txt"
   assert_success
 
-  run bash -c "$HDFS cat /_test_cmd/put_stdin/mobydick_stdin.txt > $BATS_TMPDIR/mobydick_stdin_test.txt"
+  run $HDFS cat /_test_cmd/put/stdin.txt
+  assert_output "foo bar baz"
+}
+
+@test "put stdin long" {
+  run bash -c "cat $ROOT_TEST_DIR/test/mobydick.txt | $HDFS put - /_test_cmd/put/mobydick_stdin.txt"
+  assert_success
+
+  run bash -c "$HDFS cat /_test_cmd/put/mobydick_stdin.txt > $BATS_TMPDIR/mobydick_stdin_test.txt"
   assert_success
 
   SHA=`shasum < $ROOT_TEST_DIR/test/mobydick.txt | awk '{ print $1 }'`
@@ -76,7 +84,7 @@ OUT
 }
 
 @test "put stdin into file" {
-  run bash -c "cat $ROOT_TEST_DIR/test/mobydick.txt | $HDFS put - /_test_cmd/put/existing.txt"
+  run bash -c "echo 'foo bar baz' | $HDFS put - /_test_cmd/put/existing.txt"
   assert_failure
   assert_output <<OUT
 put /_test_cmd/put/existing.txt: file already exists
@@ -84,10 +92,10 @@ OUT
 }
 
 @test "put stdin into dir" {
-  run bash -c "cat $ROOT_TEST_DIR/test/mobydick.txt | $HDFS put - /_test_cmd/put/"
+  run bash -c "echo 'foo bar baz' | $HDFS put - /_test_cmd/put/1"
   assert_failure
   assert_output <<OUT
-put /_test_cmd/put: file already exists
+put /_test_cmd/put/1: file already exists
 OUT
 }
 

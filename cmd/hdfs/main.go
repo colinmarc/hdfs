@@ -257,12 +257,6 @@ func getNameNodes(conf hdfs.HadoopConf) []string {
 
 // getKrbClientIfRequired returns a client if the hadoop configuration or the environment variables suggest one is required
 func getKrbClientIfRequired(conf hdfs.HadoopConf) *client.Client {
-	// First check the config to see if Kerberos is required.
-	val, found := conf[hadoopAuthCfgPath]
-	if !found || "kerberos" != strings.ToLower(val) {
-		return nil
-	}
-
 	// Check if the kerberos config path has been overriden
 	var krb5Cfg = os.Getenv("HADOOP_KRB_CONF")
 
@@ -277,13 +271,21 @@ func getKrbClientIfRequired(conf hdfs.HadoopConf) *client.Client {
 		return getKrbClientWithKeytab(krb5Cfg, keytabPath)
 	}
 
-	var credCachePath = os.Getenv("HADOOP_CCACHE")
-	if credCachePath == "" {
-		// TODO: read the kerberos config to determine where the cred cache is located?
-		credCachePath = getDefaultCredCachePath()
+	credCachePath := os.Getenv("HADOOP_CCACHE")
+	if credCachePath != "" {
+		return getKrbClientWithCredCache(krb5Cfg, credCachePath)
 	}
 
-	return getKrbClientWithCredCache(krb5Cfg, credCachePath)
+	// At this point none of the required env vars have been required
+	// and we need to check the configuration to know if kerberos is enabled
+	val, found := conf[hadoopAuthCfgPath]
+	if !found || "kerberos" != strings.ToLower(val) {
+		return nil
+	}
+
+	// Kerberos is enabled. fall back to the default credential cache location.
+	// TODO: read the kerberos config to determine where the cred cache is located?
+	return getKrbClientWithCredCache(krb5Cfg, getDefaultCredCachePath())
 }
 
 // returns "/tmp/krb5cc_$(id -u $(whoami))"

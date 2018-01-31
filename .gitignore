@@ -4,4 +4,3 @@ hdfs
 minicluster.log
 .idea/*
 *.keytab
-krb5.conf

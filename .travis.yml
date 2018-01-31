@@ -10,12 +10,15 @@ before_install:
 - "$HOME/bats/install.sh $HOME/bats/build"
 - export PATH="$PATH:$HOME/bats/build/bin"
 env:
-- HADOOP_DISTRO=cdh
-- HADOOP_DISTRO=hdp
+- HADOOP_DISTRO=cdh KERBEROS=true HADOOP_CONF_DIR="/tmp/kdc-home/"
+- HADOOP_DISTRO=cdh KERBEROS=false
+- HADOOP_DISTRO=hdp KERBEROS=true HADOOP_CONF_DIR="/tmp/kdc-home/"
+- HADOOP_DISTRO=hdp KERBEROS=false
 before_script:
 - export NN_PORT=9000
 - export HADOOP_NAMENODE="localhost:$NN_PORT"
 - export HADOOP_HOME="$HOME/hadoop-$HADOOP_DISTRO"
+- "./setup_kdc.sh"
 - "./setup_test_env.sh"
 before_deploy: make release
 script:

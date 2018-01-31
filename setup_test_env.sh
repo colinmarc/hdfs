@@ -24,6 +24,12 @@ if [ ! -d "$HADOOP_HOME" ]; then
   tar zxf ${HADOOP_HOME}/hadoop.tar.gz --strip-components 1 -C $HADOOP_HOME
 fi
 
+if [ $KERBEROS = "true" ]; then
+  echo "Copying core-site.xml..."
+  cp "test/conf-kerberos/core-site.xml" "/tmp/kdc-home/core-site.xml"
+  export HADOOP_CONF_DIR="/tmp/kdc-home/"
+fi
+
 MINICLUSTER_JAR=$(find $HADOOP_HOME -name "hadoop-mapreduce-client-jobclient*.jar" | grep -v tests | grep -v sources | head -1)
 if [ ! -f "$MINICLUSTER_JAR" ]; then
   echo "Couldn't find minicluster jar"
@@ -34,6 +40,7 @@ echo "minicluster jar found at $MINICLUSTER_JAR"
 
 # start the namenode in the background
 echo "Starting hadoop namenode..."
+export HADOOP_OPTS="$HADOOP_OPTS -Djava.security.krb5.conf=/tmp/kdc-home/krb5.conf"
 $HADOOP_HOME/bin/hadoop jar $MINICLUSTER_JAR minicluster -nnport $NN_PORT -datanodes 3 -nomr -format "$@" > minicluster.log 2>&1 &
 sleep 30
 

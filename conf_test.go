@@ -2,47 +2,35 @@ package hdfs
 
 import (
 	"os"
-	"sort"
-	"strings"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
 )
 
-func TestConfNamenodeHadoopHome(t *testing.T) {
-	pwd, _ := os.Getwd()
-	os.Setenv("HADOOP_HOME", strings.Join([]string{pwd, "test"}, "/"))
-	hdConf := LoadHadoopConf("")
-	nns, err := hdConf.Namenodes()
-	assert.Nil(t, err)
-	sort.Strings(nns)
-	expectedNns := []string{"hadoop-namenode-01:8020", "hadoop-namenode-02:8020", "testnode:9000"}
-	assert.EqualValues(t, expectedNns, nns)
-	os.Setenv("HADOOP_HOME", "")
-}
+func TestConfFallback(t *testing.T) {
+	os.Setenv("HADOOP_HOME", "test") // This will resolve to test/conf.
+	os.Setenv("HADOOP_CONF_DIR", "test/conf2")
 
-func TestConfNamenodeHadoopConfDir(t *testing.T) {
-	pwd, _ := os.Getwd()
-	os.Setenv("HADOOP_CONF_DIR", strings.Join([]string{pwd, "test"}, "/"))
-	hdConf := LoadHadoopConf("")
-	nns, err := hdConf.Namenodes()
-	expectedNns := []string{"testnode:9000"}
-	assert.Nil(t, err)
-	assert.EqualValues(t, nns, expectedNns)
-	os.Setenv("HADOOP_CONF_DIR", "")
-}
+	confNamenodes := []string{"namenode1:8020", "namenode2:8020"}
+	conf2Namenodes := []string{"namenode3:8020"}
+	conf3Namenodes := []string{"namenode4:8020"}
 
-func TestDedupeNamenodes(t *testing.T) {
-	pwd, _ := os.Getwd()
-	os.Setenv("HADOOP_HOME", strings.Join([]string{pwd, "test"}, "/"))
-	os.Setenv("HADOOP_CONF_DIR", strings.Join([]string{pwd, "test"}, "/"))
-	hdConf := LoadHadoopConf("")
-	nns, err := hdConf.Namenodes()
+	conf := LoadHadoopConf("test/conf3")
+	nns, err := conf.Namenodes()
 	assert.Nil(t, err)
-	sort.Strings(nns)
-	expectedNns := []string{"hadoop-namenode-01:8020", "hadoop-namenode-02:8020", "testnode:9000"}
-	assert.EqualValues(t, expectedNns, nns)
+	assert.EqualValues(t, conf3Namenodes, nns, "loading via specified path (test/conf3)")
 
-	os.Setenv("HADOOP_HOME", "")
-	os.Setenv("HADOOP_CONF_DIR", "")
+	conf = LoadHadoopConf("")
+	nns, err = conf.Namenodes()
+	assert.Nil(t, err)
+	assert.EqualValues(t, conf2Namenodes, nns, "loading via HADOOP_CONF_DIR (test/conf2)")
+
+	os.Unsetenv("HADOOP_CONF_DIR")
+
+	conf = LoadHadoopConf("")
+	nns, err = conf.Namenodes()
+	assert.Nil(t, err)
+	assert.EqualValues(t, confNamenodes, nns, "loading via HADOOP_HOME (test/conf)")
+
+	os.Unsetenv("HADOOP_HOME")
 }

@@ -7,6 +7,7 @@ import (
 	"net/url"
 	"os"
 	"path/filepath"
+	"sort"
 	"strings"
 )
 
@@ -27,39 +28,30 @@ type HadoopConf map[string]string
 
 var errUnresolvedNamenode = errors.New("no namenode address in configuration")
 
-// LoadHadoopConf returns a HadoopConf object that is key value map
-// of all the hadoop conf properties, swallows errors reading xml
-// and reading a non-existant file.
-func LoadHadoopConf(inputPath string) HadoopConf {
-	var tryPaths []string
+// LoadHadoopConf returns a HadoopConf object representing configuration from
+// the specified path, or finds the correct path in the environment. If
+// path or the env variable HADOOP_CONF_DIR is specified, it should point
+// directly to the directory where the xml files are. If neither is specified,
+// ${HADOOP_HOME}/conf will be used.
+func LoadHadoopConf(path string) HadoopConf {
 
-	if inputPath != "" {
-		tryPaths = append(tryPaths, inputPath)
-	} else {
-		hadoopConfDir := os.Getenv("HADOOP_CONF_DIR")
-		hadoopHome := os.Getenv("HADOOP_HOME")
-		if hadoopConfDir != "" {
-			confHdfsPath := filepath.Join(hadoopConfDir, "hdfs-site.xml")
-			confCorePath := filepath.Join(hadoopConfDir, "core-site.xml")
-			tryPaths = append(tryPaths, confHdfsPath, confCorePath)
-		}
-		if hadoopHome != "" {
-			hdfsPath := filepath.Join(hadoopHome, "conf", "hdfs-site.xml")
-			corePath := filepath.Join(hadoopHome, "conf", "core-site.xml")
-			tryPaths = append(tryPaths, hdfsPath, corePath)
+	if path == "" {
+		path = os.Getenv("HADOOP_CONF_DIR")
+		if path == "" {
+			path = filepath.Join(os.Getenv("HADOOP_HOME"), "conf")
 		}
 	}
-	hadoopConf := make(HadoopConf)
 
-	for _, tryPath := range tryPaths {
+	hadoopConf := make(HadoopConf)
+	for _, file := range []string{"core-site.xml", "hdfs-site.xml"} {
 		pList := propertyList{}
-		f, err := ioutil.ReadFile(tryPath)
+		f, err := ioutil.ReadFile(filepath.Join(path, file))
 		if err != nil {
 			continue
 		}
 
-		xmlErr := xml.Unmarshal(f, &pList)
-		if xmlErr != nil {
+		err = xml.Unmarshal(f, &pList)
+		if err != nil {
 			continue
 		}
 
@@ -67,32 +59,32 @@ func LoadHadoopConf(inputPath string) HadoopConf {
 			hadoopConf[prop.Name] = prop.Value
 		}
 	}
+
 	return hadoopConf
 }
 
-// Namenodes returns a slice of deduplicated namenodes named in
-// a user's hadoop configuration files or an error is there are no namenodes.
+// Namenodes returns the namenode hosts present in the configuration. The
+// returned slice will be sorted and deduped.
 func (conf HadoopConf) Namenodes() ([]string, error) {
 	nns := make(map[string]bool)
 	for key, value := range conf {
-		if strings.Contains(key, "fs.defaultFS") {
+		if strings.Contains(key, "fs.default") {
 			nnUrl, _ := url.Parse(value)
 			nns[nnUrl.Host] = true
-		}
-		if strings.HasPrefix(key, "dfs.namenode.rpc-address") {
+		} else if strings.HasPrefix(key, "dfs.namenode.rpc-address") {
 			nns[value] = true
 		}
 	}
+
 	if len(nns) == 0 {
 		return nil, errUnresolvedNamenode
 	}
 
-	keys := make([]string, len(nns))
-
-	i := 0
+	keys := make([]string, 0, len(nns))
 	for k, _ := range nns {
-		keys[i] = k
-		i++
+		keys = append(keys, k)
 	}
+
+	sort.Strings(keys)
 	return keys, nil
 }

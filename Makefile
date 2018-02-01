@@ -26,7 +26,13 @@ install: get-deps
 	go install ./...
 
 test: hdfs
+# Run unit tests only without Kerberos.
+ifndef KERBEROS
 	go test -v -race $(shell go list ./... | grep -v vendor)
+endif
+ifeq ($(KERBEROS),"false")
+	go test -v -race $(shell go list ./... | grep -v vendor)
+endif
 	bats ./cmd/hdfs/test/*.bats
 
 clean:

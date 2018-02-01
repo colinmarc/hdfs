@@ -17,16 +17,19 @@ if [ ! -d "$HADOOP_HOME" ]; then
       exit 1
   fi
 
-  echo "Downloading Hadoop from $HADOOP_URL to ${HADOOP_HOME}/hadoop.tar.gz"
-  curl -o ${HADOOP_HOME}/hadoop.tar.gz -L $HADOOP_URL
+  if [ -z ${LOCAL_TEST+x} ]; then
+    echo "Downloading Hadoop from $HADOOP_URL to ${HADOOP_HOME}/hadoop.tar.gz"
+    curl -o ${HADOOP_HOME}/hadoop.tar.gz -L $HADOOP_URL
 
-  echo "Extracting ${HADOOP_HOME}/hadoop.tar.gz into $HADOOP_HOME"
-  tar zxf ${HADOOP_HOME}/hadoop.tar.gz --strip-components 1 -C $HADOOP_HOME
+    echo "Extracting ${HADOOP_HOME}/hadoop.tar.gz into $HADOOP_HOME"
+    tar zxf ${HADOOP_HOME}/hadoop.tar.gz --strip-components 1 -C $HADOOP_HOME
+  fi
 fi
 
-if [ $KERBEROS = "true" ]; then
+if [ ${KERBEROS-"false"} = "true" ]; then
   echo "Copying core-site.xml..."
-  cp "test/conf-kerberos/core-site.xml" "/tmp/kdc-home/core-site.xml"
+  cp "test/conf-kerberos/core-site.xml" "/tmp/kdc-home/"
+  cp "test/conf-kerberos/hdfs-site.xml" "/tmp/kdc-home/"
   export HADOOP_CONF_DIR="/tmp/kdc-home/"
 fi
 
@@ -41,9 +44,11 @@ echo "minicluster jar found at $MINICLUSTER_JAR"
 # start the namenode in the background
 echo "Starting hadoop namenode..."
 export HADOOP_OPTS="$HADOOP_OPTS -Djava.security.krb5.conf=/tmp/kdc-home/krb5.conf"
+#export HADOOP_OPTS="$HADOOP_OPTS -Dsun.security.krb5.debug=true -Djava.security.krb5.conf=/tmp/kdc-home/krb5.conf"
 $HADOOP_HOME/bin/hadoop jar $MINICLUSTER_JAR minicluster -nnport $NN_PORT -datanodes 3 -nomr -format "$@" > minicluster.log 2>&1 &
 sleep 30
 
+export KRB5_CONFIG=/tmp/kdc-home/krb5.conf
 HADOOP_FS="$HADOOP_HOME/bin/hadoop fs -Ddfs.block.size=1048576"
 $HADOOP_FS -mkdir -p "hdfs://$HADOOP_NAMENODE/_test"
 $HADOOP_FS -chmod 777 "hdfs://$HADOOP_NAMENODE/_test"

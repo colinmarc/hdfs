@@ -31,13 +31,22 @@ func getClientForUser(t *testing.T, user string) *Client {
 		t.Fatal("HADOOP_NAMENODE not set")
 	}
 
-	client, err := NewForUser(nn, user)
+	hadoopCfg := LoadHadoopConf(GetConfDir())
+
+	options := ClientOptions{}
+
+	options.Addresses = []string{nn}
+
+	options.KerberosClient = GetKrbClientIfRequired(hadoopCfg)
+	options.ServicePrincipalName = GetServiceName()
+
+	c, err := NewClient(options)
 	if err != nil {
 		t.Fatal(err)
 	}
 
-	cachedClients[user] = client
-	return client
+	cachedClients[user] = c
+	return c
 }
 
 func touch(t *testing.T, path string) {

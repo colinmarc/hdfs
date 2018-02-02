@@ -44,7 +44,7 @@ func Username() (string, error) {
 
 // krbUsername returns the principle of krbClient,
 // or the result of calling Username if krbClient is nil
-func username(krb5Client *krb.Client) (string, error) {
+func krbUsername(krb5Client *krb.Client) (string, error) {
 	if krb5Client == nil {
 		return Username()
 	}
@@ -58,7 +58,7 @@ func NewClient(options ClientOptions) (*Client, error) {
 	var err error
 
 	if options.User == "" {
-		options.User, err = username(options.KerberosClient)
+		options.User, err = krbUsername(options.KerberosClient)
 		if err != nil {
 			return nil, err
 		}

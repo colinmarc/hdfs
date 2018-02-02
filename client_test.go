@@ -6,6 +6,8 @@ import (
 	"path/filepath"
 	"testing"
 
+	"log"
+
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
@@ -31,13 +33,21 @@ func getClientForUser(t *testing.T, user string) *Client {
 		t.Fatal("HADOOP_NAMENODE not set")
 	}
 
-	client, err := NewForUser(nn, user)
+	hadoopCfg := LoadHadoopConf("")
+
+	options := ClientOptions{}
+
+	options.Addresses = []string{nn}
+	options.KerberosClient = GetKrbClientIfRequired(hadoopCfg)
+	options.ServicePrincipalName = GetServiceName()
+
+	c, err := NewClient(options)
 	if err != nil {
-		t.Fatal(err)
+		log.Fatalln(err)
 	}
 
-	cachedClients[user] = client
-	return client
+	cachedClients[user] = c
+	return c
 }
 
 func touch(t *testing.T, path string) {

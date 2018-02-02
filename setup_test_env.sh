@@ -17,13 +17,12 @@ if [ ! -d "$HADOOP_HOME" ]; then
       exit 1
   fi
 
-  if [ -z ${LOCAL_TEST+x} ]; then
-    echo "Downloading Hadoop from $HADOOP_URL to ${HADOOP_HOME}/hadoop.tar.gz"
-    curl -o ${HADOOP_HOME}/hadoop.tar.gz -L $HADOOP_URL
+  echo "Downloading Hadoop from $HADOOP_URL to ${HADOOP_HOME}/hadoop.tar.gz"
+  curl -o ${HADOOP_HOME}/hadoop.tar.gz -L $HADOOP_URL
 
-    echo "Extracting ${HADOOP_HOME}/hadoop.tar.gz into $HADOOP_HOME"
-    tar zxf ${HADOOP_HOME}/hadoop.tar.gz --strip-components 1 -C $HADOOP_HOME
-  fi
+  echo "Extracting ${HADOOP_HOME}/hadoop.tar.gz into $HADOOP_HOME"
+  tar zxf ${HADOOP_HOME}/hadoop.tar.gz --strip-components 1 -C $HADOOP_HOME
+
 fi
 
 if [ ${KERBEROS-"false"} = "true" ]; then

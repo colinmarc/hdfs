@@ -6,8 +6,6 @@ import (
 	"path/filepath"
 	"testing"
 
-	"log"
-
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
@@ -43,7 +41,7 @@ func getClientForUser(t *testing.T, user string) *Client {
 
 	c, err := NewClient(options)
 	if err != nil {
-		log.Fatalln(err)
+		t.Fatal(err)
 	}
 
 	cachedClients[user] = c

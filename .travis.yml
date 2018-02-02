@@ -18,7 +18,6 @@ before_script:
 - export NN_PORT=9000
 - export HADOOP_NAMENODE="localhost:$NN_PORT"
 - export HADOOP_HOME="$HOME/hadoop-$HADOOP_DISTRO"
-- useradd nn
 - "./setup_kdc.sh"
 - "./setup_test_env.sh"
 before_deploy: make release

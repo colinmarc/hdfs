@@ -26,8 +26,8 @@ install: get-deps
 	go install ./...
 
 test: hdfs
-	bats ./cmd/hdfs/test/*.bats
 	go test -v -race $(shell go list ./... | grep -v vendor)
+	bats ./cmd/hdfs/test/*.bats
 
 clean:
 	rm -f ./hdfs

@@ -38,11 +38,11 @@ Valid commands:
 To alter the default locations from which configurations are loaded, 
 the following environment variables may be used:
 
-  - HADOOP_CONF_DIR     hadoop configuration directory. Default: %s
+  - HADOOP_CONF_DIR     hadoop configuration directory. Defaults to $HADOOP_HOME/conf 
   - HADOOP_KRB_CONF     kerberos configuration file. Default: %s
   - HADOOP_CCACHE       credential cache to use. Defaults: to "/tmp/krb5cc_{user_uid}"
   - HADOOP_KEYTAB       if set, the specified keytab is used and the credential cache is ignored.
-`, os.Args[0], hdfs.HdfsDefaultConfDir, hdfs.KrbDefaultCfgPath)
+`, os.Args[0], hdfs.KrbDefaultCfgPath)
 
 	lsOpts = getopt.New()
 	lsl    = lsOpts.Bool('l')

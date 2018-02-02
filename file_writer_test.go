@@ -182,6 +182,7 @@ func TestCreateEmptyFileWithoutParent(t *testing.T) {
 }
 
 func TestCreateEmptyFileWithoutPermission(t *testing.T) {
+	IgnoreIfKerberos(t)
 	client := getClient(t)
 	otherClient := getClientForUser(t, "other")
 

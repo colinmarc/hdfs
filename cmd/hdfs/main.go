@@ -186,11 +186,11 @@ func getClient(namenodes string) (*hdfs.Client, error) {
 		return cachedClient, nil
 	}
 
-	hadoopCfg := hdfs.LoadHadoopConf(hdfs.GetConfDir())
+	hadoopCfg := hdfs.LoadHadoopConf("")
 
 	options := hdfs.ClientOptions{}
 	if namenodes != "" {
-		options.Addresses = []string{namenodes}
+		options.Addresses = strings.Split(namenodes, ",")
 	} else {
 		options.Addresses = getNameNodes(hadoopCfg)
 	}
@@ -218,7 +218,7 @@ func getNameNodes(conf hdfs.HadoopConf) []string {
 	nn, err := conf.Namenodes()
 
 	if err != nil {
-		log.Panic(err)
+		log.Fatal(err)
 	}
 
 	return nn

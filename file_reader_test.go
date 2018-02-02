@@ -217,6 +217,7 @@ func TestFileReadDirnames(t *testing.T) {
 }
 
 func TestOpenFileWithoutPermission(t *testing.T) {
+	IgnoreIfKerberos(t)
 	otherClient := getClientForUser(t, "other")
 
 	mkdirp(t, "/_test/accessdenied")

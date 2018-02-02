@@ -2,8 +2,9 @@ package rpc
 
 import (
 	"encoding/binary"
+	"errors"
+	"fmt"
 	"io"
-	"log"
 	"strings"
 
 	hadoop "github.com/colinmarc/hdfs/protocol/hadoop_common"
@@ -15,46 +16,55 @@ import (
 
 const saslRpcCallId int32 = -33
 
-// Run a Kerberos handshake with an hadoop Namenode server that is expected to live on the other side
-// of the connection.
+// doKerberosHandshake runs a HRPC compliant Kerberos handshake with an hadoop Namenode
+// that is expected to live on the other side of the socket.
 // Assumes an HRPC header has already been sent.
-func doKerberosHandshake(c *NamenodeConnection) {
+func doKerberosHandshake(c *NamenodeConnection) error {
 	// Send the initial request for a SASL negotiation
-	sendSASLNegotiationRequest(c)
+	err := sendSASLNegotiationRequest(c)
+	if err != nil {
+		return err
+	}
 	// The reply will contain a list of supported mechanisms.
-	mechanisms := readFirstReply(c)
+	mechanisms, err := readFirstReply(c)
+	if err != nil {
+		return err
+	}
 	// Check that kerberos is supported and extract the mechanism
 	kerbMech := getKerberosAuthMech(mechanisms)
 	if kerbMech == nil {
-		log.Fatalf("Kerberos is not a supported auth mechanism. Supported mechanisms: %+v", mechanisms)
+		return fmt.Errorf("kerberos is not a supported auth mechanism: supported mechanisms: %+v", mechanisms)
 	}
-
-	sessionKey := sendInitialToken(c, kerbMech)
-
-	replyToken := readAuthReply(c)
-
-	verifyChecksum(replyToken, sessionKey)
-
-	// Contains flags pertaining to the session config (protection level, etc)
+	// Send the initial token of the authentication handshake
+	sessionKey, err := sendInitialToken(c, kerbMech)
+	if err != nil {
+		return err
+	}
+	// Verify that the server was happy with the token
+	replyToken, err := readAuthReply(c)
+	if err != nil {
+		return err
+	}
+	// Verify the checksum to authenticate the server
+	err = verifyChecksum(replyToken, sessionKey)
+	if err != nil {
+		return err
+	}
+	// The payload contains flags pertaining to the session config (protection level, etc)
 	// TODO: run checks on this to make sure we support what is required.
 	// Needs to be sent back to the server, signed with the session key.
-	toSendBack, err := gssapi.NewInitiatorToken(replyToken.Payload, sessionKey)
-
+	err = sendChallengeResponse(c, replyToken.Payload, sessionKey)
 	if err != nil {
-		log.Panic("could not build an initiator token", err)
+		return err
 	}
-
-	responseBytes, marshalErr := toSendBack.Marshal()
-
-	if marshalErr != nil {
-		log.Panic("failed to marshal outbound token.", marshalErr)
+	err = readFinalReply(c)
+	if err != nil {
+		return err
 	}
-
-	sendChallengeResponse(c, responseBytes)
-	readChallengeReply(c)
+	return nil
 }
 
-// searches and returns the kerberos auth mechanism from the passed mechanisms.
+// getKerberosAuthMech searches and returns the kerberos auth mechanism from the passed mechanisms.
 // nil is returned if the KERBEROS mechanism is not found.
 func getKerberosAuthMech(mechanisms []*hadoop.RpcSaslProto_SaslAuth) *hadoop.RpcSaslProto_SaslAuth {
 	for _, mech := range mechanisms {
@@ -65,22 +75,23 @@ func getKerberosAuthMech(mechanisms []*hadoop.RpcSaslProto_SaslAuth) *hadoop.Rpc
 	return nil
 }
 
-// Computes the checksum for the passed token and compares it to the checksum contained in the token.
-func verifyChecksum(challenge gssapi.WrapToken, key types.EncryptionKey) {
-	ok, err := challenge.VerifyCheckSum(key, keyusage.GSSAPI_ACCEPTOR_SEAL)
+// verifyChecksum computes the checksum for the passed token and compares it to the checksum contained in the token.
+func verifyChecksum(challenge *gssapi.WrapToken, key *types.EncryptionKey) error {
+	ok, err := challenge.VerifyCheckSum(*key, keyusage.GSSAPI_ACCEPTOR_SEAL)
 	if err != nil {
-		log.Panic(err)
+		return err
 	}
-	if !ok {
-		log.Panic("checksum mismatch")
+	if ok {
+		return nil
 	}
+	return errors.New("checksum mismatch")
 }
 
 func newSASLMessageHeader(clientId []byte) *hadoop.RpcRequestHeaderProto {
 	return newRPCRequestHeader(int(saslRpcCallId), clientId)
 }
 
-func sendSASLNegotiationRequest(c *NamenodeConnection) {
+func sendSASLNegotiationRequest(c *NamenodeConnection) error {
 	protoState := hadoop.RpcSaslProto_NEGOTIATE
 
 	pkt, err := makeRPCPacket(
@@ -90,30 +101,35 @@ func sendSASLNegotiationRequest(c *NamenodeConnection) {
 		})
 
 	if err != nil {
-		log.Fatal(err)
+		return err
 	}
 
 	c.conn.Write(pkt)
+	return nil
 }
 
-/**
- * Returns a list of suported auth mechanisms
- */
-func readFirstReply(c *NamenodeConnection) []*hadoop.RpcSaslProto_SaslAuth {
-	return readSaslResponse(c).GetAuths()
+// readFirstReply reads the server reply and returns the list of supported auth mechanisms
+func readFirstReply(c *NamenodeConnection) ([]*hadoop.RpcSaslProto_SaslAuth, error) {
+	authMechs, err := readSaslResponse(c)
+	if err != nil {
+		return nil, err
+	}
+	return authMechs.GetAuths(), nil
 }
 
-/**
- * Sends out a token to the service to initiate a kerberos/gssapi handshake.
- * Returns the session key that will be used to authenticate or encrypt the handshake tokens.
- */
-func sendInitialToken(c *NamenodeConnection, mechanism *hadoop.RpcSaslProto_SaslAuth) types.EncryptionKey {
+// sendInitialToken sends a token to the service to initiate a kerberos/gssapi handshake.
+// Returns the session key that will be used to authenticate the handshake tokens.
+func sendInitialToken(c *NamenodeConnection, mechanism *hadoop.RpcSaslProto_SaslAuth) (*types.EncryptionKey, error) {
 
-	token, sessionKey := getAPR(
+	token, sessionKey, err := getAPR(
 		c.kerberosClient,
 		c.servicePrincipalName,
 		// Get rid of the potential port contained in the address string
 		strings.Split(c.host.address, ":")[0])
+
+	if err != nil {
+		return nil, err
+	}
 
 	protoState := hadoop.RpcSaslProto_INITIATE
 
@@ -126,34 +142,47 @@ func sendInitialToken(c *NamenodeConnection, mechanism *hadoop.RpcSaslProto_Sasl
 		})
 
 	if err != nil {
-		log.Panic(err)
+		return nil, err
 	}
 
 	c.conn.Write(pkt)
 
-	return sessionKey
+	return sessionKey, nil
 }
 
-/**
- * Returns a list of supported auth mechanisms
- */
-func readAuthReply(c *NamenodeConnection) gssapi.WrapToken {
+// readAuthReply reads the second reply from the server (after INITIATE was sent) and
+// expects to find a WrapToken in it.
+func readAuthReply(c *NamenodeConnection) (*gssapi.WrapToken, error) {
 
-	resp := readSaslResponse(c)
+	resp, err := readSaslResponse(c)
+	if err != nil {
+		return nil, err
+	}
 
 	if resp.GetState() != hadoop.RpcSaslProto_CHALLENGE {
-		log.Panicf("expected Sasl state CHALLENGE. Was: %v", resp.GetState())
+		return nil, fmt.Errorf("expected SASL state CHALLENGE. Was: %v", resp.GetState())
 	}
 	var token gssapi.WrapToken
 
 	if err := token.Unmarshal(resp.GetToken(), true); err != nil {
-		log.Panic(err)
+		return nil, err
 	}
 
-	return token
+	return &token, nil
 }
 
-func sendChallengeResponse(c *NamenodeConnection, challenge []byte) {
+// sendChallengeResponse sends out a reply containing the passed payload.
+func sendChallengeResponse(c *NamenodeConnection, payload []byte, sessionKey *types.EncryptionKey) error {
+
+	toSendBack, err := gssapi.NewInitiatorToken(payload, *sessionKey)
+	if err != nil {
+		return err
+	}
+
+	responseBytes, err := toSendBack.Marshal()
+	if err != nil {
+		return err
+	}
 
 	protoState := hadoop.RpcSaslProto_RESPONSE
 
@@ -161,36 +190,41 @@ func sendChallengeResponse(c *NamenodeConnection, challenge []byte) {
 		newSASLMessageHeader(c.clientId),
 		&hadoop.RpcSaslProto{
 			State: &protoState,
-			Token: challenge,
+			Token: responseBytes,
 		})
 
 	if err != nil {
-		log.Fatal(err)
+		return err
 	}
 
 	c.conn.Write(pkt)
+	return nil
 }
 
-func readChallengeReply(c *NamenodeConnection) {
+func readFinalReply(c *NamenodeConnection) error {
+	resp, err := readSaslResponse(c)
 
-	resp := readSaslResponse(c)
-
-	if resp.GetState() != hadoop.RpcSaslProto_SUCCESS {
-		log.Panicf("server returned handshake failure: %+v", resp.GetState())
+	if err != nil {
+		return err
 	}
+
+	if resp.GetState() == hadoop.RpcSaslProto_SUCCESS {
+		return nil
+	}
+	return fmt.Errorf("server returned handshake failure: %+v", resp.GetState())
 }
 
-func readSaslResponse(c *NamenodeConnection) *hadoop.RpcSaslProto {
+func readSaslResponse(c *NamenodeConnection) (*hadoop.RpcSaslProto, error) {
 	var packetLength uint32
 	err := binary.Read(c.conn, binary.BigEndian, &packetLength)
 	if err != nil {
-		log.Fatal(err)
+		return nil, err
 	}
 
 	packet := make([]byte, packetLength)
 	_, err = io.ReadFull(c.conn, packet)
 	if err != nil {
-		log.Fatal(err)
+		return nil, err
 	}
 
 	rrh := &hadoop.RpcResponseHeaderProto{}
@@ -198,24 +232,25 @@ func readSaslResponse(c *NamenodeConnection) *hadoop.RpcSaslProto {
 	err = readRPCPacket(packet, rrh, resp)
 
 	if rrh.GetStatus() != hadoop.RpcResponseHeaderProto_SUCCESS {
-		log.Panicf("failed to read response: %s", rrh.GetStatus().String())
+		return nil, fmt.Errorf("failed to read response: %s", rrh.GetStatus().String())
 	}
-	return resp
+	return resp, nil
 }
 
-func getAPR(krbClient *client.Client, serviceName string, serviceHost string) (negToken gssapi.NegTokenInit, sessionKey types.EncryptionKey) {
+// getAPR returns an initial kerberos negotiation token amd the session key to use for subsequent validation operations
+func getAPR(krbClient *client.Client, serviceName string, serviceHost string) (negToken *gssapi.NegTokenInit, sessionKey *types.EncryptionKey, err error) {
 
-	tkt, key, tktE := krbClient.GetServiceTicket(serviceName + "/" + serviceHost)
+	tkt, key, err := krbClient.GetServiceTicket(serviceName + "/" + serviceHost)
 
-	if tktE != nil {
-		log.Panic(tktE)
+	if err != nil {
+		return nil, nil, err
 	}
 
-	token, tokenE := gssapi.NewNegTokenInitKrb5(*krbClient.Credentials, tkt, key)
+	token, err := gssapi.NewNegTokenInitKrb5(*krbClient.Credentials, tkt, key)
 
-	if tokenE != nil {
-		log.Panic(tokenE)
+	if err != nil {
+		return nil, nil, err
 	}
 
-	return token, key
+	return &token, &key, nil
 }

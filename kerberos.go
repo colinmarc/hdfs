@@ -15,7 +15,6 @@ import (
 const HdfsDefaultServiceName = "nn"
 const KrbDefaultCfgPath = "/etc/krb5.conf"
 const HadoopAuthCfgPath = "hadoop.security.authentication"
-const HdfsDefaultConfDir = "/etc/hadoop/conf"
 
 // GetKrbClientIfRequired returns a kerberos client if the hadoop
 // configuration or the environment variables suggest one is required
@@ -126,12 +125,4 @@ func GetServiceName() string {
 		return sn
 	}
 	return HdfsDefaultServiceName
-}
-
-// GetConfDir returns the content of HADOOP_CONF_DIR or a default path to the conf dir.
-func GetConfDir() string {
-	if cd := os.Getenv("HADOOP_CONF_DIR"); cd != "" {
-		return cd
-	}
-	return HdfsDefaultConfDir
 }

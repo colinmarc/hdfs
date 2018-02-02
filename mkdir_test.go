@@ -78,6 +78,7 @@ func TestMkdirAllExists(t *testing.T) {
 }
 
 func TestMkdirWIthoutPermission(t *testing.T) {
+	IgnoreIfKerberos(t)
 	client := getClient(t)
 	otherClient := getClientForUser(t, "other")
 
@@ -91,6 +92,7 @@ func TestMkdirWIthoutPermission(t *testing.T) {
 }
 
 func TestMkdirAllWIthoutPermission(t *testing.T) {
+	IgnoreIfKerberos(t)
 	client := getClient(t)
 	otherClient := getClientForUser(t, "other")
 

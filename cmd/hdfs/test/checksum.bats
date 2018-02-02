@@ -7,7 +7,8 @@ setup() {
 }
 
 @test "checksum" {
-  FOO_CHECKSUM=$($HADOOP_FS -checksum hdfs://$HADOOP_NAMENODE/_test/foo.txt | awk '{ print substr($3, 25, 32) }')
+  # sed is used to remove any leading blank line that would be caused by warnings
+  FOO_CHECKSUM=$($HADOOP_FS -checksum hdfs://$HADOOP_NAMENODE/_test/foo.txt | awk '{ print substr($3, 25, 32) }' | sed '/./,$!d')
 
   run $HDFS checksum /_test/foo.txt
   assert_success

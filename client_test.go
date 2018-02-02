@@ -31,22 +31,13 @@ func getClientForUser(t *testing.T, user string) *Client {
 		t.Fatal("HADOOP_NAMENODE not set")
 	}
 
-	hadoopCfg := LoadHadoopConf(GetConfDir())
-
-	options := ClientOptions{}
-
-	options.Addresses = []string{nn}
-
-	options.KerberosClient = GetKrbClientIfRequired(hadoopCfg)
-	options.ServicePrincipalName = GetServiceName()
-
-	c, err := NewClient(options)
+	client, err := NewForUser(nn, user)
 	if err != nil {
 		t.Fatal(err)
 	}
 
-	cachedClients[user] = c
-	return c
+	cachedClients[user] = client
+	return client
 }
 
 func touch(t *testing.T, path string) {
@@ -134,4 +125,10 @@ func TestCopyToRemote(t *testing.T) {
 	require.NoError(t, err)
 
 	assert.EqualValues(t, "bar\n", string(bytes))
+}
+
+func IgnoreIfKerberos(t *testing.T) {
+	if os.Getenv("KERBEROS") == "true" {
+		t.Skip("skipping permission tests under kerberos")
+	}
 }

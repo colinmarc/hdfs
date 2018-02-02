@@ -45,6 +45,7 @@ func TestChmodNonexistent(t *testing.T) {
 }
 
 func TestChmodWithoutPermission(t *testing.T) {
+	IgnoreIfKerberos(t)
 	otherClient := getClientForUser(t, "other")
 
 	mkdirp(t, "/_test/accessdenied")
@@ -91,6 +92,7 @@ func TestChownNonexistent(t *testing.T) {
 }
 
 func TestChownWithoutPermission(t *testing.T) {
+	IgnoreIfKerberos(t)
 	otherClient := getClientForUser(t, "other")
 
 	mkdirp(t, "/_test/accessdenied")

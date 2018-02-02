@@ -44,6 +44,7 @@ func TestContentSummaryNonExistent(t *testing.T) {
 }
 
 func TestContentSummaryDirWithoutPermission(t *testing.T) {
+	IgnoreIfKerberos(t)
 	otherClient := getClientForUser(t, "other")
 
 	mkdirp(t, "/_test/accessdenied")

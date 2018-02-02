@@ -32,6 +32,7 @@ func TestRemoveNotExistent(t *testing.T) {
 }
 
 func TestRemoveWithoutPermission(t *testing.T) {
+	IgnoreIfKerberos(t)
 	otherClient := getClientForUser(t, "other")
 
 	mkdirp(t, "/_test/accessdenied")

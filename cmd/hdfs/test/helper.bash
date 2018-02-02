@@ -10,7 +10,6 @@ if [ $KERBEROS = "true" ]; then
     export HADOOP_KEYTAB="/tmp/kdc-home/client.keytab"
     export HADOOP_KRB_CONF="$ROOT_TEST_DIR/test/kdc/krb5.conf"
 fi
-#export HADOOP_CONF_DIR="/tmp/kdc-home/"
 
 # stolen from https://github.com/sstephenson/rbenv/blob/master/test/test_helper.bash
 

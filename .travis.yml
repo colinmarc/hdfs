@@ -10,10 +10,10 @@ before_install:
 - "$HOME/bats/install.sh $HOME/bats/build"
 - export PATH="$PATH:$HOME/bats/build/bin"
 env:
-- HADOOP_DISTRO=cdh KERBEROS=true HADOOP_CONF_DIR="/tmp/kdc-home/" HADOOP_KRB_CONF=/tmp/kdc-home/krb5.conf HADOOP_KEYTAB=/tmp/kdc-home/client.keytab
 - HADOOP_DISTRO=cdh KERBEROS=false
-- HADOOP_DISTRO=hdp KERBEROS=true HADOOP_CONF_DIR="/tmp/kdc-home/" HADOOP_KRB_CONF=/tmp/kdc-home/krb5.conf HADOOP_KEYTAB=/tmp/kdc-home/client.keytab
+- HADOOP_DISTRO=cdh KERBEROS=true HADOOP_CONF_DIR="/tmp/kdc-home/" HADOOP_KRB_CONF=/tmp/kdc-home/krb5.conf HADOOP_KEYTAB=/tmp/kdc-home/client.keytab
 - HADOOP_DISTRO=hdp KERBEROS=false
+- HADOOP_DISTRO=hdp KERBEROS=true HADOOP_CONF_DIR="/tmp/kdc-home/" HADOOP_KRB_CONF=/tmp/kdc-home/krb5.conf HADOOP_KEYTAB=/tmp/kdc-home/client.keytab
 before_script:
 - export NN_PORT=9000
 - export HADOOP_NAMENODE="localhost:$NN_PORT"
@@ -27,8 +27,8 @@ script:
 - cat minicluster.log
 sudo: false
 cache:
-- "$HOME/hadoop-$HADOOP_DISTRO"
-- "$HOME/bats"
+ - "$HOME/hadoop-$HADOOP_DISTRO"
+ - "$HOME/bats"
 deploy:
   skip_cleanup: true
   provider: releases

@@ -25,10 +25,10 @@ sleep 3
 
 # Generate the user and the service keytabs.
 echo "Adding user principal and generating keytab..."
-echo "addprinc -pw password $USER@EXAMPLE.COM\nktadd -k client.keytab $USER@EXAMPLE.COM\nexit" | ./kadmin.sh $SRV_CONF_DIR -k $KEYTAB_DIR/admin.keytab
+echo "addprinc -pw password $USER@EXAMPLE.COM\nktadd -k client.keytab $USER@EXAMPLE.COM\nexit\n" | ./kadmin.sh $SRV_CONF_DIR -k $KEYTAB_DIR/admin.keytab
 
 echo "Adding service principal and generating keytab..."
-echo "addprinc -randkey nn/localhost@EXAMPLE.COM\nktadd -k nn.keytab nn/localhost@EXAMPLE.COM\nexit" | ./kadmin.sh $SRV_CONF_DIR -k $KEYTAB_DIR/admin.keytab
+echo "addprinc -randkey nn/localhost@EXAMPLE.COM\nktadd -k nn.keytab nn/localhost@EXAMPLE.COM\nexit\n" | ./kadmin.sh $SRV_CONF_DIR -k $KEYTAB_DIR/admin.keytab
 echo "Moving the keytabs to $KDC_HOME"
 mv client.keytab $KDC_HOME
 mv nn.keytab $KDC_HOME

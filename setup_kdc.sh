@@ -13,6 +13,7 @@ fi
 echo "Initialising KDC and assorted keytabs."
 
 rm -rf $KDC_HOME
+rm /tmp/krb5cc_hdfs_test
 mkdir -p $KEYTAB_DIR
 
 cd test/kdc

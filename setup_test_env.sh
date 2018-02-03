@@ -47,7 +47,7 @@ $HADOOP_HOME/bin/hadoop jar $MINICLUSTER_JAR minicluster -nnport $NN_PORT -datan
 sleep 30
 
 export KRB5_CONFIG=/tmp/kdc-home/krb5.conf
-HADOOP_FS="$HADOOP_HOME/bin/hadoop fs -Ddfs.block.size=1048576 -Dfs.defaultFS=hdfs://localhost:9000"
+HADOOP_FS="$HADOOP_HOME/bin/hadoop fs -Ddfs.block.size=1048576"
 $HADOOP_FS -mkdir -p "hdfs://$HADOOP_NAMENODE/_test"
 $HADOOP_FS -chmod 777 "hdfs://$HADOOP_NAMENODE/_test"
 

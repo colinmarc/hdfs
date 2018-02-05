@@ -36,6 +36,7 @@ func TestChmodDir(t *testing.T) {
 }
 
 func TestChmodNonexistent(t *testing.T) {
+	IgnoreIfKerberos(t)
 	client := getClient(t)
 
 	baleet(t, "/_test/nonexistent")
@@ -55,6 +56,7 @@ func TestChmodWithoutPermission(t *testing.T) {
 }
 
 func TestChown(t *testing.T) {
+	IgnoreIfKerberos(t)
 	client := getClient(t)
 
 	baleet(t, "/_test/tochown")
@@ -69,6 +71,7 @@ func TestChown(t *testing.T) {
 }
 
 func TestChownDir(t *testing.T) {
+	IgnoreIfKerberos(t)
 	client := getClient(t)
 
 	baleet(t, "/_test/tochowndir")
@@ -83,6 +86,7 @@ func TestChownDir(t *testing.T) {
 }
 
 func TestChownNonexistent(t *testing.T) {
+	IgnoreIfKerberos(t)
 	client := getClient(t)
 
 	baleet(t, "/_test/nonexistent")

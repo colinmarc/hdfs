@@ -2,7 +2,6 @@ package main
 
 import (
 	"errors"
-	"io"
 	"net/url"
 	"os"
 	"path"
@@ -162,51 +161,4 @@ func expandPaths(client *hdfs.Client, paths []string) ([]string, error) {
 	}
 
 	return res, nil
-}
-
-type walkFunc func(string, os.FileInfo)
-
-func walk(client *hdfs.Client, root string, visit walkFunc) error {
-	rootInfo, err := client.Stat(root)
-	if err != nil {
-		return err
-	}
-
-	visit(root, rootInfo)
-	if rootInfo.IsDir() {
-		err = walkDir(client, root, visit)
-		if err != nil {
-			return err
-		}
-	}
-
-	return nil
-}
-
-func walkDir(client *hdfs.Client, dir string, visit walkFunc) error {
-	dirReader, err := client.Open(dir)
-	if err != nil {
-		return err
-	}
-
-	var partial []os.FileInfo
-	for ; err != io.EOF; partial, err = dirReader.Readdir(100) {
-		if err != nil {
-			return err
-		}
-
-		for _, child := range partial {
-			childPath := path.Join(dir, child.Name())
-			visit(childPath, child)
-
-			if child.IsDir() {
-				err = walkDir(client, childPath, visit)
-				if err != nil {
-					return err
-				}
-			}
-		}
-	}
-
-	return nil
 }

@@ -38,7 +38,7 @@ func get(args []string) {
 		fatal(err)
 	}
 
-	err = walk(client, source, func(p string, fi os.FileInfo) {
+	err = client.Walk(source, func(p string, fi os.FileInfo, err error) error {
 		fullDest := filepath.Join(dest, strings.TrimPrefix(p, source))
 
 		if fi.IsDir() {
@@ -54,6 +54,7 @@ func get(args []string) {
 				fatal(err)
 			}
 		}
+		return nil
 	})
 
 	if err != nil {

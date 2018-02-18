@@ -1,9 +1,11 @@
 os:
 - linux
-- osx
 language: go
 go_import_path: github.com/colinmarc/hdfs
 go: 1.x
+sudo: required
+services:
+  - docker
 before_install:
 - git clone https://github.com/sstephenson/bats $HOME/bats
 - mkdir -p $HOME/bats/build
@@ -25,11 +27,9 @@ script:
 - find protocol -name *.pb.go | xargs touch # so make doesn't try to regen protobuf files
 - make test
 - cat minicluster.log
-sudo: false
 cache:
  - "$HOME/hadoop-$HADOOP_DISTRO"
  - "$HOME/bats"
- - "$HOME/kerby"
 deploy:
   skip_cleanup: true
   provider: releases

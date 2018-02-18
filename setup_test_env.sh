@@ -44,7 +44,7 @@ echo "minicluster jar found at $MINICLUSTER_JAR"
 # start the namenode in the background
 echo "Starting hadoop namenode..."
 $HADOOP_HOME/bin/hadoop jar $MINICLUSTER_JAR minicluster -nnport $NN_PORT -datanodes 3 -nomr -format "$@" > minicluster.log 2>&1 &
-sleep 30
+sleep 40
 
 export KRB5_CONFIG=/tmp/kdc-home/krb5.conf
 HADOOP_FS="$HADOOP_HOME/bin/hadoop fs -Ddfs.block.size=1048576 -Dfs.defaultFS=hdfs://localhost:9000"

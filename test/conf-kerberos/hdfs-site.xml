@@ -25,7 +25,7 @@
     </property>
     <property>
         <name>dfs.datanode.kerberos.principal</name>
-        <value>nn/localhost@EXAMPLE.COM</value>
+        <value>nn/_@EXAMPLE.COM</value>
     </property>
     <property>
         <name>ignore.secure.ports.for.testing</name>

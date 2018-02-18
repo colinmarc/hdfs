@@ -29,6 +29,7 @@ sudo: false
 cache:
  - "$HOME/hadoop-$HADOOP_DISTRO"
  - "$HOME/bats"
+ - "$HOME/kerby"
 deploy:
   skip_cleanup: true
   provider: releases

@@ -37,11 +37,11 @@
     </property>
     <property>
         <name>dfs.namenode.kerberos.principal</name>
-        <value>nn/_@EXAMPLE.COM</value>
+        <value>nn/localhost@EXAMPLE.COM</value>
     </property>
     <property>
         <name>dfs.web.authentication.kerberos.principal</name>
-        <value>nn/_@EXAMPLE.COM</value>
+        <value>nn/localhost@EXAMPLE.COM</value>
     </property>
     <property>
         <name>dfs.block.access.token.enable</name>
@@ -53,7 +53,7 @@
     </property>
     <property>
         <name>dfs.datanode.kerberos.principal</name>
-        <value>nn/_@EXAMPLE.COM</value>
+        <value>nn/localhost@EXAMPLE.COM</value>
     </property>
     <property>
         <name>ignore.secure.ports.for.testing</name>

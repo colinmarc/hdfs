@@ -57,8 +57,8 @@ kadmin.local -q "addprinc -randkey $TEST_USER@EXAMPLE.COM"
 kadmin.local -q "ktadd -k client.keytab $TEST_USER"
 
 rm -f nn.keytab
-kadmin.local -q "addprinc -randkey nn/_@EXAMPLE.COM"
-kadmin.local -q "ktadd -k nn.keytab nn/_"
+kadmin.local -q "addprinc -randkey nn/localhost@EXAMPLE.COM"
+kadmin.local -q "ktadd -k nn.keytab nn/localhost"
 
 echo "Restarting Kerberos KDS service"
 service krb5-kdc restart

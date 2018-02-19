@@ -8,10 +8,10 @@ import (
 	"strings"
 
 	hadoop "github.com/colinmarc/hdfs/protocol/hadoop_common"
-	"gopkg.in/jcmturner/gokrb5.v3/client"
-	"gopkg.in/jcmturner/gokrb5.v3/gssapi"
-	"gopkg.in/jcmturner/gokrb5.v3/iana/keyusage"
-	"gopkg.in/jcmturner/gokrb5.v3/types"
+	"gopkg.in/jcmturner/gokrb5.v4/client"
+	"gopkg.in/jcmturner/gokrb5.v4/gssapi"
+	"gopkg.in/jcmturner/gokrb5.v4/iana/keyusage"
+	"gopkg.in/jcmturner/gokrb5.v4/types"
 )
 
 const saslRpcCallId int32 = -33

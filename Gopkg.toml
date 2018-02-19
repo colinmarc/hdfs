@@ -34,5 +34,5 @@
   unused-packages = true
 
 [[constraint]]
-  name = "gopkg.in/jcmturner/gokrb5.v3"
-  version = "3.0.0"
+  name = "gopkg.in/jcmturner/gokrb5.v4"
+  version = "4.0.0"

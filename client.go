@@ -8,7 +8,7 @@ import (
 
 	hdfs "github.com/colinmarc/hdfs/protocol/hadoop_hdfs"
 	"github.com/colinmarc/hdfs/rpc"
-	krb "gopkg.in/jcmturner/gokrb5.v3/client"
+	krb "gopkg.in/jcmturner/gokrb5.v4/client"
 )
 
 // A Client represents a connection to an HDFS cluster

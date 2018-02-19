@@ -71,7 +71,7 @@
   version = "v1.0.1"
 
 [[projects]]
-  name = "gopkg.in/jcmturner/gokrb5.v3"
+  name = "gopkg.in/jcmturner/gokrb5.v4"
   packages = [
     "asn1tools",
     "client",
@@ -86,6 +86,7 @@
     "crypto/rfc8009",
     "gssapi",
     "iana",
+    "iana/addrtype",
     "iana/adtype",
     "iana/asnAppTag",
     "iana/chksumtype",
@@ -104,12 +105,12 @@
     "pac",
     "types"
   ]
-  revision = "f083a8756c5f2ec45187c4c73f29fe848e589cf8"
-  version = "v3.0.0"
+  revision = "48dba5ef0aac5a0737948e1f2d38ff71880f0a72"
+  version = "v4.1.0"
 
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "705b3c3435ce8aa8479acaba67fcbdfe42c6bb4794ccd0edce1d95d28dd7f5f2"
+  inputs-digest = "f29283c73d3116420249007ae8cca3508c39a61aad2b0222b5f2126b66dbf0b8"
   solver-name = "gps-cdcl"
   solver-version = 1

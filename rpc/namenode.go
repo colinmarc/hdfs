@@ -11,7 +11,7 @@ import (
 
 	hadoop "github.com/colinmarc/hdfs/protocol/hadoop_common"
 	"github.com/golang/protobuf/proto"
-	krb "gopkg.in/jcmturner/gokrb5.v3/client"
+	krb "gopkg.in/jcmturner/gokrb5.v4/client"
 )
 
 const (

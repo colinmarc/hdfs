@@ -352,7 +352,9 @@ func (c *NamenodeConnection) writeNamenodeHandshake() error {
 	c.conn.Write(rpcHeader)
 
 	if authProto == saslAuthProtocol {
-		doKerberosHandshake(c)
+		if err := doKerberosHandshake(c); err != nil {
+			return err
+		}
 	}
 
 	rrh := newRPCRequestHeader(handshakeCallID, c.clientId)

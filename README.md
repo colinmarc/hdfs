@@ -32,7 +32,6 @@ Along with the library, this repo contains a commandline client for HDFS. Like
 the library, its primary aim is to be idiomatic, by enabling your favorite unix
 verbs:
 
-
     $ hdfs --help
     Usage: hdfs COMMAND
     The flags available are a subset of the POSIX ones, but should behave similarly.
@@ -76,13 +75,13 @@ Installing the library
 
 To install the library, once you have Go [all set up][2]:
 
-    $ go get -u github.com/colinmarc/hdfs
+    go get -u github.com/colinmarc/hdfs
 
 Installing the commandline client
 ---------------------------------
 
 Grab a tarball from the [releases page](https://github.com/colinmarc/hdfs/releases)
-and unzip it wherever you like.
+and unzip it wherever you like. To build it from sources use : `go build ./cmd/hdfs`
 
 You'll want to add the following line to your `.bashrc` or `.profile`:
 

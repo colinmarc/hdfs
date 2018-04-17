@@ -3,6 +3,7 @@ package hdfs
 import (
 	"bytes"
 	"encoding/hex"
+	"fmt"
 	"hash/crc32"
 	"io"
 	"io/ioutil"
@@ -172,7 +173,7 @@ func TestFileSeek(t *testing.T) {
 func TestFileReadDir(t *testing.T) {
 	client := getClient(t)
 
-	mkdirp(t, "/_test/fulldir3")
+	baleet(t, "/_test/fulldir3")
 	mkdirp(t, "/_test/fulldir3/dir")
 	touch(t, "/_test/fulldir3/1")
 	touch(t, "/_test/fulldir3/2")
@@ -202,7 +203,7 @@ func TestFileReadDir(t *testing.T) {
 func TestFileReadDirnames(t *testing.T) {
 	client := getClient(t)
 
-	mkdirp(t, "/_test/fulldir4")
+	baleet(t, "/_test/fulldir4")
 	mkdirp(t, "/_test/fulldir4/dir")
 	touch(t, "/_test/fulldir4/1")
 	touch(t, "/_test/fulldir4/2")
@@ -214,6 +215,40 @@ func TestFileReadDirnames(t *testing.T) {
 	res, err := file.Readdirnames(0)
 	require.Equal(t, 4, len(res))
 	assert.EqualValues(t, []string{"1", "2", "3", "dir"}, res)
+}
+
+func TestFileReadDirMany(t *testing.T) {
+	client := getClient(t)
+
+	total := maxReadDir*5 + maxReadDir/2 + 35
+	firstBatch := maxReadDir + 71
+
+	baleet(t, "/_test/fulldir5")
+	mkdirp(t, "/_test/fulldir5")
+	for i := 0; i < total; i++ {
+		touch(t, fmt.Sprintf("/_test/fulldir5/%04d", i))
+	}
+
+	file, err := client.Open("/_test/fulldir5")
+	require.NoError(t, err)
+
+	res, err := file.Readdir(firstBatch)
+	require.Equal(t, firstBatch, len(res))
+	for i := range res {
+		assert.EqualValues(t, fmt.Sprintf("%04d", i), res[i].Name())
+	}
+
+	res, err = file.Readdir(total)
+	assert.Equal(t, total-firstBatch, len(res))
+	for i := range res {
+		assert.EqualValues(t, fmt.Sprintf("%04d", i+firstBatch), res[i].Name())
+	}
+
+	res, err = file.Readdir(0)
+	require.Equal(t, total, len(res))
+	for i := range res {
+		assert.EqualValues(t, fmt.Sprintf("%04d", i), res[i].Name())
+	}
 }
 
 func TestOpenFileWithoutPermission(t *testing.T) {

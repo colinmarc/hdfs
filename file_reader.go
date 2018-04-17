@@ -12,6 +12,8 @@ import (
 	"github.com/golang/protobuf/proto"
 )
 
+const maxReadDir = 1024
+
 // A FileReader represents an existing file or directory in HDFS. It implements
 // io.Reader, io.ReaderAt, io.Seeker, and io.Closer, and can only be used for
 // reads. For writes, see FileWriter and Client.Create.
@@ -229,17 +231,31 @@ func (f *FileReader) Readdir(n int) ([]os.FileInfo, error) {
 		f.readdirLast = ""
 	}
 
-	res, err := f.client.getDirList(f.name, f.readdirLast, n)
-	if err != nil {
-		return res, err
+	res := make([]os.FileInfo, 0)
+	for {
+		k := n - len(res)
+		if n <= 0 || k > maxReadDir {
+			k = maxReadDir
+		}
+
+		batch, err := f.client.getDirList(f.name, f.readdirLast, k)
+		if err != nil {
+			return nil, err
+		}
+
+		if len(batch) > 0 {
+			f.readdirLast = batch[len(batch)-1].Name()
+		}
+
+		res = append(res, batch...)
+		if len(batch) < k || (n > 0 && len(res) == n) {
+			break
+		}
 	}
 
-	if n > 0 {
-		if len(res) == 0 {
-			err = io.EOF
-		} else {
-			f.readdirLast = res[len(res)-1].Name()
-		}
+	var err error
+	if len(res) == 0 {
+		err = io.EOF
 	}
 
 	return res, err

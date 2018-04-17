@@ -152,6 +152,52 @@ func TestFileBigWriteReplication(t *testing.T) {
 	assert.EqualValues(t, 0x199d1ae6, hash.Sum32())
 }
 
+func TestFileWriteSmallFlushes(t *testing.T) {
+	client := getClient(t)
+
+	baleet(t, "/_test/create/6.txt")
+	mkdirp(t, "/_test/create")
+	writer, err := client.Create("/_test/create/6.txt")
+	require.NoError(t, err)
+
+	// Do a normal write, then a bunch of small flushes, then a normal write again.
+	expected := strings.Repeat("b", 65536+rand.Intn(1024)) + "\n"
+
+	n, err := writer.Write([]byte(expected))
+	require.NoError(t, err, "initial write of %d bytes", len(expected))
+	assert.Equal(t, len(expected), n)
+
+	for i := 0; i < 100; i++ {
+		s := strings.Repeat("b", rand.Intn(1024)) + "\n"
+		expected += s
+
+		n, err := writer.Write([]byte(s))
+		require.NoError(t, err, "write #%d of %d bytes", i, len(s))
+		assert.Equal(t, len(s), n)
+
+		err = writer.Flush()
+		require.NoError(t, err, "flush #%d", i)
+	}
+
+	s := strings.Repeat("b", 65536+rand.Intn(1024)) + "\n"
+	expected += s
+
+	n, err = writer.Write([]byte(s))
+	require.NoError(t, err, "final write of %d bytes", len(s))
+	assert.Equal(t, len(s), n)
+
+	err = writer.Close()
+	require.NoError(t, err)
+
+	reader, err := client.Open("/_test/create/6.txt")
+	require.NoError(t, err)
+
+	bytes, err := ioutil.ReadAll(reader)
+	require.NoError(t, err)
+	assert.Equal(t, len(expected), len(bytes))
+	assert.Equal(t, expected, string(bytes))
+}
+
 func TestCreateEmptyFile(t *testing.T) {
 	client := getClient(t)
 
@@ -343,5 +389,6 @@ func TestFileAppendRepeatedly(t *testing.T) {
 
 	bytes, err := ioutil.ReadAll(reader)
 	require.NoError(t, err)
+	assert.Equal(t, len(expected), len(bytes))
 	assert.Equal(t, expected, string(bytes))
 }

@@ -82,6 +82,15 @@ func (bw *BlockWriter) Write(b []byte) (int, error) {
 	return n, err
 }
 
+// Flush flushes any unwritten packets out to the datanode.
+func (bw *BlockWriter) Flush() error {
+	if bw.stream != nil {
+		return bw.stream.flush(true)
+	}
+
+	return nil
+}
+
 // Close implements io.Closer. It flushes any unwritten packets out to the
 // datanode, and sends a final packet indicating the end of the block.
 func (bw *BlockWriter) Close() error {

@@ -174,6 +174,21 @@ func (f *FileWriter) Write(b []byte) (int, error) {
 	return off, nil
 }
 
+// Flush flushes any buffered data out to the datanodes. Even immediately after
+// a call to Flush, it is still necessary to call Close once all data has been
+// written.
+func (f *FileWriter) Flush() error {
+	if f.closed {
+		return io.ErrClosedPipe
+	}
+
+	if f.blockWriter != nil {
+		return f.blockWriter.Flush()
+	}
+
+	return nil
+}
+
 // Close closes the file, writing any remaining data out to disk and waiting
 // for acknowledgements from the datanodes. It is important that Close is called
 // after all data has been written.

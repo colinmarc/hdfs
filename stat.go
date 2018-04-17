@@ -79,7 +79,7 @@ func (fi *FileInfo) Mode() os.FileMode {
 }
 
 func (fi *FileInfo) ModTime() time.Time {
-	return time.Unix(int64(fi.status.GetModificationTime())/1000, 0)
+	return time.Unix(0, int64(fi.status.GetModificationTime())*int64(time.Millisecond))
 }
 
 func (fi *FileInfo) IsDir() bool {

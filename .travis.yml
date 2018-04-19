@@ -12,21 +12,16 @@ before_install:
 - "$HOME/bats/install.sh $HOME/bats/build"
 - export PATH="$PATH:$HOME/bats/build/bin"
 env:
+- HADOOP_DISTRO=cdh KERBEROS=true
 - HADOOP_DISTRO=cdh KERBEROS=false
-- HADOOP_DISTRO=cdh KERBEROS=true HADOOP_CONF_DIR="/tmp/kdc-home/" HADOOP_KRB_CONF=/tmp/kdc-home/krb5.conf HADOOP_KEYTAB=/tmp/kdc-home/client.keytab
+- HADOOP_DISTRO=hdp KERBEROS=true
 - HADOOP_DISTRO=hdp KERBEROS=false
-- HADOOP_DISTRO=hdp KERBEROS=true HADOOP_CONF_DIR="/tmp/kdc-home/" HADOOP_KRB_CONF=/tmp/kdc-home/krb5.conf HADOOP_KEYTAB=/tmp/kdc-home/client.keytab
 before_script:
-- export NN_PORT=9000
-- export HADOOP_NAMENODE="localhost:$NN_PORT"
-- export HADOOP_HOME="$HOME/hadoop-$HADOOP_DISTRO"
-- "./setup_kdc.sh"
-- "./setup_test_env.sh"
+- . ./setup_test_env.sh
 before_deploy: make release
 script:
 - find protocol -name *.pb.go | xargs touch # so make doesn't try to regen protobuf files
 - make test
-- cat minicluster.log
 cache:
  - "$HOME/hadoop-$HADOOP_DISTRO"
  - "$HOME/bats"

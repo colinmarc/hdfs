@@ -16,12 +16,40 @@
 <!-- Put site-specific property overrides in this file. -->
 <configuration>
     <property>
+        <name>fs.defaultFS</name>
+        <value>hdfs://localhost:9000/</value>
+    </property>
+    <property>
+        <name>dfs.namenode.rpc-address.nn1</name>
+        <value>localhost:9000</value>
+    </property>
+    <property>
+        <name>hadoop.security.authentication</name>
+        <value>kerberos</value>
+    </property>
+    <property>
+        <name>hadoop.security.authorization</name>
+        <value>true</value>
+    </property>
+    <property>
+        <name>dfs.namenode.keytab.file</name>
+        <value>/tmp/nn.keytab</value>
+    </property>
+    <property>
+        <name>dfs.namenode.kerberos.principal</name>
+        <value>nn/localhost@EXAMPLE.COM</value>
+    </property>
+    <property>
+        <name>dfs.web.authentication.kerberos.principal</name>
+        <value>nn/localhost@EXAMPLE.COM</value>
+    </property>
+    <property>
         <name>dfs.block.access.token.enable</name>
         <value>true</value>
     </property>
     <property>
         <name>dfs.datanode.keytab.file</name>
-        <value>/tmp/kdc-home/nn.keytab</value>
+        <value>/tmp/nn.keytab</value>
     </property>
     <property>
         <name>dfs.datanode.kerberos.principal</name>
@@ -31,8 +59,5 @@
         <name>ignore.secure.ports.for.testing</name>
         <value>true</value>
     </property>
-    <property>
-        <name>dfs.permissions.enabled</name>
-        <value>false</value>
-    </property>
+
 </configuration>

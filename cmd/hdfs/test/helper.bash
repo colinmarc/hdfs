@@ -2,13 +2,13 @@
 
 export HADOOP_DISTRO=${HADOOP_DISTRO-"cdh"}
 export HADOOP_HOME=${HADOOP_HOME-"/tmp/hadoop-$HADOOP_DISTRO"}
-export HADOOP_OPTS="$HADOOP_OPTS -Djava.security.krb5.conf=/tmp/kdc-home/krb5.conf"
+export HADOOP_OPTS="$HADOOP_OPTS -Djava.security.krb5.conf=/etc/krb5.conf"
 export HADOOP_FS="$HADOOP_HOME/bin/hadoop fs -Ddfs.block.size=1048576"
 export ROOT_TEST_DIR="$BATS_TEST_DIRNAME/../../.."
 export HDFS="$ROOT_TEST_DIR/hdfs"
 if [ $KERBEROS = "true" ]; then
-    export HADOOP_KEYTAB="/tmp/kdc-home/client.keytab"
-    export HADOOP_KRB_CONF="$ROOT_TEST_DIR/test/kdc/krb5.conf"
+    export HADOOP_KEYTAB="/tmp/client.keytab"
+    export HADOOP_KRB_CONF="/etc/krb5.conf"
 fi
 
 # stolen from https://github.com/sstephenson/rbenv/blob/master/test/test_helper.bash

@@ -192,12 +192,24 @@ func (f *FileReader) ReadAt(b []byte, off int64) (int, error) {
 		return 0, io.ErrClosedPipe
 	}
 
+	if off < 0 {
+		return 0, &os.PathError{"readat", f.name, errors.New("negative offset")}
+	}
+
 	_, err := f.Seek(off, 0)
 	if err != nil {
 		return 0, err
 	}
 
-	return io.ReadFull(f, b)
+	n, err := io.ReadFull(f, b)
+
+	// For some reason, os.File.ReadAt returns io.EOF in this case instead of
+	// io.ErrUnexpectedEOF.
+	if err == io.ErrUnexpectedEOF {
+		err = io.EOF
+	}
+
+	return n, err
 }
 
 // Readdir reads the contents of the directory associated with file and returns

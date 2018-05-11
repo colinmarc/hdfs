@@ -130,6 +130,18 @@ func TestFileReadAt(t *testing.T) {
 	assert.EqualValues(t, testStr2, string(buf))
 }
 
+func TestFileReadAtEOF(t *testing.T) {
+	client := getClient(t)
+
+	file, err := client.Open("/_test/foo.txt")
+	require.NoError(t, err)
+
+	buf := make([]byte, 10)
+	_, err = file.ReadAt(buf, 1)
+
+	assert.Equal(t, err, io.EOF)
+}
+
 func TestFileSeek(t *testing.T) {
 	client := getClient(t)
 

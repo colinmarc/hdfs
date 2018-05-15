@@ -1,0 +1,166 @@
+<?xml version="1.0"?>
+<?xml-stylesheet type="text/xsl" href="configuration.xsl"?>
+
+<configuration>
+  <property>
+    <name>local.resourcemanager</name>
+    <value>master07.sunshine.sogou</value>
+  </property>
+
+  <property>
+    <name>local.resourcemanager2</name>
+    <value>master08.sunshine.sogou</value>
+  </property>
+                   
+  <property>
+    <name>local.namenode</name>
+    <value>master01.sunshine.sogou</value>
+  </property>
+
+  <property>
+    <name>local.namenode2</name>
+    <value>master02.sunshine.sogou</value>
+  </property>
+
+  <property>
+    <name>local.jobhistory</name>
+    <value>master09.sunshine.sogou</value>
+  </property>
+
+  <property>
+    <name>local.hcat</name>
+    <value>cloud101417590.wd.nm.ss.nop.sogou-op.org</value>
+  </property>
+
+  <property>
+    <name>local.hive</name>
+    <value>cloud101417592.wd.nm.ss.nop.sogou-op.org</value>
+  </property>
+
+  <property>
+    <name>fs.defaultFS</name>
+    <value>viewfs://nsX</value>
+  </property>
+
+  <property>
+       <name>fs.viewfs.mounttable.nsX.link./app-logs</name>
+       <value>hdfs://SunshineNameNode3/app-logs</value>
+    </property>
+
+    <property>
+       <name>fs.viewfs.mounttable.nsX.link./apps</name>
+       <value>hdfs://SunshineNameNode3/apps</value>
+    </property>
+
+    <property>
+       <name>fs.viewfs.mounttable.nsX.link./cloud</name>
+       <value>hdfs://SunshineNameNode/cloud</value>
+    </property>
+
+    <property>
+       <name>fs.viewfs.mounttable.nsX.link./ime</name>
+       <value>hdfs://SunshineNameNode3/ime</value>
+    </property>
+
+    <property>
+       <name>fs.viewfs.mounttable.nsX.link./lib</name>
+       <value>hdfs://SunshineNameNode3/lib</value>
+    </property>
+
+    <property>
+       <name>fs.viewfs.mounttable.nsX.link./logdata</name>
+       <value>hdfs://SunshineNameNode/logdata</value>
+    </property>
+
+    <property>
+       <name>fs.viewfs.mounttable.nsX.link./mapred</name>
+       <value>hdfs://SunshineNameNode3/mapred</value>
+    </property>
+
+    <property>
+       <name>fs.viewfs.mounttable.nsX.link./mr-history</name>
+       <value>hdfs://SunshineNameNode3/mr-history</value>
+    </property>
+
+    <property>
+       <name>fs.viewfs.mounttable.nsX.link./storage</name>
+       <value>hdfs://SunshineNameNode/storage</value>
+    </property>
+
+    <property>
+       <name>fs.viewfs.mounttable.nsX.link./tmp</name>
+       <value>hdfs://SunshineNameNode3/tmp</value>
+    </property>
+
+    <property>
+       <name>fs.viewfs.mounttable.nsX.link./user</name>
+       <value>hdfs://SunshineNameNode2/user</value>
+    </property>
+
+    <property>
+       <name>fs.viewfs.mounttable.nsX.link./root</name>
+       <value>hdfs://SunshineNameNode3/root</value>
+    </property>
+
+    <property>
+       <name>fs.viewfs.mounttable.nsX.link./hbase2</name>
+       <value>hdfs://SunshineNameNode3/hbase2</value>
+    </property>
+                      
+  <property>
+    <name>ha.zookeeper.quorum</name>
+    <value>master01.sunshine.sogou,master02.sunshine.sogou,master03.sunshine.sogou,master04.sunshine.sogou,master05.sunshine.sogou,master06.sunshine.sogou,master07.sunshine.sogou,master08.sunshine.sogou,master09.sunshine.sogou</value>
+  </property>
+                          
+  <property>
+    <name>hadoop.security.auth.server.address</name>
+    <value>http://master01.sunshine.sogou:50070,http://master02.sunshine.sogou:50070,http://master03.sunshine.sogou:50070,http://master04.sunshine.sogou:50070,http://master05.sunshine.sogou:50070,http://master06.sunshine.sogou:50070</value>
+  </property>
+
+  <property>
+    <name>hadoop.security.authentication</name>
+    <value>configfile</value>
+  </property>
+
+  <property>
+    <name>hadoop.security.authorization</name>
+    <value>false</value>
+  </property>
+                      
+  <property>
+    <name>hadoop.security.auth_to_local</name>
+    <value>
+      RULE:[2:$1@$0]([rn]m@.*)s/.*/yarn/
+      RULE:[2:$1@$0](jhs@.*)s/.*/mapred/
+      RULE:[2:$1@$0]([nd]n@.*)s/.*/hdfs/
+      RULE:[2:$1@$0](hm@.*)s/.*/hbase/
+      RULE:[2:$1@$0](rs@.*)s/.*/hbase/
+      DEFAULT</value>
+  </property>
+                                                                      
+  <property>
+    <name>io.serializations</name>
+    <value>org.apache.hadoop.io.serializer.WritableSerialization</value>
+  </property>
+                      
+  <property>
+    <name>io.compression.codecs</name>
+    <value>org.apache.hadoop.io.compress.GzipCodec,org.apache.hadoop.io.compress.DefaultCodec,org.apache.hadoop.io.compress.BZip2Codec,com.hadoop.compression.lzo.LzoCodec,com.hadoop.compression.lzo.LzopCodec</value>
+  </property>
+
+  <property>
+    <name>io.compression.codec.lzo.class</name>
+    <value>com.hadoop.compression.lzo.LzoCodec</value>
+  </property> 
+
+  <property>
+    <name>io.file.buffer.size</name>
+    <value>131072</value>
+  </property>
+                     
+  <property>
+    <name>sogou.uigs.isnewapi</name>
+    <value>true</value>
+  </property>
+                     
+</configuration>

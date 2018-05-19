@@ -11,11 +11,11 @@ import (
 // and directories are filtered by walkFn. The files are walked in lexical
 // order, which makes the output deterministic but means that for very large
 // directories Walk can be inefficient. Walk does not follow symbolic links.
-func (c *Client) Walk(root string, walkFn filepath.WalkFunc) error {
+func (c *SimpleClient) Walk(root string, walkFn filepath.WalkFunc) error {
 	return c.walk(root, walkFn)
 }
 
-func (c *Client) walk(path string, walkFn filepath.WalkFunc) error {
+func (c *SimpleClient) walk(path string, walkFn filepath.WalkFunc) error {
 	file, err := c.Open(path)
 	var info os.FileInfo
 	if file != nil {

@@ -11,11 +11,11 @@ import (
 
 // ReadDir reads the directory named by dirname and returns a list of sorted
 // directory entries.
-func (c *Client) ReadDir(dirname string) ([]os.FileInfo, error) {
+func (c *SimpleClient) ReadDir(dirname string) ([]os.FileInfo, error) {
 	return c.getDirList(dirname, "", 0)
 }
 
-func (c *Client) getDirList(dirname string, after string, max int) ([]os.FileInfo, error) {
+func (c *SimpleClient) getDirList(dirname string, after string, max int) ([]os.FileInfo, error) {
 	var res []os.FileInfo
 	last := after
 	for max <= 0 || len(res) < max {
@@ -39,7 +39,7 @@ func (c *Client) getDirList(dirname string, after string, max int) ([]os.FileInf
 	return res, nil
 }
 
-func (c *Client) getPartialDirList(dirname string, after string) ([]os.FileInfo, int, error) {
+func (c *SimpleClient) getPartialDirList(dirname string, after string) ([]os.FileInfo, int, error) {
 	dirname = path.Clean(dirname)
 
 	req := &hdfs.GetListingRequestProto{

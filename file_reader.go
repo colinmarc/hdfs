@@ -18,7 +18,7 @@ const maxReadDir = 1024
 // io.Reader, io.ReaderAt, io.Seeker, and io.Closer, and can only be used for
 // reads. For writes, see FileWriter and Client.Create.
 type FileReader struct {
-	client *Client
+	client *SimpleClient
 	name   string
 	info   os.FileInfo
 
@@ -32,7 +32,7 @@ type FileReader struct {
 }
 
 // Open returns an FileReader which can be used for reading.
-func (c *Client) Open(name string) (*FileReader, error) {
+func (c *SimpleClient) Open(name string) (*FileReader, error) {
 	info, err := c.getFileInfo(name)
 	if err != nil {
 		return nil, &os.PathError{"open", name, err}

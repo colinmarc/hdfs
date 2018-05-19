@@ -34,3 +34,38 @@ func TestConfFallback(t *testing.T) {
 
 	os.Unsetenv("HADOOP_HOME")
 }
+
+func TestConfWithViewfs(t *testing.T) {
+	var nns []string
+	var err error
+	var newurl string
+
+	os.Setenv("HADOOP_HOME", "test") // This will resolve to test/conf.
+	os.Setenv("HADOOP_CONF_DIR", "test/conf-viewfs")
+
+	snn2Addrs := []string{"master03.sunshine.sogou:8020", "master04.sunshine.sogou:8020"}
+
+	conf := LoadHadoopConf("")
+
+	defNsid := conf.DefaultNSID()
+	assert.EqualValues(t, "nsX", defNsid, "check defaultNSID in (test/conf-viewfs)")
+
+	nns, err = conf.Namenodes()
+	assert.Nil(t, err)
+	assert.EqualValues(t, []string{"nsX"}, nns, "loading via specified path (test/conf-viewfs)")
+
+	nns, err = conf.AddressesByNameServiceID("SunshineNameNode2")
+	assert.Nil(t, err)
+	assert.EqualValues(t, snn2Addrs, nns, "loading via specified path (test/conf-viewfs)")
+
+	newurl, err = conf.ViewfsReparseFilename("/user/sub")
+	assert.Nil(t, err)
+	assert.EqualValues(t, "hdfs://SunshineNameNode2/user/sub", newurl, "loading via specified path (test/conf-viewfs)")
+
+	newurl, err = conf.ViewfsReparseFilename("hdfs://nsX/user/sub")
+	assert.Nil(t, err)
+	assert.EqualValues(t, "hdfs://SunshineNameNode2/user/sub", newurl, "loading via specified path (test/conf-viewfs)")
+
+	os.Unsetenv("HADOOP_CONF_DIR")
+	os.Unsetenv("HADOOP_HOME")
+}

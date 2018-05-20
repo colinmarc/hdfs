@@ -77,14 +77,39 @@ func NewForUser(address string, user string) (*Client, error) {
 	}
 }
 
-func New(address string) (*Client, error) {
-	if address != "" {
-		t, err := NewSimpleClientForAddress(address)
-		if err != nil {
-			return nil, err
-		} else {
-			return &Client{t}, nil
+// New returns a connected Client, or an error if it can't connect. The user
+// will be the user the code is running under. If address is an empty string
+// it will try and get the namenode address from the hadoop configuration
+// files. If address is a NameServiceID in conf file, it will connect to one
+// of its HA node, If address is NameServiceID with Viewfs mount links, it
+// will return a ViewfsClient to handle links
+func New(maybe_addr string) (*Client, error) {
+	if maybe_addr != "" {
+		conf := LoadHadoopConf("")
+		o := conf.CheckTypeOfNameAddressString(maybe_addr)
+		switch o {
+		case TNAS_SimpleAddress, TNAS_SimpleNameServiceID:
+			{
+				t, err := NewSimpleClientForAddress(maybe_addr)
+				if err != nil {
+					return nil, err
+				} else {
+					return &Client{t}, nil
+				}
+			}
+		case TNAS_ViewfsNameServiceID:
+			{
+				t, err := NewViewfsClientForRootNSID(conf, maybe_addr)
+				if err != nil {
+					return nil, err
+				} else {
+					return &Client{t}, nil
+				}
+			}
+		default:
+			return nil, errUnresolvedNamenode
 		}
+
 	} else {
 		t, err := NewViewfsClientDefault()
 		if err != nil {

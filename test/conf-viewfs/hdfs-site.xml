@@ -6,41 +6,22 @@
   <!--for namenode ha-->
     <property>
       <name>dfs.nameservices</name>
-      <value>SunshineNameNode,SunshineNameNode2,SunshineNameNode3</value>
+      <value>SunshineNameNode1,SunshineNameNode2,SunshineNameNode3</value>
     </property>
 
     <property>
-      <name>dfs.ha.namenodes.SunshineNameNode</name>
+      <name>dfs.ha.namenodes.SunshineNameNode1</name>
       <value>nn1,nn2</value>
     </property>
 
     <property>
-      <name>dfs.namenode.rpc-address.SunshineNameNode.nn1</name>
-      <value>master01.sunshine.sogou:8020</value>
+      <name>dfs.namenode.rpc-address.SunshineNameNode1.nn1</name>
+      <value>localhost:9000</value>
     </property>
 
     <property>
-      <name>dfs.namenode.rpc-address.SunshineNameNode.nn2</name>
-      <value>master02.sunshine.sogou:8020</value>
-    </property>
-
-    <property>
-      <name>dfs.namenode.http-address.SunshineNameNode.nn1</name>
-      <value>master01.sunshine.sogou:50070</value>
-    </property>
-    <property>
-       <name>dfs.namenode.http-address.SunshineNameNode.nn2</name>
-      <value>master02.sunshine.sogou:50070</value>
-    </property>
-
-    <property>
-      <name>dfs.namenode.shared.edits.dir</name>
-      <value>qjournal://${local.journalnode}/SunshineNameNode</value>
-    </property>
-
-    <property>
-      <name>dfs.client.failover.proxy.provider.SunshineNameNode</name>
-      <value>org.apache.hadoop.hdfs.server.namenode.ha.ConfiguredFailoverProxyProvider</value>
+      <name>dfs.namenode.rpc-address.SunshineNameNode1.nn2</name>
+      <value>localhost:9001</value>
     </property>
 
     <property>
@@ -50,26 +31,12 @@
 
     <property>
       <name>dfs.namenode.rpc-address.SunshineNameNode2.nn3</name>
-      <value>master03.sunshine.sogou:8020</value>
+      <value>localhost:9000</value>
     </property>
 
     <property>
       <name>dfs.namenode.rpc-address.SunshineNameNode2.nn4</name>
-      <value>master04.sunshine.sogou:8020</value>
-    </property>
-
-    <property>
-      <name>dfs.namenode.http-address.SunshineNameNode2.nn3</name>
-      <value>master03.sunshine.sogou:50070</value>
-    </property>
-    <property>
-       <name>dfs.namenode.http-address.SunshineNameNode2.nn4</name>
-      <value>master04.sunshine.sogou:50070</value>
-    </property>
-
-    <property>
-      <name>dfs.client.failover.proxy.provider.SunshineNameNode2</name>
-      <value>org.apache.hadoop.hdfs.server.namenode.ha.ConfiguredFailoverProxyProvider</value>
+      <value>localhost:9001</value>
     </property>
 
     <property>
@@ -79,30 +46,12 @@
 
     <property>
       <name>dfs.namenode.rpc-address.SunshineNameNode3.nn5</name>
-      <value>master05.sunshine.sogou:8020</value>
+      <value>localhost:9000</value>
     </property>
 
     <property>
       <name>dfs.namenode.rpc-address.SunshineNameNode3.nn6</name>
-      <value>master06.sunshine.sogou:8020</value>
+      <value>localhost:9001</value>
     </property>
 
-    <property>
-      <name>dfs.namenode.http-address.SunshineNameNode3.nn5</name>
-      <value>master05.sunshine.sogou:50070</value>
-    </property>
-    <property>
-       <name>dfs.namenode.http-address.SunshineNameNode3.nn6</name>
-      <value>master06.sunshine.sogou:50070</value>
-    </property>
-
-    <property>
-      <name>dfs.client.failover.proxy.provider.SunshineNameNode3</name>
-      <value>org.apache.hadoop.hdfs.server.namenode.ha.ConfiguredFailoverProxyProvider</value>
-    </property>
-
-    <property>
-      <name>dfs.blocksize</name>
-      <value>536870912</value>
-    </property>
 </configuration>

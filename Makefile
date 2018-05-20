@@ -25,6 +25,7 @@ hdfs: clean $(SOURCES)
 install: get-deps
 	go install ./...
 
+check: test
 test: hdfs
 	go test -v -race $(shell go list ./... | grep -v vendor)
 	bats ./cmd/hdfs/test/*.bats
@@ -38,4 +39,4 @@ release: hdfs
 	cp hdfs README.md LICENSE.txt cmd/hdfs/bash_completion $(RELEASE_NAME)/
 	tar -cvzf $(RELEASE_NAME).tar.gz $(RELEASE_NAME)
 
-.PHONY: clean clean-protos install test release
+.PHONY: clean clean-protos install check test release

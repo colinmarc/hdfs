@@ -2,7 +2,6 @@ package hdfs
 
 import (
 	"errors"
-	"net/url"
 	"os"
 	"path/filepath"
 	"time"
@@ -33,17 +32,28 @@ func NewViewfsClientDefault() (*ViewfsClient, error) {
 }
 
 func NewViewfsClientWithConf(conf HadoopConf) (*ViewfsClient, error) {
-	return NewViewfsClientForUser(conf, "")
+	options := ViewfsClientOptions{
+		Conf: conf,
+	}
+	return NewViewfsClient(options)
 }
 
-func NewViewfsClientForUser(conf HadoopConf, user string) (*ViewfsClient, error) {
-	nsid := conf.DefaultNSID()
+func NewViewfsClientForRootNSIDAndUser(conf HadoopConf, nsid string, user string) (*ViewfsClient, error) {
 	options := ViewfsClientOptions{
 		Conf:              conf,
 		RootNameServiceID: nsid,
 		User:              user,
 	}
 	return NewViewfsClient(options)
+}
+
+func NewViewfsClientForRootNSID(conf HadoopConf, nsid string) (*ViewfsClient, error) {
+	return NewViewfsClientForRootNSIDAndUser(conf, nsid, "")
+}
+
+func NewViewfsClientForUser(conf HadoopConf, user string) (*ViewfsClient, error) {
+	nsid := conf.DefaultNSID()
+	return NewViewfsClientForRootNSIDAndUser(conf, nsid, user)
 }
 
 func NewViewfsClient(options ViewfsClientOptions) (*ViewfsClient, error) {
@@ -81,20 +91,17 @@ func (c *ViewfsClient) newSubClient(nsid string) (*SimpleClient, error) {
 }
 
 func (c *ViewfsClient) getSubClientAndNewPath(filename string) (*SimpleClient, string, error) {
-	newurl, err := c.conf.ViewfsReparseFilename(filename)
+	newnsid, newpath, err := c.conf.ViewfsReparseFilename(c.rootnsid, filename)
 	if err != nil {
 		return nil, "", err
 	}
-	u, _ := url.Parse(newurl)
-	nsid := u.Host
-	newpath := u.Path
-	sc, ok := c.clients[nsid]
+	sc, ok := c.clients[newnsid]
 	if !ok || sc == nil {
-		sc, err = c.newSubClient(nsid)
+		sc, err = c.newSubClient(newnsid)
 		if err != nil {
 			return nil, newpath, err
 		}
-		c.clients[nsid] = sc
+		c.clients[newnsid] = sc
 	}
 	return sc, newpath, nil
 }

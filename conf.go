@@ -66,6 +66,8 @@ func LoadHadoopConf(path string) HadoopConf {
 
 // Namenodes returns the default namenode hosts present in the configuration. The
 // returned slice will be sorted and deduped.
+// This function only works for old single NameService Hadoop conf
+// It should be deprecated
 func (conf HadoopConf) Namenodes() ([]string, error) {
 	defNSID := conf.DefaultNSID()
 	if defNSID != "" {
@@ -156,25 +158,28 @@ func (conf HadoopConf) AddressesByNameServiceID(nsid string) ([]string, error) {
 	}
 }
 
-// return the mount point of link
+// return the actual path on the final namenode of a viewfs path
 // if property
 //   fs.viewfs.mounttable.nsX.link./user = hdfs://SunshineNameNode3/user2
 //   defaultFS = nsX
 // then
-//  call ("/user/sub") returns ("hdfs://SunshineNameNode3/user/sub", nil)
-//  call ("hdfs://nsX/user/sub") returns ("hdfs://SunshineNameNode3/user2/sub", nil)
-func (conf HadoopConf) ViewfsReparseFilename(filename string) (string, error) {
+//  call ("/user/sub") returns ("SunshineNameNode3", "/user/sub", nil)
+//  call ("hdfs://nsX/user/sub") returns ("SunshineNameNode3", "/user2/sub", nil)
+func (conf HadoopConf) ViewfsReparseFilename(rootnsid string, filename string) (string, string, error) {
 	var nsid, path string
-	if filename[0] == '/' {
+	u, err := url.Parse(filename)
+	if err != nil || (u.Scheme != "hdfs" && u.Scheme != "") {
+		return "", "", errInvalidHDFSFilename
+	}
+	if u.Host != "" && rootnsid != "" { // host and nsid conflict
+		return "", "", errInvalidHDFSFilename
+	}
+	nsid, path = u.Host, u.Path
+	if nsid == "" {
+		nsid = rootnsid
+	}
+	if nsid == "" {
 		nsid = conf.DefaultNSID()
-		path = filename
-	} else {
-		u, err := url.Parse(filename)
-		if err != nil || u.Scheme != "hdfs" {
-			return "", errInvalidHDFSFilename
-		}
-		nsid = u.Host
-		path = u.Path
 	}
 
 	dirs := strings.Split(path, "/")
@@ -188,8 +193,52 @@ func (conf HadoopConf) ViewfsReparseFilename(filename string) (string, error) {
 		if ok {
 			postfix := filepath.Join(dirs[i:]...)
 			newurl := value + "/" + postfix
-			return newurl, nil
+			u, _ = url.Parse(newurl)
+			return u.Host, u.Path, nil
 		}
 	}
-	return "", errUnresolvedNamenode
+	return nsid, path, nil
+}
+
+// type of namenode address string
+type TypeOfNamenodeAddressString int
+
+const (
+	_ TypeOfNamenodeAddressString = iota
+	TNAS_SimpleAddress
+	TNAS_SimpleNameServiceID
+	TNAS_ViewfsNameServiceID
+)
+
+// returns the type of namenode/address
+// 3 situation
+// A. Just a simple hostname (with port)
+// B. A NameServiceID without viewfs mount links
+// C. A NameServiceID with viewfs mount links
+func (conf HadoopConf) CheckTypeOfNameAddressString(maybe_addr string) TypeOfNamenodeAddressString {
+	// if address is "Host:Port" style
+	if strings.Contains(maybe_addr, ":") {
+		return TNAS_SimpleAddress
+	}
+	// check is there any mounttable
+	prefix := "fs.viewfs.mounttable." + maybe_addr + ".link."
+	for key, _ := range conf {
+		if strings.HasPrefix(key, prefix) {
+			return TNAS_ViewfsNameServiceID
+		}
+	}
+	// check is it a NameServiceID
+	nsids_str, _ := conf["dfs.nameservices"]
+	nsids := strings.Split(nsids_str, ",")
+	for _, v := range nsids {
+		if maybe_addr == v {
+			return TNAS_SimpleNameServiceID
+		}
+	}
+	// check is there any HA nodes
+	if _, ok := conf["dfs.ha.namenodes."+maybe_addr]; ok {
+		return TNAS_SimpleNameServiceID
+	}
+	// fallback to simple address
+	return TNAS_SimpleAddress
 }

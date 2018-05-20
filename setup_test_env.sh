@@ -40,9 +40,15 @@ sleep 30
 HADOOP_FS="$HADOOP_HOME/bin/hadoop fs -Ddfs.block.size=1048576"
 $HADOOP_FS -mkdir -p "hdfs://$HADOOP_NAMENODE/_test"
 $HADOOP_FS -chmod 777 "hdfs://$HADOOP_NAMENODE/_test"
+$HADOOP_FS -mkdir -p "hdfs://$HADOOP_NAMENODE/_cloud"
+$HADOOP_FS -chmod 777 "hdfs://$HADOOP_NAMENODE/_cloud"
+$HADOOP_FS -mkdir -p "hdfs://$HADOOP_NAMENODE/_user"
+$HADOOP_FS -chmod 777 "hdfs://$HADOOP_NAMENODE/_user"
 
 $HADOOP_FS -put ./test/foo.txt "hdfs://$HADOOP_NAMENODE/_test/foo.txt"
 $HADOOP_FS -put ./test/mobydick.txt "hdfs://$HADOOP_NAMENODE/_test/mobydick.txt"
+$HADOOP_FS -put ./test/foo.txt "hdfs://$HADOOP_NAMENODE/_cloud/foo.txt"
+$HADOOP_FS -put ./test/mobydick.txt "hdfs://$HADOOP_NAMENODE/_user/mobydick.txt"
 
 echo "Please run the following command:"
 echo "export HADOOP_NAMENODE='$HADOOP_NAMENODE'"

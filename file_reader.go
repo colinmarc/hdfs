@@ -155,6 +155,10 @@ func (f *FileReader) Read(b []byte) (int, error) {
 		return 0, io.EOF
 	}
 
+	if len(b) == 0 {
+		return 0, nil
+	}
+
 	if f.blocks == nil {
 		err := f.getBlocks()
 		if err != nil {

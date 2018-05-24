@@ -101,6 +101,17 @@ func TestFileBigReadN(t *testing.T) {
 	assert.EqualValues(t, n, 1000000)
 }
 
+func TestFileReadNil(t *testing.T) {
+	client := getClient(t)
+
+	file, err := client.Open("/_test/mobydick.txt")
+	require.NoError(t, err)
+
+	n, err := file.Read(nil)
+	assert.NoError(t, err)
+	assert.EqualValues(t, n, 0)
+}
+
 func TestFileReadAt(t *testing.T) {
 	client := getClient(t)
 

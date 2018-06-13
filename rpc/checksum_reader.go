@@ -29,7 +29,7 @@ func NewChecksumReader(block *hdfs.LocatedBlockProto) *ChecksumReader {
 	datanodes := make([]string, len(locs))
 	for i, loc := range locs {
 		dn := loc.GetId()
-		datanodes[i] = fmt.Sprintf("%s:%d", dn.GetIpAddr(), dn.GetXferPort())
+		datanodes[i] = fmt.Sprintf("%s:%d", dn.GetHostName(), dn.GetXferPort())
 	}
 
 	return &ChecksumReader{

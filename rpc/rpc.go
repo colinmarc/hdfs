@@ -156,5 +156,5 @@ func readBlockOpResponse(r io.Reader) (*hdfs.BlockOpResponseProto, error) {
 
 func getDatanodeAddress(datanode *hdfs.DatanodeInfoProto) string {
 	id := datanode.GetId()
-	return fmt.Sprintf("%s:%d", id.GetIpAddr(), id.GetXferPort())
+	return fmt.Sprintf("%s:%d", id.GetHostName(), id.GetXferPort())
 }

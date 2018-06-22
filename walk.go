@@ -2,7 +2,6 @@ package hdfs
 
 import (
 	"os"
-	"path"
 	"path/filepath"
 	"sort"
 )
@@ -43,7 +42,7 @@ func (c *Client) walk(path string, walkFn filepath.WalkFunc) error {
 
 	sort.Strings(names)
 	for _, name := range names {
-		err = c.walk(path.Join(path, name), walkFn)
+		err = c.walk(filepath.Join(path, name), walkFn)
 		if err != nil {
 			return err
 		}

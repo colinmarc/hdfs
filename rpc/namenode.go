@@ -151,10 +151,6 @@ func (c *NamenodeConnection) resolveConnection() error {
 	}
 
 	for _, host := range c.hostList {
-		if c.host == host {
-			continue
-		}
-
 		if host.lastErrorAt.After(time.Now().Add(-backoffDuration)) {
 			continue
 		}

@@ -18,7 +18,7 @@ type FileInfo struct {
 }
 
 // Stat returns an os.FileInfo describing the named file or directory.
-func (c *Client) Stat(name string) (os.FileInfo, error) {
+func (c *SimpleClient) Stat(name string) (os.FileInfo, error) {
 	fi, err := c.getFileInfo(name)
 	if err != nil {
 		err = &os.PathError{"stat", name, err}
@@ -27,7 +27,7 @@ func (c *Client) Stat(name string) (os.FileInfo, error) {
 	return fi, err
 }
 
-func (c *Client) getFileInfo(name string) (os.FileInfo, error) {
+func (c *SimpleClient) getFileInfo(name string) (os.FileInfo, error) {
 	req := &hdfs.GetFileInfoRequestProto{Src: proto.String(name)}
 	resp := &hdfs.GetFileInfoResponseProto{}
 

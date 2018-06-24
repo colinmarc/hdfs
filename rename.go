@@ -9,7 +9,7 @@ import (
 )
 
 // Rename renames (moves) a file.
-func (c *Client) Rename(oldpath, newpath string) error {
+func (c *SimpleClient) Rename(oldpath, newpath string) error {
 	_, err := c.getFileInfo(newpath)
 	if err != nil && !os.IsNotExist(err) {
 		return &os.PathError{"rename", newpath, err}

@@ -19,7 +19,7 @@ type ContentSummary struct {
 // GetContentSummary returns a ContentSummary representing the named file or
 // directory. The summary contains information about the entire tree rooted
 // in the named file; for instance, it can return the total size of all
-func (c *Client) GetContentSummary(name string) (*ContentSummary, error) {
+func (c *SimpleClient) GetContentSummary(name string) (*ContentSummary, error) {
 	cs, err := c.getContentSummary(name)
 	if err != nil {
 		err = &os.PathError{"content summary", name, err}
@@ -28,7 +28,7 @@ func (c *Client) GetContentSummary(name string) (*ContentSummary, error) {
 	return cs, err
 }
 
-func (c *Client) getContentSummary(name string) (*ContentSummary, error) {
+func (c *SimpleClient) getContentSummary(name string) (*ContentSummary, error) {
 	req := &hdfs.GetContentSummaryRequestProto{Path: proto.String(name)}
 	resp := &hdfs.GetContentSummaryResponseProto{}
 

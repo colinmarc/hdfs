@@ -13,7 +13,7 @@ import (
 // Writer and Closer, and can only be used for writes. For reads, see
 // FileReader and Client.Open.
 type FileWriter struct {
-	client      *Client
+	client      *SimpleClient
 	name        string
 	replication int
 	blockSize   int64
@@ -28,7 +28,7 @@ type FileWriter struct {
 // to it. Because of the way that HDFS writes are buffered and acknowledged
 // asynchronously, it is very important that Close is called after all data has
 // been written.
-func (c *Client) Create(name string) (*FileWriter, error) {
+func (c *SimpleClient) Create(name string) (*FileWriter, error) {
 	_, err := c.getFileInfo(name)
 	if err == nil {
 		return nil, &os.PathError{"create", name, os.ErrExist}
@@ -50,7 +50,7 @@ func (c *Client) Create(name string) (*FileWriter, error) {
 // and permissions, and returns an io.WriteCloser for writing to it. Because of
 // the way that HDFS writes are buffered and acknowledged asynchronously, it is
 // very important that Close is called after all data has been written.
-func (c *Client) CreateFile(name string, replication int, blockSize int64, perm os.FileMode) (*FileWriter, error) {
+func (c *SimpleClient) CreateFile(name string, replication int, blockSize int64, perm os.FileMode) (*FileWriter, error) {
 	createReq := &hdfs.CreateRequestProto{
 		Src:          proto.String(name),
 		Masked:       &hdfs.FsPermissionProto{Perm: proto.Uint32(uint32(perm))},
@@ -83,7 +83,7 @@ func (c *Client) CreateFile(name string, replication int, blockSize int64, perm 
 // writing to it. Because of the way that HDFS writes are buffered and
 // acknowledged asynchronously, it is very important that Close is called after
 // all data has been written.
-func (c *Client) Append(name string) (*FileWriter, error) {
+func (c *SimpleClient) Append(name string) (*FileWriter, error) {
 	info, err := c.getFileInfo(name)
 	if err != nil {
 		return nil, &os.PathError{"append", name, err}
@@ -133,7 +133,7 @@ func (c *Client) Append(name string) (*FileWriter, error) {
 
 // CreateEmptyFile creates a empty file at the given name, with the
 // permissions 0644.
-func (c *Client) CreateEmptyFile(name string) error {
+func (c *SimpleClient) CreateEmptyFile(name string) error {
 	f, err := c.Create(name)
 	if err != nil {
 		return err

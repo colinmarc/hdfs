@@ -10,7 +10,7 @@ import (
 )
 
 // Remove removes the named file or directory.
-func (c *Client) Remove(name string) error {
+func (c *SimpleClient) Remove(name string) error {
 	_, err := c.getFileInfo(name)
 	if err != nil {
 		return &os.PathError{"remove", name, err}

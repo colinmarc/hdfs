@@ -156,7 +156,7 @@ func (c *NamenodeConnection) resolveConnection() error {
 		}
 
 		c.host = host
-		c.conn, err = net.DialTimeout("tcp", host.address, connectTimeout)
+		c.conn, err = net.DialTimeout("tcp", host.address, ConnectTimeout)
 		if err != nil {
 			c.markFailure(err)
 			continue

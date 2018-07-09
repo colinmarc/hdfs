@@ -60,7 +60,7 @@ func (cr *ChecksumReader) ReadChecksum() ([]byte, error) {
 }
 
 func (cr *ChecksumReader) readChecksum(address string) ([]byte, error) {
-	conn, err := net.DialTimeout("tcp", address, connectTimeout)
+	conn, err := net.DialTimeout("tcp", address, ConnectTimeout)
 	if err != nil {
 		return nil, err
 	}

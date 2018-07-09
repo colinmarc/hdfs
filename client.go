@@ -82,9 +82,7 @@ func NewClient(options ClientOptions) (*Client, error) {
 // it will try and get the namenode address from the hadoop configuration
 // files.
 func New(address string) (*Client, error) {
-	options := ClientOptions{
-		ConnectTimeout: 1 * time.Second,
-	}
+	options := ClientOptions{}
 
 	if address != "" {
 		options.Addresses = []string{address}

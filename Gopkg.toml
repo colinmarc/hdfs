@@ -32,3 +32,7 @@
 [prune]
   go-tests = true
   unused-packages = true
+
+[[constraint]]
+  name = "gopkg.in/jcmturner/gokrb5.v4"
+  version = "4.0.0"

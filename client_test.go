@@ -18,9 +18,33 @@ func getClient(t *testing.T) *Client {
 		t.Fatal(err)
 	}
 
-	return getClientForUser(t, username)
+	nn := os.Getenv("HADOOP_NAMENODE")
+	if nn == "" {
+		t.Fatal("HADOOP_NAMENODE not set")
+	}
+
+	hadoopCfg := LoadHadoopConf("")
+	krbClient := GetKrbClientIfRequired(hadoopCfg)
+
+	if krbClient == nil {
+		getClientForUser(t, username)
+	}
+
+	options := ClientOptions{}
+
+	options.Addresses = []string{nn}
+	options.KerberosClient = krbClient
+	options.ServicePrincipalName = GetServiceName()
+
+	c, err := NewClient(options)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	return c
 }
 
+// getClientForUser should only be used without Kerberos enabled
 func getClientForUser(t *testing.T, user string) *Client {
 	if c, ok := cachedClients[user]; ok {
 		return c
@@ -125,4 +149,10 @@ func TestCopyToRemote(t *testing.T) {
 	require.NoError(t, err)
 
 	assert.EqualValues(t, "bar\n", string(bytes))
+}
+
+func IgnoreIfKerberos(t *testing.T) {
+	if os.Getenv("KERBEROS") == "true" {
+		t.Skip("skipping permission tests under kerberos")
+	}
 }

@@ -1,9 +1,10 @@
 package main
 
 import (
-	"errors"
 	"fmt"
+	"log"
 	"os"
+	"strings"
 
 	"github.com/colinmarc/hdfs"
 	"github.com/pborman/getopt"
@@ -33,7 +34,15 @@ Valid commands:
   getmerge SOURCE DEST
   put SOURCE DEST
   df [-h]
-`, os.Args[0])
+
+To alter the default locations from which configurations are loaded, 
+the following environment variables may be used:
+
+  - HADOOP_CONF_DIR     hadoop configuration directory. Defaults to $HADOOP_HOME/conf 
+  - HADOOP_KRB_CONF     kerberos configuration file. Default: %s
+  - HADOOP_CCACHE       credential cache to use. Defaults: to "/tmp/krb5cc_{user_uid}"
+  - HADOOP_KEYTAB       if set, the specified keytab is used and the credential cache is ignored.
+`, os.Args[0], hdfs.KrbDefaultCfgPath)
 
 	lsOpts = getopt.New()
 	lsl    = lsOpts.Bool('l')
@@ -169,24 +178,48 @@ func fatalWithUsage(msg ...interface{}) {
 	fatal(msg...)
 }
 
-func getClient(namenode string) (*hdfs.Client, error) {
+// getClient returns a HDFS client to the namenode or namenods provided.
+// if an empty string is provided, the env var HADOOP_NAMENODE is looked up.
+// one or multiple namenodes may be specified in a comma separated list: "<namenode1>:<port>,<namenode2>:<port>,..."
+func getClient(namenodes string) (*hdfs.Client, error) {
 	if cachedClient != nil {
 		return cachedClient, nil
 	}
 
-	if namenode == "" {
-		namenode = os.Getenv("HADOOP_NAMENODE")
+	hadoopCfg := hdfs.LoadHadoopConf("")
+
+	options := hdfs.ClientOptions{}
+	if namenodes != "" {
+		options.Addresses = strings.Split(namenodes, ",")
+	} else {
+		options.Addresses = getNameNodes(hadoopCfg)
 	}
 
-	if namenode == "" && os.Getenv("HADOOP_CONF_DIR") == "" {
-		return nil, errors.New("Couldn't find a namenode to connect to. You should specify hdfs://<namenode>:<port> in your paths. Alternatively, set HADOOP_NAMENODE or HADOOP_CONF_DIR in your environment.")
-	}
+	options.KerberosClient = hdfs.GetKrbClientIfRequired(hadoopCfg)
+	options.ServicePrincipalName = hdfs.GetServiceName()
 
-	c, err := hdfs.New(namenode)
+	c, err := hdfs.NewClient(options)
 	if err != nil {
 		return nil, err
 	}
 
 	cachedClient = c
+
 	return cachedClient, nil
+}
+
+// getNameNodes checks the HADOOP_NAMENODE or the passed configuration for the namenode servers
+func getNameNodes(conf hdfs.HadoopConf) []string {
+
+	if env := os.Getenv("HADOOP_NAMENODE"); env != "" {
+		return strings.Split(env, ",")
+	}
+
+	nn, err := conf.Namenodes()
+
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	return nn
 }

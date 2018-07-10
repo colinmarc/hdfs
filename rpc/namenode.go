@@ -11,12 +11,14 @@ import (
 
 	hadoop "github.com/colinmarc/hdfs/protocol/hadoop_common"
 	"github.com/golang/protobuf/proto"
+	krb "gopkg.in/jcmturner/gokrb5.v4/client"
 )
 
 const (
 	rpcVersion            = 0x09
 	serviceClass          = 0x0
-	authProtocol          = 0x0
+	saslAuthProtocol      = 0xdf
+	noneAuthProtocol      = 0
 	protocolClass         = "org.apache.hadoop.hdfs.protocol.ClientProtocol"
 	protocolClassVersion  = 1
 	handshakeCallID       = -3
@@ -35,13 +37,22 @@ type NamenodeConnection struct {
 	host             *namenodeHost
 	hostList         []*namenodeHost
 	reqLock          sync.Mutex
+	// KerberosClient for kerberized clusters. Will be `nil` if not required.
+	kerberosClient *krb.Client
+	// ServicePrincipalName the service part of the SPN (<SERVICE>/<FQDN>, ie, nn/localhost) if Kerberos is enabled
+	servicePrincipalName string
 }
 
 // NamenodeConnectionOptions represents the configurable options available
 // for a NamenodeConnection.
 type NamenodeConnectionOptions struct {
 	Addresses []string
-	User      string
+	// User should contain the full user principal if kerberos is used
+	User string
+	// KerberosClient for kerberized clusters. Will be `nil` if not required.
+	KerberosClient *krb.Client
+	// ServicePrincipalName the service part of the SPN (<SERVICE>/<FQDN>, ie, nn/localhost) if Kerberos is enabled
+	ServicePrincipalName string
 }
 
 // NamenodeError represents an interepreted error from the Namenode, including
@@ -99,10 +110,12 @@ func NewNamenodeConnectionWithOptions(options NamenodeConnectionOptions) (*Namen
 	// "globally unique" ID) and as the "client name" in various requests.
 	clientId := newClientID()
 	c := &NamenodeConnection{
-		clientId:   clientId,
-		clientName: "go-hdfs-" + string(clientId),
-		user:       options.User,
-		hostList:   hostList,
+		clientId:             clientId,
+		clientName:           "go-hdfs-" + string(clientId),
+		user:                 options.User,
+		servicePrincipalName: options.ServicePrincipalName,
+		hostList:             hostList,
+		kerberosClient:       options.KerberosClient,
 	}
 
 	err := c.resolveConnection()
@@ -295,7 +308,6 @@ func (c *NamenodeConnection) readResponse(method string, resp proto.Message) err
 	return nil
 }
 
-// A handshake packet:
 // +-----------------------------------------------------------+
 // |  Header, 4 bytes ("hrpc")                                 |
 // +-----------------------------------------------------------+
@@ -305,26 +317,50 @@ func (c *NamenodeConnection) readResponse(method string, resp proto.Message) err
 // +-----------------------------------------------------------+
 // |  Auth protocol, 1 byte (Auth method None = 0x00)          |
 // +-----------------------------------------------------------+
+
+// +-----------------------------------------------------------+
+// | Kerberos Auth handshake happens here, if required.        |
+// +-----------------------------------------------------------+
+
+// +-----------------------------------------------------------+
 // |  uint32 length of the next two parts                      |
 // +-----------------------------------------------------------+
 // |  varint length + RpcRequestHeaderProto                    |
 // +-----------------------------------------------------------+
 // |  varint length + IpcConnectionContextProto                |
 // +-----------------------------------------------------------+
+
 func (c *NamenodeConnection) writeNamenodeHandshake() error {
+
+	var authProto byte = noneAuthProtocol
+	if c.kerberosClient != nil {
+		authProto = saslAuthProtocol
+	}
+
 	rpcHeader := []byte{
 		0x68, 0x72, 0x70, 0x63, // "hrpc"
-		rpcVersion, serviceClass, authProtocol,
+		rpcVersion,
+		serviceClass,
+		authProto,
+	}
+
+	c.conn.Write(rpcHeader)
+
+	if authProto == saslAuthProtocol {
+		if err := doKerberosHandshake(c); err != nil {
+			return err
+		}
 	}
 
 	rrh := newRPCRequestHeader(handshakeCallID, c.clientId)
 	cc := newConnectionContext(c.user)
 	packet, err := makeRPCPacket(rrh, cc)
+
 	if err != nil {
 		return err
 	}
 
-	_, err = c.conn.Write(append(rpcHeader, packet...))
+	_, err = c.conn.Write(packet)
 	return err
 }
 

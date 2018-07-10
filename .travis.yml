@@ -1,31 +1,30 @@
 os:
 - linux
-- osx
 language: go
 go_import_path: github.com/colinmarc/hdfs
 go: 1.x
+sudo: required
+services:
+  - docker
 before_install:
 - git clone https://github.com/sstephenson/bats $HOME/bats
 - mkdir -p $HOME/bats/build
 - "$HOME/bats/install.sh $HOME/bats/build"
 - export PATH="$PATH:$HOME/bats/build/bin"
 env:
-- HADOOP_DISTRO=cdh
-- HADOOP_DISTRO=hdp
+- HADOOP_DISTRO=cdh KERBEROS=true
+- HADOOP_DISTRO=cdh KERBEROS=false
+- HADOOP_DISTRO=hdp KERBEROS=true
+- HADOOP_DISTRO=hdp KERBEROS=false
 before_script:
-- export NN_PORT=9000
-- export HADOOP_NAMENODE="localhost:$NN_PORT"
-- export HADOOP_HOME="$HOME/hadoop-$HADOOP_DISTRO"
-- "./setup_test_env.sh"
+- . ./setup_test_env.sh
 before_deploy: make release
 script:
 - find protocol -name *.pb.go | xargs touch # so make doesn't try to regen protobuf files
 - make test
-- cat minicluster.log
-sudo: false
 cache:
-- "$HOME/hadoop-$HADOOP_DISTRO"
-- "$HOME/bats"
+ - "$HOME/hadoop-$HADOOP_DISTRO"
+ - "$HOME/bats"
 deploy:
   skip_cleanup: true
   provider: releases

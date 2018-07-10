@@ -30,7 +30,7 @@ func (c *Client) Chmod(name string, perm os.FileMode) error {
 }
 
 // Chown changes the user and group of the file. Unlike os.Chown, this takes
-// a string username and group (since that's what HDFS uses.)
+// a string krbUsername and group (since that's what HDFS uses.)
 //
 // If an empty string is passed for user or group, that field will not be
 // changed remotely.

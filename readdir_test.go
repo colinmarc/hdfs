@@ -96,6 +96,7 @@ func TestReadDirNonexistent(t *testing.T) {
 }
 
 func TestReadDirWithoutPermission(t *testing.T) {
+	IgnoreIfKerberos(t)
 	mkdirp(t, "/_test/accessdenied")
 	touch(t, "/_test/accessdenied/foo")
 

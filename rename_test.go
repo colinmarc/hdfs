@@ -46,6 +46,7 @@ func TestRenameDestExists(t *testing.T) {
 }
 
 func TestRenameWithoutPermissionForSrc(t *testing.T) {
+	IgnoreIfKerberos(t)
 	otherClient := getClientForUser(t, "other")
 
 	mkdirp(t, "/_test/accessdenied")
@@ -56,6 +57,7 @@ func TestRenameWithoutPermissionForSrc(t *testing.T) {
 }
 
 func TestRenameWithoutPermissionForDest(t *testing.T) {
+	IgnoreIfKerberos(t)
 	otherClient := getClientForUser(t, "other")
 
 	baleet(t, "/_test/ownedbyother2")

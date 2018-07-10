@@ -2,3 +2,5 @@ build
 hdfs
 !hdfs/
 minicluster.log
+.idea/*
+*.keytab

@@ -244,7 +244,7 @@ func (s *blockWriteStream) ackPackets() {
 	// Once we've seen an error, just keep reading packets off the channel (but
 	// not off the socket) until the writing thread figures it out. If we don't,
 	// the upstream thread could deadlock waiting for the channel to have space.
-	for _ = range s.packets {
+	for range s.packets {
 	}
 }
 

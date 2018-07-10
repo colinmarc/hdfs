@@ -5,6 +5,7 @@ import (
 	"io/ioutil"
 	"os"
 	"os/user"
+	"time"
 
 	hdfs "github.com/colinmarc/hdfs/protocol/hadoop_hdfs"
 	"github.com/colinmarc/hdfs/rpc"
@@ -18,9 +19,10 @@ type Client struct {
 
 // ClientOptions represents the configurable options for a client.
 type ClientOptions struct {
-	Addresses []string
-	Namenode  *rpc.NamenodeConnection
-	User      string
+	Addresses      []string
+	Namenode       *rpc.NamenodeConnection
+	User           string
+	ConnectTimeout time.Duration
 }
 
 // Username returns the value of HADOOP_USER_NAME in the environment, or
@@ -66,6 +68,10 @@ func NewClient(options ClientOptions) (*Client, error) {
 		if err != nil {
 			return nil, err
 		}
+	}
+
+	if options.ConnectTimeout > 0 {
+		rpc.ConnectTimeout = options.ConnectTimeout
 	}
 
 	return &Client{namenode: options.Namenode}, nil

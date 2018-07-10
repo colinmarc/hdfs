@@ -22,7 +22,7 @@ const (
 )
 
 var (
-	connectTimeout  = 1 * time.Second
+	ConnectTimeout  = 1 * time.Second
 	namenodeTimeout = 3 * time.Second
 	datanodeTimeout = 3 * time.Second
 )

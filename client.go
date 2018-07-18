@@ -18,9 +18,14 @@ type Client struct {
 
 // ClientOptions represents the configurable options for a client.
 type ClientOptions struct {
+	// Addresses specifies the namenode(s) to connect to.
 	Addresses []string
-	Namenode  *rpc.NamenodeConnection
-	User      string
+	// User specifies which HDFS user the client will act as.
+	User string
+	// Namenode optionally specifies an existing NamenodeConnection to wrap. This
+	// is useful if you needed to create the namenode net.Conn manually for
+	// whatever reason.
+	Namenode *rpc.NamenodeConnection
 }
 
 // Username returns the value of HADOOP_USER_NAME in the environment, or
@@ -41,20 +46,6 @@ func Username() (string, error) {
 // the client could not be created.
 func NewClient(options ClientOptions) (*Client, error) {
 	var err error
-
-	if options.User == "" {
-		options.User, err = Username()
-		if err != nil {
-			return nil, err
-		}
-	}
-
-	if options.Addresses == nil || len(options.Addresses) == 0 {
-		options.Addresses, err = getNameNodeFromConf()
-		if err != nil {
-			return nil, err
-		}
-	}
 
 	if options.Namenode == nil {
 		options.Namenode, err = rpc.NewNamenodeConnectionWithOptions(
@@ -78,8 +69,18 @@ func NewClient(options ClientOptions) (*Client, error) {
 func New(address string) (*Client, error) {
 	options := ClientOptions{}
 
-	if address != "" {
+	if address == "" {
+		options.Addresses, err = getNameNodeFromConf()
+		if err != nil {
+			return nil, err
+		}
+	} else {
 		options.Addresses = []string{address}
+	}
+
+	options.User, err = Username()
+	if err != nil {
+		return nil, err
 	}
 
 	return NewClient(options)

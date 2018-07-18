@@ -5,6 +5,7 @@ import (
 	"io/ioutil"
 	"os"
 	"os/user"
+	"strings"
 
 	hdfs "github.com/colinmarc/hdfs/protocol/hadoop_hdfs"
 	"github.com/colinmarc/hdfs/rpc"
@@ -28,6 +29,15 @@ type ClientOptions struct {
 	Namenode *rpc.NamenodeConnection
 }
 
+// ClientOptionsFromConf attempts to load any relevant configuration options
+// from the given Hadoop configuration and create a ClientOptions struct
+// suitable for creating a Client. Currently this is restricted to the namenode
+// address(es), but may be expanded in the future.
+func ClientOptionsFromConf(conf HadoopConf) (ClientOptions, error) {
+	namenodes, err := conf.Namenodes()
+	return ClientOptions{Addresses: namenodes}, err
+}
+
 // Username returns the value of HADOOP_USER_NAME in the environment, or
 // the current system user if it is not set.
 func Username() (string, error) {
@@ -35,10 +45,12 @@ func Username() (string, error) {
 	if username != "" {
 		return username, nil
 	}
+
 	currentUser, err := user.Current()
 	if err != nil {
 		return "", err
 	}
+
 	return currentUser.Username, nil
 }
 
@@ -63,19 +75,19 @@ func NewClient(options ClientOptions) (*Client, error) {
 }
 
 // New returns a connected Client, or an error if it can't connect. The user
-// will be the user the code is running under. If address is an empty string
-// it will try and get the namenode address from the hadoop configuration
-// files.
+// will be the current system user, or HADOOP_USER_NAME if set. Any relevant
+// options (including the address(es) of the namenode(s), if an empty string is
+// passed) will be loaded from the Hadoop configuration present at
+// HADOOP_CONF_DIR or the default location.
 func New(address string) (*Client, error) {
-	options := ClientOptions{}
+	conf := LoadHadoopConf("")
+	options, err := ClientOptionsFromConf(conf)
+	if err != nil {
+		options = ClientOptions{}
+	}
 
-	if address == "" {
-		options.Addresses, err = getNameNodeFromConf()
-		if err != nil {
-			return nil, err
-		}
-	} else {
-		options.Addresses = []string{address}
+	if address != "" {
+		options.Addresses = strings.Split(address, ",")
 	}
 
 	options.User, err = Username()
@@ -84,17 +96,6 @@ func New(address string) (*Client, error) {
 	}
 
 	return NewClient(options)
-}
-
-// getNameNodeFromConf returns namenodes from the system Hadoop configuration.
-func getNameNodeFromConf() ([]string, error) {
-	hadoopConf := LoadHadoopConf("")
-
-	namenodes, nnErr := hadoopConf.Namenodes()
-	if nnErr != nil {
-		return nil, nnErr
-	}
-	return namenodes, nil
 }
 
 // NewForUser returns a connected Client with the user specified, or an error if

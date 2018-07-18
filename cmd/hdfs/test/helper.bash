@@ -1,8 +1,6 @@
 #!/bin/bash
 
-export HADOOP_DISTRO=${HADOOP_DISTRO-"cdh"}
-export HADOOP_HOME=${HADOOP_HOME-"/tmp/hadoop-$HADOOP_DISTRO"}
-export HADOOP_FS="$HADOOP_HOME/bin/hadoop fs -Ddfs.block.size=1048576"
+export HADOOP_FS=${HADOOP_FS-"hadoop fs"}
 export ROOT_TEST_DIR="$BATS_TEST_DIRNAME/../../.."
 export HDFS="$ROOT_TEST_DIR/hdfs"
 

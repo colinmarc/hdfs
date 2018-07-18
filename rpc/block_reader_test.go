@@ -87,6 +87,10 @@ func getBlockReader(t *testing.T, name string) (*BlockReader, string) {
 func TestReadFailsOver(t *testing.T) {
 	br, dn := getBlockReader(t, "/_test/mobydick.txt")
 	datanodes := br.datanodes.numRemaining()
+	if datanodes < 2 {
+		t.Skip("not enough datanodes to test failover")
+	}
+
 	br.stream.reader = iotest.TimeoutReader(br.stream.reader)
 
 	hash := crc32.NewIEEE()
@@ -103,6 +107,9 @@ func TestReadFailsOver(t *testing.T) {
 func TestReadFailsOverMidRead(t *testing.T) {
 	br, dn := getBlockReader(t, "/_test/mobydick.txt")
 	datanodes := br.datanodes.numRemaining()
+	if datanodes < 2 {
+		t.Skip("not enough datanodes to test failover")
+	}
 
 	hash := crc32.NewIEEE()
 	_, err := io.CopyN(hash, br, 10000)

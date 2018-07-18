@@ -9,7 +9,7 @@ setup() {
 }
 
 @test "put" {
-  run $HDFS put $ROOT_TEST_DIR/test/foo.txt /_test_cmd/put/1
+  run $HDFS put $ROOT_TEST_DIR/testdata/foo.txt /_test_cmd/put/1
   assert_success
 
   run $HDFS cat /_test_cmd/put/1/foo.txt
@@ -17,18 +17,18 @@ setup() {
 }
 
 @test "put long" {
-  run $HDFS put $ROOT_TEST_DIR/test/mobydick.txt /_test_cmd/put/1
+  run $HDFS put $ROOT_TEST_DIR/testdata/mobydick.txt /_test_cmd/put/1
   assert_success
 
   run bash -c "$HDFS cat /_test_cmd/put/1/mobydick.txt > $BATS_TMPDIR/mobydick_test.txt"
   assert_success
 
-  SHA=`shasum < $ROOT_TEST_DIR/test/mobydick.txt | awk '{ print $1 }'`
+  SHA=`shasum < $ROOT_TEST_DIR/testdata/mobydick.txt | awk '{ print $1 }'`
   assert_equal $SHA `shasum < $BATS_TMPDIR/mobydick_test.txt | awk '{ print $1 }'`
 }
 
 @test "put dir" {
-  run $HDFS put $ROOT_TEST_DIR/test /_test_cmd/put/test2
+  run $HDFS put $ROOT_TEST_DIR/testdata /_test_cmd/put/test2
   assert_success
 
   run $HDFS cat /_test_cmd/put/test2/foo.txt
@@ -37,27 +37,27 @@ setup() {
   run bash -c "$HDFS cat /_test_cmd/put/test2/mobydick.txt > $BATS_TMPDIR/mobydick_test.txt"
   assert_success
 
-  SHA=`shasum < $ROOT_TEST_DIR/test/mobydick.txt | awk '{ print $1 }'`
+  SHA=`shasum < $ROOT_TEST_DIR/testdata/mobydick.txt | awk '{ print $1 }'`
   assert_equal $SHA `shasum < $BATS_TMPDIR/mobydick_test.txt | awk '{ print $1 }'`
 }
 
 
 @test "put dir into dir" {
-  run $HDFS put $ROOT_TEST_DIR/test /_test_cmd/put/test
+  run $HDFS put $ROOT_TEST_DIR/testdata /_test_cmd/put/test
   assert_success
 
-  run $HDFS cat /_test_cmd/put/test/test/foo.txt
+  run $HDFS cat /_test_cmd/put/test/testdata/foo.txt
   assert_output "bar"
 
-  run bash -c "$HDFS cat /_test_cmd/put/test/test/mobydick.txt > $BATS_TMPDIR/mobydick_test.txt"
+  run bash -c "$HDFS cat /_test_cmd/put/test/testdata/mobydick.txt > $BATS_TMPDIR/mobydick_test.txt"
   assert_success
 
-  SHA=`shasum < $ROOT_TEST_DIR/test/mobydick.txt | awk '{ print $1 }'`
+  SHA=`shasum < $ROOT_TEST_DIR/testdata/mobydick.txt | awk '{ print $1 }'`
   assert_equal $SHA `shasum < $BATS_TMPDIR/mobydick_test.txt | awk '{ print $1 }'`
 }
 
 @test "put dir into file" {
-  run $HDFS put $ROOT_TEST_DIR/test /_test_cmd/put/existing.txt
+  run $HDFS put $ROOT_TEST_DIR/testdata /_test_cmd/put/existing.txt
     assert_failure
     assert_output <<OUT
 mkdir /_test_cmd/put/existing.txt: file already exists
@@ -73,13 +73,13 @@ OUT
 }
 
 @test "put stdin long" {
-  run bash -c "cat $ROOT_TEST_DIR/test/mobydick.txt | $HDFS put - /_test_cmd/put/mobydick_stdin.txt"
+  run bash -c "cat $ROOT_TEST_DIR/testdata/mobydick.txt | $HDFS put - /_test_cmd/put/mobydick_stdin.txt"
   assert_success
 
   run bash -c "$HDFS cat /_test_cmd/put/mobydick_stdin.txt > $BATS_TMPDIR/mobydick_stdin_test.txt"
   assert_success
 
-  SHA=`shasum < $ROOT_TEST_DIR/test/mobydick.txt | awk '{ print $1 }'`
+  SHA=`shasum < $ROOT_TEST_DIR/testdata/mobydick.txt | awk '{ print $1 }'`
   assert_equal $SHA `shasum < $BATS_TMPDIR/mobydick_stdin_test.txt | awk '{ print $1 }'`
 }
 

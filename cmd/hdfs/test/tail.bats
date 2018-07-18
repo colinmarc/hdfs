@@ -11,13 +11,13 @@ load helper
 @test "tail long" {
   run $HDFS tail /_test/mobydick.txt
   assert_success
-  assert_output "$(tail $ROOT_TEST_DIR/test/mobydick.txt)"
+  assert_output "$(tail $ROOT_TEST_DIR/testdata/mobydick.txt)"
 }
 
 @test "tail bytes" {
   run $HDFS tail -c 10 /_test/mobydick.txt
   assert_success
-  assert_output "$(tail -c 10 $ROOT_TEST_DIR/test/mobydick.txt)"
+  assert_output "$(tail -c 10 $ROOT_TEST_DIR/testdata/mobydick.txt)"
 }
 
 @test "tail nonexistent" {

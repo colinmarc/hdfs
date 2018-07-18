@@ -11,13 +11,13 @@ load helper
 @test "head long" {
   run $HDFS head /_test/mobydick.txt
   assert_success
-  assert_output "$(head $ROOT_TEST_DIR/test/mobydick.txt)"
+  assert_output "$(head $ROOT_TEST_DIR/testdata/mobydick.txt)"
 }
 
 @test "head bytes" {
   run $HDFS head -c 10 /_test/mobydick.txt
   assert_success
-  assert_output "$(head -c 10 $ROOT_TEST_DIR/test/mobydick.txt)"
+  assert_output "$(head -c 10 $ROOT_TEST_DIR/testdata/mobydick.txt)"
 }
 
 @test "head nonexistent" {

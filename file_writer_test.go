@@ -48,7 +48,7 @@ func TestFileBigWrite(t *testing.T) {
 	writer, err := client.Create("/_test/create/2.txt")
 	require.NoError(t, err)
 
-	mobydick, err := os.Open("test/mobydick.txt")
+	mobydick, err := os.Open("testdata/mobydick.txt")
 	require.NoError(t, err)
 
 	n, err := io.Copy(writer, mobydick)
@@ -76,7 +76,7 @@ func TestFileBigWriteMultipleBlocks(t *testing.T) {
 	writer, err := client.CreateFile("/_test/create/3.txt", 1, 1048576, 0755)
 	require.NoError(t, err)
 
-	mobydick, err := os.Open("test/mobydick.txt")
+	mobydick, err := os.Open("testdata/mobydick.txt")
 	require.NoError(t, err)
 
 	n, err := io.Copy(writer, mobydick)
@@ -104,7 +104,7 @@ func TestFileBigWriteWeirdBlockSize(t *testing.T) {
 	writer, err := client.CreateFile("/_test/create/4.txt", 1, 1050000, 0755)
 	require.NoError(t, err)
 
-	mobydick, err := os.Open("test/mobydick.txt")
+	mobydick, err := os.Open("testdata/mobydick.txt")
 	require.NoError(t, err)
 
 	n, err := io.Copy(writer, mobydick)
@@ -132,7 +132,7 @@ func TestFileBigWriteReplication(t *testing.T) {
 	writer, err := client.CreateFile("/_test/create/5.txt", 3, 1048576, 0755)
 	require.NoError(t, err)
 
-	mobydick, err := os.Open("test/mobydick.txt")
+	mobydick, err := os.Open("testdata/mobydick.txt")
 	require.NoError(t, err)
 
 	n, err := io.Copy(writer, mobydick)
@@ -309,7 +309,7 @@ func TestFileAppendEmptyFile(t *testing.T) {
 }
 
 func TestFileAppendLastBlockFull(t *testing.T) {
-	mobydick, err := os.Open("test/mobydick.txt")
+	mobydick, err := os.Open("testdata/mobydick.txt")
 	require.NoError(t, err)
 
 	client := getClient(t)

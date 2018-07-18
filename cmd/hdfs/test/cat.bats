@@ -12,7 +12,7 @@ load helper
   run bash -c "$HDFS cat /_test/mobydick.txt > $BATS_TMPDIR/mobydick_test.txt"
   assert_success
 
-  SHA=`shasum < $ROOT_TEST_DIR/test/mobydick.txt | awk '{ print $1 }'`
+  SHA=`shasum < $ROOT_TEST_DIR/testdata/mobydick.txt | awk '{ print $1 }'`
   assert_equal $SHA `shasum < $BATS_TMPDIR/mobydick_test.txt | awk '{ print $1 }'`
 }
 

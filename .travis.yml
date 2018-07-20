@@ -5,14 +5,13 @@ go: 1.x
 env:
 - PLATFORM=cdh5
 - PLATFORM=hdp2
-before_install:
+install:
 - git clone https://github.com/sstephenson/bats $HOME/bats
 - mkdir -p $HOME/bats/build
 - "$HOME/bats/install.sh $HOME/bats/build"
 - export PATH="$PATH:$HOME/bats/build/bin"
-before_script:
-- export HADOOP_CONF_DIR="/etc/hadoop/conf"
 - ./travis-setup.sh $PLATFORM
+before_script: export HADOOP_CONF_DIR="/etc/hadoop/conf"
 script:
 - find protocol -name *.pb.go | xargs touch # so make doesn't try to regen protobuf files
 - make test

@@ -11,10 +11,10 @@ install:
 - "$HOME/bats/install.sh $HOME/bats/build"
 - export PATH="$PATH:$HOME/bats/build/bin"
 - ./travis-setup.sh $PLATFORM
-before_script: export HADOOP_CONF_DIR="/etc/hadoop/conf"
-script:
+before_script:
+- export HADOOP_CONF_DIR="/etc/hadoop/conf"
 - find protocol -name *.pb.go | xargs touch # so make doesn't try to regen protobuf files
-- make test
+script: make test
 before_deploy: make release
 deploy:
   skip_cleanup: true

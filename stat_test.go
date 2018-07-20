@@ -61,15 +61,15 @@ func TestStatDir(t *testing.T) {
 }
 
 func TestStatDirWithoutPermission(t *testing.T) {
-	otherClient := getClientForUser(t, "other")
+	client2 := getClientForUser(t, "gohdfs2")
 
-	mkdirp(t, "/_test/accessdenied")
-	touch(t, "/_test/accessdenied/foo")
+	mkdirpMask(t, "/_test/accessdenied", 0700)
+	touchMask(t, "/_test/accessdenied/foo", 0600)
 
-	resp, err := otherClient.Stat("/_test/accessdenied")
+	resp, err := client2.Stat("/_test/accessdenied")
 	assert.NoError(t, err)
 	assert.NotEqual(t, "", resp.(*FileInfo).Owner())
 
-	_, err = otherClient.Stat("/_test/accessdenied/foo")
+	_, err = client2.Stat("/_test/accessdenied/foo")
 	assertPathError(t, err, "stat", "/_test/accessdenied/foo", os.ErrPermission)
 }

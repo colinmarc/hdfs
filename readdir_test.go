@@ -96,10 +96,10 @@ func TestReadDirNonexistent(t *testing.T) {
 }
 
 func TestReadDirWithoutPermission(t *testing.T) {
-	mkdirp(t, "/_test/accessdenied")
-	touch(t, "/_test/accessdenied/foo")
+	mkdirpMask(t, "/_test/accessdenied", 0700)
+	touchMask(t, "/_test/accessdenied/foo", 0600)
 
-	client := getClientForUser(t, "other")
+	client := getClientForUser(t, "gohdfs2")
 
 	res, err := client.ReadDir("/_test/accessdenied")
 	assertPathError(t, err, "readdir", "/_test/accessdenied", os.ErrPermission)

@@ -246,7 +246,6 @@ func TestFileReadDirMany(t *testing.T) {
 	total := maxReadDir*5 + maxReadDir/2 + 35
 	firstBatch := maxReadDir + 71
 
-	baleet(t, "/_test/fulldir5")
 	mkdirp(t, "/_test/fulldir5")
 	for i := 0; i < total; i++ {
 		touch(t, fmt.Sprintf("/_test/fulldir5/%04d", i))
@@ -275,14 +274,14 @@ func TestFileReadDirMany(t *testing.T) {
 }
 
 func TestOpenFileWithoutPermission(t *testing.T) {
-	otherClient := getClientForUser(t, "other")
+	client2 := getClientForUser(t, "gohdfs2")
 
-	mkdirp(t, "/_test/accessdenied")
-	touch(t, "/_test/accessdenied/foo")
+	mkdirpMask(t, "/_test/accessdenied", 0700)
+	touchMask(t, "/_test/accessdenied/foo", 0700)
 
-	file, err := otherClient.Open("/_test/accessdenied/foo")
-	assert.Nil(t, file)
+	file, err := client2.Open("/_test/accessdenied/foo")
 	assertPathError(t, err, "open", "/_test/accessdenied/foo", os.ErrPermission)
+	assert.Nil(t, file)
 }
 
 func TestFileChecksum(t *testing.T) {

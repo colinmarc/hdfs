@@ -11,6 +11,7 @@ import (
 func TestContentSummaryDir(t *testing.T) {
 	client := getClient(t)
 
+	baleet(t, "/_test/dirforcs")
 	mkdirp(t, "/_test/dirforcs/1")
 	mkdirp(t, "/_test/dirforcs/2")
 	touch(t, "/_test/dirforcs/foo")
@@ -44,11 +45,11 @@ func TestContentSummaryNonExistent(t *testing.T) {
 }
 
 func TestContentSummaryDirWithoutPermission(t *testing.T) {
-	otherClient := getClientForUser(t, "other")
+	client2 := getClientForUser(t, "gohdfs2")
 
-	mkdirp(t, "/_test/accessdenied")
-	touch(t, "/_test/accessdenied/foo")
+	mkdirpMask(t, "/_test/accessdenied", 0700)
+	touchMask(t, "/_test/accessdenied/foo", 0600)
 
-	_, err := otherClient.GetContentSummary("/_test/accessdenied/foo")
+	_, err := client2.GetContentSummary("/_test/accessdenied/foo")
 	assertPathError(t, err, "content summary", "/_test/accessdenied/foo", os.ErrPermission)
 }

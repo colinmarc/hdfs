@@ -229,12 +229,12 @@ func TestCreateEmptyFileWithoutParent(t *testing.T) {
 
 func TestCreateEmptyFileWithoutPermission(t *testing.T) {
 	client := getClient(t)
-	otherClient := getClientForUser(t, "other")
+	client2 := getClientForUser(t, "gohdfs2")
 
 	mkdirp(t, "/_test/accessdenied")
 	baleet(t, "/_test/accessdenied/emptyfile")
 
-	err := otherClient.CreateEmptyFile("/_test/accessdenied/emptyfile")
+	err := client2.CreateEmptyFile("/_test/accessdenied/emptyfile")
 	assertPathError(t, err, "create", "/_test/accessdenied/emptyfile", os.ErrPermission)
 
 	_, err = client.Stat("/_test/accessdenied/emptyfile")

@@ -3,6 +3,7 @@ package hdfs
 import (
 	"io/ioutil"
 	"os"
+	"os/user"
 	"path/filepath"
 	"testing"
 
@@ -13,12 +14,16 @@ import (
 var cachedClients = make(map[string]*Client)
 
 func getClient(t *testing.T) *Client {
-	username, err := Username()
+	return getClientForUser(t, "gohdfs1")
+}
+
+func getClientForSuperUser(t *testing.T) *Client {
+	u, err := user.Current()
 	if err != nil {
 		t.Fatal(err)
 	}
 
-	return getClientForUser(t, username)
+	return getClientForUser(t, u.Username)
 }
 
 func getClientForUser(t *testing.T, user string) *Client {
@@ -41,18 +46,43 @@ func getClientForUser(t *testing.T, user string) *Client {
 }
 
 func touch(t *testing.T, path string) {
+	touchMask(t, path, 0)
+}
+
+func touchMask(t *testing.T, path string, mask os.FileMode) {
 	c := getClient(t)
 
-	err := c.CreateEmptyFile(path)
+	err := c.Remove(path)
+	if err != nil && !os.IsNotExist(err) {
+		t.Fatal(err)
+	}
+
+	err = c.CreateEmptyFile(path)
 	if err != nil && !os.IsExist(err) {
 		t.Fatal(err)
+	}
+
+	if mask != 0 {
+		err = c.Chmod(path, mask)
+		if err != nil {
+			t.Fatal(err)
+		}
 	}
 }
 
 func mkdirp(t *testing.T, path string) {
+	mkdirpMask(t, path, 0755)
+}
+
+func mkdirpMask(t *testing.T, path string, mask os.FileMode) {
 	c := getClient(t)
 
-	err := c.MkdirAll(path, 0644)
+	err := c.Remove(path)
+	if err != nil && !os.IsNotExist(err) {
+		t.Fatal(err)
+	}
+
+	err = c.MkdirAll(path, mask)
 	if err != nil && !os.IsExist(err) {
 		t.Fatal(err)
 	}

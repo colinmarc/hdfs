@@ -32,11 +32,11 @@ func TestRemoveNotExistent(t *testing.T) {
 }
 
 func TestRemoveWithoutPermission(t *testing.T) {
-	otherClient := getClientForUser(t, "other")
+	client2 := getClientForUser(t, "gohdfs2")
 
 	mkdirp(t, "/_test/accessdenied")
 	touch(t, "/_test/accessdenied/foo")
 
-	err := otherClient.Remove("/_test/accessdenied/foo")
+	err := client2.Remove("/_test/accessdenied/foo")
 	assertPathError(t, err, "remove", "/_test/accessdenied/foo", os.ErrPermission)
 }

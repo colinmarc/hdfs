@@ -45,64 +45,63 @@ func TestChmodNonexistent(t *testing.T) {
 }
 
 func TestChmodWithoutPermission(t *testing.T) {
-	otherClient := getClientForUser(t, "other")
+	client2 := getClientForUser(t, "gohdfs2")
 
 	mkdirp(t, "/_test/accessdenied")
 
-	err := otherClient.Chmod("/_test/accessdenied", 0777)
+	err := client2.Chmod("/_test/accessdenied", 0777)
 	assertPathError(t, err, "chmod", "/_test/accessdenied", os.ErrPermission)
 }
 
 func TestChown(t *testing.T) {
-	client := getClient(t)
+	superClient := getClientForSuperUser(t)
 
-	baleet(t, "/_test/tochown")
 	touch(t, "/_test/tochown")
 
-	err := client.Chown("/_test/tochown", "other", "")
+	err := superClient.Chown("/_test/tochown", "foo", "bar")
 	require.NoError(t, err)
 
-	fi, err := client.Stat("/_test/tochown")
+	fi, err := superClient.Stat("/_test/tochown")
 	assert.NoError(t, err)
-	assert.EqualValues(t, fi.(*FileInfo).Owner(), "other")
+	assert.EqualValues(t, fi.(*FileInfo).Owner(), "foo")
+	assert.EqualValues(t, fi.(*FileInfo).OwnerGroup(), "bar")
 }
 
 func TestChownDir(t *testing.T) {
-	client := getClient(t)
+	superClient := getClientForSuperUser(t)
 
-	baleet(t, "/_test/tochowndir")
 	mkdirp(t, "/_test/tochowndir")
 
-	err := client.Chown("/_test/tochowndir", "other", "")
+	err := superClient.Chown("/_test/tochowndir", "foo", "bar")
 	require.NoError(t, err)
 
-	fi, err := client.Stat("/_test/tochowndir")
+	fi, err := superClient.Stat("/_test/tochowndir")
 	assert.NoError(t, err)
-	assert.EqualValues(t, fi.(*FileInfo).Owner(), "other")
+	assert.EqualValues(t, fi.(*FileInfo).Owner(), "foo")
+	assert.EqualValues(t, fi.(*FileInfo).OwnerGroup(), "bar")
 }
 
 func TestChownNonexistent(t *testing.T) {
-	client := getClient(t)
+	superClient := getClientForSuperUser(t)
 
 	baleet(t, "/_test/nonexistent")
 
-	err := client.Chown("/_test/nonexistent", "other", "")
+	err := superClient.Chown("/_test/nonexistent", "gohdfs2", "")
 	assertPathError(t, err, "chown", "/_test/nonexistent", os.ErrNotExist)
 }
 
 func TestChownWithoutPermission(t *testing.T) {
-	otherClient := getClientForUser(t, "other")
+	client2 := getClientForUser(t, "gohdfs2")
 
 	mkdirp(t, "/_test/accessdenied")
 
-	err := otherClient.Chown("/_test/accessdenied", "owner", "")
+	err := client2.Chown("/_test/accessdenied", "owner", "")
 	assertPathError(t, err, "chown", "/_test/accessdenied", os.ErrPermission)
 }
 
 func TestChtimes(t *testing.T) {
 	client := getClient(t)
 
-	baleet(t, "/_test/tochtime")
 	touch(t, "/_test/tochtime")
 
 	birthday := time.Date(1990, 1, 22, 14, 33, 35, 0, time.UTC)

@@ -46,23 +46,23 @@ func TestRenameDestExists(t *testing.T) {
 }
 
 func TestRenameWithoutPermissionForSrc(t *testing.T) {
-	otherClient := getClientForUser(t, "other")
+	client2 := getClientForUser(t, "gohdfs2")
 
-	mkdirp(t, "/_test/accessdenied")
-	touch(t, "/_test/accessdenied/foo")
+	mkdirpMask(t, "/_test/accessdenied", 0700)
+	touchMask(t, "/_test/accessdenied/foo", 0600)
 
-	err := otherClient.Rename("/_test/accessdenied/foo", "/_test/tomovedest3")
+	err := client2.Rename("/_test/accessdenied/foo", "/_test/tomovedest3")
 	assertPathError(t, err, "rename", "/_test/accessdenied/foo", os.ErrPermission)
 }
 
 func TestRenameWithoutPermissionForDest(t *testing.T) {
-	otherClient := getClientForUser(t, "other")
+	client2 := getClientForUser(t, "gohdfs2")
 
 	baleet(t, "/_test/ownedbyother2")
 
-	err := otherClient.CreateEmptyFile("/_test/ownedbyother2")
+	err := client2.CreateEmptyFile("/_test/ownedbyother2")
 	require.NoError(t, err)
 
-	err = otherClient.Rename("/_test/ownedbyother2", "/_test/accessdenied/tomovedest4")
+	err = client2.Rename("/_test/ownedbyother2", "/_test/accessdenied/tomovedest4")
 	assertPathError(t, err, "rename", "/_test/accessdenied/tomovedest4", os.ErrPermission)
 }

@@ -79,11 +79,11 @@ func TestMkdirAllExists(t *testing.T) {
 
 func TestMkdirWIthoutPermission(t *testing.T) {
 	client := getClient(t)
-	otherClient := getClientForUser(t, "other")
+	client2 := getClientForUser(t, "gohdfs2")
 
 	mkdirp(t, "/_test/accessdenied")
 
-	err := otherClient.Mkdir("/_test/accessdenied/dir", mode)
+	err := client2.Mkdir("/_test/accessdenied/dir", mode)
 	assertPathError(t, err, "mkdir", "/_test/accessdenied/dir", os.ErrPermission)
 
 	_, err = client.Stat("/_test/accessdenied/dir")
@@ -92,11 +92,11 @@ func TestMkdirWIthoutPermission(t *testing.T) {
 
 func TestMkdirAllWIthoutPermission(t *testing.T) {
 	client := getClient(t)
-	otherClient := getClientForUser(t, "other")
+	client2 := getClientForUser(t, "gohdfs2")
 
 	mkdirp(t, "/_test/accessdenied")
 
-	err := otherClient.Mkdir("/_test/accessdenied/dir2/foo", mode)
+	err := client2.Mkdir("/_test/accessdenied/dir2/foo", mode)
 	assertPathError(t, err, "mkdir", "/_test/accessdenied/dir2/foo", os.ErrPermission)
 
 	_, err = client.Stat("/_test/accessdenied/dir2/foo")

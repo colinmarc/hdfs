@@ -1,6 +1,7 @@
 package hdfs
 
 import (
+	"fmt"
 	"io/ioutil"
 	"os"
 	"os/user"
@@ -9,6 +10,9 @@ import (
 
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
+	krb "gopkg.in/jcmturner/gokrb5.v5/client"
+	"gopkg.in/jcmturner/gokrb5.v5/config"
+	"gopkg.in/jcmturner/gokrb5.v5/credentials"
 )
 
 var cachedClients = make(map[string]*Client)
@@ -37,7 +41,12 @@ func getClientForUser(t *testing.T, username string) *Client {
 		t.Fatal("No hadoop configuration found at HADOOP_CONF_DIR")
 	}
 
-	options.User = username
+	if options.KerberosClient != nil {
+		options.KerberosClient = getKerberosClient(t, username)
+	} else {
+		options.User = username
+	}
+
 	client, err := NewClient(options)
 	if err != nil {
 		t.Fatal(err)
@@ -45,6 +54,28 @@ func getClientForUser(t *testing.T, username string) *Client {
 
 	cachedClients[username] = client
 	return client
+}
+
+// getKerberosClient expects a ccache file for each user mentioned in the tests
+// to live at /tmp/krb5cc_gohdfs_<username>, and krb5.conf to live at
+// /etc/krb5.conf
+func getKerberosClient(t *testing.T, username string) *krb.Client {
+	cfg, err := config.Load("/etc/krb5.conf")
+	if err != nil {
+		t.Skip("Couldn't load krb config:", err)
+	}
+
+	ccache, err := credentials.LoadCCache(fmt.Sprintf("/tmp/krb5cc_gohdfs_%s", username))
+	if err != nil {
+		t.Skipf("Couldn't load keytab for user %s: %s", username, err)
+	}
+
+	client, err := krb.NewClientFromCCache(ccache)
+	if err != nil {
+		t.Fatal("Couldn't initialize krb client:", err)
+	}
+
+	return client.WithConfig(cfg)
 }
 
 func touch(t *testing.T, path string) {

@@ -4,6 +4,7 @@ go_import_path: github.com/colinmarc/hdfs
 go: 1.x
 env:
 - PLATFORM=cdh5
+- PLATFORM=cdh5 KERBEROS=true
 - PLATFORM=hdp2
 install:
 - git clone https://github.com/sstephenson/bats $HOME/bats
@@ -27,6 +28,6 @@ deploy:
     repo: colinmarc/hdfs
     tags: true
     all_branches: true
-    condition: $PLATFORM = cdh5
+    condition: $PLATFORM = hdp2
 cache:
 - "$HOME/bats"

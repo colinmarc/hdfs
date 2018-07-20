@@ -26,22 +26,24 @@ func getClientForSuperUser(t *testing.T) *Client {
 	return getClientForUser(t, u.Username)
 }
 
-func getClientForUser(t *testing.T, user string) *Client {
-	if c, ok := cachedClients[user]; ok {
+func getClientForUser(t *testing.T, username string) *Client {
+	if c, ok := cachedClients[username]; ok {
 		return c
 	}
 
-	nn := os.Getenv("HADOOP_NAMENODE")
-	if nn == "" {
-		t.Fatal("HADOOP_NAMENODE not set")
+	conf := LoadHadoopConf("")
+	options, _ := ClientOptionsFromConf(conf)
+	if options.Addresses == nil {
+		t.Fatal("No hadoop configuration found at HADOOP_CONF_DIR")
 	}
 
-	client, err := NewForUser(nn, user)
+	options.User = username
+	client, err := NewClient(options)
 	if err != nil {
 		t.Fatal(err)
 	}
 
-	cachedClients[user] = client
+	cachedClients[username] = client
 	return client
 }
 

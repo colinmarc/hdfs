@@ -22,12 +22,23 @@ fi
 
 echo "Starting minicluster..."
 $HADOOP_HOME/bin/hadoop jar $MINICLUSTER_JAR minicluster -nnport $NN_PORT -datanodes 3 -nomr -format "$@" > minicluster.log 2>&1 &
+
+export HADOOP_CONF_DIR=$(mktemp -d)
+cat > $HADOOP_CONF_DIR/core-site.xml <<EOF
+<configuration>
+  <property>
+    <name>fs.defaultFS</name>
+    <value>hdfs://$HADOOP_NAMENODE</value>
+  </property>
+</configuration>
+EOF
+
 echo "Waiting for namenode to start up..."
-$HADOOP_HOME/bin/hdfs dfsadmin "-Dfs.defaultFS=hdfs://$HADOOP_NAMENODE/" -safemode wait
+$HADOOP_HOME/bin/hdfs dfsadmin -safemode wait
 
 export HADOOP_FS="$HADOOP_HOME/bin/hadoop fs"
 ./fixtures.sh
 
 echo "Please run the following commands:"
-echo "export HADOOP_NAMENODE='$HADOOP_NAMENODE'"
+echo "export HADOOP_CONF_DIR='$HADOOP_CONF_DIR'"
 echo "export HADOOP_FS='$HADOOP_HOME/bin/hadoop fs'"

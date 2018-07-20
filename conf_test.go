@@ -8,6 +8,8 @@ import (
 )
 
 func TestConfFallback(t *testing.T) {
+	oldHome := os.Getenv("HADOOP_HOME")
+	oldConfDir := os.Getenv("HADOOP_CONF_DIR")
 	os.Setenv("HADOOP_HOME", "testdata") // This will resolve to testdata/conf.
 	os.Setenv("HADOOP_CONF_DIR", "testdata/conf2")
 
@@ -32,5 +34,6 @@ func TestConfFallback(t *testing.T) {
 	assert.Nil(t, err)
 	assert.EqualValues(t, confNamenodes, nns, "loading via HADOOP_HOME (testdata/conf)")
 
-	os.Unsetenv("HADOOP_HOME")
+	os.Setenv("HADOOP_HOME", oldHome)
+	os.Setenv("HADOOP_CONF_DIR", oldConfDir)
 }

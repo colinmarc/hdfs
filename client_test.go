@@ -108,18 +108,19 @@ func assertPathError(t *testing.T, err error, op, path string, wrappedErr error)
 }
 
 func TestNewWithMultipleNodes(t *testing.T) {
-	nn := os.Getenv("HADOOP_NAMENODE")
-	if nn == "" {
-		t.Fatal("HADOOP_NAMENODE not set")
+	conf := LoadHadoopConf("")
+	nns, err := conf.Namenodes()
+	if err != nil {
+		t.Fatal("No hadoop configuration found at HADOOP_CONF_DIR")
 	}
-	_, err := NewClient(ClientOptions{
-		Addresses: []string{"localhost:80", nn},
-	})
+
+	nns = append([]string{"localhost:100"}, nns...)
+	_, err = NewClient(ClientOptions{Addresses: nns})
 	assert.Nil(t, err)
 }
 
 func TestNewWithFailingNode(t *testing.T) {
-	_, err := New("localhost:80")
+	_, err := New("localhost:100")
 	assert.NotNil(t, err)
 }
 

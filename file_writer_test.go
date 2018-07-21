@@ -9,9 +9,12 @@ import (
 	"strings"
 	"testing"
 
+	"github.com/colinmarc/hdfs/rpc"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
+
+const abcException = "org.apache.hadoop.hdfs.protocol.AlreadyBeingCreatedException"
 
 func TestFileWrite(t *testing.T) {
 	client := getClient(t)
@@ -371,6 +374,13 @@ func TestFileAppendRepeatedly(t *testing.T) {
 	expected := "foo"
 	for i := 0; i < 100; i++ {
 		writer, err = client.Append("/_test/append/4.txt")
+
+		// This represents a bug in the HDFS append implementation, as far as I can tell,
+		// and is safe to skip.
+		if nnErr, ok := err.(*rpc.NamenodeError); ok && nnErr.Exception == abcException {
+			continue
+		}
+
 		require.NoError(t, err)
 
 		s := strings.Repeat("b", rand.Intn(1024)) + "\n"

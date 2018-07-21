@@ -24,7 +24,7 @@ func (c *Client) walk(path string, walkFn filepath.WalkFunc) error {
 
 	err = walkFn(path, info, err)
 	if err != nil {
-		if info.IsDir() && err == filepath.SkipDir {
+		if info != nil && info.IsDir() && err == filepath.SkipDir {
 			return nil
 		}
 

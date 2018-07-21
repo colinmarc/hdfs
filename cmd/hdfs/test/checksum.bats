@@ -7,7 +7,7 @@ setup() {
 }
 
 @test "checksum" {
-  FOO_CHECKSUM=$($HADOOP_FS -checksum hdfs://$HADOOP_NAMENODE/_test/foo.txt | awk '{ print substr($3, 25, 32) }')
+  FOO_CHECKSUM=$($HADOOP_FS -checksum hdfs://$HADOOP_NAMENODE/_test/foo.txt | tail -1 | awk '{ print substr($3, 25, 32) }')
 
   run $HDFS checksum /_test/foo.txt
   assert_success

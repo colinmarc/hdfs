@@ -466,7 +466,7 @@ func TestFileAppendDeadlineBefore(t *testing.T) {
 	client := getClient(t)
 
 	mkdirp(t, "/_test/append")
-	writer, err := client.Create("/_test/append/5.txt")
+	writer, err := client.Create("/_test/append/6.txt")
 	require.NoError(t, err)
 
 	n, err := writer.Write([]byte("foobar\n"))
@@ -476,7 +476,7 @@ func TestFileAppendDeadlineBefore(t *testing.T) {
 	err = writer.Close()
 	require.NoError(t, err)
 
-	writer, err = client.Append("/_test/append/5.txt")
+	writer, err = client.Append("/_test/append/6.txt")
 	require.NoError(t, err)
 
 	writer.SetDeadline(time.Now())

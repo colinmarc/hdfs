@@ -377,8 +377,11 @@ func TestFileAppendRepeatedly(t *testing.T) {
 
 		// This represents a bug in the HDFS append implementation, as far as I can tell,
 		// and is safe to skip.
-		if nnErr, ok := err.(*rpc.NamenodeError); ok && nnErr.Exception == abcException {
-			continue
+		if pathErr, ok := err.(*os.PathError); ok {
+			if nnErr, ok := pathErr.Err.(*rpc.NamenodeError); ok && nnErr.Exception == abcException {
+				t.Log("Ignoring AlreadyBeingCreatedException from append")
+				continue
+			}
 		}
 
 		require.NoError(t, err)

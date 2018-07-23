@@ -372,7 +372,7 @@ func TestFileAppendRepeatedly(t *testing.T) {
 	require.NoError(t, err)
 
 	expected := "foo"
-	for i := 0; i < 100; i++ {
+	for i := 0; i < 20; i++ {
 		writer, err = client.Append("/_test/append/4.txt")
 
 		// This represents a bug in the HDFS append implementation, as far as I can tell,

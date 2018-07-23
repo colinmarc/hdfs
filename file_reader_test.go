@@ -243,7 +243,8 @@ func TestFileReadDirnames(t *testing.T) {
 func TestFileReadDirMany(t *testing.T) {
 	client := getClient(t)
 
-	total := maxReadDir*5 + maxReadDir/2 + 35
+	maxReadDir := 1000 // HDFS returns this many entries.
+	total := maxReadDir*2 + maxReadDir/2 + 35
 	firstBatch := maxReadDir + 71
 
 	mkdirp(t, "/_test/fulldir5")

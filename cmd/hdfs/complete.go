@@ -68,8 +68,10 @@ func completePath(fragment string) {
 		return
 	}
 
+	// 1000 entries should align with what HDFS returns. If not, well, it was
+	// going to be slow anyway.
 	var partial []os.FileInfo
-	for ; err != io.EOF; partial, err = dirReader.Readdir(100) {
+	for ; err != io.EOF; partial, err = dirReader.Readdir(1000) {
 		if err != nil {
 			return
 		}

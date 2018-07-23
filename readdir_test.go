@@ -1,7 +1,6 @@
 package hdfs
 
 import (
-	"fmt"
 	"os"
 	"testing"
 
@@ -33,19 +32,6 @@ func TestReadDir(t *testing.T) {
 
 	assert.EqualValues(t, "dir", res[3].Name())
 	assert.True(t, res[3].IsDir())
-}
-
-func TestReadDirMany(t *testing.T) {
-	client := getClient(t)
-
-	mkdirp(t, "/_test/hugedir")
-	for i := 1; i <= 1000; i++ {
-		touch(t, fmt.Sprintf("/_test/hugedir/%d", i))
-	}
-
-	res, err := client.ReadDir("/_test/hugedir")
-	require.NoError(t, err)
-	require.Equal(t, len(res), 1000)
 }
 
 func TestReadDirTrailingSlash(t *testing.T) {
@@ -91,7 +77,7 @@ func TestReadDirNonexistent(t *testing.T) {
 	baleet(t, "/_test/nonexistent")
 
 	res, err := client.ReadDir("/_test/nonexistent")
-	assertPathError(t, err, "readdir", "/_test/nonexistent", os.ErrNotExist)
+	assertPathError(t, err, "open", "/_test/nonexistent", os.ErrNotExist)
 	assert.Nil(t, res)
 }
 

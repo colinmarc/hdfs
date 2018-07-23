@@ -12,8 +12,6 @@ import (
 	"github.com/golang/protobuf/proto"
 )
 
-const maxReadDir = 1024
-
 // A FileReader represents an existing file or directory in HDFS. It implements
 // io.Reader, io.ReaderAt, io.Seeker, and io.Closer, and can only be used for
 // reads. For writes, see FileWriter and Client.Create.
@@ -230,6 +228,15 @@ func (f *FileReader) ReadAt(b []byte, off int64) (int, error) {
 // the directory), it returns the slice and a nil error. If it encounters an
 // error before the end of the directory, Readdir returns the os.FileInfo read
 // until that point and a non-nil error.
+//
+// The os.FileInfo values returned will not have block location attached to
+// the struct returned by Sys(). To fetch that information, make a separate
+// call to Stat.
+//
+// Note that making multiple calls to Readdir with a smallish n (as you might do
+// with the os version) is slower than just requesting everything at once.
+// That's because HDFS has no mechanism for limiting the number of entries
+// returned; whatever extra entries it returns are simply thrown away.
 func (f *FileReader) Readdir(n int) ([]os.FileInfo, error) {
 	if f.closed {
 		return nil, io.ErrClosedPipe
@@ -249,14 +256,9 @@ func (f *FileReader) Readdir(n int) ([]os.FileInfo, error) {
 
 	res := make([]os.FileInfo, 0)
 	for {
-		k := n - len(res)
-		if n <= 0 || k > maxReadDir {
-			k = maxReadDir
-		}
-
-		batch, err := f.client.getDirList(f.name, f.readdirLast, k)
+		batch, remaining, err := f.readdir()
 		if err != nil {
-			return nil, err
+			return nil, &os.PathError{"readdir", f.name, err}
 		}
 
 		if len(batch) > 0 {
@@ -264,17 +266,52 @@ func (f *FileReader) Readdir(n int) ([]os.FileInfo, error) {
 		}
 
 		res = append(res, batch...)
-		if len(batch) < k || (n > 0 && len(res) == n) {
+		if remaining == 0 || (n > 0 && len(res) >= n) {
 			break
 		}
 	}
 
-	var err error
-	if len(res) == 0 {
-		err = io.EOF
+	if n > 0 {
+		if len(res) == 0 {
+			return nil, io.EOF
+		}
+
+		if len(res) > n {
+			res = res[:n]
+			f.readdirLast = res[len(res)-1].Name()
+		}
 	}
 
-	return res, err
+	return res, nil
+}
+
+func (f *FileReader) readdir() ([]os.FileInfo, int, error) {
+	req := &hdfs.GetListingRequestProto{
+		Src:          proto.String(f.name),
+		StartAfter:   []byte(f.readdirLast),
+		NeedLocation: proto.Bool(false),
+	}
+	resp := &hdfs.GetListingResponseProto{}
+
+	err := f.client.namenode.Execute("getListing", req, resp)
+	if err != nil {
+		if nnErr, ok := err.(*rpc.NamenodeError); ok {
+			err = interpretException(nnErr.Exception, err)
+		}
+
+		return nil, 0, err
+	} else if resp.GetDirList() == nil {
+		return nil, 0, os.ErrNotExist
+	}
+
+	list := resp.GetDirList().GetPartialListing()
+	res := make([]os.FileInfo, 0, len(list))
+	for _, status := range list {
+		res = append(res, newFileInfo(status, ""))
+	}
+
+	remaining := int(resp.GetDirList().GetRemainingEntries())
+	return res, remaining, nil
 }
 
 // Readdirnames reads and returns a slice of names from the directory f.

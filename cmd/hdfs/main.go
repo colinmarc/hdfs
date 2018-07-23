@@ -74,8 +74,8 @@ Valid commands:
 	dfOpts = getopt.New()
 	dfh    = dfOpts.Bool('h')
 
-	cachedClient *hdfs.Client
-	status       = 0
+	cachedClients map[string]*hdfs.Client = make(map[string]*hdfs.Client)
+	status                                = 0
 )
 
 func init() {
@@ -170,23 +170,40 @@ func fatalWithUsage(msg ...interface{}) {
 }
 
 func getClient(namenode string) (*hdfs.Client, error) {
-	if cachedClient != nil {
-		return cachedClient, nil
+	if cachedClients[namenode] != nil {
+		return cachedClients[namenode], nil
 	}
 
 	if namenode == "" {
 		namenode = os.Getenv("HADOOP_NAMENODE")
 	}
 
-	if namenode == "" && os.Getenv("HADOOP_CONF_DIR") == "" {
+	// Ignore errors here, since we don't care if the conf doesn't exist if the
+	// namenode was specified.
+	conf := hdfs.LoadHadoopConf("")
+	options, _ := hdfs.ClientOptionsFromConf(conf)
+	if namenode != "" {
+		options.Addresses = []string{namenode}
+	}
+
+	if options.Addresses == nil {
 		return nil, errors.New("Couldn't find a namenode to connect to. You should specify hdfs://<namenode>:<port> in your paths. Alternatively, set HADOOP_NAMENODE or HADOOP_CONF_DIR in your environment.")
 	}
 
-	c, err := hdfs.New(namenode)
-	if err != nil {
-		return nil, err
+	var err error
+	options.User = os.Getenv("HADOOP_USER_NAME")
+	if options.User == "" {
+		options.User, err = hdfs.Username()
+		if err != nil {
+			return nil, fmt.Errorf("Couldn't determine user: %s", err)
+		}
 	}
 
-	cachedClient = c
-	return cachedClient, nil
+	c, err := hdfs.NewClient(options)
+	if err != nil {
+		return nil, fmt.Errorf("Couldn't connect to namenode: %s", err)
+	}
+
+	cachedClients[namenode] = c
+	return c, nil
 }

@@ -38,22 +38,6 @@ func ClientOptionsFromConf(conf HadoopConf) (ClientOptions, error) {
 	return ClientOptions{Addresses: namenodes}, err
 }
 
-// Username returns the value of HADOOP_USER_NAME in the environment, or
-// the current system user if it is not set.
-func Username() (string, error) {
-	username := os.Getenv("HADOOP_USER_NAME")
-	if username != "" {
-		return username, nil
-	}
-
-	currentUser, err := user.Current()
-	if err != nil {
-		return "", err
-	}
-
-	return currentUser.Username, nil
-}
-
 // NewClient returns a connected Client for the given options, or an error if
 // the client could not be created.
 func NewClient(options ClientOptions) (*Client, error) {
@@ -75,10 +59,9 @@ func NewClient(options ClientOptions) (*Client, error) {
 }
 
 // New returns a connected Client, or an error if it can't connect. The user
-// will be the current system user, or HADOOP_USER_NAME if set. Any relevant
-// options (including the address(es) of the namenode(s), if an empty string is
-// passed) will be loaded from the Hadoop configuration present at
-// HADOOP_CONF_DIR or the default location.
+// will be the current system user. Any relevantoptions (including the
+// address(es) of the namenode(s), if an empty string is passed) will be loaded
+// from the Hadoop configuration present at HADOOP_CONF_DIR.
 func New(address string) (*Client, error) {
 	conf := LoadHadoopConf("")
 	options, err := ClientOptionsFromConf(conf)
@@ -90,11 +73,12 @@ func New(address string) (*Client, error) {
 		options.Addresses = strings.Split(address, ",")
 	}
 
-	options.User, err = Username()
+	u, err := user.Current()
 	if err != nil {
 		return nil, err
 	}
 
+	options.User = u.Username
 	return NewClient(options)
 }
 
@@ -186,4 +170,17 @@ func (c *Client) fetchDefaults() (*hdfs.FsServerDefaultsProto, error) {
 // Close terminates all underlying socket connections to remote server.
 func (c *Client) Close() error {
 	return c.namenode.Close()
+}
+
+// Username returns the current system user if it is not set.
+//
+// Deprecated: just use user.Current. Previous versions of this function would
+// check the env variable HADOOP_USER_NAME; this functionality was removed.
+func Username() (string, error) {
+	currentUser, err := user.Current()
+	if err != nil {
+		return "", err
+	}
+
+	return currentUser.Username, nil
 }

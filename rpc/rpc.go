@@ -3,8 +3,8 @@
 package rpc
 
 import (
-	"bytes"
 	"encoding/binary"
+	"errors"
 	"fmt"
 	"io"
 	"math/rand"
@@ -20,6 +20,8 @@ const (
 	readBlockOp         = 0x51
 	checksumBlockOp     = 0x55
 )
+
+var errMalformedRPCMessage = errors.New("malformed RPC message")
 
 // Used for client ID generation, below.
 const chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
@@ -53,27 +55,44 @@ func makeRPCPacket(msgs ...proto.Message) ([]byte, error) {
 	return packet, nil
 }
 
-// Doesn't include the uint32 length
-func readRPCPacket(b []byte, msgs ...proto.Message) error {
-	reader := bytes.NewReader(b)
+func readRPCPacket(r io.Reader, msgs ...proto.Message) error {
+	var packetLength uint32
+	err := binary.Read(r, binary.BigEndian, &packetLength)
+	if err != nil {
+		return err
+	}
+
+	packet := make([]byte, packetLength)
+	_, err = io.ReadFull(r, packet)
+	if err != nil {
+		return err
+	}
+
 	for _, msg := range msgs {
-		msgLength, err := binary.ReadUvarint(reader)
-		if err != nil {
-			return err
+		// HDFS doesn't send all the response messages all the time (for example, if
+		// the RpcResponseHeaderProto contains an error).
+		if len(packet) == 0 {
+			return nil
 		}
 
+		msgLength, n := binary.Uvarint(packet)
+		if n <= 0 || msgLength > uint64(len(packet)) {
+			return errMalformedRPCMessage
+		}
+
+		packet = packet[n:]
 		if msgLength != 0 {
-			msgBytes := make([]byte, msgLength)
-			_, err = reader.Read(msgBytes)
+			err = proto.Unmarshal(packet[:msgLength], msg)
 			if err != nil {
 				return err
 			}
 
-			err = proto.Unmarshal(msgBytes, msg)
-			if err != nil {
-				return err
-			}
+			packet = packet[msgLength:]
 		}
+	}
+
+	if len(packet) > 0 {
+		return errMalformedRPCMessage
 	}
 
 	return nil

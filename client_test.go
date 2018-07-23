@@ -115,7 +115,7 @@ func TestNewWithMultipleNodes(t *testing.T) {
 	}
 
 	nns = append([]string{"localhost:100"}, nns...)
-	_, err = NewClient(ClientOptions{Addresses: nns})
+	_, err = NewClient(ClientOptions{Addresses: nns, User: "gohdfs1"})
 	assert.Nil(t, err)
 }
 

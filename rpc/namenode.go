@@ -2,26 +2,26 @@ package rpc
 
 import (
 	"context"
-	"encoding/binary"
 	"errors"
 	"fmt"
-	"io"
 	"net"
 	"sync"
 	"time"
 
 	hadoop "github.com/colinmarc/hdfs/protocol/hadoop_common"
 	"github.com/golang/protobuf/proto"
+	krb "gopkg.in/jcmturner/gokrb5.v5/client"
 )
 
 const (
-	rpcVersion            = 0x09
-	serviceClass          = 0x0
-	authProtocol          = 0x0
-	protocolClass         = "org.apache.hadoop.hdfs.protocol.ClientProtocol"
-	protocolClassVersion  = 1
-	handshakeCallID       = -3
-	standbyExceptionClass = "org.apache.hadoop.ipc.StandbyException"
+	rpcVersion            byte = 0x09
+	serviceClass          byte = 0x0
+	noneAuthProtocol      byte = 0x0
+	saslAuthProtocol      byte = 0xdf
+	protocolClass              = "org.apache.hadoop.hdfs.protocol.ClientProtocol"
+	protocolClassVersion       = 1
+	handshakeCallID            = -3
+	standbyExceptionClass      = "org.apache.hadoop.ipc.StandbyException"
 )
 
 const backoffDuration = time.Second * 5
@@ -30,9 +30,12 @@ const backoffDuration = time.Second * 5
 type NamenodeConnection struct {
 	clientId         []byte
 	clientName       string
-	currentRequestID int
+	currentRequestID int32
 
-	user     string
+	user                         string
+	kerberosClient               *krb.Client
+	kerberosServicePrincipleName string
+
 	dialFunc func(ctx context.Context, network, addr string) (net.Conn, error)
 	conn     net.Conn
 	host     *namenodeHost
@@ -51,6 +54,17 @@ type NamenodeConnectionOptions struct {
 	// DialFunc is used to connect to the datanodes. If nil, then
 	// (&net.Dialer{}).DialContext is used.
 	DialFunc func(ctx context.Context, network, addr string) (net.Conn, error)
+	// KerberosClient is used to connect to kerberized HDFS clusters. If provided,
+	// the NamenodeConnection will always mutually athenticate when connecting
+	// to the namenode(s).
+	KerberosClient *krb.Client
+	// KerberosServicePrincipleName specifiesthe Service Principle Name
+	// (<SERVICE>/<FQDN>) for the namenode(s). Like in the
+	// dfs.namenode.kerberos.principal property of core-site.xml, the special
+	// string '_HOST' can be substituted for the hostname in a multi-namenode
+	// setup (for example: 'nn/_HOST@EXAMPLE.COM'). It is required if
+	// KerberosClient is provided.
+	KerberosServicePrincipleName string
 }
 
 // NamenodeError represents an interepreted error from the Namenode, including
@@ -108,11 +122,13 @@ func NewNamenodeConnectionWithOptions(options NamenodeConnectionOptions) (*Namen
 	// "globally unique" ID) and as the "client name" in various requests.
 	clientId := newClientID()
 	c := &NamenodeConnection{
-		clientId:   clientId,
-		clientName: "go-hdfs-" + string(clientId),
-		user:       options.User,
-		hostList:   hostList,
-		dialFunc:   options.DialFunc,
+		clientId:                     clientId,
+		clientName:                   "go-hdfs-" + string(clientId),
+		kerberosClient:               options.KerberosClient,
+		kerberosServicePrincipleName: options.KerberosServicePrincipleName,
+		user:     options.User,
+		dialFunc: options.DialFunc,
+		hostList: hostList,
 	}
 
 	err := c.resolveConnection()
@@ -141,7 +157,7 @@ func WrapNamenodeConnection(conn net.Conn, user string) (*NamenodeConnection, er
 		hostList:   make([]*namenodeHost, 0),
 	}
 
-	err := c.writeNamenodeHandshake()
+	err := c.doNamenodeHandshake()
 	if err != nil {
 		conn.Close()
 		return nil, fmt.Errorf("namenode handshake failed: %s", err)
@@ -177,7 +193,7 @@ func (c *NamenodeConnection) resolveConnection() error {
 			continue
 		}
 
-		err = c.writeNamenodeHandshake()
+		err = c.doNamenodeHandshake()
 		if err != nil {
 			c.markFailure(err)
 			continue
@@ -281,30 +297,19 @@ func (c *NamenodeConnection) writeRequest(method string, req proto.Message) erro
 // |  varint length + Response                                 |
 // +-----------------------------------------------------------+
 func (c *NamenodeConnection) readResponse(method string, resp proto.Message) error {
-	var packetLength uint32
-	err := binary.Read(c.conn, binary.BigEndian, &packetLength)
-	if err != nil {
-		return err
-	}
-
-	packet := make([]byte, packetLength)
-	_, err = io.ReadFull(c.conn, packet)
-	if err != nil {
-		return err
-	}
-
 	rrh := &hadoop.RpcResponseHeaderProto{}
-	err = readRPCPacket(packet, rrh, resp)
-
-	if rrh.GetStatus() != hadoop.RpcResponseHeaderProto_SUCCESS {
+	err := readRPCPacket(c.conn, rrh, resp)
+	if err != nil {
+		return err
+	} else if int32(rrh.GetCallId()) != c.currentRequestID {
+		return errors.New("unexpected sequence number")
+	} else if rrh.GetStatus() != hadoop.RpcResponseHeaderProto_SUCCESS {
 		return &NamenodeError{
 			Method:    method,
 			Message:   rrh.GetErrorMsg(),
 			Code:      int(rrh.GetErrorDetail()),
 			Exception: rrh.GetExceptionClassName(),
 		}
-	} else if int(rrh.GetCallId()) != c.currentRequestID {
-		return errors.New("unexpected sequence number")
 	}
 
 	return nil
@@ -320,16 +325,43 @@ func (c *NamenodeConnection) readResponse(method string, resp proto.Message) err
 // +-----------------------------------------------------------+
 // |  Auth protocol, 1 byte (Auth method None = 0x00)          |
 // +-----------------------------------------------------------+
+//
+//  If the auth protocol is something other than 'none', the authentication
+//  handshake happens here. Otherwise, everything can be sent as one packet.
+//
+// +-----------------------------------------------------------+
 // |  uint32 length of the next two parts                      |
 // +-----------------------------------------------------------+
 // |  varint length + RpcRequestHeaderProto                    |
 // +-----------------------------------------------------------+
 // |  varint length + IpcConnectionContextProto                |
 // +-----------------------------------------------------------+
-func (c *NamenodeConnection) writeNamenodeHandshake() error {
+func (c *NamenodeConnection) doNamenodeHandshake() error {
+	authProtocol := noneAuthProtocol
+	kerberos := false
+	if c.kerberosClient != nil {
+		authProtocol = saslAuthProtocol
+		kerberos = true
+	}
+
 	rpcHeader := []byte{
 		0x68, 0x72, 0x70, 0x63, // "hrpc"
 		rpcVersion, serviceClass, authProtocol,
+	}
+
+	_, err := c.conn.Write(rpcHeader)
+	if err != nil {
+		return err
+	}
+
+	if kerberos {
+		err = c.doKerberosHandshake()
+		if err != nil {
+			return fmt.Errorf("SASL handshake: %s", err)
+		}
+
+		// Reset the sequence number here, since we set it to -33 for the SASL bits.
+		c.currentRequestID = 0
 	}
 
 	rrh := newRPCRequestHeader(handshakeCallID, c.clientId)
@@ -339,7 +371,7 @@ func (c *NamenodeConnection) writeNamenodeHandshake() error {
 		return err
 	}
 
-	_, err = c.conn.Write(append(rpcHeader, packet...))
+	_, err = c.conn.Write(packet)
 	return err
 }
 
@@ -351,11 +383,11 @@ func (c *NamenodeConnection) Close() error {
 	return nil
 }
 
-func newRPCRequestHeader(id int, clientID []byte) *hadoop.RpcRequestHeaderProto {
+func newRPCRequestHeader(id int32, clientID []byte) *hadoop.RpcRequestHeaderProto {
 	return &hadoop.RpcRequestHeaderProto{
 		RpcKind:  hadoop.RpcKindProto_RPC_PROTOCOL_BUFFER.Enum(),
 		RpcOp:    hadoop.RpcRequestHeaderProto_RPC_FINAL_PACKET.Enum(),
-		CallId:   proto.Int32(int32(id)),
+		CallId:   proto.Int32(id),
 		ClientId: clientID,
 	}
 }

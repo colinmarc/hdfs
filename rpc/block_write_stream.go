@@ -94,8 +94,8 @@ func (s *blockWriteStream) Write(b []byte) (int, error) {
 		return 0, io.ErrClosedPipe
 	}
 
-	if s.ackError != nil {
-		return 0, s.ackError
+	if err := s.getAckError(); err != nil {
+		return 0, err
 	}
 
 	n, _ := s.buf.Write(b)
@@ -111,8 +111,8 @@ func (s *blockWriteStream) finish() error {
 	}
 	s.closed = true
 
-	if s.ackError != nil {
-		return s.ackError
+	if err := s.getAckError(); err != nil {
+		return err
 	}
 
 	err := s.flush(true)
@@ -135,10 +135,12 @@ func (s *blockWriteStream) finish() error {
 	}
 	close(s.packets)
 
-	// Check one more time for any ack errors.
+	// Wait for the ack loop to finish.
 	<-s.acksDone
-	if s.ackError != nil {
-		return s.ackError
+
+	// Check one more time for any ack errors.
+	if err := s.getAckError(); err != nil {
+		return err
 	}
 
 	return nil
@@ -148,6 +150,10 @@ func (s *blockWriteStream) finish() error {
 // the datanode. We keep around a reference to the packet, in case the ack
 // fails, and we need to send it again later.
 func (s *blockWriteStream) flush(force bool) error {
+	if err := s.getAckError(); err != nil {
+		return err
+	}
+
 	for s.buf.Len() > 0 && (force || s.buf.Len() >= outboundPacketSize) {
 		packet := s.makePacket()
 		s.packets <- packet
@@ -246,6 +252,18 @@ func (s *blockWriteStream) ackPackets() {
 	// the upstream thread could deadlock waiting for the channel to have space.
 	for _ = range s.packets {
 	}
+}
+
+func (s *blockWriteStream) getAckError() error {
+	select {
+	case <-s.acksDone:
+		if s.ackError != nil {
+			return s.ackError
+		}
+	default:
+	}
+
+	return nil
 }
 
 // A packet for the datanode:

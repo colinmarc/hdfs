@@ -3,15 +3,21 @@ package cmd
 import "github.com/spf13/cobra"
 
 func init() {
-	rootCmd.AddCommand(catCmd)
+	rootCmd.AddCommand(mkdirCmd)
+	mkdirCmd.PersistentFlags().BoolVarP(&mkdirAllOpt, "parents", "p", false, "no error if existing, make parent directories")
 }
 
-var catCmd = &cobra.Command{
-	Use:   "cat",
+var (
+	mkdirAllOpt bool
+)
+
+var mkdirCmd = &cobra.Command{
+	Use:   "mkdir [-p] FILE...",
 	Short: "concatenate HDFS files and print on the standard output",
-	RunE:  catRun,
+	RunE:  mkdirRun,
+	DisableFlagsInUseLine: true,
 }
 
-func catRun(cmd *cobra.Command, args []string) error {
+func mkdirRun(cmd *cobra.Command, args []string) error {
 	return cmd.Help()
 }

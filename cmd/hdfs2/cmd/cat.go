@@ -13,7 +13,7 @@ func init() {
 }
 
 var catCmd = &cobra.Command{
-	Use:   "cat",
+	Use:   "cat SOURCE...",
 	Short: "concatenate HDFS files and print on the standard output",
 	RunE:  catRun,
 }

@@ -16,9 +16,9 @@ var ErrEndOfBlock = errors.New("The amount of data to be written is more than is
 // Given a block location, it handles pipeline construction and failures,
 // including communicating with the namenode if need be.
 type BlockWriter struct {
-	clientName string
-	block      *hdfs.LocatedBlockProto
-	blockSize  int64
+	opts      Options
+	block     *hdfs.LocatedBlockProto
+	blockSize int64
 
 	namenode *NamenodeConnection
 	conn     net.Conn
@@ -31,12 +31,12 @@ type BlockWriter struct {
 // NewBlockWriter returns a BlockWriter for the given block. It will lazily
 // set up a replication pipeline, and connect to the "best" datanode based on
 // any previously seen failures.
-func NewBlockWriter(block *hdfs.LocatedBlockProto, namenode *NamenodeConnection, blockSize int64) *BlockWriter {
+func NewBlockWriter(block *hdfs.LocatedBlockProto, namenode *NamenodeConnection, blockSize int64, opts Options) *BlockWriter {
 	bw := &BlockWriter{
-		clientName: namenode.ClientName(),
-		block:      block,
-		blockSize:  blockSize,
-		namenode:   namenode,
+		opts:      opts,
+		block:     block,
+		blockSize: blockSize,
+		namenode:  namenode,
 	}
 
 	if o := block.B.GetNumBytes(); o > 0 {
@@ -117,7 +117,7 @@ func (bw *BlockWriter) Close() error {
 }
 
 func (bw *BlockWriter) connectNext() error {
-	address := getDatanodeAddress(bw.currentPipeline()[0])
+	address := getDatanodeAddress(bw.currentPipeline()[0], bw.opts.UseDatanodeHostname)
 
 	conn, err := net.DialTimeout("tcp", address, connectTimeout)
 	if err != nil {
@@ -179,7 +179,7 @@ func (bw *BlockWriter) finalizeBlock(length int64) error {
 	bw.block.GetB().NumBytes = proto.Uint64(uint64(length))
 	updateReq := &hdfs.UpdateBlockForPipelineRequestProto{
 		Block:      bw.block.GetB(),
-		ClientName: proto.String(bw.clientName),
+		ClientName: proto.String(bw.opts.ClientName),
 	}
 	updateResp := &hdfs.UpdateBlockForPipelineResponseProto{}
 
@@ -211,7 +211,7 @@ func (bw *BlockWriter) writeBlockWriteRequest(w io.Writer) error {
 				Block: bw.block.GetB(),
 				Token: bw.block.GetBlockToken(),
 			},
-			ClientName: proto.String(bw.clientName),
+			ClientName: proto.String(bw.opts.ClientName),
 		},
 		Targets:               targets,
 		Stage:                 bw.currentStage().Enum(),

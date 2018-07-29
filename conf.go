@@ -63,6 +63,20 @@ func LoadHadoopConf(path string) HadoopConf {
 	return hadoopConf
 }
 
+// UseDatanodeHostname returns whether or not the option
+// dfs.client.use.datanode.hostname is enabled -- thereby using the hostname of
+// datanodes as opposed to IP addressses
+func (conf HadoopConf) UseDatanodeHostname() bool {
+	v, ok := conf["dfs.client.use.datanode.hostname"]
+	if !ok {
+		return false
+	}
+	if v == "true" {
+		return true
+	}
+	return false
+}
+
 // Namenodes returns the namenode hosts present in the configuration. The
 // returned slice will be sorted and deduped.
 func (conf HadoopConf) Namenodes() ([]string, error) {

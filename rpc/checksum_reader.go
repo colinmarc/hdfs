@@ -4,7 +4,6 @@ import (
 	"bufio"
 	"encoding/binary"
 	"errors"
-	"fmt"
 	"io"
 	"net"
 
@@ -24,12 +23,11 @@ type ChecksumReader struct {
 }
 
 // NewChecksumReader creates a new ChecksumReader for the given block.
-func NewChecksumReader(block *hdfs.LocatedBlockProto) *ChecksumReader {
+func NewChecksumReader(block *hdfs.LocatedBlockProto, opts Options) *ChecksumReader {
 	locs := block.GetLocs()
 	datanodes := make([]string, len(locs))
 	for i, loc := range locs {
-		dn := loc.GetId()
-		datanodes[i] = fmt.Sprintf("%s:%d", dn.GetHostName(), dn.GetXferPort())
+		datanodes[i] = getDatanodeAddress(loc, opts.UseDatanodeHostname)
 	}
 
 	return &ChecksumReader{

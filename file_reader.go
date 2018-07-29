@@ -84,7 +84,7 @@ func (f *FileReader) Checksum() ([]byte, error) {
 	totalLength := 0
 	checksum := md5.New()
 	for _, block := range f.blocks {
-		cr := rpc.NewChecksumReader(block)
+		cr := rpc.NewChecksumReader(block, f.client.RPCOptions())
 
 		blockChecksum, err := cr.ReadChecksum()
 		if err != nil {
@@ -378,7 +378,7 @@ func (f *FileReader) getNewBlockReader() error {
 		end := start + block.GetB().GetNumBytes()
 
 		if start <= off && off < end {
-			br := rpc.NewBlockReader(block, int64(off-start), f.client.namenode.ClientName())
+			br := rpc.NewBlockReader(block, int64(off-start), f.client.RPCOptions())
 
 			f.blockReader = br
 			return nil

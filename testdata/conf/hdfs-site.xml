@@ -35,4 +35,8 @@
         <name>dfs.namenode.rpc-address.tests.nn2</name>
         <value>namenode2:8020</value>
     </property>
+    <property>
+        <name>dfs.client.use.datanode.hostname</name>
+        <value>true</value>
+    </property>
 </configuration>

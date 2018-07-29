@@ -24,12 +24,16 @@ type ChecksumReader struct {
 }
 
 // NewChecksumReader creates a new ChecksumReader for the given block.
-func NewChecksumReader(block *hdfs.LocatedBlockProto) *ChecksumReader {
+func NewChecksumReader(block *hdfs.LocatedBlockProto, opts Options) *ChecksumReader {
 	locs := block.GetLocs()
 	datanodes := make([]string, len(locs))
 	for i, loc := range locs {
 		dn := loc.GetId()
-		datanodes[i] = fmt.Sprintf("%s:%d", dn.GetHostName(), dn.GetXferPort())
+		host := dn.GetIpAddr()
+		if opts.UseDatanodeHostname {
+			host = dn.GetHostName()
+		}
+		datanodes[i] = fmt.Sprintf("%s:%d", host, dn.GetXferPort())
 	}
 
 	return &ChecksumReader{

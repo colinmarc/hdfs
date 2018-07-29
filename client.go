@@ -15,6 +15,7 @@ import (
 type Client struct {
 	namenode *rpc.NamenodeConnection
 	defaults *hdfs.FsServerDefaultsProto
+	Options  ClientOptions
 }
 
 // ClientOptions represents the configurable options for a client.
@@ -27,6 +28,10 @@ type ClientOptions struct {
 	// is useful if you needed to create the namenode net.Conn manually for
 	// whatever reason.
 	Namenode *rpc.NamenodeConnection
+	// UseDatanodeHostname whether clients should use datanode hostnames (instead
+	// of the default, datanote IP addresses) when connecting to datanodes. This
+	// may be useful for multihomed environments.
+	UseDatanodeHostname bool
 }
 
 // ClientOptionsFromConf attempts to load any relevant configuration options
@@ -35,7 +40,15 @@ type ClientOptions struct {
 // address(es), but may be expanded in the future.
 func ClientOptionsFromConf(conf HadoopConf) (ClientOptions, error) {
 	namenodes, err := conf.Namenodes()
-	return ClientOptions{Addresses: namenodes}, err
+	if err != nil {
+		return ClientOptions{}, err
+	}
+
+	opts := ClientOptions{
+		Addresses:           namenodes,
+		UseDatanodeHostname: conf.UseDatanodeHostname(),
+	}
+	return opts, nil
 }
 
 // NewClient returns a connected Client for the given options, or an error if
@@ -55,7 +68,10 @@ func NewClient(options ClientOptions) (*Client, error) {
 		}
 	}
 
-	return &Client{namenode: options.Namenode}, nil
+	return &Client{
+		namenode: options.Namenode,
+		Options:  options,
+	}, nil
 }
 
 // New returns a connected Client, or an error if it can't connect. The user
@@ -165,6 +181,14 @@ func (c *Client) fetchDefaults() (*hdfs.FsServerDefaultsProto, error) {
 
 	c.defaults = resp.GetServerDefaults()
 	return c.defaults, nil
+}
+
+// RPCOptions fills out the options for RPC-specific parameters.
+func (c *Client) RPCOptions() rpc.Options {
+	return rpc.Options{
+		ClientName:          c.namenode.ClientName(),
+		UseDatanodeHostname: c.Options.UseDatanodeHostname,
+	}
 }
 
 // Close terminates all underlying socket connections to remote server.

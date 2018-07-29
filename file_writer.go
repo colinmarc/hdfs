@@ -127,7 +127,7 @@ func (c *Client) Append(name string) (*FileWriter, error) {
 		return f, nil
 	}
 	f.block = blocks[len(blocks)-1]
-	f.blockWriter = rpc.NewBlockWriter(f.block, c.namenode, f.blockSize)
+	f.blockWriter = rpc.NewBlockWriter(f.block, c.namenode, f.blockSize, c.RPCOptions())
 	return f, nil
 }
 
@@ -254,6 +254,6 @@ func (f *FileWriter) startNewBlock() error {
 	}
 
 	f.block = addBlockResp.GetBlock()
-	f.blockWriter = rpc.NewBlockWriter(f.block, f.client.namenode, f.blockSize)
+	f.blockWriter = rpc.NewBlockWriter(f.block, f.client.namenode, f.blockSize, f.client.RPCOptions())
 	return nil
 }

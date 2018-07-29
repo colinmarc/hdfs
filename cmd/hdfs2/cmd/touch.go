@@ -22,7 +22,7 @@ var (
 
 var touchCmd = &cobra.Command{
 	Use:   "touch [-c] FILE...",
-	Short: "concatenate HDFS files and print on the standard output",
+	Short: "create HDFS files and modify their timestamps",
 	RunE:  touchRun,
 	DisableFlagsInUseLine: true,
 }

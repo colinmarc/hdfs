@@ -4,7 +4,6 @@ import (
 	"bufio"
 	"encoding/binary"
 	"errors"
-	"fmt"
 	"io"
 	"net"
 
@@ -28,12 +27,7 @@ func NewChecksumReader(block *hdfs.LocatedBlockProto, opts Options) *ChecksumRea
 	locs := block.GetLocs()
 	datanodes := make([]string, len(locs))
 	for i, loc := range locs {
-		dn := loc.GetId()
-		host := dn.GetIpAddr()
-		if opts.UseDatanodeHostname {
-			host = dn.GetHostName()
-		}
-		datanodes[i] = fmt.Sprintf("%s:%d", host, dn.GetXferPort())
+		datanodes[i] = getDatanodeAddress(loc, opts.UseDatanodeHostname)
 	}
 
 	return &ChecksumReader{

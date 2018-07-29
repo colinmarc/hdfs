@@ -26,7 +26,7 @@ setup() {
   run $HDFS mv /_test_cmd/nonexistent /_test_cmd/nonexistent2
   assert_failure
   assert_output <<OUT
-rename /_test_cmd/nonexistent: file does not exist
+Error: rename /_test_cmd/nonexistent: file does not exist
 OUT
 }
 
@@ -90,7 +90,7 @@ OUT
   run $HDFS mv -T /_test_cmd/mv/a /_test_cmd/mv/dir1
   assert_failure
   assert_output <<OUT
-Can't replace directory with non-directory.
+Error: Can't replace directory with non-directory.
 OUT
 }
 
@@ -98,7 +98,7 @@ OUT
   run $HDFS mv -nT /_test_cmd/mv/a /_test_cmd/mv/dir1
   assert_failure
   assert_output <<OUT
-Can't replace directory with non-directory.
+Error: Can't replace directory with non-directory.
 OUT
 }
 
@@ -130,7 +130,7 @@ OUT
   run $HDFS mv -nT /_test_cmd/mv/dir1 /_test_cmd/mv/dir2
   assert_failure
   assert_output <<OUT
-rename /_test_cmd/mv/dir2: file already exists
+Error: rename /_test_cmd/mv/dir2: file already exists
 OUT
 }
 

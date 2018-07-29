@@ -30,7 +30,7 @@ var (
 )
 
 var lsCmd = &cobra.Command{
-	Use:   "ls [-lah] [FILE]...",
+	Use:   "ls [-ahl] [FILE]...",
 	Short: "list HDFS directory contents",
 	RunE:  lsRun,
 	DisableFlagsInUseLine: true,

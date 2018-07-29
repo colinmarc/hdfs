@@ -43,8 +43,8 @@ setup() {
   run $HDFS rm /_test_cmd/nonexistent /_test_cmd/nonexistent2
   assert_failure
   assert_output <<OUT
-remove /_test_cmd/nonexistent: file does not exist
-remove /_test_cmd/nonexistent2: file does not exist
+Error: remove /_test_cmd/nonexistent: file does not exist
+Error: remove /_test_cmd/nonexistent2: file does not exist
 OUT
 }
 

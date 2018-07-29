@@ -60,7 +60,7 @@ setup() {
   run $HDFS put $ROOT_TEST_DIR/testdata /_test_cmd/put/existing.txt
     assert_failure
     assert_output <<OUT
-mkdir /_test_cmd/put/existing.txt: file already exists
+Error: mkdir /_test_cmd/put/existing.txt: file already exists
 OUT
 }
 
@@ -87,7 +87,7 @@ OUT
   run bash -c "echo 'foo bar baz' | $HDFS put - /_test_cmd/put/existing.txt"
   assert_failure
   assert_output <<OUT
-put /_test_cmd/put/existing.txt: file already exists
+Error: put /_test_cmd/put/existing.txt: file already exists
 OUT
 }
 
@@ -95,7 +95,7 @@ OUT
   run bash -c "echo 'foo bar baz' | $HDFS put - /_test_cmd/put/1"
   assert_failure
   assert_output <<OUT
-put /_test_cmd/put/1: file already exists
+Error: put /_test_cmd/put/1: file already exists
 OUT
 }
 

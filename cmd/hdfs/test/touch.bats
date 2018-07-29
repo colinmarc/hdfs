@@ -23,7 +23,7 @@ setup() {
   run $HDFS touch /_test_cmd/nonexistent/a
   assert_failure
   assert_output <<OUT
-create /_test_cmd/nonexistent/a: file does not exist
+Error: create /_test_cmd/nonexistent/a: file does not exist
 OUT
 }
 

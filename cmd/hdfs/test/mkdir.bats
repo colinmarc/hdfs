@@ -22,7 +22,7 @@ setup() {
   run $HDFS mkdir /_test_cmd/nonexistent/a
   assert_failure
   assert_output <<OUT
-mkdir /_test_cmd/nonexistent/a: file does not exist
+Error: mkdir /_test_cmd/nonexistent/a: file does not exist
 OUT
 }
 

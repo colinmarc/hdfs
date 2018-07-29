@@ -35,7 +35,7 @@ OUT
   run $HDFS ls /_test_cmd/nonexistent
   assert_failure
   assert_output <<OUT
-stat /_test_cmd/nonexistent: file does not exist
+Error: stat /_test_cmd/nonexistent: file does not exist
 OUT
 }
 

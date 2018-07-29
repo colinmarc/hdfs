@@ -20,6 +20,6 @@ load helper
   run $HDFS cat /_test_cmd/nonexistent
   assert_failure
   assert_output <<OUT
-open /_test_cmd/nonexistent: file does not exist
+Error: open /_test_cmd/nonexistent: file does not exist
 OUT
 }

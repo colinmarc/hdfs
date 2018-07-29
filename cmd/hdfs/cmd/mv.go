@@ -11,8 +11,8 @@ import (
 
 func init() {
 	rootCmd.AddCommand(mvCmd)
-	mvCmd.PersistentFlags().BoolVarP(&mvForceOpt, "force", "f", false, "do not prompt before overwriting")
-	mvCmd.PersistentFlags().BoolVarP(&mvForceOpt, "no-target-directory", "T", false, "treat DEST as a normal file")
+	mvCmd.PersistentFlags().BoolVarP(&mvNoClobberOpt, "no-clobber", "n", false, "do not overwrite an existing file")
+	mvCmd.PersistentFlags().BoolVarP(&mvDestAsFile, "no-target-directory", "T", false, "treat DEST as a normal file")
 }
 
 var mvCmd = &cobra.Command{
@@ -23,8 +23,8 @@ var mvCmd = &cobra.Command{
 }
 
 var (
-	mvForceOpt   bool
-	mvDestAsFile bool
+	mvNoClobberOpt bool
+	mvDestAsFile   bool
 )
 
 func mvRun(cmd *cobra.Command, args []string) error {
@@ -57,13 +57,13 @@ func mvRun(cmd *cobra.Command, args []string) error {
 
 	exists := !os.IsNotExist(err)
 	if exists && !mvDestAsFile && destInfo.IsDir() {
-		moveInto(client, sources, dest, mvForceOpt)
+		moveInto(client, sources, dest, mvNoClobberOpt)
 	} else {
 		if len(sources) > 1 {
 			return errors.New("can't move multiple sources into the same place")
 		}
 
-		moveTo(client, sources[0], dest, mvForceOpt)
+		moveTo(client, sources[0], dest, mvNoClobberOpt)
 	}
 	return nil
 }

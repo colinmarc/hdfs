@@ -140,6 +140,7 @@ func (c *Client) Append(name string) (*FileWriter, error) {
 		Offset:              int64(lastBlock.B.GetNumBytes()),
 		Append:              true,
 		UseDatanodeHostname: f.client.options.UseDatanodeHostname,
+		DialFunc:            f.client.options.DatanodeDialFunc,
 	}
 
 	return f, nil
@@ -271,6 +272,7 @@ func (f *FileWriter) startNewBlock() error {
 		Block:               addBlockResp.GetBlock(),
 		BlockSize:           f.blockSize,
 		UseDatanodeHostname: f.client.options.UseDatanodeHostname,
+		DialFunc:            f.client.options.DatanodeDialFunc,
 	}
 
 	return nil

@@ -1,6 +1,7 @@
 package rpc
 
 import (
+	"context"
 	"encoding/binary"
 	"errors"
 	"fmt"
@@ -30,18 +31,26 @@ type NamenodeConnection struct {
 	clientId         []byte
 	clientName       string
 	currentRequestID int
-	user             string
-	conn             net.Conn
-	host             *namenodeHost
-	hostList         []*namenodeHost
-	reqLock          sync.Mutex
+
+	user     string
+	dialFunc func(ctx context.Context, network, addr string) (net.Conn, error)
+	conn     net.Conn
+	host     *namenodeHost
+	hostList []*namenodeHost
+
+	reqLock sync.Mutex
 }
 
 // NamenodeConnectionOptions represents the configurable options available
 // for a NamenodeConnection.
 type NamenodeConnectionOptions struct {
+	// Addresses specifies the namenode(s) to connect to.
 	Addresses []string
-	User      string
+	// User specifies which HDFS user the client will act as.
+	User string
+	// DialFunc is used to connect to the datanodes. If nil, then
+	// (&net.Dialer{}).DialContext is used.
+	DialFunc func(ctx context.Context, network, addr string) (net.Conn, error)
 }
 
 // NamenodeError represents an interepreted error from the Namenode, including
@@ -116,7 +125,8 @@ func NewNamenodeConnectionWithOptions(options NamenodeConnectionOptions) (*Namen
 // WrapNamenodeConnection wraps an existing net.Conn to a Namenode, and preforms
 // an initial handshake.
 //
-// Deprecated: use the higher-level hdfs.New or NewNamenodeConnection instead.
+// Deprecated: use the DialFunc option in NamenodeConnectionOptions or the
+// higher-level hdfs.NewClient.
 func WrapNamenodeConnection(conn net.Conn, user string) (*NamenodeConnection, error) {
 	// The ClientID is reused here both in the RPC headers (which requires a
 	// "globally unique" ID) and as the "client name" in various requests.
@@ -155,8 +165,12 @@ func (c *NamenodeConnection) resolveConnection() error {
 			continue
 		}
 
+		if c.dialFunc == nil {
+			c.dialFunc = (&net.Dialer{}).DialContext
+		}
+
 		c.host = host
-		c.conn, err = net.DialTimeout("tcp", host.address, connectTimeout)
+		c.conn, err = c.dialFunc(context.Background(), "tcp", host.address)
 		if err != nil {
 			c.markFailure(err)
 			continue

@@ -21,12 +21,6 @@ const (
 	checksumBlockOp     = 0x55
 )
 
-var (
-	connectTimeout  = 1 * time.Second
-	namenodeTimeout = 3 * time.Second
-	datanodeTimeout = 3 * time.Second
-)
-
 // Used for client ID generation, below.
 const chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
 

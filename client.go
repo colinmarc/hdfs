@@ -1,8 +1,10 @@
 package hdfs
 
 import (
+	"context"
 	"io"
 	"io/ioutil"
+	"net"
 	"os"
 	"os/user"
 	"strings"
@@ -19,19 +21,41 @@ type Client struct {
 }
 
 // ClientOptions represents the configurable options for a client.
+// The NamenodeDialFunc and DatanodeDialFunc options can be used to set
+// connection timeouts:
+//
+//    dialFunc := (&net.Dialer{
+//        Timeout:   30 * time.Second,
+//        KeepAlive: 30 * time.Second,
+//        DualStack: true,
+//    }).DialContext
+//
+//    options := ClientOptions{
+//        Addresses: []string{"nn1:9000"},
+//        NamenodeDialFunc: dialFunc,
+//        DatanodeDialFunc: dialFunc,
+//    }
 type ClientOptions struct {
 	// Addresses specifies the namenode(s) to connect to.
 	Addresses []string
 	// User specifies which HDFS user the client will act as.
 	User string
-	// Namenode optionally specifies an existing NamenodeConnection to wrap. This
-	// is useful if you needed to create the namenode net.Conn manually for
-	// whatever reason.
-	Namenode *rpc.NamenodeConnection
 	// UseDatanodeHostname specifies whether the client should connect to the
 	// datanodes via hostname (which is useful in multi-homed setups) or IP
 	// address, which may be required if DNS isn't available.
 	UseDatanodeHostname bool
+	// NamenodeDialFunc is used to connect to the datanodes. If nil, then
+	// (&net.Dialer{}).DialContext is used.
+	NamenodeDialFunc func(ctx context.Context, network, addr string) (net.Conn, error)
+	// DatanodeDialFunc is used to connect to the datanodes. If nil, then
+	// (&net.Dialer{}).DialContext is used.
+	DatanodeDialFunc func(ctx context.Context, network, addr string) (net.Conn, error)
+	// Namenode optionally specifies an existing NamenodeConnection to wrap. This
+	// is useful if you needed to create the namenode net.Conn manually for
+	// whatever reason.
+	//
+	// Deprecated: use NamenodeDialFunc instead.
+	Namenode *rpc.NamenodeConnection
 }
 
 // ClientOptionsFromConf attempts to load any relevant configuration options
@@ -63,6 +87,7 @@ func NewClient(options ClientOptions) (*Client, error) {
 			rpc.NamenodeConnectionOptions{
 				Addresses: options.Addresses,
 				User:      options.User,
+				DialFunc:  options.NamenodeDialFunc,
 			},
 		)
 		if err != nil {

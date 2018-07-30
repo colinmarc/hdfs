@@ -2,6 +2,7 @@ package rpc
 
 import (
 	"bufio"
+	"context"
 	"encoding/binary"
 	"errors"
 	"io"
@@ -20,6 +21,9 @@ type ChecksumReader struct {
 	// UseDatanodeHostname specifies whether the datanodes should be connected to
 	// via their hostnames (if true) or IP addresses (if false).
 	UseDatanodeHostname bool
+	// DialFunc is used to connect to the datanodes. If nil, then
+	// (&net.Dialer{}).DialContext is used.
+	DialFunc func(ctx context.Context, network, addr string) (net.Conn, error)
 
 	datanodes *datanodeFailover
 	conn      net.Conn
@@ -69,7 +73,11 @@ func (cr *ChecksumReader) ReadChecksum() ([]byte, error) {
 }
 
 func (cr *ChecksumReader) readChecksum(address string) ([]byte, error) {
-	conn, err := net.DialTimeout("tcp", address, connectTimeout)
+	if cr.DialFunc == nil {
+		cr.DialFunc = (&net.Dialer{}).DialContext
+	}
+
+	conn, err := cr.DialFunc(context.Background(), "tcp", address)
 	if err != nil {
 		return nil, err
 	}

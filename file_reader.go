@@ -75,10 +75,10 @@ func (f *FileReader) Checksum() ([]byte, error) {
 		}
 	}
 
-	// The way the hadoop code calculates this, it writes all the checksums out to
-	// a byte array, which is automatically padded with zeroes out to the next
-	// power of 2 (with a minimum of 32)... and then takes the MD5 of that array,
-	// including the zeroes. This is pretty shady business, but we want to track
+	// Hadoop calculates this by writing the checksums out to a byte array, which
+	// is automatically padded with zeroes out to the next  power of 2
+	// (with a minimum of 32)... and then takes the MD5 of that array, including
+	// the zeroes. This is pretty shady business, but we want to track
 	// the 'hadoop fs -checksum' behavior if possible.
 	paddedLength := 32
 	totalLength := 0
@@ -87,6 +87,7 @@ func (f *FileReader) Checksum() ([]byte, error) {
 		cr := &rpc.ChecksumReader{
 			Block:               block,
 			UseDatanodeHostname: f.client.options.UseDatanodeHostname,
+			DialFunc:            f.client.options.DatanodeDialFunc,
 		}
 
 		blockChecksum, err := cr.ReadChecksum()
@@ -386,6 +387,7 @@ func (f *FileReader) getNewBlockReader() error {
 				Block:               block,
 				Offset:              int64(off - start),
 				UseDatanodeHostname: f.client.options.UseDatanodeHostname,
+				DialFunc:            f.client.options.DatanodeDialFunc,
 			}
 
 			return nil

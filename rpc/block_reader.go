@@ -1,6 +1,7 @@
 package rpc
 
 import (
+	"context"
 	"errors"
 	"fmt"
 	"hash/crc32"
@@ -26,6 +27,9 @@ type BlockReader struct {
 	// UseDatanodeHostname specifies whether the datanodes should be connected to
 	// via their hostnames (if true) or IP addresses (if false).
 	UseDatanodeHostname bool
+	// DialFunc is used to connect to the datanodes. If nil, then
+	// (&net.Dialer{}).DialContext is used.
+	DialFunc func(ctx context.Context, network, addr string) (net.Conn, error)
 
 	datanodes *datanodeFailover
 	stream    *blockReadStream
@@ -126,7 +130,11 @@ func (br *BlockReader) Close() error {
 func (br *BlockReader) connectNext() error {
 	address := br.datanodes.next()
 
-	conn, err := net.DialTimeout("tcp", address, connectTimeout)
+	if br.DialFunc == nil {
+		br.DialFunc = (&net.Dialer{}).DialContext
+	}
+
+	conn, err := br.DialFunc(context.Background(), "tcp", address)
 	if err != nil {
 		return err
 	}

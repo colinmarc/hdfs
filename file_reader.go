@@ -84,7 +84,7 @@ func (f *FileReader) Checksum() ([]byte, error) {
 	totalLength := 0
 	checksum := md5.New()
 	for _, block := range f.blocks {
-		cr := &ChecksumReader{
+		cr := &rpc.ChecksumReader{
 			Block:               block,
 			UseDatanodeHostname: f.client.options.UseDatanodeHostname,
 		}

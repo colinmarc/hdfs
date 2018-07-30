@@ -134,11 +134,12 @@ func (c *Client) Append(name string) (*FileWriter, error) {
 	}
 
 	f.blockWriter = &rpc.BlockWriter{
-		ClientName: f.client.namenode.ClientName(),
-		Block:      lastBlock,
-		BlockSize:  f.blockSize,
-		Offset:     int64(lastBlock.B.GetNumBytes()),
-		Append:     true,
+		ClientName:          f.client.namenode.ClientName(),
+		Block:               lastBlock,
+		BlockSize:           f.blockSize,
+		Offset:              int64(lastBlock.B.GetNumBytes()),
+		Append:              true,
+		UseDatanodeHostname: f.client.options.UseDatanodeHostname,
 	}
 
 	return f, nil
@@ -266,9 +267,10 @@ func (f *FileWriter) startNewBlock() error {
 	}
 
 	f.blockWriter = &rpc.BlockWriter{
-		ClientName: f.client.namenode.ClientName(),
-		Block:      addBlockResp.GetBlock(),
-		BlockSize:  f.blockSize,
+		ClientName:          f.client.namenode.ClientName(),
+		Block:               addBlockResp.GetBlock(),
+		BlockSize:           f.blockSize,
+		UseDatanodeHostname: f.client.options.UseDatanodeHostname,
 	}
 
 	return nil

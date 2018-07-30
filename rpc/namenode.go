@@ -133,7 +133,7 @@ func WrapNamenodeConnection(conn net.Conn, user string) (*NamenodeConnection, er
 	err := c.writeNamenodeHandshake()
 	if err != nil {
 		conn.Close()
-		return nil, fmt.Errorf("Error performing handshake: %s", err)
+		return nil, fmt.Errorf("namenode handshake failed: %s", err)
 	}
 
 	return c, nil
@@ -289,7 +289,7 @@ func (c *NamenodeConnection) readResponse(method string, resp proto.Message) err
 			Exception: rrh.GetExceptionClassName(),
 		}
 	} else if int(rrh.GetCallId()) != c.currentRequestID {
-		return errors.New("Error reading response: unexpected sequence number")
+		return errors.New("unexpected sequence number")
 	}
 
 	return nil

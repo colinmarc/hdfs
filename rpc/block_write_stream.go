@@ -55,7 +55,7 @@ func (ae ackError) Error() string {
 	return fmt.Sprintf("Ack error from datanode: %s", ae.status.String())
 }
 
-var ErrInvalidSeqno = errors.New("Invalid ack sequence number")
+var ErrInvalidSeqno = errors.New("invalid ack sequence number")
 
 func newBlockWriteStream(conn io.ReadWriter, offset int64) *blockWriteStream {
 	s := &blockWriteStream{

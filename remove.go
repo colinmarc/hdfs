@@ -33,7 +33,7 @@ func (c *Client) Remove(name string) error {
 		return &os.PathError{
 			"remove",
 			name,
-			errors.New("Unexpected empty response to 'delete' rpc call"),
+			errors.New("unexpected empty response"),
 		}
 	}
 

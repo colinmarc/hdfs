@@ -12,7 +12,7 @@ import (
 	"github.com/golang/protobuf/proto"
 )
 
-var errInvalidChecksum = errors.New("Invalid checksum")
+var errInvalidChecksum = errors.New("invalid checksum")
 
 // blockReadStream implements io.Reader for reading a packet stream for a single
 // block from a single datanode.

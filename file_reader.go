@@ -121,11 +121,11 @@ func (f *FileReader) Seek(offset int64, whence int) (int64, error) {
 	} else if whence == 2 {
 		off = f.info.Size() + offset
 	} else {
-		return f.offset, fmt.Errorf("Invalid whence: %d", whence)
+		return f.offset, fmt.Errorf("invalid whence: %d", whence)
 	}
 
 	if off < 0 || off > f.info.Size() {
-		return f.offset, fmt.Errorf("Invalid resulting offset: %d", off)
+		return f.offset, fmt.Errorf("invalid resulting offset: %d", off)
 	}
 
 	if f.offset != off {
@@ -392,5 +392,5 @@ func (f *FileReader) getNewBlockReader() error {
 		}
 	}
 
-	return fmt.Errorf("Couldn't find block for offset: %d", off)
+	return errors.New("invalid offset")
 }

@@ -10,7 +10,7 @@ import (
 	"github.com/golang/protobuf/proto"
 )
 
-var ErrEndOfBlock = errors.New("the amount of data to be written is more than is left in the block.")
+var ErrEndOfBlock = errors.New("end of block")
 
 // BlockWriter implements io.WriteCloser for writing a block to a datanode.
 // Given a block location, it handles pipeline construction and failures,
@@ -132,7 +132,7 @@ func (bw *BlockWriter) connectNext() error {
 	if err != nil {
 		return err
 	} else if resp.GetStatus() != hdfs.Status_SUCCESS {
-		return fmt.Errorf("Error from datanode: %s (%s)", resp.GetStatus().String(), resp.GetMessage())
+		return fmt.Errorf("write failed: %s (%s)", resp.GetStatus().String(), resp.GetMessage())
 	}
 
 	bw.conn = conn

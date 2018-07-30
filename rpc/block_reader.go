@@ -105,7 +105,7 @@ func (br *BlockReader) Read(b []byte) (int, error) {
 
 	err := br.datanodes.lastError()
 	if err == nil {
-		err = errors.New("No available datanodes for block.")
+		err = errors.New("no available datanodes")
 	}
 
 	return 0, err
@@ -140,7 +140,7 @@ func (br *BlockReader) connectNext() error {
 	if err != nil {
 		return err
 	} else if resp.GetStatus() != hdfs.Status_SUCCESS {
-		return fmt.Errorf("Error from datanode: %s (%s)", resp.GetStatus().String(), resp.GetMessage())
+		return fmt.Errorf("read failed: %s (%s)", resp.GetStatus().String(), resp.GetMessage())
 	}
 
 	readInfo := resp.GetReadOpChecksumInfo()
@@ -154,7 +154,7 @@ func (br *BlockReader) connectNext() error {
 	case hdfs.ChecksumTypeProto_CHECKSUM_CRC32C:
 		checksumTab = crc32.MakeTable(crc32.Castagnoli)
 	default:
-		return fmt.Errorf("Unsupported checksum type: %d", checksumType)
+		return fmt.Errorf("unsupported checksum type: %d", checksumType)
 	}
 
 	chunkSize := int(checksumInfo.GetBytesPerChecksum())

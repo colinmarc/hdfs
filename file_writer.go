@@ -18,7 +18,6 @@ type FileWriter struct {
 	replication int
 	blockSize   int64
 
-	block       *hdfs.LocatedBlockProto
 	blockWriter *rpc.BlockWriter
 	closed      bool
 }
@@ -123,11 +122,25 @@ func (c *Client) Append(name string) (*FileWriter, error) {
 		replication: int(appendResp.Stat.GetBlockReplication()),
 		blockSize:   int64(appendResp.Stat.GetBlocksize()),
 	}
+
 	if len(blocks) == 0 {
 		return f, nil
 	}
-	f.block = blocks[len(blocks)-1]
-	f.blockWriter = rpc.NewBlockWriter(f.block, c.namenode, f.blockSize)
+
+	lastBlock := blocks[len(blocks)-1]
+	lastBlockSize := int64(lastBlock.GetB().GetNumBytes())
+	if lastBlockSize == 0 || lastBlockSize == f.blockSize {
+		return f, nil
+	}
+
+	f.blockWriter = &rpc.BlockWriter{
+		ClientName: f.client.namenode.ClientName(),
+		Block:      lastBlock,
+		BlockSize:  f.blockSize,
+		Offset:     int64(lastBlock.B.GetNumBytes()),
+		Append:     true,
+	}
+
 	return f, nil
 }
 
@@ -199,13 +212,13 @@ func (f *FileWriter) Close() error {
 
 	var lastBlock *hdfs.ExtendedBlockProto
 	if f.blockWriter != nil {
+		lastBlock = f.blockWriter.Block.GetB()
+
 		// Close the blockWriter, flushing any buffered packets.
-		err := f.blockWriter.Close()
+		err := f.finalizeBlock()
 		if err != nil {
 			return err
 		}
-
-		lastBlock = f.block.GetB()
 	}
 
 	completeReq := &hdfs.CompleteRequestProto{
@@ -224,17 +237,16 @@ func (f *FileWriter) Close() error {
 }
 
 func (f *FileWriter) startNewBlock() error {
-	// TODO: we don't need to wait for previous blocks to ack before continuing
-
+	var previous *hdfs.ExtendedBlockProto
 	if f.blockWriter != nil {
-		err := f.blockWriter.Close()
+		previous = f.blockWriter.Block.GetB()
+
+		// TODO: We don't actually need to wait for previous blocks to ack before
+		// continuing.
+		err := f.finalizeBlock()
 		if err != nil {
 			return err
 		}
-	}
-	var previous *hdfs.ExtendedBlockProto
-	if f.block != nil {
-		previous = f.block.GetB()
 	}
 
 	addBlockReq := &hdfs.AddBlockRequestProto{
@@ -253,7 +265,35 @@ func (f *FileWriter) startNewBlock() error {
 		return &os.PathError{"create", f.name, err}
 	}
 
-	f.block = addBlockResp.GetBlock()
-	f.blockWriter = rpc.NewBlockWriter(f.block, f.client.namenode, f.blockSize)
+	f.blockWriter = &rpc.BlockWriter{
+		ClientName: f.client.namenode.ClientName(),
+		Block:      addBlockResp.GetBlock(),
+		BlockSize:  f.blockSize,
+	}
+
+	return nil
+}
+
+func (f *FileWriter) finalizeBlock() error {
+	err := f.blockWriter.Close()
+	if err != nil {
+		return err
+	}
+
+	// Finalize the block on the namenode.
+	lastBlock := f.blockWriter.Block.GetB()
+	lastBlock.NumBytes = proto.Uint64(uint64(f.blockWriter.Offset))
+	updateReq := &hdfs.UpdateBlockForPipelineRequestProto{
+		Block:      lastBlock,
+		ClientName: proto.String(f.client.namenode.ClientName()),
+	}
+	updateResp := &hdfs.UpdateBlockForPipelineResponseProto{}
+
+	err = f.client.namenode.Execute("updateBlockForPipeline", updateReq, updateResp)
+	if err != nil {
+		return err
+	}
+
+	f.blockWriter = nil
 	return nil
 }

@@ -16,30 +16,34 @@ import (
 // reading from multiple datanodes, in order to be robust to connection
 // failures, timeouts, and other shenanigans.
 type BlockReader struct {
-	clientName string
-	block      *hdfs.LocatedBlockProto
-	datanodes  *datanodeFailover
-	stream     *blockReadStream
-	conn       net.Conn
-	offset     int64
-	closed     bool
+	// ClientName is the unique ID used by the NamenodeConnection to locate the
+	// block.
+	ClientName string
+	// Block is the block location provided by the namenode.
+	Block *hdfs.LocatedBlockProto
+	// Offset is the current read offset in the block.
+	Offset int64
+	// UseDatanodeHostname specifies whether the datanodes should be connected to
+	// via their hostnames (if true) or IP addresses (if false).
+	UseDatanodeHostname bool
+
+	datanodes *datanodeFailover
+	stream    *blockReadStream
+	conn      net.Conn
+	closed    bool
 }
 
 // NewBlockReader returns a new BlockReader, given the block information and
 // security token from the namenode. It will connect (lazily) to one of the
 // provided datanode locations based on which datanodes have seen failures.
+//
+// Deprecated: this method does not do any required initialization, and does
+// not allow you to set fields such as UseDatanodeHostname.
 func NewBlockReader(block *hdfs.LocatedBlockProto, offset int64, clientName string) *BlockReader {
-	locs := block.GetLocs()
-	datanodes := make([]string, len(locs))
-	for i, loc := range locs {
-		datanodes[i] = getDatanodeAddress(loc)
-	}
-
 	return &BlockReader{
-		clientName: clientName,
-		block:      block,
-		datanodes:  newDatanodeFailover(datanodes),
-		offset:     offset,
+		ClientName: clientName,
+		Block:      block,
+		Offset:     offset,
 	}
 }
 
@@ -55,9 +59,19 @@ func NewBlockReader(block *hdfs.LocatedBlockProto, offset int64, clientName stri
 func (br *BlockReader) Read(b []byte) (int, error) {
 	if br.closed {
 		return 0, io.ErrClosedPipe
-	} else if uint64(br.offset) >= br.block.GetB().GetNumBytes() {
+	} else if uint64(br.Offset) >= br.Block.GetB().GetNumBytes() {
 		br.Close()
 		return 0, io.EOF
+	}
+
+	if br.datanodes == nil {
+		locs := br.Block.GetLocs()
+		datanodes := make([]string, len(locs))
+		for i, loc := range locs {
+			datanodes[i] = getDatanodeAddress(loc.GetId(), br.UseDatanodeHostname)
+		}
+
+		br.datanodes = newDatanodeFailover(datanodes)
 	}
 
 	// This is the main retry loop.
@@ -75,7 +89,7 @@ func (br *BlockReader) Read(b []byte) (int, error) {
 		// Then, try to read. If we fail here after reading some bytes, we return
 		// a partial read (n < len(b)).
 		n, err := br.stream.Read(b)
-		br.offset += int64(n)
+		br.Offset += int64(n)
 		if err != nil && err != io.EOF {
 			br.stream = nil
 			br.datanodes.recordFailure(err)
@@ -148,7 +162,7 @@ func (br *BlockReader) connectNext() error {
 
 	// The read will start aligned to a chunk boundary, so we need to seek forward
 	// to the requested offset.
-	amountToDiscard := br.offset - int64(readInfo.GetChunkOffset())
+	amountToDiscard := br.Offset - int64(readInfo.GetChunkOffset())
 	if amountToDiscard > 0 {
 		_, err := io.CopyN(ioutil.Discard, stream, amountToDiscard)
 		if err != nil {
@@ -175,16 +189,16 @@ func (br *BlockReader) connectNext() error {
 // |  varint length + OpReadBlockProto                         |
 // +-----------------------------------------------------------+
 func (br *BlockReader) writeBlockReadRequest(w io.Writer) error {
-	needed := br.block.GetB().GetNumBytes() - uint64(br.offset)
+	needed := br.Block.GetB().GetNumBytes() - uint64(br.Offset)
 	op := &hdfs.OpReadBlockProto{
 		Header: &hdfs.ClientOperationHeaderProto{
 			BaseHeader: &hdfs.BaseHeaderProto{
-				Block: br.block.GetB(),
-				Token: br.block.GetBlockToken(),
+				Block: br.Block.GetB(),
+				Token: br.Block.GetBlockToken(),
 			},
-			ClientName: proto.String(br.clientName),
+			ClientName: proto.String(br.ClientName),
 		},
-		Offset: proto.Uint64(uint64(br.offset)),
+		Offset: proto.Uint64(uint64(br.Offset)),
 		Len:    proto.Uint64(needed),
 	}
 

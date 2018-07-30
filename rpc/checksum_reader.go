@@ -4,7 +4,6 @@ import (
 	"bufio"
 	"encoding/binary"
 	"errors"
-	"fmt"
 	"io"
 	"net"
 
@@ -16,30 +15,40 @@ import (
 // individual blocks. It abstracts over reading from multiple datanodes, in
 // order to be robust to failures.
 type ChecksumReader struct {
-	block     *hdfs.LocatedBlockProto
-	datanodes *datanodeFailover
+	// Block is the block location provided by the namenode.
+	Block *hdfs.LocatedBlockProto
+	// UseDatanodeHostname specifies whether the datanodes should be connected to
+	// via their hostnames (if true) or IP addresses (if false).
+	UseDatanodeHostname bool
 
-	conn   net.Conn
-	reader *bufio.Reader
+	datanodes *datanodeFailover
+	conn      net.Conn
+	reader    *bufio.Reader
 }
 
 // NewChecksumReader creates a new ChecksumReader for the given block.
+//
+// Deprecated: this method does not do any required initialization, and does
+// not allow you to set fields such as UseDatanodeHostname.
 func NewChecksumReader(block *hdfs.LocatedBlockProto) *ChecksumReader {
-	locs := block.GetLocs()
-	datanodes := make([]string, len(locs))
-	for i, loc := range locs {
-		dn := loc.GetId()
-		datanodes[i] = fmt.Sprintf("%s:%d", dn.GetHostName(), dn.GetXferPort())
-	}
-
 	return &ChecksumReader{
-		block:     block,
-		datanodes: newDatanodeFailover(datanodes),
+		Block: block,
 	}
 }
 
 // ReadChecksum returns the checksum of the block.
 func (cr *ChecksumReader) ReadChecksum() ([]byte, error) {
+	if cr.datanodes == nil {
+		locs := cr.Block.GetLocs()
+		datanodes := make([]string, len(locs))
+		for i, loc := range locs {
+			dn := loc.GetId()
+			datanodes[i] = getDatanodeAddress(dn, cr.UseDatanodeHostname)
+		}
+
+		cr.datanodes = newDatanodeFailover(datanodes)
+	}
+
 	for cr.datanodes.numRemaining() > 0 {
 		address := cr.datanodes.next()
 		checksum, err := cr.readChecksum(address)
@@ -91,7 +100,7 @@ func (cr *ChecksumReader) readChecksum(address string) ([]byte, error) {
 func (cr *ChecksumReader) writeBlockChecksumRequest() error {
 	header := []byte{0x00, dataTransferVersion, checksumBlockOp}
 
-	op := newChecksumBlockOp(cr.block)
+	op := newChecksumBlockOp(cr.Block)
 	opBytes, err := makePrefixedMessage(op)
 	if err != nil {
 		return err

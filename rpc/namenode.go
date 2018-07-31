@@ -42,6 +42,7 @@ type NamenodeConnection struct {
 type NamenodeConnectionOptions struct {
 	Addresses []string
 	User      string
+	Lazy      bool
 }
 
 // NamenodeError represents an interepreted error from the Namenode, including
@@ -87,7 +88,7 @@ func NewNamenodeConnection(address string, user string) (*NamenodeConnection, er
 }
 
 // NewNamenodeConnectionWithOptions creates a new connection to a namenode with
-// the given options and performs an initial handshake.
+// the given options and optionally performs an initial handshake.
 func NewNamenodeConnectionWithOptions(options NamenodeConnectionOptions) (*NamenodeConnection, error) {
 	// Build the list of hosts to be used for failover.
 	hostList := make([]*namenodeHost, len(options.Addresses))
@@ -103,6 +104,11 @@ func NewNamenodeConnectionWithOptions(options NamenodeConnectionOptions) (*Namen
 		clientName: "go-hdfs-" + string(clientId),
 		user:       options.User,
 		hostList:   hostList,
+	}
+
+	// Resolve connection lazily.
+	if options.Lazy {
+		return c, nil
 	}
 
 	err := c.resolveConnection()

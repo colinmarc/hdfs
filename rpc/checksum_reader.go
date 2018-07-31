@@ -1,15 +1,12 @@
 package rpc
 
 import (
-	"bufio"
 	"context"
-	"encoding/binary"
 	"errors"
 	"io"
 	"net"
 
 	hdfs "github.com/colinmarc/hdfs/protocol/hadoop_hdfs"
-	"github.com/golang/protobuf/proto"
 )
 
 // ChecksumReader provides an interface for reading the "MD5CRC32" checksums of
@@ -26,8 +23,6 @@ type ChecksumReader struct {
 	DialFunc func(ctx context.Context, network, addr string) (net.Conn, error)
 
 	datanodes *datanodeFailover
-	conn      net.Conn
-	reader    *bufio.Reader
 }
 
 // NewChecksumReader creates a new ChecksumReader for the given block.
@@ -82,14 +77,12 @@ func (cr *ChecksumReader) readChecksum(address string) ([]byte, error) {
 		return nil, err
 	}
 
-	cr.conn = conn
-	err = cr.writeBlockChecksumRequest()
+	err = cr.writeBlockChecksumRequest(conn)
 	if err != nil {
 		return nil, err
 	}
 
-	cr.reader = bufio.NewReader(conn)
-	resp, err := cr.readBlockChecksumResponse()
+	resp, err := cr.readBlockChecksumResponse(conn)
 	if err != nil {
 		return nil, err
 	}
@@ -105,7 +98,7 @@ func (cr *ChecksumReader) readChecksum(address string) ([]byte, error) {
 // +-----------------------------------------------------------+
 // |  varint length + OpReadBlockProto                         |
 // +-----------------------------------------------------------+
-func (cr *ChecksumReader) writeBlockChecksumRequest() error {
+func (cr *ChecksumReader) writeBlockChecksumRequest(w io.Writer) error {
 	header := []byte{0x00, dataTransferVersion, checksumBlockOp}
 
 	op := newChecksumBlockOp(cr.Block)
@@ -115,7 +108,7 @@ func (cr *ChecksumReader) writeBlockChecksumRequest() error {
 	}
 
 	req := append(header, opBytes...)
-	_, err = cr.conn.Write(req)
+	_, err = w.Write(req)
 	if err != nil {
 		return err
 	}
@@ -127,29 +120,10 @@ func (cr *ChecksumReader) writeBlockChecksumRequest() error {
 // +-----------------------------------------------------------+
 // |  varint length + BlockOpResponseProto                     |
 // +-----------------------------------------------------------+
-func (cr *ChecksumReader) readBlockChecksumResponse() (*hdfs.BlockOpResponseProto, error) {
-	respLength, err := binary.ReadUvarint(cr.reader)
-	if err != nil {
-		if err == io.EOF {
-			err = io.ErrUnexpectedEOF
-		}
-
-		return nil, err
-	}
-
-	respBytes := make([]byte, respLength)
-	_, err = io.ReadFull(cr.reader, respBytes)
-	if err != nil {
-		return nil, err
-	}
-
+func (cr *ChecksumReader) readBlockChecksumResponse(r io.Reader) (*hdfs.BlockOpResponseProto, error) {
 	resp := &hdfs.BlockOpResponseProto{}
-	err = proto.Unmarshal(respBytes, resp)
-	if err != nil {
-		return nil, err
-	}
-
-	return resp, nil
+	err := readPrefixedMessage(r, resp)
+	return resp, err
 }
 
 func newChecksumBlockOp(block *hdfs.LocatedBlockProto) *hdfs.OpBlockChecksumProto {

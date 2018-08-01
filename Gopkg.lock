@@ -15,6 +15,21 @@
 
 [[projects]]
   branch = "master"
+  name = "github.com/hashicorp/go-uuid"
+  packages = ["."]
+  revision = "27454136f0364f2d44b1276c552d69105cf8c498"
+
+[[projects]]
+  branch = "master"
+  name = "github.com/jcmturner/gofork"
+  packages = [
+    "encoding/asn1",
+    "x/crypto/pbkdf2"
+  ]
+  revision = "2aebee971930cd0dd525873330952ab7df5ac95c"
+
+[[projects]]
+  branch = "master"
   name = "github.com/pborman/getopt"
   packages = ["."]
   revision = "7148bc3a4c3008adfcab60cbebfd0576018f330b"
@@ -34,9 +49,69 @@
   revision = "b91bfb9ebec76498946beb6af7c0230c7cc7ba6c"
   version = "v1.2.0"
 
+[[projects]]
+  branch = "master"
+  name = "golang.org/x/crypto"
+  packages = [
+    "md4",
+    "pbkdf2"
+  ]
+  revision = "a2144134853fc9a27a7b1e3eb4f19f1a76df13c9"
+
+[[projects]]
+  name = "gopkg.in/jcmturner/aescts.v1"
+  packages = ["."]
+  revision = "f6abebb3171c4c1b1fea279cb7c7325020a26290"
+  version = "v1.0.1"
+
+[[projects]]
+  name = "gopkg.in/jcmturner/dnsutils.v1"
+  packages = ["."]
+  revision = "13eeb8d49ffb74d7a75784c35e4d900607a3943c"
+  version = "v1.0.1"
+
+[[projects]]
+  name = "gopkg.in/jcmturner/gokrb5.v5"
+  packages = [
+    "asn1tools",
+    "client",
+    "config",
+    "credentials",
+    "crypto",
+    "crypto/common",
+    "crypto/etype",
+    "crypto/rfc3961",
+    "crypto/rfc3962",
+    "crypto/rfc4757",
+    "crypto/rfc8009",
+    "gssapi",
+    "iana",
+    "iana/addrtype",
+    "iana/adtype",
+    "iana/asnAppTag",
+    "iana/chksumtype",
+    "iana/errorcode",
+    "iana/etypeID",
+    "iana/flags",
+    "iana/keyusage",
+    "iana/msgtype",
+    "iana/nametype",
+    "iana/patype",
+    "kadmin",
+    "keytab",
+    "krberror",
+    "messages",
+    "mstypes",
+    "ndr",
+    "pac",
+    "types"
+  ]
+  revision = "5502bb09507bcc91e28c9b6feba046beb2e007d1"
+  version = "v5.2.0"
+
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "6a827061ac3d7c045d36ae7765d9c25d37753981315d02cdb6484bebb48375e7"
+  inputs-digest = "1d8135f1a2177170f1fe8a07cf27bdf40ebf2786c22069ec383bf78b48bff646"
   solver-name = "gps-cdcl"
   solver-version = 1

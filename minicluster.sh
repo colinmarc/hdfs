@@ -36,6 +36,16 @@ EOF
 echo "Waiting for namenode to start up..."
 $HADOOP_HOME/bin/hdfs dfsadmin -safemode wait
 
+export HADOOP_CONF_DIR=$(mktemp -d)
+cat > $HADOOP_CONF_DIR/core-site.xml <<EOF
+<configuration>
+  <property>
+    <name>fs.defaultFS</name>
+    <value>hdfs://$HADOOP_NAMENODE</value>
+  </property>
+</configuration>
+EOF
+
 export HADOOP_FS="$HADOOP_HOME/bin/hadoop fs"
 ./fixtures.sh
 

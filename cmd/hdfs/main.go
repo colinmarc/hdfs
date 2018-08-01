@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"net"
 	"os"
+	"os/user"
 	"time"
 
 	"github.com/colinmarc/hdfs"
@@ -193,11 +194,20 @@ func getClient(namenode string) (*hdfs.Client, error) {
 	}
 
 	var err error
-	options.User = os.Getenv("HADOOP_USER_NAME")
-	if options.User == "" {
-		options.User, err = hdfs.Username()
+	if options.KerberosClient != nil {
+		options.KerberosClient, err = getKerberosClient()
 		if err != nil {
-			return nil, fmt.Errorf("Couldn't determine user: %s", err)
+			return nil, fmt.Errorf("Problem with kerberos authentication: %s", err)
+		}
+	} else {
+		options.User = os.Getenv("HADOOP_USER_NAME")
+		if options.User == "" {
+			u, err := user.Current()
+			if err != nil {
+				return nil, fmt.Errorf("Couldn't determine user: %s", err)
+			}
+
+			options.User = u.Username
 		}
 	}
 

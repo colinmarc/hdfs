@@ -26,7 +26,7 @@ type propertyList struct {
 // pairs found in a user's hadoop configuration files.
 type HadoopConf map[string]string
 
-var errUnresolvedNamenode = errors.New("no namenode address in configuration")
+var errNoNamenodesInConf = errors.New("no namenode address(es) in configuration")
 
 // LoadHadoopConf returns a HadoopConf object representing configuration from
 // the specified path, or finds the correct path in the environment. If
@@ -34,7 +34,6 @@ var errUnresolvedNamenode = errors.New("no namenode address in configuration")
 // directly to the directory where the xml files are. If neither is specified,
 // ${HADOOP_HOME}/conf will be used.
 func LoadHadoopConf(path string) HadoopConf {
-
 	if path == "" {
 		path = os.Getenv("HADOOP_CONF_DIR")
 		if path == "" {
@@ -64,7 +63,9 @@ func LoadHadoopConf(path string) HadoopConf {
 }
 
 // Namenodes returns the namenode hosts present in the configuration. The
-// returned slice will be sorted and deduped.
+// returned slice will be sorted and deduped. The values are loaded from
+// fs.defaultFS (or the deprecated fs.default.name), or fields beginning with
+// dfs.namenode.rpc-address.
 func (conf HadoopConf) Namenodes() ([]string, error) {
 	nns := make(map[string]bool)
 	for key, value := range conf {
@@ -77,7 +78,7 @@ func (conf HadoopConf) Namenodes() ([]string, error) {
 	}
 
 	if len(nns) == 0 {
-		return nil, errUnresolvedNamenode
+		return nil, errNoNamenodesInConf
 	}
 
 	keys := make([]string, 0, len(nns))

@@ -84,19 +84,35 @@ Installing the commandline client
 Grab a tarball from the [releases page](https://github.com/colinmarc/hdfs/releases)
 and unzip it wherever you like.
 
-You'll want to add the following line to your `.bashrc` or `.profile`:
+To configure the client, make sure one or both of these environment variables
+point to your Hadoop configuration (`core-site.xml` and `hdfs-site.xml`). On
+systems with Hadoop installed, they should already be set.
 
-    export HADOOP_NAMENODE="namenode:8020"
+    $ export HADOOP_HOME="/etc/hadoop"
+    $ export HADOOP_CONF_DIR="/etc/hadoop/conf"
 
 To install tab completion globally on linux, copy or link the `bash_completion`
 file which comes with the tarball into the right place:
 
-    ln -sT bash_completion /etc/bash_completion.d/gohdfs
+    $ ln -sT bash_completion /etc/bash_completion.d/gohdfs
 
-By default, the HDFS user is set to the currently-logged-in user. You can
-override this in your `.bashrc` or `.profile`:
+By default on non-kerberized clusters, the HDFS user is set to the
+currently-logged-in user. You can override this with another environment
+variable:
 
-    export HADOOP_USER_NAME=username
+    $ export HADOOP_USER_NAME=username
+
+Using the commandline client with Kerberos authentication
+---------------------------------------------------------
+
+Like `hadoop fs`, the commandline client expects a `ccache` file in the default
+location: `/tmp/krb5cc_<uid>`. That means it should 'just work' to use `kinit`:
+
+    $ kinit bob@EXAMPLE.com
+    $ hdfs ls /
+
+If that doesn't work, try setting the `KRB5CCNAME` environment variable to
+wherever you have the `ccache` saved.
 
 Compatibility
 -------------

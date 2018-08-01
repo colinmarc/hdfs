@@ -85,7 +85,7 @@ func (c *Client) CreateFile(name string, replication int, blockSize int64, perm 
 // acknowledged asynchronously, it is very important that Close is called after
 // all data has been written.
 func (c *Client) Append(name string) (*FileWriter, error) {
-	info, err := c.getFileInfo(name)
+	_, err := c.getFileInfo(name)
 	if err != nil {
 		return nil, &os.PathError{"append", name, err}
 	}
@@ -105,19 +105,6 @@ func (c *Client) Append(name string) (*FileWriter, error) {
 		return nil, &os.PathError{"append", name, err}
 	}
 
-	req := &hdfs.GetBlockLocationsRequestProto{
-		Src:    proto.String(name),
-		Offset: proto.Uint64(0),
-		Length: proto.Uint64(uint64(info.Size())),
-	}
-	resp := &hdfs.GetBlockLocationsResponseProto{}
-
-	err = c.namenode.Execute("getBlockLocations", req, resp)
-	if err != nil {
-		return nil, err
-	}
-
-	blocks := resp.GetLocations().GetBlocks()
 	f := &FileWriter{
 		client:      c,
 		name:        name,
@@ -125,21 +112,18 @@ func (c *Client) Append(name string) (*FileWriter, error) {
 		blockSize:   int64(appendResp.Stat.GetBlocksize()),
 	}
 
-	if len(blocks) == 0 {
-		return f, nil
-	}
-
-	lastBlock := blocks[len(blocks)-1]
-	lastBlockSize := int64(lastBlock.GetB().GetNumBytes())
-	if lastBlockSize == 0 || lastBlockSize == f.blockSize {
+	// This returns nil if there are no blocks (it's an empty file) or if the
+	// last block is full (so we have to start a fresh block).
+	block := appendResp.GetBlock()
+	if block == nil {
 		return f, nil
 	}
 
 	f.blockWriter = &rpc.BlockWriter{
 		ClientName:          f.client.namenode.ClientName(),
-		Block:               lastBlock,
+		Block:               block,
 		BlockSize:           f.blockSize,
-		Offset:              int64(lastBlock.B.GetNumBytes()),
+		Offset:              int64(block.B.GetNumBytes()),
 		Append:              true,
 		UseDatanodeHostname: f.client.options.UseDatanodeHostname,
 		DialFunc:            f.client.options.DatanodeDialFunc,

@@ -1,20 +1,61 @@
 #!/bin/bash
 
+#Valid commands:
+#  ls [-lah] [FILE]...
+#  rm [-rf] FILE...
+#  mv [-nT] SOURCE... DEST
+#  mkdir [-p] FILE...
+#  touch [-amc] FILE...
+#  chmod [-R] OCTAL-MODE FILE...
+#  chown [-R] OWNER[:GROUP] FILE...
+#  cat SOURCE...
+#  head [-n LINES | -c BYTES] SOURCE...
+#  tail [-n LINES | -c BYTES] SOURCE...
+#  du [-sh] FILE...
+#  checksum FILE...
+#  get SOURCE [DEST]
+#  getmerge SOURCE DEST
+#  put SOURCE DEST
+#  df [-h]
+
+# This all breaks if any flags are used due to absolute position assumptions
+# more work neede, and command like df need special handling while single
+# path commands also need fixing.
 _hdfs_complete()
 {
-    local cur prev opts
+    local cur cmd opts
+    compopt +o default
     COMPREPLY=()
     cur="${COMP_WORDS[COMP_CWORD]}"
-    words=$(IFS=$' '; echo "${COMP_WORDS[*]}")
-    opts=$(${COMP_WORDS[0]} complete "$words")
-    COMPREPLY=( $(compgen -W "${opts}" -- ${cur}) )
-
-    if [[ $COMPREPLY != "" && $COMPREPLY != */ ]]
+    if [ "$COMP_CWORD" = 1 ]
     then
-      COMPREPLY="$COMPREPLY "
+      opts=$(${COMP_WORDS[0]} complete)
+      COMPREPLY=( $(compgen -W "${opts}" -- ${cur}) )
+    elif [ "$COMP_CWORD" = 2 ]
+    then
+      cmd="${COMP_WORDS[1]}"
+      if [ "$cmd" = "put" ]
+      then
+        compopt -o default
+      else
+        compopt -o nospace
+        opts=$(${COMP_WORDS[0]} complete "no-op no-op $cur")
+        COMPREPLY=( $(compgen -W "${opts}" -- ${cur}) )
+      fi
+    elif [ "$COMP_CWORD" = 3 ]
+    then
+      cmd="${COMP_WORDS[1]}"
+      if [[ "$cmd" == "get"* ]]
+      then
+        compopt -o default
+      else
+        compopt -o nospace
+        opts=$(${COMP_WORDS[0]} complete "no-op no-op $cur")
+        COMPREPLY=( $(compgen -W "${opts}" -- ${cur}) )
+      fi
     fi
 
     return 0
 }
 
-complete -o nospace -F _hdfs_complete hdfs
+complete -o default -F _hdfs_complete hdfs

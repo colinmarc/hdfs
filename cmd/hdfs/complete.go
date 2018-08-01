@@ -23,6 +23,8 @@ var knownCommands = []string{
 	"checksum",
 	"get",
 	"getmerge",
+	"put",
+	"df",
 }
 
 func complete(args []string) {

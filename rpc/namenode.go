@@ -112,6 +112,7 @@ func NewNamenodeConnectionWithOptions(options NamenodeConnectionOptions) (*Namen
 		clientName: "go-hdfs-" + string(clientId),
 		user:       options.User,
 		hostList:   hostList,
+		dialFunc:   options.DialFunc,
 	}
 
 	err := c.resolveConnection()

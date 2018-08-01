@@ -3,7 +3,9 @@ package main
 import (
 	"errors"
 	"fmt"
+	"net"
 	"os"
+	"time"
 
 	"github.com/colinmarc/hdfs"
 	"github.com/pborman/getopt"
@@ -198,6 +200,16 @@ func getClient(namenode string) (*hdfs.Client, error) {
 			return nil, fmt.Errorf("Couldn't determine user: %s", err)
 		}
 	}
+
+	// Set some basic defaults.
+	dialFunc := (&net.Dialer{
+		Timeout:   5 * time.Second,
+		KeepAlive: 5 * time.Second,
+		DualStack: true,
+	}).DialContext
+
+	options.NamenodeDialFunc = dialFunc
+	options.DatanodeDialFunc = dialFunc
 
 	c, err := hdfs.NewClient(options)
 	if err != nil {

@@ -22,11 +22,8 @@ clean-protos:
 hdfs: clean $(SOURCES)
 	go build -ldflags "-X main.version=$(TRAVIS_TAG)" ./cmd/hdfs
 
-install: get-deps
-	go install ./...
-
 test: hdfs
-	go test -v -race $(shell go list ./... | grep -v vendor)
+	go test -v -race ./...
 	bats ./cmd/hdfs/test/*.bats
 
 clean:

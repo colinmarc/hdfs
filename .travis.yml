@@ -1,7 +1,7 @@
 sudo: required
 language: go
 go_import_path: github.com/colinmarc/hdfs
-go: 1.x
+go: 1.11beta2
 env:
 - PLATFORM=cdh5
 - PLATFORM=cdh5 KERBEROS=true

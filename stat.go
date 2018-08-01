@@ -6,7 +6,6 @@ import (
 	"time"
 
 	hdfs "github.com/colinmarc/hdfs/internal/protocol/hadoop_hdfs"
-	"github.com/colinmarc/hdfs/internal/rpc"
 	"github.com/golang/protobuf/proto"
 )
 
@@ -21,7 +20,7 @@ type FileInfo struct {
 func (c *Client) Stat(name string) (os.FileInfo, error) {
 	fi, err := c.getFileInfo(name)
 	if err != nil {
-		err = &os.PathError{"stat", name, err}
+		err = &os.PathError{"stat", name, interpretException(err)}
 	}
 
 	return fi, err
@@ -33,10 +32,6 @@ func (c *Client) getFileInfo(name string) (os.FileInfo, error) {
 
 	err := c.namenode.Execute("getFileInfo", req, resp)
 	if err != nil {
-		if nnErr, ok := err.(*rpc.NamenodeError); ok {
-			err = interpretException(nnErr.Exception, err)
-		}
-
 		return nil, err
 	}
 

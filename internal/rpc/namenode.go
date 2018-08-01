@@ -196,7 +196,7 @@ func (c *NamenodeConnection) Execute(method string, req proto.Message, resp prot
 		err = c.readResponse(method, resp)
 		if err != nil {
 			// Only retry on a standby exception.
-			if nerr, ok := err.(*NamenodeError); ok && nerr.Exception == standbyExceptionClass {
+			if nerr, ok := err.(*NamenodeError); ok && nerr.exception == standbyExceptionClass {
 				c.markFailure(err)
 				continue
 			}
@@ -252,10 +252,10 @@ func (c *NamenodeConnection) readResponse(method string, resp proto.Message) err
 		return errors.New("unexpected sequence number")
 	} else if rrh.GetStatus() != hadoop.RpcResponseHeaderProto_SUCCESS {
 		return &NamenodeError{
-			Method:    method,
-			Message:   rrh.GetErrorMsg(),
-			Code:      int(rrh.GetErrorDetail()),
-			Exception: rrh.GetExceptionClassName(),
+			method:    method,
+			message:   rrh.GetErrorMsg(),
+			code:      int(rrh.GetErrorDetail()),
+			exception: rrh.GetExceptionClassName(),
 		}
 	}
 

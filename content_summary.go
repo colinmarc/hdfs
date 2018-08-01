@@ -4,7 +4,6 @@ import (
 	"os"
 
 	hdfs "github.com/colinmarc/hdfs/internal/protocol/hadoop_hdfs"
-	"github.com/colinmarc/hdfs/internal/rpc"
 	"github.com/golang/protobuf/proto"
 )
 
@@ -22,7 +21,7 @@ type ContentSummary struct {
 func (c *Client) GetContentSummary(name string) (*ContentSummary, error) {
 	cs, err := c.getContentSummary(name)
 	if err != nil {
-		err = &os.PathError{"content summary", name, err}
+		err = &os.PathError{"content summary", name, interpretException(err)}
 	}
 
 	return cs, err
@@ -34,10 +33,6 @@ func (c *Client) getContentSummary(name string) (*ContentSummary, error) {
 
 	err := c.namenode.Execute("getContentSummary", req, resp)
 	if err != nil {
-		if nnErr, ok := err.(*rpc.NamenodeError); ok {
-			err = interpretException(nnErr.Exception, err)
-		}
-
 		return nil, err
 	}
 

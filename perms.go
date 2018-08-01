@@ -5,7 +5,6 @@ import (
 	"time"
 
 	hdfs "github.com/colinmarc/hdfs/internal/protocol/hadoop_hdfs"
-	"github.com/colinmarc/hdfs/internal/rpc"
 	"github.com/golang/protobuf/proto"
 )
 
@@ -19,11 +18,7 @@ func (c *Client) Chmod(name string, perm os.FileMode) error {
 
 	err := c.namenode.Execute("setPermission", req, resp)
 	if err != nil {
-		if nnErr, ok := err.(*rpc.NamenodeError); ok {
-			err = interpretException(nnErr.Exception, err)
-		}
-
-		return &os.PathError{"chmod", name, err}
+		return &os.PathError{"chmod", name, interpretException(err)}
 	}
 
 	return nil
@@ -44,11 +39,7 @@ func (c *Client) Chown(name string, user, group string) error {
 
 	err := c.namenode.Execute("setOwner", req, resp)
 	if err != nil {
-		if nnErr, ok := err.(*rpc.NamenodeError); ok {
-			err = interpretException(nnErr.Exception, err)
-		}
-
-		return &os.PathError{"chown", name, err}
+		return &os.PathError{"chown", name, interpretException(err)}
 	}
 
 	return nil
@@ -65,11 +56,7 @@ func (c *Client) Chtimes(name string, atime time.Time, mtime time.Time) error {
 
 	err := c.namenode.Execute("setTimes", req, resp)
 	if err != nil {
-		if nnErr, ok := err.(*rpc.NamenodeError); ok {
-			err = interpretException(nnErr.Exception, err)
-		}
-
-		return &os.PathError{"chtimes", name, err}
+		return &os.PathError{"chtimes", name, interpretException(err)}
 	}
 
 	return nil

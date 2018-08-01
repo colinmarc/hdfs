@@ -35,7 +35,7 @@ type FileReader struct {
 func (c *Client) Open(name string) (*FileReader, error) {
 	info, err := c.getFileInfo(name)
 	if err != nil {
-		return nil, &os.PathError{"open", name, err}
+		return nil, &os.PathError{"open", name, interpretException(err)}
 	}
 
 	return &FileReader{
@@ -281,7 +281,7 @@ func (f *FileReader) Readdir(n int) ([]os.FileInfo, error) {
 	for {
 		batch, remaining, err := f.readdir()
 		if err != nil {
-			return nil, &os.PathError{"readdir", f.name, err}
+			return nil, &os.PathError{"readdir", f.name, interpretException(err)}
 		}
 
 		if len(batch) > 0 {
@@ -318,10 +318,6 @@ func (f *FileReader) readdir() ([]os.FileInfo, int, error) {
 
 	err := f.client.namenode.Execute("getListing", req, resp)
 	if err != nil {
-		if nnErr, ok := err.(*rpc.NamenodeError); ok {
-			err = interpretException(nnErr.Exception, err)
-		}
-
 		return nil, 0, err
 	} else if resp.GetDirList() == nil {
 		return nil, 0, os.ErrNotExist

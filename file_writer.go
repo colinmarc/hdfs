@@ -31,6 +31,7 @@ type FileWriter struct {
 // been written.
 func (c *Client) Create(name string) (*FileWriter, error) {
 	_, err := c.getFileInfo(name)
+	err = interpretException(err)
 	if err == nil {
 		return nil, &os.PathError{"create", name, os.ErrExist}
 	} else if !os.IsNotExist(err) {
@@ -65,11 +66,7 @@ func (c *Client) CreateFile(name string, replication int, blockSize int64, perm 
 
 	err := c.namenode.Execute("create", createReq, createResp)
 	if err != nil {
-		if nnErr, ok := err.(*rpc.NamenodeError); ok {
-			err = interpretException(nnErr.Exception, err)
-		}
-
-		return nil, &os.PathError{"create", name, err}
+		return nil, &os.PathError{"create", name, interpretException(err)}
 	}
 
 	return &FileWriter{
@@ -87,7 +84,7 @@ func (c *Client) CreateFile(name string, replication int, blockSize int64, perm 
 func (c *Client) Append(name string) (*FileWriter, error) {
 	_, err := c.getFileInfo(name)
 	if err != nil {
-		return nil, &os.PathError{"append", name, err}
+		return nil, &os.PathError{"append", name, interpretException(err)}
 	}
 
 	appendReq := &hdfs.AppendRequestProto{
@@ -98,11 +95,7 @@ func (c *Client) Append(name string) (*FileWriter, error) {
 
 	err = c.namenode.Execute("append", appendReq, appendResp)
 	if err != nil {
-		if nnErr, ok := err.(*rpc.NamenodeError); ok {
-			err = interpretException(nnErr.Exception, err)
-		}
-
-		return nil, &os.PathError{"append", name, err}
+		return nil, &os.PathError{"append", name, interpretException(err)}
 	}
 
 	f := &FileWriter{
@@ -266,11 +259,7 @@ func (f *FileWriter) startNewBlock() error {
 
 	err := f.client.namenode.Execute("addBlock", addBlockReq, addBlockResp)
 	if err != nil {
-		if nnErr, ok := err.(*rpc.NamenodeError); ok {
-			err = interpretException(nnErr.Exception, err)
-		}
-
-		return &os.PathError{"create", f.name, err}
+		return &os.PathError{"create", f.name, interpretException(err)}
 	}
 
 	f.blockWriter = &rpc.BlockWriter{

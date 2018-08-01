@@ -5,7 +5,6 @@ import (
 	"os"
 
 	hdfs "github.com/colinmarc/hdfs/internal/protocol/hadoop_hdfs"
-	"github.com/colinmarc/hdfs/internal/rpc"
 	"github.com/golang/protobuf/proto"
 )
 
@@ -24,11 +23,7 @@ func (c *Client) Remove(name string) error {
 
 	err = c.namenode.Execute("delete", req, resp)
 	if err != nil {
-		if nnErr, ok := err.(*rpc.NamenodeError); ok {
-			err = interpretException(nnErr.Exception, err)
-		}
-
-		return &os.PathError{"remove", name, err}
+		return &os.PathError{"remove", name, interpretException(err)}
 	} else if resp.Result == nil {
 		return &os.PathError{
 			"remove",

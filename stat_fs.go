@@ -2,7 +2,6 @@ package hdfs
 
 import (
 	hdfs "github.com/colinmarc/hdfs/internal/protocol/hadoop_hdfs"
-	"github.com/colinmarc/hdfs/internal/rpc"
 )
 
 // FsInfo provides information about HDFS
@@ -24,9 +23,6 @@ func (c *Client) StatFs() (FsInfo, error) {
 
 	err := c.namenode.Execute("getFsStats", req, resp)
 	if err != nil {
-		if nnErr, ok := err.(*rpc.NamenodeError); ok {
-			err = interpretException(nnErr.Exception, err)
-		}
 		return FsInfo{}, err
 	}
 

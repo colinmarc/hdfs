@@ -13,16 +13,10 @@ import (
 
 var (
 	errMultipleNamenodeUrls = errors.New("Multiple namenode URLs specified")
-	rootPath                = userDir()
 )
 
-func userDir() string {
-	currentUser, err := hdfs.Username()
-	if err != nil || currentUser == "" {
-		return "/"
-	}
-
-	return path.Join("/user", currentUser)
+func userDir(client *hdfs.Client) string {
+	return path.Join("/user", client.User())
 }
 
 // normalizePaths parses the hosts out of HDFS URLs, and turns relative paths
@@ -46,12 +40,7 @@ func normalizePaths(paths []string) ([]string, string, error) {
 			namenode = url.Host
 		}
 
-		p := path.Clean(url.Path)
-		if !path.IsAbs(url.Path) {
-			p = path.Join(rootPath, p)
-		}
-
-		cleanPaths = append(cleanPaths, p)
+		cleanPaths = append(cleanPaths, path.Clean(url.Path))
 	}
 
 	return cleanPaths, namenode, nil
@@ -146,8 +135,13 @@ func expandGlobs(client *hdfs.Client, globbedPath string) ([]string, error) {
 
 func expandPaths(client *hdfs.Client, paths []string) ([]string, error) {
 	var res []string
+	home := userDir(client)
 
 	for _, p := range paths {
+		if !path.IsAbs(p) {
+			p = path.Join(home, p)
+		}
+
 		if hasGlob(p) {
 			expanded, err := expandGlobs(client, p)
 			if err != nil {

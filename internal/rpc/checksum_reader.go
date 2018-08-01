@@ -27,16 +27,6 @@ type ChecksumReader struct {
 	datanodes *datanodeFailover
 }
 
-// NewChecksumReader creates a new ChecksumReader for the given block.
-//
-// Deprecated: this method does not do any required initialization, and does
-// not allow you to set fields such as UseDatanodeHostname.
-func NewChecksumReader(block *hdfs.LocatedBlockProto) *ChecksumReader {
-	return &ChecksumReader{
-		Block: block,
-	}
-}
-
 // SetDeadline sets the deadline for future ReadChecksum calls. A zero value
 // for t means Read will not time out.
 func (cr *ChecksumReader) SetDeadline(t time.Time) error {

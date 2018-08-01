@@ -402,7 +402,7 @@ func (f *FileReader) getNewBlockReader() error {
 
 		if start <= off && off < end {
 			f.blockReader = &rpc.BlockReader{
-				ClientName:          f.client.namenode.ClientName(),
+				ClientName:          f.client.namenode.ClientName,
 				Block:               block,
 				Offset:              int64(off - start),
 				UseDatanodeHostname: f.client.options.UseDatanodeHostname,

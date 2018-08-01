@@ -65,12 +65,6 @@ type ClientOptions struct {
 	// multi-namenode setup (for example: 'nn/_HOST'). It is required if
 	// KerberosClient is provided.
 	KerberosServicePrincipleName string
-	// Namenode optionally specifies an existing NamenodeConnection to wrap. This
-	// is useful if you needed to create the namenode net.Conn manually for
-	// whatever reason.
-	//
-	// Deprecated: use NamenodeDialFunc instead.
-	Namenode *rpc.NamenodeConnection
 }
 
 // ClientOptionsFromConf attempts to load any relevant configuration options
@@ -127,40 +121,29 @@ func ClientOptionsFromConf(conf HadoopConf) (ClientOptions, error) {
 // the client could not be created.
 func NewClient(options ClientOptions) (*Client, error) {
 	var err error
-	if options.Namenode == nil {
-		if options.KerberosClient != nil && options.KerberosClient.Credentials == nil {
-			return nil, errors.New("kerberos enabled, but kerberos client is missing credentials")
-		}
-
-		if options.KerberosClient != nil && options.KerberosServicePrincipleName == "" {
-			return nil, errors.New("kerberos enabled, but kerberos namenode SPN is not provided")
-		}
-
-		if options.User == "" {
-			if options.KerberosClient != nil {
-				creds := options.KerberosClient.Credentials
-				options.User = creds.Username + "@" + creds.Realm
-			} else {
-				return nil, errors.New("user not specified")
-			}
-		}
-
-		options.Namenode, err = rpc.NewNamenodeConnectionWithOptions(
-			rpc.NamenodeConnectionOptions{
-				Addresses:                    options.Addresses,
-				User:                         options.User,
-				DialFunc:                     options.NamenodeDialFunc,
-				KerberosClient:               options.KerberosClient,
-				KerberosServicePrincipleName: options.KerberosServicePrincipleName,
-			},
-		)
-
-		if err != nil {
-			return nil, err
-		}
+	if options.KerberosClient != nil && options.KerberosClient.Credentials == nil {
+		return nil, errors.New("kerberos enabled, but kerberos client is missing credentials")
 	}
 
-	return &Client{namenode: options.Namenode, options: options}, nil
+	if options.KerberosClient != nil && options.KerberosServicePrincipleName == "" {
+		return nil, errors.New("kerberos enabled, but kerberos namenode SPN is not provided")
+	}
+
+	namenode, err := rpc.NewNamenodeConnection(
+		rpc.NamenodeConnectionOptions{
+			Addresses:                    options.Addresses,
+			User:                         options.User,
+			DialFunc:                     options.NamenodeDialFunc,
+			KerberosClient:               options.KerberosClient,
+			KerberosServicePrincipleName: options.KerberosServicePrincipleName,
+		},
+	)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return &Client{namenode: namenode, options: options}, nil
 }
 
 // New returns a connected Client, or an error if it can't connect. The user
@@ -189,24 +172,10 @@ func New(address string) (*Client, error) {
 	return NewClient(options)
 }
 
-// NewForUser returns a connected Client with the user specified, or an error if
-// it can't connect.
-//
-// Deprecated: Use NewClient with ClientOptions instead.
-func NewForUser(address string, user string) (*Client, error) {
-	return NewClient(ClientOptions{
-		Addresses: []string{address},
-		User:      user,
-	})
-}
-
-// NewForConnection returns Client with the specified, underlying rpc.NamenodeConnection.
-// You can use rpc.WrapNamenodeConnection to wrap your own net.Conn.
-//
-// Deprecated: Use NewClient with ClientOptions instead.
-func NewForConnection(namenode *rpc.NamenodeConnection) *Client {
-	client, _ := NewClient(ClientOptions{Namenode: namenode})
-	return client
+// User returns the user that the Client is acting under. This is either the
+// current system user or the kerberos principal.
+func (c *Client) User() string {
+	return c.namenode.User
 }
 
 // ReadFile reads the file named by filename and returns the contents.
@@ -277,17 +246,4 @@ func (c *Client) fetchDefaults() (*hdfs.FsServerDefaultsProto, error) {
 // Close terminates all underlying socket connections to remote server.
 func (c *Client) Close() error {
 	return c.namenode.Close()
-}
-
-// Username returns the current system user if it is not set.
-//
-// Deprecated: just use user.Current. Previous versions of this function would
-// check the env variable HADOOP_USER_NAME; this functionality was removed.
-func Username() (string, error) {
-	currentUser, err := user.Current()
-	if err != nil {
-		return "", err
-	}
-
-	return currentUser.Username, nil
 }

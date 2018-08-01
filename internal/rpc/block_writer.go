@@ -44,20 +44,6 @@ type BlockWriter struct {
 	closed   bool
 }
 
-// NewBlockWriter returns a BlockWriter for the given block. It will lazily
-// set up a replication pipeline, and connect to the "best" datanode based on
-// any previously seen failures.
-//
-// Deprecated: this method does not do any required initialization, and does
-// not allow you to set fields such as UseDatanodeHostname.
-func NewBlockWriter(block *hdfs.LocatedBlockProto, namenode *NamenodeConnection, blockSize int64) *BlockWriter {
-	return &BlockWriter{
-		ClientName: namenode.ClientName(),
-		Block:      block,
-		BlockSize:  blockSize,
-	}
-}
-
 // SetDeadline sets the deadline for future Write, Flush, and Close calls. A
 // zero value for t means those calls will not time out.
 func (bw *BlockWriter) SetDeadline(t time.Time) error {

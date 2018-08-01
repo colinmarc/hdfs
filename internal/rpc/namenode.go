@@ -28,13 +28,15 @@ const backoffDuration = time.Second * 5
 
 // NamenodeConnection represents an open connection to a namenode.
 type NamenodeConnection struct {
-	clientId         []byte
-	clientName       string
+	ClientID   []byte
+	ClientName string
+	User       string
+
 	currentRequestID int32
 
-	user                         string
 	kerberosClient               *krb.Client
 	kerberosServicePrincipleName string
+	kerberosRealm                string
 
 	dialFunc func(ctx context.Context, network, addr string) (net.Conn, error)
 	conn     net.Conn
@@ -49,7 +51,9 @@ type NamenodeConnection struct {
 type NamenodeConnectionOptions struct {
 	// Addresses specifies the namenode(s) to connect to.
 	Addresses []string
-	// User specifies which HDFS user the client will act as.
+	// User specifies which HDFS user the client will act as. It is required
+	// unless kerberos authentication is enabled, in which case it will be
+	// determined from the provided credentials if empty.
 	User string
 	// DialFunc is used to connect to the datanodes. If nil, then
 	// (&net.Dialer{}).DialContext is used.
@@ -67,66 +71,45 @@ type NamenodeConnectionOptions struct {
 	KerberosServicePrincipleName string
 }
 
-// NamenodeError represents an interepreted error from the Namenode, including
-// the error code and the java backtrace.
-type NamenodeError struct {
-	Method    string
-	Message   string
-	Code      int
-	Exception string
-}
-
-// Desc returns the long form of the error code, as defined in the
-// RpcErrorCodeProto in RpcHeader.proto
-func (err *NamenodeError) Desc() string {
-	return hadoop.RpcResponseHeaderProto_RpcErrorCodeProto_name[int32(err.Code)]
-}
-
-func (err *NamenodeError) Error() string {
-	s := fmt.Sprintf("%s call failed with %s", err.Method, err.Desc())
-	if err.Exception != "" {
-		s += fmt.Sprintf(" (%s)", err.Exception)
-	}
-
-	return s
-}
-
 type namenodeHost struct {
 	address     string
 	lastError   error
 	lastErrorAt time.Time
 }
 
-// NewNamenodeConnection creates a new connection to a namenode and performs an
-// initial handshake.
-//
-// You probably want to use hdfs.New instead, which provides a higher-level
-// interface.
-func NewNamenodeConnection(address string, user string) (*NamenodeConnection, error) {
-	return NewNamenodeConnectionWithOptions(NamenodeConnectionOptions{
-		Addresses: []string{address},
-		User:      user,
-	})
-}
-
 // NewNamenodeConnectionWithOptions creates a new connection to a namenode with
 // the given options and performs an initial handshake.
-func NewNamenodeConnectionWithOptions(options NamenodeConnectionOptions) (*NamenodeConnection, error) {
+func NewNamenodeConnection(options NamenodeConnectionOptions) (*NamenodeConnection, error) {
 	// Build the list of hosts to be used for failover.
 	hostList := make([]*namenodeHost, len(options.Addresses))
 	for i, addr := range options.Addresses {
 		hostList[i] = &namenodeHost{address: addr}
 	}
 
+	var user, realm string
+	user = options.User
+	if user == "" {
+		if options.KerberosClient != nil {
+			creds := options.KerberosClient.Credentials
+			user = creds.Username
+			realm = creds.Realm
+		} else {
+			return nil, errors.New("user not specified")
+		}
+	}
+
 	// The ClientID is reused here both in the RPC headers (which requires a
 	// "globally unique" ID) and as the "client name" in various requests.
 	clientId := newClientID()
 	c := &NamenodeConnection{
-		clientId:                     clientId,
-		clientName:                   "go-hdfs-" + string(clientId),
+		ClientID:   clientId,
+		ClientName: "go-hdfs-" + string(clientId),
+		User:       user,
+
 		kerberosClient:               options.KerberosClient,
 		kerberosServicePrincipleName: options.KerberosServicePrincipleName,
-		user:     options.User,
+		kerberosRealm:                realm,
+
 		dialFunc: options.DialFunc,
 		hostList: hostList,
 	}
@@ -139,40 +122,12 @@ func NewNamenodeConnectionWithOptions(options NamenodeConnectionOptions) (*Namen
 	return c, nil
 }
 
-// WrapNamenodeConnection wraps an existing net.Conn to a Namenode, and preforms
-// an initial handshake.
-//
-// Deprecated: use the DialFunc option in NamenodeConnectionOptions or the
-// higher-level hdfs.NewClient.
-func WrapNamenodeConnection(conn net.Conn, user string) (*NamenodeConnection, error) {
-	// The ClientID is reused here both in the RPC headers (which requires a
-	// "globally unique" ID) and as the "client name" in various requests.
-	clientId := newClientID()
-	c := &NamenodeConnection{
-		clientId:   clientId,
-		clientName: "go-hdfs-" + string(clientId),
-		user:       user,
-		conn:       conn,
-		host:       &namenodeHost{},
-		hostList:   make([]*namenodeHost, 0),
-	}
-
-	err := c.doNamenodeHandshake()
-	if err != nil {
-		conn.Close()
-		return nil, fmt.Errorf("namenode handshake failed: %s", err)
-	}
-
-	return c, nil
-}
-
 func (c *NamenodeConnection) resolveConnection() error {
 	if c.conn != nil {
 		return nil
 	}
 
 	var err error
-
 	if c.host != nil {
 		err = c.host.lastError
 	}
@@ -216,14 +171,6 @@ func (c *NamenodeConnection) markFailure(err error) {
 	}
 	c.host.lastError = err
 	c.host.lastErrorAt = time.Now()
-}
-
-// ClientName provides a unique identifier for this client, which is required
-// for various RPC calls. Confusingly, it's separate from clientID, which is
-// used in the RPC header; to make things simpler, it reuses the random bytes
-// from that, but adds a prefix to make it human-readable.
-func (c *NamenodeConnection) ClientName() string {
-	return c.clientName
 }
 
 // Execute performs an rpc call. It does this by sending req over the wire and
@@ -276,7 +223,7 @@ func (c *NamenodeConnection) Execute(method string, req proto.Message, resp prot
 // |  varint length + Request                                  |
 // +-----------------------------------------------------------+
 func (c *NamenodeConnection) writeRequest(method string, req proto.Message) error {
-	rrh := newRPCRequestHeader(c.currentRequestID, c.clientId)
+	rrh := newRPCRequestHeader(c.currentRequestID, c.ClientID)
 	rh := newRequestHeader(method)
 
 	reqBytes, err := makeRPCPacket(rrh, rh, req)
@@ -364,8 +311,8 @@ func (c *NamenodeConnection) doNamenodeHandshake() error {
 		c.currentRequestID = 0
 	}
 
-	rrh := newRPCRequestHeader(handshakeCallID, c.clientId)
-	cc := newConnectionContext(c.user)
+	rrh := newRPCRequestHeader(handshakeCallID, c.ClientID)
+	cc := newConnectionContext(c.User, c.kerberosRealm)
 	packet, err := makeRPCPacket(rrh, cc)
 	if err != nil {
 		return err
@@ -400,7 +347,11 @@ func newRequestHeader(methodName string) *hadoop.RequestHeaderProto {
 	}
 }
 
-func newConnectionContext(user string) *hadoop.IpcConnectionContextProto {
+func newConnectionContext(user, kerberosRealm string) *hadoop.IpcConnectionContextProto {
+	if kerberosRealm != "" {
+		user = user + "@" + kerberosRealm
+	}
+
 	return &hadoop.IpcConnectionContextProto{
 		UserInfo: &hadoop.UserInformationProto{
 			EffectiveUser: proto.String(user),

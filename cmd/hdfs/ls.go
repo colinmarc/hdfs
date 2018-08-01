@@ -20,7 +20,7 @@ func ls(paths []string, long, all, humanReadable bool) {
 	}
 
 	if len(paths) == 0 {
-		paths = []string{userDir()}
+		paths = []string{userDir(client)}
 	}
 
 	files := make([]string, 0, len(paths))

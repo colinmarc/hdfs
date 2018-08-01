@@ -39,20 +39,6 @@ type BlockReader struct {
 	closed    bool
 }
 
-// NewBlockReader returns a new BlockReader, given the block information and
-// security token from the namenode. It will connect (lazily) to one of the
-// provided datanode locations based on which datanodes have seen failures.
-//
-// Deprecated: this method does not do any required initialization, and does
-// not allow you to set fields such as UseDatanodeHostname.
-func NewBlockReader(block *hdfs.LocatedBlockProto, offset int64, clientName string) *BlockReader {
-	return &BlockReader{
-		ClientName: clientName,
-		Block:      block,
-		Offset:     offset,
-	}
-}
-
 // SetDeadline sets the deadline for future Read calls. A zero value for t
 // means Read will not time out.
 func (br *BlockReader) SetDeadline(t time.Time) error {

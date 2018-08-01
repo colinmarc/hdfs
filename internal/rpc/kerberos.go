@@ -102,7 +102,7 @@ func (c *NamenodeConnection) doKerberosHandshake() error {
 }
 
 func (c *NamenodeConnection) writeSaslRequest(req *hadoop.RpcSaslProto) error {
-	packet, err := makeRPCPacket(newRPCRequestHeader(saslRpcCallId, c.clientId), req)
+	packet, err := makeRPCPacket(newRPCRequestHeader(saslRpcCallId, c.ClientID), req)
 	if err != nil {
 		return err
 	}

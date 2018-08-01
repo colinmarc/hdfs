@@ -55,7 +55,7 @@ func (c *Client) CreateFile(name string, replication int, blockSize int64, perm 
 	createReq := &hdfs.CreateRequestProto{
 		Src:          proto.String(name),
 		Masked:       &hdfs.FsPermissionProto{Perm: proto.Uint32(uint32(perm))},
-		ClientName:   proto.String(c.namenode.ClientName()),
+		ClientName:   proto.String(c.namenode.ClientName),
 		CreateFlag:   proto.Uint32(1),
 		CreateParent: proto.Bool(false),
 		Replication:  proto.Uint32(uint32(replication)),
@@ -92,7 +92,7 @@ func (c *Client) Append(name string) (*FileWriter, error) {
 
 	appendReq := &hdfs.AppendRequestProto{
 		Src:        proto.String(name),
-		ClientName: proto.String(c.namenode.ClientName()),
+		ClientName: proto.String(c.namenode.ClientName),
 	}
 	appendResp := &hdfs.AppendResponseProto{}
 
@@ -120,7 +120,7 @@ func (c *Client) Append(name string) (*FileWriter, error) {
 	}
 
 	f.blockWriter = &rpc.BlockWriter{
-		ClientName:          f.client.namenode.ClientName(),
+		ClientName:          f.client.namenode.ClientName,
 		Block:               block,
 		BlockSize:           f.blockSize,
 		Offset:              int64(block.B.GetNumBytes()),
@@ -231,7 +231,7 @@ func (f *FileWriter) Close() error {
 
 	completeReq := &hdfs.CompleteRequestProto{
 		Src:        proto.String(f.name),
-		ClientName: proto.String(f.client.namenode.ClientName()),
+		ClientName: proto.String(f.client.namenode.ClientName),
 		Last:       lastBlock,
 	}
 	completeResp := &hdfs.CompleteResponseProto{}
@@ -259,7 +259,7 @@ func (f *FileWriter) startNewBlock() error {
 
 	addBlockReq := &hdfs.AddBlockRequestProto{
 		Src:        proto.String(f.name),
-		ClientName: proto.String(f.client.namenode.ClientName()),
+		ClientName: proto.String(f.client.namenode.ClientName),
 		Previous:   previous,
 	}
 	addBlockResp := &hdfs.AddBlockResponseProto{}
@@ -274,7 +274,7 @@ func (f *FileWriter) startNewBlock() error {
 	}
 
 	f.blockWriter = &rpc.BlockWriter{
-		ClientName:          f.client.namenode.ClientName(),
+		ClientName:          f.client.namenode.ClientName,
 		Block:               addBlockResp.GetBlock(),
 		BlockSize:           f.blockSize,
 		UseDatanodeHostname: f.client.options.UseDatanodeHostname,
@@ -295,7 +295,7 @@ func (f *FileWriter) finalizeBlock() error {
 	lastBlock.NumBytes = proto.Uint64(uint64(f.blockWriter.Offset))
 	updateReq := &hdfs.UpdateBlockForPipelineRequestProto{
 		Block:      lastBlock,
-		ClientName: proto.String(f.client.namenode.ClientName()),
+		ClientName: proto.String(f.client.namenode.ClientName),
 	}
 	updateResp := &hdfs.UpdateBlockForPipelineResponseProto{}
 

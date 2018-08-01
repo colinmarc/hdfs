@@ -8,6 +8,7 @@ import (
 	"os"
 	"strings"
 	"testing"
+	"time"
 
 	"github.com/colinmarc/hdfs/rpc"
 	"github.com/stretchr/testify/assert"
@@ -19,7 +20,6 @@ const abcException = "org.apache.hadoop.hdfs.protocol.AlreadyBeingCreatedExcepti
 func TestFileWrite(t *testing.T) {
 	client := getClient(t)
 
-	baleet(t, "/_test/create/1.txt")
 	mkdirp(t, "/_test/create")
 	writer, err := client.Create("/_test/create/1.txt")
 	require.NoError(t, err)
@@ -46,7 +46,6 @@ func TestFileWrite(t *testing.T) {
 func TestFileBigWrite(t *testing.T) {
 	client := getClient(t)
 
-	baleet(t, "/_test/create/2.txt")
 	mkdirp(t, "/_test/create")
 	writer, err := client.Create("/_test/create/2.txt")
 	require.NoError(t, err)
@@ -74,7 +73,6 @@ func TestFileBigWrite(t *testing.T) {
 func TestFileBigWriteMultipleBlocks(t *testing.T) {
 	client := getClient(t)
 
-	baleet(t, "/_test/create/3.txt")
 	mkdirp(t, "/_test/create")
 	writer, err := client.CreateFile("/_test/create/3.txt", 1, 1048576, 0755)
 	require.NoError(t, err)
@@ -102,7 +100,6 @@ func TestFileBigWriteMultipleBlocks(t *testing.T) {
 func TestFileBigWriteWeirdBlockSize(t *testing.T) {
 	client := getClient(t)
 
-	baleet(t, "/_test/create/4.txt")
 	mkdirp(t, "/_test/create")
 	writer, err := client.CreateFile("/_test/create/4.txt", 1, 1050000, 0755)
 	require.NoError(t, err)
@@ -130,7 +127,6 @@ func TestFileBigWriteWeirdBlockSize(t *testing.T) {
 func TestFileBigWriteReplication(t *testing.T) {
 	client := getClient(t)
 
-	baleet(t, "/_test/create/5.txt")
 	mkdirp(t, "/_test/create")
 	writer, err := client.CreateFile("/_test/create/5.txt", 3, 1048576, 0755)
 	require.NoError(t, err)
@@ -158,7 +154,6 @@ func TestFileBigWriteReplication(t *testing.T) {
 func TestFileWriteSmallFlushes(t *testing.T) {
 	client := getClient(t)
 
-	baleet(t, "/_test/create/6.txt")
 	mkdirp(t, "/_test/create")
 	writer, err := client.Create("/_test/create/6.txt")
 	require.NoError(t, err)
@@ -235,7 +230,6 @@ func TestCreateEmptyFileWithoutPermission(t *testing.T) {
 	client2 := getClientForUser(t, "gohdfs2")
 
 	mkdirp(t, "/_test/accessdenied")
-	baleet(t, "/_test/accessdenied/emptyfile")
 
 	err := client2.CreateEmptyFile("/_test/accessdenied/emptyfile")
 	assertPathError(t, err, "create", "/_test/accessdenied/emptyfile", os.ErrPermission)
@@ -247,7 +241,6 @@ func TestCreateEmptyFileWithoutPermission(t *testing.T) {
 func TestFileAppend(t *testing.T) {
 	client := getClient(t)
 
-	baleet(t, "/_test/append/1.txt")
 	mkdirp(t, "/_test/append")
 	writer, err := client.Create("/_test/append/1.txt")
 	require.NoError(t, err)
@@ -284,7 +277,6 @@ func TestFileAppend(t *testing.T) {
 func TestFileAppendEmptyFile(t *testing.T) {
 	client := getClient(t)
 
-	baleet(t, "/_test/append/2.txt")
 	mkdirp(t, "/_test/append")
 	err := client.CreateEmptyFile("/_test/append/2.txt")
 	require.NoError(t, err)
@@ -317,7 +309,6 @@ func TestFileAppendLastBlockFull(t *testing.T) {
 
 	client := getClient(t)
 
-	baleet(t, "/_test/append/3.txt")
 	mkdirp(t, "/_test/append")
 
 	writer, err := client.CreateFile("/_test/append/3.txt", 3, 1048576, 0644)
@@ -359,7 +350,6 @@ func TestFileAppendLastBlockFull(t *testing.T) {
 func TestFileAppendRepeatedly(t *testing.T) {
 	client := getClient(t)
 
-	baleet(t, "/_test/append/4.txt")
 	mkdirp(t, "/_test/append")
 	writer, err := client.Create("/_test/append/4.txt")
 	require.NoError(t, err)
@@ -404,4 +394,92 @@ func TestFileAppendRepeatedly(t *testing.T) {
 	require.NoError(t, err)
 	assert.Equal(t, len(expected), len(bytes))
 	assert.Equal(t, expected, string(bytes))
+}
+
+func TestFileWriteDeadline(t *testing.T) {
+	client := getClient(t)
+
+	mkdirp(t, "/_test/create")
+	writer, err := client.Create("/_test/create/7.txt")
+	require.NoError(t, err)
+
+	writer.SetDeadline(time.Now().Add(100 * time.Millisecond))
+	_, err = writer.Write([]byte("foo"))
+	assert.NoError(t, err)
+
+	err = writer.Flush()
+	assert.NoError(t, err)
+
+	time.Sleep(100 * time.Millisecond)
+	_, err = writer.Write([]byte("bar"))
+	assert.NoError(t, err)
+
+	err = writer.Flush()
+	assert.Error(t, err)
+}
+
+func TestFileWriteDeadlineBefore(t *testing.T) {
+	client := getClient(t)
+
+	mkdirp(t, "/_test/create")
+	writer, err := client.Create("/_test/create/8.txt")
+	require.NoError(t, err)
+
+	writer.SetDeadline(time.Now())
+	_, err = writer.Write([]byte("foo"))
+	assert.Error(t, err)
+}
+
+func TestFileAppendDeadline(t *testing.T) {
+	client := getClient(t)
+
+	mkdirp(t, "/_test/append")
+	writer, err := client.Create("/_test/append/5.txt")
+	require.NoError(t, err)
+
+	n, err := writer.Write([]byte("foobar\n"))
+	require.NoError(t, err)
+	assert.Equal(t, 7, n)
+
+	err = writer.Close()
+	require.NoError(t, err)
+
+	writer, err = client.Append("/_test/append/5.txt")
+	require.NoError(t, err)
+
+	writer.SetDeadline(time.Now().Add(100 * time.Millisecond))
+	_, err = writer.Write([]byte("foo"))
+	assert.NoError(t, err)
+
+	err = writer.Flush()
+	assert.NoError(t, err)
+
+	time.Sleep(100 * time.Millisecond)
+	_, err = writer.Write([]byte("bar"))
+	assert.NoError(t, err)
+
+	err = writer.Flush()
+	assert.Error(t, err)
+}
+
+func TestFileAppendDeadlineBefore(t *testing.T) {
+	client := getClient(t)
+
+	mkdirp(t, "/_test/append")
+	writer, err := client.Create("/_test/append/5.txt")
+	require.NoError(t, err)
+
+	n, err := writer.Write([]byte("foobar\n"))
+	require.NoError(t, err)
+	assert.Equal(t, 7, n)
+
+	err = writer.Close()
+	require.NoError(t, err)
+
+	writer, err = client.Append("/_test/append/5.txt")
+	require.NoError(t, err)
+
+	writer.SetDeadline(time.Now())
+	_, err = writer.Write([]byte("foo\n"))
+	assert.Error(t, err)
 }

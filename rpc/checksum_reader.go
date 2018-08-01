@@ -5,6 +5,7 @@ import (
 	"errors"
 	"io"
 	"net"
+	"time"
 
 	hdfs "github.com/colinmarc/hdfs/protocol/hadoop_hdfs"
 )
@@ -22,6 +23,7 @@ type ChecksumReader struct {
 	// (&net.Dialer{}).DialContext is used.
 	DialFunc func(ctx context.Context, network, addr string) (net.Conn, error)
 
+	deadline  time.Time
 	datanodes *datanodeFailover
 }
 
@@ -33,6 +35,14 @@ func NewChecksumReader(block *hdfs.LocatedBlockProto) *ChecksumReader {
 	return &ChecksumReader{
 		Block: block,
 	}
+}
+
+// SetDeadline sets the deadline for future ReadChecksum calls. A zero value
+// for t means Read will not time out.
+func (cr *ChecksumReader) SetDeadline(t time.Time) error {
+	cr.deadline = t
+	// Return the error at connection time.
+	return nil
 }
 
 // ReadChecksum returns the checksum of the block.
@@ -73,6 +83,11 @@ func (cr *ChecksumReader) readChecksum(address string) ([]byte, error) {
 	}
 
 	conn, err := cr.DialFunc(context.Background(), "tcp", address)
+	if err != nil {
+		return nil, err
+	}
+
+	err = conn.SetDeadline(cr.deadline)
 	if err != nil {
 		return nil, err
 	}

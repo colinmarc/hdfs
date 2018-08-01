@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"io"
 	"net"
+	"time"
 
 	hdfs "github.com/colinmarc/hdfs/protocol/hadoop_hdfs"
 	"github.com/golang/protobuf/proto"
@@ -37,9 +38,10 @@ type BlockWriter struct {
 	// (&net.Dialer{}).DialContext is used.
 	DialFunc func(ctx context.Context, network, addr string) (net.Conn, error)
 
-	conn   net.Conn
-	stream *blockWriteStream
-	closed bool
+	conn     net.Conn
+	deadline time.Time
+	stream   *blockWriteStream
+	closed   bool
 }
 
 // NewBlockWriter returns a BlockWriter for the given block. It will lazily
@@ -54,6 +56,18 @@ func NewBlockWriter(block *hdfs.LocatedBlockProto, namenode *NamenodeConnection,
 		Block:      block,
 		BlockSize:  blockSize,
 	}
+}
+
+// SetDeadline sets the deadline for future Write, Flush, and Close calls. A
+// zero value for t means those calls will not time out.
+func (bw *BlockWriter) SetDeadline(t time.Time) error {
+	bw.deadline = t
+	if bw.conn != nil {
+		return bw.conn.SetDeadline(t)
+	}
+
+	// Return the error at connection time.
+	return nil
 }
 
 // Write implements io.Writer.
@@ -127,6 +141,11 @@ func (bw *BlockWriter) connectNext() error {
 	}
 
 	conn, err := bw.DialFunc(context.Background(), "tcp", address)
+	if err != nil {
+		return err
+	}
+
+	err = conn.SetDeadline(bw.deadline)
 	if err != nil {
 		return err
 	}

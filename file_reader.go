@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"io"
 	"os"
+	"time"
 
 	hdfs "github.com/colinmarc/hdfs/protocol/hadoop_hdfs"
 	"github.com/colinmarc/hdfs/rpc"
@@ -22,6 +23,7 @@ type FileReader struct {
 
 	blocks      []*hdfs.LocatedBlockProto
 	blockReader *rpc.BlockReader
+	deadline    time.Time
 	offset      int64
 
 	readdirLast string
@@ -52,6 +54,18 @@ func (f *FileReader) Name() string {
 // Stat returns the FileInfo structure describing file.
 func (f *FileReader) Stat() os.FileInfo {
 	return f.info
+}
+
+// SetDeadline sets the deadline for future Read, ReadAt, and Checksum calls. A
+// zero value for t means those calls will not time out.
+func (f *FileReader) SetDeadline(t time.Time) error {
+	f.deadline = t
+	if f.blockReader != nil {
+		return f.blockReader.SetDeadline(t)
+	}
+
+	// Return the error at connection time.
+	return nil
 }
 
 // Checksum returns HDFS's internal "MD5MD5CRC32C" checksum for a given file.
@@ -88,6 +102,11 @@ func (f *FileReader) Checksum() ([]byte, error) {
 			Block:               block,
 			UseDatanodeHostname: f.client.options.UseDatanodeHostname,
 			DialFunc:            f.client.options.DatanodeDialFunc,
+		}
+
+		err := cr.SetDeadline(f.deadline)
+		if err != nil {
+			return nil, err
 		}
 
 		blockChecksum, err := cr.ReadChecksum()
@@ -390,7 +409,7 @@ func (f *FileReader) getNewBlockReader() error {
 				DialFunc:            f.client.options.DatanodeDialFunc,
 			}
 
-			return nil
+			return f.SetDeadline(f.deadline)
 		}
 	}
 

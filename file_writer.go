@@ -3,6 +3,7 @@ package hdfs
 import (
 	"io"
 	"os"
+	"time"
 
 	hdfs "github.com/colinmarc/hdfs/protocol/hadoop_hdfs"
 	"github.com/colinmarc/hdfs/rpc"
@@ -19,6 +20,7 @@ type FileWriter struct {
 	blockSize   int64
 
 	blockWriter *rpc.BlockWriter
+	deadline    time.Time
 	closed      bool
 }
 
@@ -143,6 +145,11 @@ func (c *Client) Append(name string) (*FileWriter, error) {
 		DialFunc:            f.client.options.DatanodeDialFunc,
 	}
 
+	err = f.blockWriter.SetDeadline(f.deadline)
+	if err != nil {
+		return nil, err
+	}
+
 	return f, nil
 }
 
@@ -155,6 +162,21 @@ func (c *Client) CreateEmptyFile(name string) error {
 	}
 
 	return f.Close()
+}
+
+// SetDeadline sets the deadline for future Write, Flush, and Close calls. A
+// zero value for t means those calls will not time out.
+//
+// Note that because of buffering, Write calls that do not result in a blocking
+// network call may still succeed after the deadline.
+func (f *FileWriter) SetDeadline(t time.Time) error {
+	f.deadline = t
+	if f.blockWriter != nil {
+		return f.blockWriter.SetDeadline(t)
+	}
+
+	// Return the error at connection time.
+	return nil
 }
 
 // Write implements io.Writer for writing to a file in HDFS. Internally, it
@@ -275,7 +297,7 @@ func (f *FileWriter) startNewBlock() error {
 		DialFunc:            f.client.options.DatanodeDialFunc,
 	}
 
-	return nil
+	return f.blockWriter.SetDeadline(f.deadline)
 }
 
 func (f *FileWriter) finalizeBlock() error {

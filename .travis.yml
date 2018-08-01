@@ -14,7 +14,7 @@ install:
 - ./travis-setup.sh $PLATFORM
 before_script:
 - export HADOOP_CONF_DIR="/etc/hadoop/conf"
-- find protocol -name *.pb.go | xargs touch # so make doesn't try to regen protobuf files
+- find internal/protocol -name *.pb.go | xargs touch # so make doesn't try to regen protobuf files
 script: make test
 before_deploy: make release
 deploy:

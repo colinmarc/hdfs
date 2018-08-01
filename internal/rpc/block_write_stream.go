@@ -10,7 +10,7 @@ import (
 	"io"
 	"math"
 
-	hdfs "github.com/colinmarc/hdfs/protocol/hadoop_hdfs"
+	hdfs "github.com/colinmarc/hdfs/internal/protocol/hadoop_hdfs"
 	"github.com/golang/protobuf/proto"
 )
 

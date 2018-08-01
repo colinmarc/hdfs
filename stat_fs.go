@@ -1,8 +1,8 @@
 package hdfs
 
 import (
-	hdfs "github.com/colinmarc/hdfs/protocol/hadoop_hdfs"
-	"github.com/colinmarc/hdfs/rpc"
+	hdfs "github.com/colinmarc/hdfs/internal/protocol/hadoop_hdfs"
+	"github.com/colinmarc/hdfs/internal/rpc"
 )
 
 // FsInfo provides information about HDFS

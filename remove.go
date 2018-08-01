@@ -4,8 +4,8 @@ import (
 	"errors"
 	"os"
 
-	hdfs "github.com/colinmarc/hdfs/protocol/hadoop_hdfs"
-	"github.com/colinmarc/hdfs/rpc"
+	hdfs "github.com/colinmarc/hdfs/internal/protocol/hadoop_hdfs"
+	"github.com/colinmarc/hdfs/internal/rpc"
 	"github.com/golang/protobuf/proto"
 )
 

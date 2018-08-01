@@ -10,7 +10,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/colinmarc/hdfs/rpc"
+	"github.com/colinmarc/hdfs/internal/rpc"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )

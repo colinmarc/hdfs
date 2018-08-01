@@ -1,14 +1,13 @@
 package rpc
 
 import (
-	"bufio"
-	"encoding/binary"
+	"context"
 	"errors"
 	"io"
 	"net"
+	"time"
 
 	hdfs "github.com/colinmarc/hdfs/protocol/hadoop_hdfs"
-	"github.com/golang/protobuf/proto"
 )
 
 // ChecksumReader provides an interface for reading the "MD5CRC32" checksums of
@@ -20,10 +19,12 @@ type ChecksumReader struct {
 	// UseDatanodeHostname specifies whether the datanodes should be connected to
 	// via their hostnames (if true) or IP addresses (if false).
 	UseDatanodeHostname bool
+	// DialFunc is used to connect to the datanodes. If nil, then
+	// (&net.Dialer{}).DialContext is used.
+	DialFunc func(ctx context.Context, network, addr string) (net.Conn, error)
 
+	deadline  time.Time
 	datanodes *datanodeFailover
-	conn      net.Conn
-	reader    *bufio.Reader
 }
 
 // NewChecksumReader creates a new ChecksumReader for the given block.
@@ -34,6 +35,14 @@ func NewChecksumReader(block *hdfs.LocatedBlockProto) *ChecksumReader {
 	return &ChecksumReader{
 		Block: block,
 	}
+}
+
+// SetDeadline sets the deadline for future ReadChecksum calls. A zero value
+// for t means Read will not time out.
+func (cr *ChecksumReader) SetDeadline(t time.Time) error {
+	cr.deadline = t
+	// Return the error at connection time.
+	return nil
 }
 
 // ReadChecksum returns the checksum of the block.
@@ -69,19 +78,26 @@ func (cr *ChecksumReader) ReadChecksum() ([]byte, error) {
 }
 
 func (cr *ChecksumReader) readChecksum(address string) ([]byte, error) {
-	conn, err := net.DialTimeout("tcp", address, connectTimeout)
+	if cr.DialFunc == nil {
+		cr.DialFunc = (&net.Dialer{}).DialContext
+	}
+
+	conn, err := cr.DialFunc(context.Background(), "tcp", address)
 	if err != nil {
 		return nil, err
 	}
 
-	cr.conn = conn
-	err = cr.writeBlockChecksumRequest()
+	err = conn.SetDeadline(cr.deadline)
 	if err != nil {
 		return nil, err
 	}
 
-	cr.reader = bufio.NewReader(conn)
-	resp, err := cr.readBlockChecksumResponse()
+	err = cr.writeBlockChecksumRequest(conn)
+	if err != nil {
+		return nil, err
+	}
+
+	resp, err := cr.readBlockChecksumResponse(conn)
 	if err != nil {
 		return nil, err
 	}
@@ -97,7 +113,7 @@ func (cr *ChecksumReader) readChecksum(address string) ([]byte, error) {
 // +-----------------------------------------------------------+
 // |  varint length + OpReadBlockProto                         |
 // +-----------------------------------------------------------+
-func (cr *ChecksumReader) writeBlockChecksumRequest() error {
+func (cr *ChecksumReader) writeBlockChecksumRequest(w io.Writer) error {
 	header := []byte{0x00, dataTransferVersion, checksumBlockOp}
 
 	op := newChecksumBlockOp(cr.Block)
@@ -107,7 +123,7 @@ func (cr *ChecksumReader) writeBlockChecksumRequest() error {
 	}
 
 	req := append(header, opBytes...)
-	_, err = cr.conn.Write(req)
+	_, err = w.Write(req)
 	if err != nil {
 		return err
 	}
@@ -119,29 +135,10 @@ func (cr *ChecksumReader) writeBlockChecksumRequest() error {
 // +-----------------------------------------------------------+
 // |  varint length + BlockOpResponseProto                     |
 // +-----------------------------------------------------------+
-func (cr *ChecksumReader) readBlockChecksumResponse() (*hdfs.BlockOpResponseProto, error) {
-	respLength, err := binary.ReadUvarint(cr.reader)
-	if err != nil {
-		if err == io.EOF {
-			err = io.ErrUnexpectedEOF
-		}
-
-		return nil, err
-	}
-
-	respBytes := make([]byte, respLength)
-	_, err = io.ReadFull(cr.reader, respBytes)
-	if err != nil {
-		return nil, err
-	}
-
+func (cr *ChecksumReader) readBlockChecksumResponse(r io.Reader) (*hdfs.BlockOpResponseProto, error) {
 	resp := &hdfs.BlockOpResponseProto{}
-	err = proto.Unmarshal(respBytes, resp)
-	if err != nil {
-		return nil, err
-	}
-
-	return resp, nil
+	err := readPrefixedMessage(r, resp)
+	return resp, err
 }
 
 func newChecksumBlockOp(block *hdfs.LocatedBlockProto) *hdfs.OpBlockChecksumProto {

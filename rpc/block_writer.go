@@ -1,10 +1,12 @@
 package rpc
 
 import (
+	"context"
 	"errors"
 	"fmt"
 	"io"
 	"net"
+	"time"
 
 	hdfs "github.com/colinmarc/hdfs/protocol/hadoop_hdfs"
 	"github.com/golang/protobuf/proto"
@@ -32,10 +34,14 @@ type BlockWriter struct {
 	// UseDatanodeHostname indicates whether the datanodes will be connected to
 	// via hostname (if true) or IP address (if false).
 	UseDatanodeHostname bool
+	// DialFunc is used to connect to the datanodes. If nil, then
+	// (&net.Dialer{}).DialContext is used.
+	DialFunc func(ctx context.Context, network, addr string) (net.Conn, error)
 
-	conn   net.Conn
-	stream *blockWriteStream
-	closed bool
+	conn     net.Conn
+	deadline time.Time
+	stream   *blockWriteStream
+	closed   bool
 }
 
 // NewBlockWriter returns a BlockWriter for the given block. It will lazily
@@ -50,6 +56,18 @@ func NewBlockWriter(block *hdfs.LocatedBlockProto, namenode *NamenodeConnection,
 		Block:      block,
 		BlockSize:  blockSize,
 	}
+}
+
+// SetDeadline sets the deadline for future Write, Flush, and Close calls. A
+// zero value for t means those calls will not time out.
+func (bw *BlockWriter) SetDeadline(t time.Time) error {
+	bw.deadline = t
+	if bw.conn != nil {
+		return bw.conn.SetDeadline(t)
+	}
+
+	// Return the error at connection time.
+	return nil
 }
 
 // Write implements io.Writer.
@@ -118,7 +136,16 @@ func (bw *BlockWriter) Close() error {
 func (bw *BlockWriter) connectNext() error {
 	address := getDatanodeAddress(bw.currentPipeline()[0].GetId(), bw.UseDatanodeHostname)
 
-	conn, err := net.DialTimeout("tcp", address, connectTimeout)
+	if bw.DialFunc == nil {
+		bw.DialFunc = (&net.Dialer{}).DialContext
+	}
+
+	conn, err := bw.DialFunc(context.Background(), "tcp", address)
+	if err != nil {
+		return err
+	}
+
+	err = conn.SetDeadline(bw.deadline)
 	if err != nil {
 		return err
 	}

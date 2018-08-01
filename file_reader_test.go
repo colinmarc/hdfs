@@ -296,3 +296,55 @@ func TestFileChecksum(t *testing.T) {
 
 	assert.EqualValues(t, testChecksum, hex.EncodeToString(checksum))
 }
+
+func TestFileReadDeadline(t *testing.T) {
+	client := getClient(t)
+
+	file, err := client.Open("/_test/foo.txt")
+	require.NoError(t, err)
+
+	file.SetDeadline(time.Now().Add(100 * time.Millisecond))
+	_, err = file.Read([]byte{0, 0})
+	assert.NoError(t, err)
+
+	time.Sleep(100 * time.Millisecond)
+	_, err = file.Read([]byte{0, 0})
+	assert.NotNil(t, err)
+}
+
+func TestFileReadDeadlineBefore(t *testing.T) {
+	client := getClient(t)
+
+	file, err := client.Open("/_test/foo.txt")
+	require.NoError(t, err)
+
+	file.SetDeadline(time.Now())
+	_, err = file.Read([]byte{0, 0})
+	assert.NotNil(t, err)
+}
+
+func TestFileChecksumDeadline(t *testing.T) {
+	client := getClient(t)
+
+	file, err := client.Open("/_test/foo.txt")
+	require.NoError(t, err)
+
+	file.SetDeadline(time.Now().Add(100 * time.Millisecond))
+	_, err = file.Checksum()
+	assert.NoError(t, err)
+
+	time.Sleep(100 * time.Millisecond)
+	_, err = file.Checksum()
+	assert.NotNil(t, err)
+}
+
+func TestFileChecksumDeadlineBefore(t *testing.T) {
+	client := getClient(t)
+
+	file, err := client.Open("/_test/foo.txt")
+	require.NoError(t, err)
+
+	file.SetDeadline(time.Now())
+	_, err = file.Checksum()
+	assert.NotNil(t, err)
+}

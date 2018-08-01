@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"io"
 	"os"
+	"time"
 
 	hdfs "github.com/colinmarc/hdfs/protocol/hadoop_hdfs"
 	"github.com/colinmarc/hdfs/rpc"
@@ -22,6 +23,7 @@ type FileReader struct {
 
 	blocks      []*hdfs.LocatedBlockProto
 	blockReader *rpc.BlockReader
+	deadline    time.Time
 	offset      int64
 
 	readdirLast string
@@ -54,6 +56,18 @@ func (f *FileReader) Stat() os.FileInfo {
 	return f.info
 }
 
+// SetDeadline sets the deadline for future Read, ReadAt, and Checksum calls. A
+// zero value for t means those calls will not time out.
+func (f *FileReader) SetDeadline(t time.Time) error {
+	f.deadline = t
+	if f.blockReader != nil {
+		return f.blockReader.SetDeadline(t)
+	}
+
+	// Return the error at connection time.
+	return nil
+}
+
 // Checksum returns HDFS's internal "MD5MD5CRC32C" checksum for a given file.
 //
 // Internally to HDFS, it works by calculating the MD5 of all the CRCs (which
@@ -75,10 +89,10 @@ func (f *FileReader) Checksum() ([]byte, error) {
 		}
 	}
 
-	// The way the hadoop code calculates this, it writes all the checksums out to
-	// a byte array, which is automatically padded with zeroes out to the next
-	// power of 2 (with a minimum of 32)... and then takes the MD5 of that array,
-	// including the zeroes. This is pretty shady business, but we want to track
+	// Hadoop calculates this by writing the checksums out to a byte array, which
+	// is automatically padded with zeroes out to the next  power of 2
+	// (with a minimum of 32)... and then takes the MD5 of that array, including
+	// the zeroes. This is pretty shady business, but we want to track
 	// the 'hadoop fs -checksum' behavior if possible.
 	paddedLength := 32
 	totalLength := 0
@@ -87,6 +101,12 @@ func (f *FileReader) Checksum() ([]byte, error) {
 		cr := &rpc.ChecksumReader{
 			Block:               block,
 			UseDatanodeHostname: f.client.options.UseDatanodeHostname,
+			DialFunc:            f.client.options.DatanodeDialFunc,
+		}
+
+		err := cr.SetDeadline(f.deadline)
+		if err != nil {
+			return nil, err
 		}
 
 		blockChecksum, err := cr.ReadChecksum()
@@ -386,9 +406,10 @@ func (f *FileReader) getNewBlockReader() error {
 				Block:               block,
 				Offset:              int64(off - start),
 				UseDatanodeHostname: f.client.options.UseDatanodeHostname,
+				DialFunc:            f.client.options.DatanodeDialFunc,
 			}
 
-			return nil
+			return f.SetDeadline(f.deadline)
 		}
 	}
 

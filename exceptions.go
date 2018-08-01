@@ -1,6 +1,11 @@
 package hdfs
 
-import "os"
+import (
+	"github.com/colinmarc/hdfs/internal/rpc"
+	"os"
+)
+
+type NamenodeError = rpc.NamenodeError
 
 const (
 	fileNotFoundException     = "java.io.FileNotFoundException"

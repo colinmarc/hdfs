@@ -45,13 +45,15 @@ func completePath(fragment string) {
 		return
 	}
 
-	fullPath := paths[0]
-	if hasGlob(fullPath) {
+	client, err := getClient(namenode)
+	if err != nil {
 		return
 	}
 
-	client, err := getClient(namenode)
-	if err != nil {
+	fullPath := paths[0]
+	if fullPath == "" {
+		fullPath = userDir() + "/"
+	} else if hasGlob(fullPath) {
 		return
 	}
 

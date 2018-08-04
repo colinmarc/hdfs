@@ -12,6 +12,8 @@ import (
 
 	hdfs "github.com/colinmarc/hdfs/internal/protocol/hadoop_hdfs"
 	"github.com/colinmarc/hdfs/internal/rpc"
+
+	"github.com/colinmarc/hdfs/hadoopconf"
 	krb "gopkg.in/jcmturner/gokrb5.v5/client"
 )
 
@@ -92,14 +94,13 @@ type ClientOptions struct {
 // actually configured, you should check for whether KerberosClient is set in
 // the resulting ClientOptions before proceeding:
 //
-//   options, _ := ClientOptionsFromConf(conf)
+//   options := ClientOptionsFromConf(conf)
 //   if options.KerberosClient != nil {
 //      // Replace with a valid credentialed client.
 //      options.KerberosClient = getKerberosClient()
 //   }
-func ClientOptionsFromConf(conf HadoopConf) (ClientOptions, error) {
-	namenodes, err := conf.Namenodes()
-	options := ClientOptions{Addresses: namenodes}
+func ClientOptionsFromConf(conf hadoopconf.HadoopConf) ClientOptions {
+	options := ClientOptions{Addresses: conf.Namenodes()}
 
 	options.UseDatanodeHostname = (conf["dfs.client.use.datanode.hostname"] == "true")
 
@@ -114,7 +115,7 @@ func ClientOptionsFromConf(conf HadoopConf) (ClientOptions, error) {
 		options.KerberosServicePrincipleName = strings.Split(conf["dfs.namenode.kerberos.principal"], "@")[0]
 	}
 
-	return options, err
+	return options
 }
 
 // NewClient returns a connected Client for the given options, or an error if
@@ -146,19 +147,25 @@ func NewClient(options ClientOptions) (*Client, error) {
 	return &Client{namenode: namenode, options: options}, nil
 }
 
-// New returns a connected Client, or an error if it can't connect. The user
-// will be the current system user. Any relevantoptions (including the
-// address(es) of the namenode(s), if an empty string is passed) will be loaded
-// from the Hadoop configuration present at HADOOP_CONF_DIR.  Note, however,
-// that New will not attempt any Kerberos authentication; use NewClient if you
-// need that.
+// New returns Client connected to the namenode(s) specified by address, or an
+// error if it can't connect. Multiple namenodes can be specified by separating
+// them with commas, for example "nn1:9000,nn2:9000".
+//
+// The user will be the current system user. Any other relevant options
+// (including the address(es) of the namenode(s), if an empty string is passed)
+// will be loaded from the Hadoop configuration present at HADOOP_CONF_DIR or
+// HADOOP_HOME, as specified by hadoopconf.LoadFromEnvironment and
+// ClientOptionsFromConf.
+//
+// Note, however, that New will not attempt any Kerberos authentication; use
+// NewClient if you need that.
 func New(address string) (*Client, error) {
-	conf := LoadHadoopConf("")
-	options, err := ClientOptionsFromConf(conf)
+	conf, err := hadoopconf.LoadFromEnvironment()
 	if err != nil {
-		options = ClientOptions{}
+		return nil, err
 	}
 
+	options := ClientOptionsFromConf(conf)
 	if address != "" {
 		options.Addresses = strings.Split(address, ",")
 	}

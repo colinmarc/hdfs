@@ -66,7 +66,7 @@ func completePath(fragment string) {
 
 	fullPath := paths[0]
 	if fullPath == "" {
-		fullPath = userDir() + "/"
+		fullPath = userDir(client) + "/"
 	} else if hasGlob(fullPath) {
 		return
 	}

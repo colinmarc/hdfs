@@ -8,6 +8,7 @@ import (
 	"path/filepath"
 	"testing"
 
+	"github.com/colinmarc/hdfs/hadoopconf"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	krb "gopkg.in/jcmturner/gokrb5.v5/client"
@@ -35,10 +36,14 @@ func getClientForUser(t *testing.T, username string) *Client {
 		return c
 	}
 
-	conf := LoadHadoopConf("")
-	options, _ := ClientOptionsFromConf(conf)
+	conf, err := hadoopconf.LoadFromEnvironment()
+	if err != nil || conf == nil {
+		t.Fatal("Couldn't load ambient config", err)
+	}
+
+	options := ClientOptionsFromConf(conf)
 	if options.Addresses == nil {
-		t.Fatal("No hadoop configuration found at HADOOP_CONF_DIR")
+		t.Fatal("Missing namenode addresses in ambient config")
 	}
 
 	if options.KerberosClient != nil {
@@ -139,11 +144,12 @@ func assertPathError(t *testing.T, err error, op, path string, wrappedErr error)
 }
 
 func TestNewWithMultipleNodes(t *testing.T) {
-	conf := LoadHadoopConf("")
-	nns, err := conf.Namenodes()
+	conf, err := hadoopconf.LoadFromEnvironment()
 	if err != nil {
-		t.Fatal("No hadoop configuration found at HADOOP_CONF_DIR")
+		t.Fatal("Couldn't load ambient config", err)
 	}
+
+	nns := conf.Namenodes()
 
 	nns = append([]string{"localhost:100"}, nns...)
 	_, err = NewClient(ClientOptions{Addresses: nns, User: "gohdfs1"})

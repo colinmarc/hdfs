@@ -1,4 +1,4 @@
-package hdfs
+package hadoopconf
 
 import (
 	"os"
@@ -15,23 +15,21 @@ func TestConfFallback(t *testing.T) {
 
 	confNamenodes := []string{"namenode1:8020", "namenode2:8020"}
 	conf2Namenodes := []string{"namenode3:8020"}
-	conf3Namenodes := []string{"namenode4:8020"}
 
-	conf := LoadHadoopConf("testdata/conf3")
-	nns, err := conf.Namenodes()
-	assert.Nil(t, err)
-	assert.EqualValues(t, conf3Namenodes, nns, "loading via specified path (testdata/conf3)")
+	conf, err := LoadFromEnvironment()
+	assert.NoError(t, err)
 
-	conf = LoadHadoopConf("")
-	nns, err = conf.Namenodes()
-	assert.Nil(t, err)
+	nns := conf.Namenodes()
+	assert.NoError(t, err)
 	assert.EqualValues(t, conf2Namenodes, nns, "loading via HADOOP_CONF_DIR (testdata/conf2)")
 
 	os.Unsetenv("HADOOP_CONF_DIR")
 
-	conf = LoadHadoopConf("")
-	nns, err = conf.Namenodes()
-	assert.Nil(t, err)
+	conf, err = LoadFromEnvironment()
+	assert.NoError(t, err)
+
+	nns = conf.Namenodes()
+	assert.NoError(t, err)
 	assert.EqualValues(t, confNamenodes, nns, "loading via HADOOP_HOME (testdata/conf)")
 
 	os.Setenv("HADOOP_HOME", oldHome)

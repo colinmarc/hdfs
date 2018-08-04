@@ -9,6 +9,7 @@ import (
 	"time"
 
 	"github.com/colinmarc/hdfs"
+	"github.com/colinmarc/hdfs/hadoopconf"
 	"github.com/pborman/getopt"
 )
 
@@ -181,10 +182,12 @@ func getClient(namenode string) (*hdfs.Client, error) {
 		namenode = os.Getenv("HADOOP_NAMENODE")
 	}
 
-	// Ignore errors here, since we don't care if the conf doesn't exist if the
-	// namenode was specified.
-	conf := hdfs.LoadHadoopConf("")
-	options, _ := hdfs.ClientOptionsFromConf(conf)
+	conf, err := hadoopconf.LoadFromEnvironment()
+	if err != nil {
+		return nil, fmt.Errorf("Problem loading configuration: %s", err)
+	}
+
+	options := hdfs.ClientOptionsFromConf(conf)
 	if namenode != "" {
 		options.Addresses = []string{namenode}
 	}
@@ -193,7 +196,6 @@ func getClient(namenode string) (*hdfs.Client, error) {
 		return nil, errors.New("Couldn't find a namenode to connect to. You should specify hdfs://<namenode>:<port> in your paths. Alternatively, set HADOOP_NAMENODE or HADOOP_CONF_DIR in your environment.")
 	}
 
-	var err error
 	if options.KerberosClient != nil {
 		options.KerberosClient, err = getKerberosClient()
 		if err != nil {

@@ -6,6 +6,8 @@ env:
 - PLATFORM=cdh5
 - PLATFORM=cdh5 KERBEROS=true
 - PLATFORM=hdp2
+before_install:
+- export GO111MODULE=on # Travis installs into $GOPATH/src, which disables module support by default.
 install:
 - git clone https://github.com/sstephenson/bats $HOME/bats
 - mkdir -p $HOME/bats/build

@@ -71,13 +71,6 @@ Since it doesn't have to wait for the JVM to start up, it's also a lot faster
 
 Best of all, it comes with bash tab completion for paths!
 
-Installing the library
-----------------------
-
-To install the library, once you have Go [all set up][2]:
-
-    $ go get -u github.com/colinmarc/hdfs
-
 Installing the commandline client
 ---------------------------------
 

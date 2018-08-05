@@ -8,7 +8,7 @@ import (
 	"regexp"
 	"strings"
 
-	"github.com/colinmarc/hdfs"
+	"github.com/colinmarc/hdfs/v2"
 )
 
 var (

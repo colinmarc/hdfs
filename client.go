@@ -10,10 +10,9 @@ import (
 	"os/user"
 	"strings"
 
-	hdfs "github.com/colinmarc/hdfs/internal/protocol/hadoop_hdfs"
-	"github.com/colinmarc/hdfs/internal/rpc"
-
-	"github.com/colinmarc/hdfs/hadoopconf"
+	"github.com/colinmarc/hdfs/v2/hadoopconf"
+	hdfs "github.com/colinmarc/hdfs/v2/internal/protocol/hadoop_hdfs"
+	"github.com/colinmarc/hdfs/v2/internal/rpc"
 	krb "gopkg.in/jcmturner/gokrb5.v5/client"
 )
 

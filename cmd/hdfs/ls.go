@@ -57,7 +57,7 @@ func ls(paths []string, long, all, humanReadable bool) {
 		}
 
 		for i, dir := range dirs {
-			if i > 0 {
+			if i > 0 || len(files) > 0 {
 				fmt.Println()
 			}
 

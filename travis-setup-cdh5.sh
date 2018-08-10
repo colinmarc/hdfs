@@ -3,6 +3,7 @@
 set -e
 
 KERBEROS=${KERBEROS-"false"}
+USE_SSL=${USE_SSL-"false"}
 
 UBUNTU_CODENAME=$(lsb_release -c | awk '{print $2}')
 
@@ -86,6 +87,10 @@ sudo tee /etc/hadoop/conf.gohdfs/core-site.xml <<EOF
   <property>
     <name>hadoop.security.authorization</name>
     <value>$KERBEROS</value>
+  </property>
+  <property>
+    <name>hadoop.ssl.enabled</name>
+    <value>$USE_SSL</value>
   </property>
   <property>
     <name>dfs.namenode.keytab.file</name>

@@ -127,7 +127,7 @@ func (c *NamenodeConnection) readSaslResponse(expectedState hadoop.RpcSaslProto_
 // paired session key, along with an error if any occured.
 func (c *NamenodeConnection) getKerberosTicket() (gssapi.NegTokenInit, krbtypes.EncryptionKey, error) {
 	host, _, _ := net.SplitHostPort(c.host.address)
-	spn := replaceSPNHostWildcard(c.kerberosServicePrincipleName, host)
+	spn := replaceSPNHostWildcard(c.kerberosServicePrincipalName, host)
 
 	ticket, key, err := c.kerberosClient.GetServiceTicket(spn)
 	if err != nil {

@@ -2,6 +2,7 @@ package rpc
 
 import (
 	"context"
+	"crypto/tls"
 	"errors"
 	"fmt"
 	"net"
@@ -35,9 +36,10 @@ type NamenodeConnection struct {
 	currentRequestID int32
 
 	kerberosClient               *krb.Client
-	kerberosServicePrincipleName string
+	kerberosServicePrincipalName string
 	kerberosRealm                string
 
+	useSSL   bool
 	dialFunc func(ctx context.Context, network, addr string) (net.Conn, error)
 	conn     net.Conn
 	host     *namenodeHost
@@ -62,13 +64,15 @@ type NamenodeConnectionOptions struct {
 	// the NamenodeConnection will always mutually athenticate when connecting
 	// to the namenode(s).
 	KerberosClient *krb.Client
-	// KerberosServicePrincipleName specifiesthe Service Principle Name
+	// KerberosServicePrincipalName specifiesthe Service Principal Name
 	// (<SERVICE>/<FQDN>) for the namenode(s). Like in the
 	// dfs.namenode.kerberos.principal property of core-site.xml, the special
 	// string '_HOST' can be substituted for the hostname in a multi-namenode
 	// setup (for example: 'nn/_HOST@EXAMPLE.COM'). It is required if
 	// KerberosClient is provided.
-	KerberosServicePrincipleName string
+	KerberosServicePrincipalName string
+	// UseSSL whether to use SSL
+	UseSSL bool
 }
 
 type namenodeHost struct {
@@ -107,9 +111,10 @@ func NewNamenodeConnection(options NamenodeConnectionOptions) (*NamenodeConnecti
 		User:       user,
 
 		kerberosClient:               options.KerberosClient,
-		kerberosServicePrincipleName: options.KerberosServicePrincipleName,
+		kerberosServicePrincipalName: options.KerberosServicePrincipalName,
 		kerberosRealm:                realm,
 
+		useSSL:   options.UseSSL,
 		dialFunc: options.DialFunc,
 		hostList: hostList,
 	}
@@ -146,6 +151,14 @@ func (c *NamenodeConnection) resolveConnection() error {
 		if err != nil {
 			c.markFailure(err)
 			continue
+		}
+
+		if c.useSSL {
+			conn := c.conn
+			// TODO : figure out tls config
+			c.conn = tls.Client(conn, &tls.Config{
+				InsecureSkipVerify: true,
+			})
 		}
 
 		err = c.doNamenodeHandshake()

@@ -59,13 +59,15 @@ type ClientOptions struct {
 	// the client will always mutually athenticate when connecting to the
 	// namenode(s).
 	KerberosClient *krb.Client
-	// KerberosServicePrincipleName specifies the Service Principle Name
+	// KerberosServicePrincipalName specifies the Service Principal Name
 	// (<SERVICE>/<FQDN>) for the namenode(s). Like in the
 	// dfs.namenode.kerberos.principal property of core-site.xml, the special
 	// string '_HOST' can be substituted for the address of the namenode in a
 	// multi-namenode setup (for example: 'nn/_HOST'). It is required if
 	// KerberosClient is provided.
-	KerberosServicePrincipleName string
+	KerberosServicePrincipalName string
+	// UseSSL is used to determine whether the dialer needs to be wrapped in TLS
+	UseSSL bool
 }
 
 // ClientOptionsFromConf attempts to load any relevant configuration options
@@ -87,7 +89,7 @@ type ClientOptions struct {
 //
 //   // Determined by dfs.namenode.kerberos.principal, with the realm
 //   // (everything after the first '@') chopped off.
-//   KerberosServicePrincipleName string
+//   KerberosServicePrincipalName string
 //
 // Because of the way Kerberos can be forced by the Hadoop configuration but not
 // actually configured, you should check for whether KerberosClient is set in
@@ -111,9 +113,12 @@ func ClientOptionsFromConf(conf hadoopconf.HadoopConf) ClientOptions {
 	}
 
 	if conf["dfs.namenode.kerberos.principal"] != "" {
-		options.KerberosServicePrincipleName = strings.Split(conf["dfs.namenode.kerberos.principal"], "@")[0]
+		options.KerberosServicePrincipalName = strings.Split(conf["dfs.namenode.kerberos.principal"], "@")[0]
 	}
 
+	if conf["hadoop.ssl.enabled"] != "" {
+		options.UseSSL = conf["hadoop.ssl.enabled"] == "true"
+	}
 	return options
 }
 
@@ -125,7 +130,7 @@ func NewClient(options ClientOptions) (*Client, error) {
 		return nil, errors.New("kerberos enabled, but kerberos client is missing credentials")
 	}
 
-	if options.KerberosClient != nil && options.KerberosServicePrincipleName == "" {
+	if options.KerberosClient != nil && options.KerberosServicePrincipalName == "" {
 		return nil, errors.New("kerberos enabled, but kerberos namenode SPN is not provided")
 	}
 
@@ -135,7 +140,8 @@ func NewClient(options ClientOptions) (*Client, error) {
 			User:                         options.User,
 			DialFunc:                     options.NamenodeDialFunc,
 			KerberosClient:               options.KerberosClient,
-			KerberosServicePrincipleName: options.KerberosServicePrincipleName,
+			KerberosServicePrincipalName: options.KerberosServicePrincipalName,
+			UseSSL: options.UseSSL,
 		},
 	)
 

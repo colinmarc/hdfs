@@ -5,6 +5,8 @@ go: 1.11beta2
 env:
 - PLATFORM=cdh5
 - PLATFORM=cdh5 KERBEROS=true
+- PLATFORM=cdh5 USE_SSL=true
+- PLATFORM=cdh5 KERBEROS=true USE_SSL=true
 - PLATFORM=hdp2
 before_install:
 - export GO111MODULE=on # Travis installs into $GOPATH/src, which disables module support by default.

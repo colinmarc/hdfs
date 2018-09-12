@@ -9,6 +9,9 @@ import (
 	"hash/crc32"
 	"io"
 	"math"
+	"os"
+	"sync"
+	"time"
 
 	hdfs "github.com/colinmarc/hdfs/protocol/hadoop_hdfs"
 	"github.com/golang/protobuf/proto"
@@ -18,6 +21,8 @@ const (
 	outboundPacketSize = 65536
 	outboundChunkSize  = 512
 	maxPacketsInQueue  = 5
+	heartBeatSeqno     = -1
+	heartBeatTimeout   = 30 * time.Second
 )
 
 // blockWriteStream writes data out to a datanode, and reads acks back.
@@ -35,6 +40,10 @@ type blockWriteStream struct {
 	ackError        error
 	acksDone        chan struct{}
 	lastPacketSeqno int
+
+	lock sync.Mutex // to synchronize with heartbeat thread
+
+	closeCh chan struct{}
 }
 
 type outboundPacket struct {
@@ -64,6 +73,7 @@ func newBlockWriteStream(conn io.ReadWriter, offset int64) *blockWriteStream {
 		seqno:    1,
 		packets:  make(chan outboundPacket, maxPacketsInQueue),
 		acksDone: make(chan struct{}),
+		closeCh:  make(chan struct{}),
 	}
 
 	// Ack packets in the background.
@@ -71,6 +81,8 @@ func newBlockWriteStream(conn io.ReadWriter, offset int64) *blockWriteStream {
 		s.ackPackets()
 		close(s.acksDone)
 	}()
+
+	go s.sendHeartBeats()
 
 	return s
 }
@@ -105,18 +117,28 @@ func (s *blockWriteStream) Write(b []byte) (int, error) {
 
 // finish flushes the rest of the buffered bytes, and then sends a final empty
 // packet signifying the end of the block.
-func (s *blockWriteStream) finish() error {
+func (s *blockWriteStream) finish() (err error) {
 	if s.closed {
 		return nil
 	}
 	s.closed = true
 
+	defer func() {
+		close(s.closeCh)
+		close(s.packets)
+
+		// Check one more time for any ack errors.
+		<-s.acksDone
+		if s.ackError != nil {
+			err = s.ackError
+		}
+	}()
+
 	if s.ackError != nil {
 		return s.ackError
 	}
 
-	err := s.flush(true)
-	if err != nil {
+	if err := s.flush(true); err != nil {
 		return err
 	}
 
@@ -129,19 +151,8 @@ func (s *blockWriteStream) finish() error {
 		data:      []byte{},
 	}
 	s.packets <- lastPacket
-	err = s.writePacket(lastPacket)
-	if err != nil {
-		return err
-	}
-	close(s.packets)
 
-	// Check one more time for any ack errors.
-	<-s.acksDone
-	if s.ackError != nil {
-		return s.ackError
-	}
-
-	return nil
+	return s.writePacket(lastPacket)
 }
 
 // flush parcels out the buffered bytes into packets, which it then flushes to
@@ -211,6 +222,7 @@ func (s *blockWriteStream) makePacket() outboundPacket {
 func (s *blockWriteStream) ackPackets() {
 	reader := bufio.NewReader(s.conn)
 
+L:
 	for {
 		p, ok := <-s.packets
 		if !ok {
@@ -218,19 +230,27 @@ func (s *blockWriteStream) ackPackets() {
 			return
 		}
 
-		// If we fail to read the ack at all, that counts as a failure from the
-		// first datanode (the one we're connected to).
-		ack := &hdfs.PipelineAckProto{}
-		err := readPrefixedMessage(reader, ack)
-		if err != nil {
-			s.ackError = err
-			break
-		}
+		var seqno int
+		for {
+			// If we fail to read the ack at all, that counts as a failure from the
+			// first datanode (the one we're connected to).
+			ack := &hdfs.PipelineAckProto{}
+			err := readPrefixedMessage(reader, ack)
+			if err != nil {
+				s.ackError = err
+				break L
+			}
 
-		seqno := int(ack.GetSeqno())
-		for i, status := range ack.GetReply() {
-			if status != hdfs.Status_SUCCESS {
-				s.ackError = ackError{status: status, seqno: seqno, pipelineIndex: i}
+			seqno = int(ack.GetSeqno())
+
+			for i, status := range ack.GetReply() {
+				if status != hdfs.Status_SUCCESS {
+					s.ackError = ackError{status: status, seqno: seqno, pipelineIndex: i}
+					break L
+				}
+			}
+
+			if seqno != heartBeatSeqno {
 				break
 			}
 		}
@@ -280,6 +300,9 @@ func (s *blockWriteStream) writePacket(p outboundPacket) error {
 	binary.BigEndian.PutUint16(header[4:], uint16(len(infoBytes)))
 	header = append(header, infoBytes...)
 
+	s.lock.Lock()
+	defer s.lock.Unlock()
+
 	_, err = s.conn.Write(header)
 	if err != nil {
 		return err
@@ -296,4 +319,48 @@ func (s *blockWriteStream) writePacket(p outboundPacket) error {
 	}
 
 	return nil
+}
+
+//hadoop-hdfs-project/hadoop-hdfs-client/src/main/java/org/apache/hadoop/hdfs/DataStreamer.java:createHeartbeatPacket()
+func (s *blockWriteStream) writeHeartBeatPacket() error {
+	var o, h int64 = 0, heartBeatSeqno
+	l := false
+	var d int32 = 0
+	headerInfo := &hdfs.PacketHeaderProto{
+		OffsetInBlock:     &o,
+		Seqno:             &h,
+		LastPacketInBlock: &l,
+		DataLen:           &d,
+	}
+
+	infoBytes, err := proto.Marshal(headerInfo)
+	if err != nil {
+		return err
+	}
+
+	header := make([]byte, 6)
+	binary.BigEndian.PutUint32(header, 4)
+	binary.BigEndian.PutUint16(header[4:], uint16(len(infoBytes)))
+	header = append(header, infoBytes...)
+
+	s.lock.Lock()
+	defer s.lock.Unlock()
+	_, err = s.conn.Write(header)
+
+	return err
+}
+
+func (s *blockWriteStream) sendHeartBeats() {
+	ticker := time.NewTicker(heartBeatTimeout)
+	defer ticker.Stop()
+	for {
+		select {
+		case <-ticker.C:
+			if err := s.writeHeartBeatPacket(); err != nil {
+				fmt.Fprintf(os.Stderr, "hdfs datanode heartbeat error: %v\n", err)
+			}
+		case <-s.closeCh:
+			return
+		}
+	}
 }

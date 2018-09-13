@@ -1,19 +1,36 @@
 package hdfs
 
 import (
+	"fmt"
 	"io"
 	"io/ioutil"
 	"os"
 	"os/user"
+	"sync"
+	"sync/atomic"
+	"time"
 
 	hdfs "github.com/colinmarc/hdfs/protocol/hadoop_hdfs"
 	"github.com/colinmarc/hdfs/rpc"
+	"github.com/golang/protobuf/proto"
 )
+
+const leaseRenewInterval = 30 * time.Second
+
+type leaseRenewer struct {
+	closeCh chan struct{}
+	errCh   chan error
+	wg      sync.WaitGroup
+
+	filesWOpen uint64
+}
 
 // A Client represents a connection to an HDFS cluster
 type Client struct {
 	namenode *rpc.NamenodeConnection
 	defaults *hdfs.FsServerDefaultsProto
+
+	leaseRenewer
 }
 
 // ClientOptions represents the configurable options for a client.
@@ -35,6 +52,42 @@ func Username() (string, error) {
 		return "", err
 	}
 	return currentUser.Username, nil
+}
+
+func (c *Client) leaseRenew() error {
+	if atomic.LoadUint64(&c.filesWOpen) == 0 {
+		return nil
+	}
+	req := &hdfs.RenewLeaseRequestProto{
+		ClientName: proto.String(c.namenode.ClientName()),
+	}
+	resp := &hdfs.RenewLeaseResponseProto{}
+
+	if err := c.namenode.Execute("renewLease", req, resp); err != nil {
+		if nnErr, ok := err.(*rpc.NamenodeError); ok {
+			err = interpretException(nnErr.Exception, err)
+		}
+
+		return err
+	}
+
+	return nil
+}
+
+func (c *Client) leaseRenewerRun() {
+	defer c.wg.Done()
+	ticker := time.NewTicker(leaseRenewInterval)
+	defer ticker.Stop()
+	for {
+		select {
+		case <-ticker.C:
+			if err := c.leaseRenew(); err != nil {
+				fmt.Fprintf(os.Stderr, "hdfs lease renew error: %+v\n", err)
+			}
+		case <-c.closeCh:
+			return
+		}
+	}
 }
 
 // NewClient returns a connected Client for the given options, or an error if
@@ -68,7 +121,12 @@ func NewClient(options ClientOptions) (*Client, error) {
 		}
 	}
 
-	return &Client{namenode: options.Namenode}, nil
+	c := &Client{namenode: options.Namenode, leaseRenewer: leaseRenewer{closeCh: make(chan struct{}), errCh: make(chan error)}}
+
+	c.wg.Add(1)
+	go c.leaseRenewerRun()
+
+	return c, nil
 }
 
 // New returns a connected Client, or an error if it can't connect. The user
@@ -183,5 +241,7 @@ func (c *Client) fetchDefaults() (*hdfs.FsServerDefaultsProto, error) {
 
 // Close terminates all underlying socket connections to remote server.
 func (c *Client) Close() error {
+	close(c.closeCh)
+	c.wg.Wait()
 	return c.namenode.Close()
 }

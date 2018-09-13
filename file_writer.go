@@ -3,6 +3,7 @@ package hdfs
 import (
 	"io"
 	"os"
+	"sync/atomic"
 
 	hdfs "github.com/colinmarc/hdfs/protocol/hadoop_hdfs"
 	"github.com/colinmarc/hdfs/rpc"
@@ -71,6 +72,8 @@ func (c *Client) CreateFile(name string, replication int, blockSize int64, perm 
 		return nil, &os.PathError{"create", name, err}
 	}
 
+	atomic.AddUint64(&c.filesWOpen, 1)
+
 	return &FileWriter{
 		client:      c,
 		name:        name,
@@ -123,6 +126,7 @@ func (c *Client) Append(name string) (*FileWriter, error) {
 		replication: int(appendResp.Stat.GetBlockReplication()),
 		blockSize:   int64(appendResp.Stat.GetBlocksize()),
 	}
+	atomic.AddUint64(&c.filesWOpen, 1)
 	if len(blocks) == 0 {
 		return f, nil
 	}
@@ -196,6 +200,9 @@ func (f *FileWriter) Close() error {
 	if f.closed {
 		return io.ErrClosedPipe
 	}
+
+	f.closed = true
+	atomic.AddUint64(&f.client.filesWOpen, ^uint64(0))
 
 	var lastBlock *hdfs.ExtendedBlockProto
 	if f.blockWriter != nil {

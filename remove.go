@@ -8,8 +8,17 @@ import (
 	"github.com/golang/protobuf/proto"
 )
 
-// Remove removes the named file or directory.
+// Remove removes the named file or directory non-recursively.
 func (c *Client) Remove(name string) error {
+	return delete(c, name, false)
+}
+
+// RemoveAll removes the named file or directory recursively.
+func (c *Client) RemoveAll(name string) error {
+	return delete(c, name, true)
+}
+
+func delete(c *Client, name string, recursive bool) error {
 	_, err := c.getFileInfo(name)
 	if err != nil {
 		return &os.PathError{"remove", name, err}
@@ -17,7 +26,7 @@ func (c *Client) Remove(name string) error {
 
 	req := &hdfs.DeleteRequestProto{
 		Src:       proto.String(name),
-		Recursive: proto.Bool(true),
+		Recursive: proto.Bool(recursive),
 	}
 	resp := &hdfs.DeleteResponseProto{}
 

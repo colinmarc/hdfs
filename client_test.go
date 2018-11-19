@@ -90,7 +90,7 @@ func touch(t *testing.T, path string) {
 func touchMask(t *testing.T, path string, mask os.FileMode) {
 	c := getClient(t)
 
-	err := c.Remove(path)
+	err := c.RemoveAll(path)
 	if err != nil && !os.IsNotExist(err) {
 		t.Fatal(err)
 	}
@@ -115,7 +115,7 @@ func mkdirp(t *testing.T, path string) {
 func mkdirpMask(t *testing.T, path string, mask os.FileMode) {
 	c := getClient(t)
 
-	err := c.Remove(path)
+	err := c.RemoveAll(path)
 	if err != nil && !os.IsNotExist(err) {
 		t.Fatal(err)
 	}
@@ -129,7 +129,7 @@ func mkdirpMask(t *testing.T, path string, mask os.FileMode) {
 func baleet(t *testing.T, path string) {
 	c := getClient(t)
 
-	err := c.Remove(path)
+	err := c.RemoveAll(path)
 	if err != nil && !os.IsNotExist(err) {
 		t.Fatal(err)
 	}

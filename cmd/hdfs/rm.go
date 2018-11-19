@@ -34,7 +34,7 @@ func rm(paths []string, recursive bool, force bool) {
 			continue
 		}
 
-		err = client.Remove(p)
+		err = client.RemoveAll(p)
 		if err != nil {
 			fatal(err)
 		}

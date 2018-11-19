@@ -2,11 +2,13 @@ package hdfs
 
 import (
 	"os"
+	"syscall"
 )
 
 const (
-	fileNotFoundException     = "java.io.FileNotFoundException"
-	permissionDeniedException = "org.apache.hadoop.security.AccessControlException"
+	fileNotFoundException      = "java.io.FileNotFoundException"
+	permissionDeniedException  = "org.apache.hadoop.security.AccessControlException"
+	pathIsNotEmptyDirException = "org.apache.hadoop.fs.PathIsNotEmptyDirectoryException"
 )
 
 // Error represents a remote java exception from an HDFS namenode or datanode.
@@ -34,6 +36,8 @@ func interpretException(err error) error {
 		return os.ErrNotExist
 	case permissionDeniedException:
 		return os.ErrPermission
+	case pathIsNotEmptyDirException:
+		return syscall.ENOTEMPTY
 	default:
 		return err
 	}

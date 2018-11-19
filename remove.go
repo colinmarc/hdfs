@@ -8,8 +8,24 @@ import (
 	"github.com/golang/protobuf/proto"
 )
 
-// Remove removes the named file or directory.
+// Remove removes the named file or (empty) directory.
 func (c *Client) Remove(name string) error {
+	return delete(c, name, false)
+}
+
+// RemoveAll removes path and any children it contains. It removes everything it
+// can but returns the first error it encounters. If the path does not exist,
+// RemoveAll returns nil (no error).
+func (c *Client) RemoveAll(name string) error {
+	err := delete(c, name, true)
+	if os.IsNotExist(err) {
+		return nil
+	}
+
+	return err
+}
+
+func delete(c *Client, name string, recursive bool) error {
 	_, err := c.getFileInfo(name)
 	if err != nil {
 		return &os.PathError{"remove", name, err}
@@ -17,7 +33,7 @@ func (c *Client) Remove(name string) error {
 
 	req := &hdfs.DeleteRequestProto{
 		Src:       proto.String(name),
-		Recursive: proto.Bool(true),
+		Recursive: proto.Bool(recursive),
 	}
 	resp := &hdfs.DeleteResponseProto{}
 

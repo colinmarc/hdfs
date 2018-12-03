@@ -38,7 +38,7 @@ func getClientForUser(t *testing.T, username string) *Client {
 
 	conf, err := hadoopconf.LoadFromEnvironment()
 	if err != nil || conf == nil {
-		t.Fatal("Couldn't load ambient config", err)
+		t.Fatal("Couldn't load ambient config", err, conf)
 	}
 
 	options := ClientOptionsFromConf(conf)

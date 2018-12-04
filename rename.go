@@ -10,7 +10,7 @@ import (
 
 // Rename renames (moves) a file.
 func (c *Client) Rename(oldpath, newpath string) error {
-	return RenameWithOverwriteOption(oldpath, newpath, true)
+	return c.RenameWithOverwriteOption(oldpath, newpath, true)
 }
 
 // RenameWithOverwrite renames (moves) a file. Overwrite option is taken as input.

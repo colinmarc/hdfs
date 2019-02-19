@@ -21,24 +21,31 @@ var (
 )
 
 func (c *NamenodeConnection) doKerberosHandshake() error {
-	// All SASL requests/responses use this sequence number.
-	c.currentRequestID = saslRpcCallId
-
 	// Start negotiation, and get the list of supported mechanisms in reply.
-	c.writeSaslRequest(&hadoop.RpcSaslProto{State: hadoop.RpcSaslProto_NEGOTIATE.Enum()})
+	err := c.writeSaslRequest(&hadoop.RpcSaslProto{
+		State: hadoop.RpcSaslProto_NEGOTIATE.Enum(),
+	})
+	if err != nil {
+		return err
+	}
+
 	resp, err := c.readSaslResponse(hadoop.RpcSaslProto_NEGOTIATE)
 	if err != nil {
 		return err
 	}
 
-	var mechanism *hadoop.RpcSaslProto_SaslAuth
+	var krbAuth, tokenAuth *hadoop.RpcSaslProto_SaslAuth
 	for _, m := range resp.GetAuths() {
-		if *m.Method == "KERBEROS" {
-			mechanism = m
+		switch *m.Method {
+		case "KERBEROS":
+			krbAuth = m
+		case "TOKEN":
+			tokenAuth = m
+		default:
 		}
 	}
 
-	if mechanism == nil {
+	if krbAuth == nil {
 		return errKerberosNotSupported
 	}
 
@@ -48,12 +55,34 @@ func (c *NamenodeConnection) doKerberosHandshake() error {
 		return err
 	}
 
+	if tokenAuth != nil {
+		challenge, err := parseChallenge(tokenAuth)
+		if err != nil {
+			return err
+		}
+
+		switch challenge.qop {
+		case qopPrivacy, qopIntegrity:
+			// Switch to SASL RPC handler
+			c.transport = &saslTransport{
+				basicTransport: basicTransport{
+					clientID: c.ClientID,
+				},
+				sessionKey: sessionKey,
+				privacy:    challenge.qop == qopPrivacy,
+			}
+		case qopAuthentication:
+			// No special transport is required.
+		default:
+			return errors.New("unexpected QOP in challenge")
+		}
+	}
+
 	err = c.writeSaslRequest(&hadoop.RpcSaslProto{
 		State: hadoop.RpcSaslProto_INITIATE.Enum(),
 		Token: token.MechTokenBytes,
-		Auths: []*hadoop.RpcSaslProto_SaslAuth{mechanism},
+		Auths: []*hadoop.RpcSaslProto_SaslAuth{krbAuth},
 	})
-
 	if err != nil {
 		return err
 	}
@@ -92,7 +121,6 @@ func (c *NamenodeConnection) doKerberosHandshake() error {
 		State: hadoop.RpcSaslProto_RESPONSE.Enum(),
 		Token: signedBytes,
 	})
-
 	if err != nil {
 		return err
 	}
@@ -103,7 +131,8 @@ func (c *NamenodeConnection) doKerberosHandshake() error {
 }
 
 func (c *NamenodeConnection) writeSaslRequest(req *hadoop.RpcSaslProto) error {
-	packet, err := makeRPCPacket(newRPCRequestHeader(saslRpcCallId, c.ClientID), req)
+	rrh := newRPCRequestHeader(saslRpcCallId, c.ClientID)
+	packet, err := makeRPCPacket(rrh, req)
 	if err != nil {
 		return err
 	}
@@ -113,10 +142,20 @@ func (c *NamenodeConnection) writeSaslRequest(req *hadoop.RpcSaslProto) error {
 }
 
 func (c *NamenodeConnection) readSaslResponse(expectedState hadoop.RpcSaslProto_SaslState) (*hadoop.RpcSaslProto, error) {
+	rrh := &hadoop.RpcResponseHeaderProto{}
 	resp := &hadoop.RpcSaslProto{}
-	err := c.readResponse("sasl", resp)
+	err := readRPCPacket(c.conn, rrh, resp)
 	if err != nil {
 		return nil, err
+	} else if int32(rrh.GetCallId()) != saslRpcCallId {
+		return nil, errors.New("unexpected sequence number")
+	} else if rrh.GetStatus() != hadoop.RpcResponseHeaderProto_SUCCESS {
+		return nil, &NamenodeError{
+			method:    "sasl",
+			message:   rrh.GetErrorMsg(),
+			code:      int(rrh.GetErrorDetail()),
+			exception: rrh.GetExceptionClassName(),
+		}
 	} else if resp.GetState() != expectedState {
 		return nil, fmt.Errorf("unexpected SASL state: %s", resp.GetState().String())
 	}

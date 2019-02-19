@@ -107,6 +107,10 @@ sudo tee /etc/hadoop/conf.gohdfs/core-site.xml <<EOF
     <name>dfs.datanode.kerberos.principal</name>
     <value>dn/localhost@$KERBEROS_REALM</value>
   </property>
+  <property>
+    <name>hadoop.rpc.protection</name>
+    <value>$RPC_PROTECTION</value>
+  </property>
 </configuration>
 EOF
 

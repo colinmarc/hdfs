@@ -42,10 +42,11 @@ type NamenodeConnection struct {
 	kerberosServicePrincipleName string
 	kerberosRealm                string
 
-	dialFunc func(ctx context.Context, network, addr string) (net.Conn, error)
-	conn     net.Conn
-	host     *namenodeHost
-	hostList []*namenodeHost
+	dialFunc  func(ctx context.Context, network, addr string) (net.Conn, error)
+	conn      net.Conn
+	host      *namenodeHost
+	hostList  []*namenodeHost
+	transport transport
 
 	reqLock sync.Mutex
 	done    chan struct{}
@@ -115,8 +116,9 @@ func NewNamenodeConnection(options NamenodeConnectionOptions) (*NamenodeConnecti
 		kerberosServicePrincipleName: options.KerberosServicePrincipleName,
 		kerberosRealm:                realm,
 
-		dialFunc: options.DialFunc,
-		hostList: hostList,
+		dialFunc:  options.DialFunc,
+		hostList:  hostList,
+		transport: &basicTransport{clientID: clientId},
 
 		done: make(chan struct{}),
 	}
@@ -190,6 +192,7 @@ func (c *NamenodeConnection) Execute(method string, req proto.Message, resp prot
 	defer c.reqLock.Unlock()
 
 	c.currentRequestID++
+	requestID := c.currentRequestID
 
 	for {
 		err := c.resolveConnection()
@@ -197,13 +200,13 @@ func (c *NamenodeConnection) Execute(method string, req proto.Message, resp prot
 			return err
 		}
 
-		err = c.writeRequest(method, req)
+		err = c.transport.writeRequest(c.conn, method, requestID, req)
 		if err != nil {
 			c.markFailure(err)
 			continue
 		}
 
-		err = c.readResponse(method, resp)
+		err = c.transport.readResponse(c.conn, method, requestID, resp)
 		if err != nil {
 			// Only retry on a standby exception.
 			if nerr, ok := err.(*NamenodeError); ok && nerr.exception == standbyExceptionClass {
@@ -215,62 +218,6 @@ func (c *NamenodeConnection) Execute(method string, req proto.Message, resp prot
 		}
 
 		break
-	}
-
-	return nil
-}
-
-// addLease increases the lease counter on the namenode. As long as the lease
-// counter is greater than zero, all leases will automatically be renewed every
-//
-
-// RPC definitions
-
-// A request packet:
-// +-----------------------------------------------------------+
-// |  uint32 length of the next three parts                    |
-// +-----------------------------------------------------------+
-// |  varint length + RpcRequestHeaderProto                    |
-// +-----------------------------------------------------------+
-// |  varint length + RequestHeaderProto                       |
-// +-----------------------------------------------------------+
-// |  varint length + Request                                  |
-// +-----------------------------------------------------------+
-func (c *NamenodeConnection) writeRequest(method string, req proto.Message) error {
-	rrh := newRPCRequestHeader(c.currentRequestID, c.ClientID)
-	rh := newRequestHeader(method)
-
-	reqBytes, err := makeRPCPacket(rrh, rh, req)
-	if err != nil {
-		return err
-	}
-
-	_, err = c.conn.Write(reqBytes)
-	return err
-}
-
-// A response from the namenode:
-// +-----------------------------------------------------------+
-// |  uint32 length of the next two parts                      |
-// +-----------------------------------------------------------+
-// |  varint length + RpcResponseHeaderProto                   |
-// +-----------------------------------------------------------+
-// |  varint length + Response                                 |
-// +-----------------------------------------------------------+
-func (c *NamenodeConnection) readResponse(method string, resp proto.Message) error {
-	rrh := &hadoop.RpcResponseHeaderProto{}
-	err := readRPCPacket(c.conn, rrh, resp)
-	if err != nil {
-		return err
-	} else if int32(rrh.GetCallId()) != c.currentRequestID {
-		return errors.New("unexpected sequence number")
-	} else if rrh.GetStatus() != hadoop.RpcResponseHeaderProto_SUCCESS {
-		return &NamenodeError{
-			method:    method,
-			message:   rrh.GetErrorMsg(),
-			code:      int(rrh.GetErrorDetail()),
-			exception: rrh.GetExceptionClassName(),
-		}
 	}
 
 	return nil
@@ -320,9 +267,6 @@ func (c *NamenodeConnection) doNamenodeHandshake() error {
 		if err != nil {
 			return fmt.Errorf("SASL handshake: %s", err)
 		}
-
-		// Reset the sequence number here, since we set it to -33 for the SASL bits.
-		c.currentRequestID = 0
 	}
 
 	rrh := newRPCRequestHeader(handshakeCallID, c.ClientID)

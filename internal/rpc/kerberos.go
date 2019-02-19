@@ -12,7 +12,10 @@ import (
 	krbtypes "gopkg.in/jcmturner/gokrb5.v5/types"
 )
 
-const saslRpcCallId = -33
+const (
+	// All SASL requests/responses use this sequence number.
+	saslRpcCallId = -33
+)
 
 var (
 	errKerberosNotSupported = errors.New("kerberos authentication not supported by namenode")
@@ -20,24 +23,31 @@ var (
 )
 
 func (c *NamenodeConnection) doKerberosHandshake() error {
-	// All SASL requests/responses use this sequence number.
-	c.currentRequestID = saslRpcCallId
-
 	// Start negotiation, and get the list of supported mechanisms in reply.
-	c.writeSaslRequest(&hadoop.RpcSaslProto{State: hadoop.RpcSaslProto_NEGOTIATE.Enum()})
+	err := c.writeSaslRequest(&hadoop.RpcSaslProto{
+		State: hadoop.RpcSaslProto_NEGOTIATE.Enum(),
+	})
+	if err != nil {
+		return err
+	}
+
 	resp, err := c.readSaslResponse(hadoop.RpcSaslProto_NEGOTIATE)
 	if err != nil {
 		return err
 	}
 
-	var mechanism *hadoop.RpcSaslProto_SaslAuth
+	var krbAuth *hadoop.RpcSaslProto_SaslAuth
+	var tokenAuth *hadoop.RpcSaslProto_SaslAuth
 	for _, m := range resp.GetAuths() {
 		if *m.Method == "KERBEROS" {
-			mechanism = m
+			krbAuth = m
+		}
+		if *m.Method == "TOKEN" {
+			tokenAuth = m
 		}
 	}
 
-	if mechanism == nil {
+	if krbAuth == nil {
 		return errKerberosNotSupported
 	}
 
@@ -47,12 +57,25 @@ func (c *NamenodeConnection) doKerberosHandshake() error {
 		return err
 	}
 
+	if tokenAuth != nil {
+		challenge, err := ParseChallenge(tokenAuth)
+		if err != nil {
+			return err
+		}
+		if challenge.QOP == Privacy || challenge.QOP == Integrity {
+			// Switch to SASL RPC handler
+			c.rpcReader = &SaslRpcReader{
+				SessionKey:      sessionKey,
+				Confidentiality: challenge.QOP == Privacy,
+			}
+		}
+	}
+
 	err = c.writeSaslRequest(&hadoop.RpcSaslProto{
 		State: hadoop.RpcSaslProto_INITIATE.Enum(),
 		Token: token.MechToken,
-		Auths: []*hadoop.RpcSaslProto_SaslAuth{mechanism},
+		Auths: []*hadoop.RpcSaslProto_SaslAuth{krbAuth},
 	})
-
 	if err != nil {
 		return err
 	}
@@ -91,18 +114,21 @@ func (c *NamenodeConnection) doKerberosHandshake() error {
 		State: hadoop.RpcSaslProto_RESPONSE.Enum(),
 		Token: signedBytes,
 	})
-
 	if err != nil {
 		return err
 	}
 
 	// Read the final response. If it's a SUCCESS, then we're done here.
 	_, err = c.readSaslResponse(hadoop.RpcSaslProto_SUCCESS)
+	if err != nil {
+		return err
+	}
 	return err
 }
 
 func (c *NamenodeConnection) writeSaslRequest(req *hadoop.RpcSaslProto) error {
-	packet, err := makeRPCPacket(newRPCRequestHeader(saslRpcCallId, c.ClientID), req)
+	rrh := newRPCRequestHeader(saslRpcCallId, c.ClientID)
+	packet, err := makeRPCPacket(rrh, req)
 	if err != nil {
 		return err
 	}
@@ -112,10 +138,20 @@ func (c *NamenodeConnection) writeSaslRequest(req *hadoop.RpcSaslProto) error {
 }
 
 func (c *NamenodeConnection) readSaslResponse(expectedState hadoop.RpcSaslProto_SaslState) (*hadoop.RpcSaslProto, error) {
+	rrh := &hadoop.RpcResponseHeaderProto{}
 	resp := &hadoop.RpcSaslProto{}
-	err := c.readResponse("sasl", resp)
+	err := readRPCPacket(c.conn, rrh, resp)
 	if err != nil {
 		return nil, err
+	} else if int32(rrh.GetCallId()) != saslRpcCallId {
+		return nil, errors.New("unexpected sequence number")
+	} else if rrh.GetStatus() != hadoop.RpcResponseHeaderProto_SUCCESS {
+		return nil, &NamenodeError{
+			method:    "sasl",
+			message:   rrh.GetErrorMsg(),
+			code:      int(rrh.GetErrorDetail()),
+			exception: rrh.GetExceptionClassName(),
+		}
 	} else if resp.GetState() != expectedState {
 		return nil, fmt.Errorf("unexpected SASL state: %s", resp.GetState().String())
 	}

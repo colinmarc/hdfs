@@ -11,6 +11,7 @@ import (
 	hadoop "github.com/colinmarc/hdfs/v2/internal/protocol/hadoop_common"
 	"github.com/golang/protobuf/proto"
 	krb "gopkg.in/jcmturner/gokrb5.v5/client"
+	krbtypes "gopkg.in/jcmturner/gokrb5.v5/types"
 )
 
 const (
@@ -32,7 +33,8 @@ type NamenodeConnection struct {
 	ClientName string
 	User       string
 
-	currentRequestID int32
+	currentRequestID  int32
+	currentSessionKey krbtypes.EncryptionKey
 
 	kerberosClient               *krb.Client
 	kerberosServicePrincipleName string
@@ -44,6 +46,9 @@ type NamenodeConnection struct {
 	hostList []*namenodeHost
 
 	reqLock sync.Mutex
+
+	rpcWriter RpcWriter
+	rpcReader RpcReader
 }
 
 // NamenodeConnectionOptions represents the configurable options available
@@ -112,6 +117,11 @@ func NewNamenodeConnection(options NamenodeConnectionOptions) (*NamenodeConnecti
 
 		dialFunc: options.DialFunc,
 		hostList: hostList,
+
+		rpcWriter: &BasicRpcWriter{
+			ClientID: clientId,
+		},
+		rpcReader: &BasicRpcReader{},
 	}
 
 	err := c.resolveConnection()
@@ -180,6 +190,7 @@ func (c *NamenodeConnection) Execute(method string, req proto.Message, resp prot
 	defer c.reqLock.Unlock()
 
 	c.currentRequestID++
+	requestID := c.currentRequestID
 
 	for {
 		err := c.resolveConnection()
@@ -187,13 +198,13 @@ func (c *NamenodeConnection) Execute(method string, req proto.Message, resp prot
 			return err
 		}
 
-		err = c.writeRequest(method, req)
+		err = c.rpcWriter.WriteRequest(c.conn, method, requestID, req)
 		if err != nil {
 			c.markFailure(err)
 			continue
 		}
 
-		err = c.readResponse(method, resp)
+		err = c.rpcReader.ReadResponse(c.conn, method, requestID, resp)
 		if err != nil {
 			// Only retry on a standby exception.
 			if nerr, ok := err.(*NamenodeError); ok && nerr.exception == standbyExceptionClass {
@@ -205,58 +216,6 @@ func (c *NamenodeConnection) Execute(method string, req proto.Message, resp prot
 		}
 
 		break
-	}
-
-	return nil
-}
-
-// RPC definitions
-
-// A request packet:
-// +-----------------------------------------------------------+
-// |  uint32 length of the next three parts                    |
-// +-----------------------------------------------------------+
-// |  varint length + RpcRequestHeaderProto                    |
-// +-----------------------------------------------------------+
-// |  varint length + RequestHeaderProto                       |
-// +-----------------------------------------------------------+
-// |  varint length + Request                                  |
-// +-----------------------------------------------------------+
-func (c *NamenodeConnection) writeRequest(method string, req proto.Message) error {
-	rrh := newRPCRequestHeader(c.currentRequestID, c.ClientID)
-	rh := newRequestHeader(method)
-
-	reqBytes, err := makeRPCPacket(rrh, rh, req)
-	if err != nil {
-		return err
-	}
-
-	_, err = c.conn.Write(reqBytes)
-	return err
-}
-
-// A response from the namenode:
-// +-----------------------------------------------------------+
-// |  uint32 length of the next two parts                      |
-// +-----------------------------------------------------------+
-// |  varint length + RpcResponseHeaderProto                   |
-// +-----------------------------------------------------------+
-// |  varint length + Response                                 |
-// +-----------------------------------------------------------+
-func (c *NamenodeConnection) readResponse(method string, resp proto.Message) error {
-	rrh := &hadoop.RpcResponseHeaderProto{}
-	err := readRPCPacket(c.conn, rrh, resp)
-	if err != nil {
-		return err
-	} else if int32(rrh.GetCallId()) != c.currentRequestID {
-		return errors.New("unexpected sequence number")
-	} else if rrh.GetStatus() != hadoop.RpcResponseHeaderProto_SUCCESS {
-		return &NamenodeError{
-			method:    method,
-			message:   rrh.GetErrorMsg(),
-			code:      int(rrh.GetErrorDetail()),
-			exception: rrh.GetExceptionClassName(),
-		}
 	}
 
 	return nil
@@ -306,9 +265,6 @@ func (c *NamenodeConnection) doNamenodeHandshake() error {
 		if err != nil {
 			return fmt.Errorf("SASL handshake: %s", err)
 		}
-
-		// Reset the sequence number here, since we set it to -33 for the SASL bits.
-		c.currentRequestID = 0
 	}
 
 	rrh := newRPCRequestHeader(handshakeCallID, c.ClientID)

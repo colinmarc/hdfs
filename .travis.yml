@@ -4,7 +4,9 @@ go_import_path: github.com/colinmarc/hdfs
 go: 1.11beta2
 env:
 - PLATFORM=cdh5
-- PLATFORM=cdh5 KERBEROS=true
+- PLATFORM=cdh5 KERBEROS=true RPC_PROTECTION=authentication
+- PLATFORM=cdh5 KERBEROS=true RPC_PROTECTION=integrity
+- PLATFORM=cdh5 KERBEROS=true RPC_PROTECTION=privacy
 - PLATFORM=hdp2
 before_install:
 - export GO111MODULE=on # Travis installs into $GOPATH/src, which disables module support by default.

@@ -104,3 +104,8 @@ func (fi *FileInfo) OwnerGroup() string {
 func (fi *FileInfo) AccessTime() time.Time {
 	return time.Unix(int64(fi.status.GetAccessTime())/1000, 0)
 }
+
+// FileID returns the file ID which identifies the same file in HDFS
+func (fi *FileInfo) FileID() uint64 {
+	return fi.status.GetFileId()
+}

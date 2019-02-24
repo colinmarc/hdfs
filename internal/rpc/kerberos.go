@@ -62,12 +62,17 @@ func (c *NamenodeConnection) doKerberosHandshake() error {
 		if err != nil {
 			return err
 		}
-		if challenge.QOP == Privacy || challenge.QOP == Integrity {
+		switch challenge.QOP {
+		case Privacy, Integrity:
 			// Switch to SASL RPC handler
 			c.rpcReader = &SaslRpcReader{
 				SessionKey:      sessionKey,
 				Confidentiality: challenge.QOP == Privacy,
 			}
+		case Authentication:
+			// just use default RPC handler
+		default:
+			return errors.New("unexpected QOP")
 		}
 	}
 

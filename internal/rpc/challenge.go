@@ -34,7 +34,7 @@ func ParseChallenge(auth *hadoop.RpcSaslProto_SaslAuth) (*TokenChallenge, error)
 	tokenChallenge := TokenChallenge{}
 	matched := challengeRegexp.FindAllSubmatch(auth.Challenge, -1)
 	if matched == nil {
-		return nil, errors.New("aaaa")
+		return nil, errors.New("challenge format is invalid")
 	}
 	for _, m := range matched {
 		key := string(m[1])

@@ -14,11 +14,6 @@ import (
 	krbtypes "gopkg.in/jcmturner/gokrb5.v5/types"
 )
 
-// To check interface validity
-var rpcWriter RpcWriter = &BasicRpcWriter{}
-var rpcReader RpcReader = &BasicRpcReader{}
-var saslRpcReader RpcReader = &SaslRpcReader{}
-
 // RpcWriter is an interface for sending RPC payload
 type RpcWriter interface {
 	WriteRequest(w io.Writer, method string, requestID int32, req proto.Message) error

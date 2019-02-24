@@ -9,17 +9,17 @@ import (
 )
 
 const (
-	// Authentication - Establishes mutual authentication between the client and the server
+	// Authentication - Establishes mutual authentication between the client and the server.
 	Authentication = "auth"
-	// Integrity - In addition to authentication, it guarantees that a man-in-the-middle cannot tamper with messages exchanged between the client and the server
+	// Integrity - In addition to authentication, it guarantees that a man-in-the-middle cannot tamper with messages exchanged between the client and the server.
 	Integrity = "auth-int"
-	// Privacy - In addition to the features offered by authentication and integrity, it also fully encrypts the messages exchanged between the client and the server
+	// Privacy - In addition to the features offered by authentication and integrity, it also fully encrypts the messages exchanged between the client and the server.
 	Privacy = "auth-conf"
 )
 
 var challengeRegexp = regexp.MustCompile(",?([a-zA-Z0-9]+)=(\"([^\"]+)\"|([^,]+)),?")
 
-// TokenChallenge is a struct which holds a challenge of TOKEN auth
+// TokenChallenge is a struct which holds a challenge of TOKEN auth.
 type TokenChallenge struct {
 	Realm     string
 	Nonce     string
@@ -29,7 +29,7 @@ type TokenChallenge struct {
 	Algorithm string
 }
 
-// ParseChallenge returns a TokenChallenge parsed from a given SaslAuth
+// ParseChallenge returns a TokenChallenge parsed from a given SaslAuth.
 func ParseChallenge(auth *hadoop.RpcSaslProto_SaslAuth) (*TokenChallenge, error) {
 	tokenChallenge := TokenChallenge{}
 	matched := challengeRegexp.FindAllSubmatch(auth.Challenge, -1)

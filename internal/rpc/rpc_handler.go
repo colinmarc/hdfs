@@ -14,35 +14,35 @@ import (
 	krbtypes "gopkg.in/jcmturner/gokrb5.v5/types"
 )
 
-// RpcWriter is an interface for sending RPC payload
+// RpcWriter is an interface for sending RPC payload.
 type RpcWriter interface {
 	WriteRequest(w io.Writer, method string, requestID int32, req proto.Message) error
 }
 
-// RpcReader is an interface for receiving RPC payload
+// RpcReader is an interface for receiving RPC payload.
 type RpcReader interface {
 	ReadResponse(r io.Reader, method string, requestID int32, resp proto.Message) error
 }
 
-// BasicRpcWriter is a basic RPC writer
+// BasicRpcWriter is a basic RPC writer for HDFS.
 type BasicRpcWriter struct {
-	// ClientID is the client ID of this writer
+	// ClientID is the client ID of this writer.
 	ClientID []byte
 }
 
-// BasicRpcReader is a basic RPC reader
+// BasicRpcReader is a basic RPC reader for HDFS.
 type BasicRpcReader struct {
 }
 
-// SaslRpcReader is a RPC reader which wrap payload with SASL
+// SaslRpcReader is an RPC reader for HDFS with SASL encryption.
 type SaslRpcReader struct {
-	// SessionKey is a encryption key used to decrypt payload
+	// SessionKey is a encryption key used to decrypt payload.
 	SessionKey krbtypes.EncryptionKey
-	// Confidentiality is a flag of message encryption
+	// Confidentiality is a flag of message encryption.
 	Confidentiality bool
 }
 
-// WriteRequest writes a request message
+// WriteRequest writes a request message.
 //
 // A request packet:
 // +-----------------------------------------------------------+
@@ -67,7 +67,7 @@ func (writer *BasicRpcWriter) WriteRequest(w io.Writer, method string, requestID
 	return err
 }
 
-// ReadResponse reads a response message
+// ReadResponse reads a response message.
 //
 // A response from the namenode:
 // +-----------------------------------------------------------+
@@ -96,7 +96,7 @@ func (reader *BasicRpcReader) ReadResponse(r io.Reader, method string, requestID
 	return nil
 }
 
-// ReadResponse reads a response message wrapped by SASL
+// ReadResponse reads a response message wrapped by SASL.
 //
 // A response from the namenode:
 // +-----------------------------------------------------------+

@@ -120,9 +120,6 @@ func (c *NamenodeConnection) doKerberosHandshake() error {
 
 	// Read the final response. If it's a SUCCESS, then we're done here.
 	_, err = c.readSaslResponse(hadoop.RpcSaslProto_SUCCESS)
-	if err != nil {
-		return err
-	}
 	return err
 }
 

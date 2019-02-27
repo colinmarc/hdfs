@@ -56,6 +56,7 @@ func (c *NamenodeConnection) doKerberosHandshake() error {
 	if err != nil {
 		return err
 	}
+	c.currentSessionKey = sessionKey
 
 	if tokenAuth != nil {
 		challenge, err := ParseChallenge(tokenAuth)

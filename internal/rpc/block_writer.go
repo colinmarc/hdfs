@@ -221,8 +221,8 @@ func (bw *BlockWriter) writeBlockWriteRequest(w io.Writer) error {
 			Type:             hdfs.ChecksumTypeProto_CHECKSUM_CRC32.Enum(),
 			BytesPerChecksum: proto.Uint32(outboundChunkSize),
 		},
-		StorageType: &(bw.block.StorageTypes[0]),
-		TargetStorageTypes : bw.block.GetStorageTypes()[1:],
+		StorageType: &(bw.Block.StorageTypes[0]),
+		TargetStorageTypes : bw.Block.GetStorageTypes()[1:],
 	}
 
 	return writeBlockOpRequest(w, writeBlockOp, op)

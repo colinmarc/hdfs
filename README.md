@@ -119,6 +119,7 @@ Acknowledgements
 
 This library is heavily indebted to [snakebite][3].
 
+
 [1]: https://godoc.org/github.com/colinmarc/hdfs
 [2]: https://golang.org/doc/install
 [3]: https://github.com/spotify/snakebite

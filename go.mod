@@ -1,13 +1,12 @@
 module github.com/colinmarc/hdfs/v2
 
 require (
-	github.com/davecgh/go-spew v1.1.0 // indirect
 	github.com/golang/protobuf v1.1.0
 	github.com/hashicorp/go-uuid v0.0.0-20180228145832-27454136f036 // indirect
 	github.com/jcmturner/gofork v0.0.0-20180107083740-2aebee971930 // indirect
 	github.com/pborman/getopt v0.0.0-20180729010549-6fdd0a2c7117
-	github.com/pmezard/go-difflib v1.0.0 // indirect
-	github.com/stretchr/testify v1.2.2
+	github.com/stretchr/testify v1.6.1
+	github.com/tj/assert v0.0.3
 	golang.org/x/crypto v0.0.0-20180723164146-c126467f60eb // indirect
 	golang.org/x/sync v0.0.0-20190911185100-cd5d95a43a6e // indirect
 	gopkg.in/jcmturner/aescts.v1 v1.0.1 // indirect

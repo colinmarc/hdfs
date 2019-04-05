@@ -2,6 +2,7 @@ module github.com/colinmarc/hdfs/v2
 
 require (
 	github.com/davecgh/go-spew v1.1.0 // indirect
+	github.com/gogo/protobuf v1.2.1
 	github.com/golang/protobuf v1.1.0
 	github.com/hashicorp/go-uuid v0.0.0-20180228145832-27454136f036 // indirect
 	github.com/jcmturner/gofork v0.0.0-20180107083740-2aebee971930 // indirect

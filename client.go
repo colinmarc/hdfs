@@ -9,6 +9,7 @@ import (
 	"os"
 	"os/user"
 	"strings"
+	"sync"
 
 	"github.com/colinmarc/hdfs/v2/hadoopconf"
 	hdfs "github.com/colinmarc/hdfs/v2/internal/protocol/hadoop_hdfs"
@@ -21,6 +22,8 @@ type Client struct {
 	namenode *rpc.NamenodeConnection
 	defaults *hdfs.FsServerDefaultsProto
 	options  ClientOptions
+
+	mu sync.Mutex
 }
 
 // ClientOptions represents the configurable options for a client.
@@ -233,6 +236,8 @@ func (c *Client) CopyToRemote(src string, dst string) error {
 }
 
 func (c *Client) fetchDefaults() (*hdfs.FsServerDefaultsProto, error) {
+	c.mu.Lock()
+	defer c.mu.Unlock()
 	if c.defaults != nil {
 		return c.defaults, nil
 	}

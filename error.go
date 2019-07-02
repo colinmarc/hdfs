@@ -9,6 +9,7 @@ const (
 	fileNotFoundException      = "java.io.FileNotFoundException"
 	permissionDeniedException  = "org.apache.hadoop.security.AccessControlException"
 	pathIsNotEmptyDirException = "org.apache.hadoop.fs.PathIsNotEmptyDirectoryException"
+	FileAlreadyExistsException = "org.apache.hadoop.fs.FileAlreadyExistsException"
 )
 
 // Error represents a remote java exception from an HDFS namenode or datanode.
@@ -38,6 +39,8 @@ func interpretException(err error) error {
 		return os.ErrPermission
 	case pathIsNotEmptyDirException:
 		return syscall.ENOTEMPTY
+	case FileAlreadyExistsException:
+		return os.ErrExist
 	default:
 		return err
 	}

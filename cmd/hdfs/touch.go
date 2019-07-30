@@ -1,11 +1,12 @@
 package main
 
 import (
+	"github.com/colinmarc/hdfs/v2"
 	"os"
 	"time"
 )
 
-func touch(paths []string, noCreate bool) {
+func touch(paths []string, noCreate bool, accessTime bool, modifyTime bool) {
 	paths, nn, err := normalizePaths(paths)
 	if err != nil {
 		fatal(err)
@@ -25,18 +26,25 @@ func touch(paths []string, noCreate bool) {
 			fatal(&os.PathError{"mkdir", p, os.ErrNotExist})
 		}
 
-		_, err := client.Stat(p)
+		finfo, err := client.Stat(p)
 		exists := !os.IsNotExist(err)
 		if (err != nil && exists) || (!exists && noCreate) {
 			fatal(err)
 		}
 
 		if exists {
-			now := time.Now()
-			mtime := now
-			atime := now
-
-			err = client.Chtimes(p, mtime, atime)
+			if accessTime {
+				now := time.Now()
+				atime := now
+				err = client.Chtimes(p, atime, finfo.ModTime())
+			}
+			if modifyTime {
+				now := time.Now()
+				mtime := now
+				hdfsFileInfo := finfo.(*hdfs.FileInfo)
+				atime := hdfsFileInfo.AccessTime()
+				err = client.Chtimes(p, atime, mtime)
+			}
 		} else {
 			err = client.CreateEmptyFile(p)
 		}

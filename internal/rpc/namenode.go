@@ -8,7 +8,7 @@ import (
 	"sync"
 	"time"
 
-	hadoop "github.com/colinmarc/hdfs/v2/internal/protocol/hadoop_common"
+	hadoop "github.com/colinmarc/hdfs/internal/protocol/hadoop_common"
 	"github.com/golang/protobuf/proto"
 	krb "gopkg.in/jcmturner/gokrb5.v5/client"
 )

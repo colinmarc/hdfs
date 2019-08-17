@@ -6,7 +6,7 @@ package hadoop_hdfs
 import proto "github.com/golang/protobuf/proto"
 import fmt "fmt"
 import math "math"
-import hadoop_common "github.com/colinmarc/hdfs/v2/internal/protocol/hadoop_common"
+import hadoop_common "github.com/colinmarc/hdfs/internal/protocol/hadoop_common"
 
 // Reference imports to suppress errors if they are not otherwise used.
 var _ = proto.Marshal

@@ -3,7 +3,7 @@ package rpc
 import (
 	"fmt"
 
-	hadoop "github.com/colinmarc/hdfs/v2/internal/protocol/hadoop_common"
+	hadoop "github.com/colinmarc/hdfs/internal/protocol/hadoop_common"
 )
 
 // NamenodeError represents an interepreted error from the Namenode, including

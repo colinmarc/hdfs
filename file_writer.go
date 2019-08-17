@@ -5,8 +5,8 @@ import (
 	"os"
 	"time"
 
-	hdfs "github.com/colinmarc/hdfs/v2/internal/protocol/hadoop_hdfs"
-	"github.com/colinmarc/hdfs/v2/internal/rpc"
+	hdfs "github.com/colinmarc/hdfs/internal/protocol/hadoop_hdfs"
+	"github.com/colinmarc/hdfs/internal/rpc"
 	"github.com/golang/protobuf/proto"
 )
 

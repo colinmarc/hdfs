@@ -7,9 +7,9 @@ import (
 	"regexp"
 
 	hadoop "github.com/colinmarc/hdfs/v2/internal/protocol/hadoop_common"
-	"gopkg.in/jcmturner/gokrb5.v5/gssapi"
-	"gopkg.in/jcmturner/gokrb5.v5/iana/keyusage"
-	krbtypes "gopkg.in/jcmturner/gokrb5.v5/types"
+	"gopkg.in/jcmturner/gokrb5.v7/gssapi"
+	"gopkg.in/jcmturner/gokrb5.v7/iana/keyusage"
+	krbtypes "gopkg.in/jcmturner/gokrb5.v7/types"
 )
 
 const saslRpcCallId = -33
@@ -42,14 +42,22 @@ func (c *NamenodeConnection) doKerberosHandshake() error {
 	}
 
 	// Get a ticket from Kerberos, and send the initial token to the namenode.
+	err = c.kerberosClient.Login()
+	if err != nil {
+		return err
+	}
 	token, sessionKey, err := c.getKerberosTicket()
 	if err != nil {
 		return err
 	}
 
+	bToken, err := token.Marshal()
+	if err != nil {
+		return err
+	}
 	err = c.writeSaslRequest(&hadoop.RpcSaslProto{
 		State: hadoop.RpcSaslProto_INITIATE.Enum(),
-		Token: token.MechToken,
+		Token: bToken,
 		Auths: []*hadoop.RpcSaslProto_SaslAuth{mechanism},
 	})
 
@@ -69,7 +77,7 @@ func (c *NamenodeConnection) doKerberosHandshake() error {
 		return err
 	}
 
-	_, err = nnToken.VerifyCheckSum(sessionKey, keyusage.GSSAPI_ACCEPTOR_SEAL)
+	_, err = nnToken.Verify(sessionKey, keyusage.GSSAPI_ACCEPTOR_SEAL)
 	if err != nil {
 		return fmt.Errorf("invalid server token: %s", err)
 	}
@@ -77,7 +85,7 @@ func (c *NamenodeConnection) doKerberosHandshake() error {
 	// Sign the payload and send it back to the namenode.
 	// TODO: Make sure we can support what is required based on what's in the
 	// payload.
-	signed, err := gssapi.NewInitiatorToken(nnToken.Payload, sessionKey)
+	signed, err := gssapi.NewInitiatorMICToken(nnToken.Payload, sessionKey)
 	if err != nil {
 		return err
 	}
@@ -125,16 +133,17 @@ func (c *NamenodeConnection) readSaslResponse(expectedState hadoop.RpcSaslProto_
 
 // getKerberosTicket returns an initial kerberos negotiation token and the
 // paired session key, along with an error if any occured.
-func (c *NamenodeConnection) getKerberosTicket() (gssapi.NegTokenInit, krbtypes.EncryptionKey, error) {
+func (c *NamenodeConnection) getKerberosTicket() (*gssapi.MICToken, krbtypes.EncryptionKey, error) {
 	host, _, _ := net.SplitHostPort(c.host.address)
 	spn := replaceSPNHostWildcard(c.kerberosServicePrincipleName, host)
 
 	ticket, key, err := c.kerberosClient.GetServiceTicket(spn)
 	if err != nil {
-		return gssapi.NegTokenInit{}, key, err
+		return &gssapi.MICToken{}, key, err
 	}
-
-	token, err := gssapi.NewNegTokenInitKrb5(*c.kerberosClient.Credentials, ticket, key)
+	token, err := gssapi.NewInitiatorMICToken(ticket.DecryptedEncPart.Flags.Bytes, key)
+	// token, err := gssapi.NewInitiatorMICToken(*c.kerberosClient.Credentials., key)
+	// token, err := gssapi.NewNegTokenInitKrb5(*c.kerberosClient.Credentials, ticket, key)
 	return token, key, err
 }
 

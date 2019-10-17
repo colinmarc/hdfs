@@ -11,6 +11,7 @@ require (
 	golang.org/x/crypto v0.0.0-20180723164146-c126467f60eb // indirect
 	gopkg.in/jcmturner/aescts.v1 v1.0.1 // indirect
 	gopkg.in/jcmturner/dnsutils.v1 v1.0.1 // indirect
-	gopkg.in/jcmturner/gokrb5.v5 v5.3.0
+	gopkg.in/jcmturner/gokrb5.v7 v7.3.0
 	gopkg.in/jcmturner/rpc.v0 v0.0.2 // indirect
+	gopkg.in/jcmturner/rpc.v1 v1.1.0 // indirect
 )

@@ -10,7 +10,7 @@ import (
 
 	hadoop "github.com/colinmarc/hdfs/v2/internal/protocol/hadoop_common"
 	"github.com/golang/protobuf/proto"
-	krb "gopkg.in/jcmturner/gokrb5.v5/client"
+	krb "gopkg.in/jcmturner/gokrb5.v7/client"
 )
 
 const (
@@ -91,8 +91,8 @@ func NewNamenodeConnection(options NamenodeConnectionOptions) (*NamenodeConnecti
 	if user == "" {
 		if options.KerberosClient != nil {
 			creds := options.KerberosClient.Credentials
-			user = creds.Username
-			realm = creds.Realm
+			user = creds.UserName()
+			realm = creds.Realm()
 		} else {
 			return nil, errors.New("user not specified")
 		}

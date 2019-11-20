@@ -5,6 +5,11 @@ import (
 	"github.com/colinmarc/hdfs/rpc"
 )
 
+// AllowSnapshots marks a directory as available for snapshots.
+// This is required to make a snapshot of a directory as snapshottable
+// directories work as a whitelist.
+//
+// This requires superuser privileges.
 func (c *Client) AllowSnapshots(dir string) error {
 	allowSnapshotReq := &hdfs.AllowSnapshotRequestProto{SnapshotRoot: &dir}
 	allowSnapshotRes := &hdfs.AllowSnapshotResponseProto{}
@@ -20,6 +25,9 @@ func (c *Client) AllowSnapshots(dir string) error {
 	return nil
 }
 
+// DisallowSnapshots marks a directory as unavailable for snapshots.
+//
+// This requires superuser privileges.
 func (c *Client) DisallowSnapshots(dir string) error {
 	disallowSnapshotReq := &hdfs.DisallowSnapshotRequestProto{SnapshotRoot: &dir}
 	disallowSnapshotRes := &hdfs.DisallowSnapshotResponseProto{}
@@ -35,6 +43,10 @@ func (c *Client) DisallowSnapshots(dir string) error {
 	return nil
 }
 
+// CreateSnapshots creates a snapshot of a given directory and name, and
+// returns the path containing the snapshot. Snapshot names must be unique.
+//
+// This requires superuser privileges.
 func (c *Client) CreateSnapshot(dir, name string) (string, error) {
 	allowSnapshotReq := &hdfs.CreateSnapshotRequestProto{
 		SnapshotRoot: &dir,
@@ -53,6 +65,9 @@ func (c *Client) CreateSnapshot(dir, name string) (string, error) {
 	return allowSnapshotRes.GetSnapshotPath(), nil
 }
 
+// CreateSnapshots deletes a snapshot with a given directory and name.
+//
+// This requires superuser privileges.
 func (c *Client) DeleteSnapshot(dir, name string) error {
 	allowSnapshotReq := &hdfs.DeleteSnapshotRequestProto{
 		SnapshotRoot: &dir,

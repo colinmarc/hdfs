@@ -11,7 +11,7 @@ import (
 )
 
 func writeAndVerifyTestFile(t *testing.T, snapshotDir, filepath string) {
-	c := getClient(t)
+	c := getClientForSuperUser(t)
 
 	baleet(t, filepath)
 	mkdirp(t, snapshotDir)
@@ -40,12 +40,12 @@ func writeAndVerifyTestFile(t *testing.T, snapshotDir, filepath string) {
 }
 
 func baleetSnapshot(t *testing.T, dir, snapshot string) {
-	c := getClient(t)
+	c := getClientForSuperUser(t)
 	c.DeleteSnapshot(dir, snapshot)
 }
 
 func TestAllowSnapshot(t *testing.T) {
-	c := getClient(t)
+	c := getClientForSuperUser(t)
 	baleetSnapshot(t, "/_test/allowsnaps", "snap")
 	mkdirp(t, "/_test/allowsnaps")
 	err := c.AllowSnapshots("/_test/allowsnaps")
@@ -56,7 +56,7 @@ func TestAllowSnapshot(t *testing.T) {
 }
 
 func TestDisallowSnapshot(t *testing.T) {
-	c := getClient(t)
+	c := getClientForSuperUser(t)
 	baleetSnapshot(t, "/_test/allowsnaps", "snap")
 	mkdirp(t, "/_test/allowsnaps")
 	err := c.DisallowSnapshots("/_test/allowsnaps")
@@ -71,7 +71,7 @@ func TestSnapshot(t *testing.T) {
 	const filename = "file_to_restore.txt"
 	const filepath = "/_test/snapshot/file_to_restore.txt"
 
-	c := getClient(t)
+	c := getClientForSuperUser(t)
 	baleetSnapshot(t, dir, name)
 
 	writeAndVerifyTestFile(t, dir, filepath)
@@ -94,7 +94,7 @@ func TestSnapshot(t *testing.T) {
 }
 
 func TestDeleteSnapshot(t *testing.T) {
-	c := getClient(t)
+	c := getClientForSuperUser(t)
 	baleetSnapshot(t, "/_test/deletesnaps", "snap")
 	mkdirp(t, "/_test/deletesnaps")
 	err := c.AllowSnapshots("/_test/deletesnaps")

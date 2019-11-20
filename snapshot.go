@@ -1,8 +1,7 @@
 package hdfs
 
 import (
-	hdfs "github.com/colinmarc/hdfs/protocol/hadoop_hdfs"
-	"github.com/colinmarc/hdfs/rpc"
+	hdfs "github.com/colinmarc/hdfs/v2/internal/protocol/hadoop_hdfs"
 )
 
 // AllowSnapshots marks a directory as available for snapshots.
@@ -16,10 +15,7 @@ func (c *Client) AllowSnapshots(dir string) error {
 
 	err := c.namenode.Execute("allowSnapshot", allowSnapshotReq, allowSnapshotRes)
 	if err != nil {
-		if nnErr, ok := err.(*rpc.NamenodeError); ok {
-			err = interpretException(nnErr.Exception, err)
-		}
-		return err
+		return interpretException(err)
 	}
 
 	return nil
@@ -34,10 +30,7 @@ func (c *Client) DisallowSnapshots(dir string) error {
 
 	err := c.namenode.Execute("disallowSnapshot", disallowSnapshotReq, disallowSnapshotRes)
 	if err != nil {
-		if nnErr, ok := err.(*rpc.NamenodeError); ok {
-			err = interpretException(nnErr.Exception, err)
-		}
-		return err
+		return interpretException(err)
 	}
 
 	return nil
@@ -56,10 +49,7 @@ func (c *Client) CreateSnapshot(dir, name string) (string, error) {
 
 	err := c.namenode.Execute("createSnapshot", allowSnapshotReq, allowSnapshotRes)
 	if err != nil {
-		if nnErr, ok := err.(*rpc.NamenodeError); ok {
-			err = interpretException(nnErr.Exception, err)
-		}
-		return "", err
+		return "", interpretException(err)
 	}
 
 	return allowSnapshotRes.GetSnapshotPath(), nil
@@ -77,11 +67,7 @@ func (c *Client) DeleteSnapshot(dir, name string) error {
 
 	err := c.namenode.Execute("deleteSnapshot", allowSnapshotReq, allowSnapshotRes)
 	if err != nil {
-		if nnErr, ok := err.(*rpc.NamenodeError); ok {
-			err = interpretException(nnErr.Exception, err)
-		}
-		return err
+		return interpretException(err)
 	}
-
 	return nil
 }

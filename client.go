@@ -16,7 +16,7 @@ import (
 	krb "gopkg.in/jcmturner/gokrb5.v7/client"
 )
 
-// A Client represents a connection to an HDFS cluster
+// Client represents a connection to an HDFS cluster.
 type Client struct {
 	namenode *rpc.NamenodeConnection
 	defaults *hdfs.FsServerDefaultsProto

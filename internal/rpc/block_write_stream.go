@@ -9,6 +9,8 @@ import (
 	"hash/crc32"
 	"io"
 	"math"
+	"sync"
+	"time"
 
 	hdfs "github.com/colinmarc/hdfs/v2/internal/protocol/hadoop_hdfs"
 	"github.com/golang/protobuf/proto"
@@ -18,7 +20,31 @@ const (
 	outboundPacketSize = 65536
 	outboundChunkSize  = 512
 	maxPacketsInQueue  = 5
+	heartbeatSeqno     = -1
+	heartbeatInterval  = 30 * time.Second
 )
+
+// heartbeatPacket is sent every 30 seconds to keep the stream alive. It's
+// always the same.
+var heartbeatPacket []byte
+
+func init() {
+	b, err := proto.Marshal(&hdfs.PacketHeaderProto{
+		OffsetInBlock:     proto.Int64(0),
+		Seqno:             proto.Int64(heartbeatSeqno),
+		LastPacketInBlock: proto.Bool(false),
+		DataLen:           proto.Int32(0),
+	})
+
+	if err != nil {
+		panic(err)
+	}
+
+	header := make([]byte, 6)
+	binary.BigEndian.PutUint32(header, 4)
+	binary.BigEndian.PutUint16(header[4:], uint16(len(b)))
+	heartbeatPacket = append(header, b...)
+}
 
 // blockWriteStream writes data out to a datanode, and reads acks back.
 type blockWriteStream struct {
@@ -35,6 +61,9 @@ type blockWriteStream struct {
 	ackError        error
 	acksDone        chan struct{}
 	lastPacketSeqno int
+
+	heartbeats chan struct{}
+	writeLock  sync.Mutex
 }
 
 type outboundPacket struct {
@@ -59,12 +88,16 @@ var ErrInvalidSeqno = errors.New("invalid ack sequence number")
 
 func newBlockWriteStream(conn io.ReadWriter, offset int64) *blockWriteStream {
 	s := &blockWriteStream{
-		conn:     conn,
-		offset:   offset,
-		seqno:    1,
-		packets:  make(chan outboundPacket, maxPacketsInQueue),
-		acksDone: make(chan struct{}),
+		conn:       conn,
+		offset:     offset,
+		seqno:      1,
+		packets:    make(chan outboundPacket, maxPacketsInQueue),
+		acksDone:   make(chan struct{}),
+		heartbeats: make(chan struct{}),
 	}
+
+	// Send idle heartbeats every 30 seconds.
+	go s.writeHeartbeats()
 
 	// Ack packets in the background.
 	go func() {
@@ -111,12 +144,14 @@ func (s *blockWriteStream) finish() error {
 	}
 	s.closed = true
 
+	// Stop sending heartbeats.
+	close(s.heartbeats)
+
 	if err := s.getAckError(); err != nil {
 		return err
 	}
 
-	err := s.flush(true)
-	if err != nil {
+	if err := s.flush(true); err != nil {
 		return err
 	}
 
@@ -129,13 +164,14 @@ func (s *blockWriteStream) finish() error {
 		data:      []byte{},
 	}
 	s.packets <- lastPacket
-	err = s.writePacket(lastPacket)
+
+	err := s.writePacket(lastPacket)
 	if err != nil {
 		return err
 	}
-	close(s.packets)
 
 	// Wait for the ack loop to finish.
+	close(s.packets)
 	<-s.acksDone
 
 	// Check one more time for any ack errors.
@@ -150,9 +186,8 @@ func (s *blockWriteStream) finish() error {
 // the datanode. We keep around a reference to the packet, in case the ack
 // fails, and we need to send it again later.
 func (s *blockWriteStream) flush(force bool) error {
-	if err := s.getAckError(); err != nil {
-		return err
-	}
+	s.writeLock.Lock()
+	defer s.writeLock.Unlock()
 
 	for s.buf.Len() > 0 && (force || s.buf.Len() >= outboundPacketSize) {
 		packet := s.makePacket()
@@ -217,6 +252,7 @@ func (s *blockWriteStream) makePacket() outboundPacket {
 func (s *blockWriteStream) ackPackets() {
 	reader := bufio.NewReader(s.conn)
 
+Acks:
 	for {
 		p, ok := <-s.packets
 		if !ok {
@@ -224,26 +260,34 @@ func (s *blockWriteStream) ackPackets() {
 			return
 		}
 
-		// If we fail to read the ack at all, that counts as a failure from the
-		// first datanode (the one we're connected to).
-		ack := &hdfs.PipelineAckProto{}
-		err := readPrefixedMessage(reader, ack)
-		if err != nil {
-			s.ackError = err
-			break
-		}
+		var seqno int
+		for {
+			// If we fail to read the ack at all, that counts as a failure from the
+			// first datanode (the one we're connected to).
+			ack := &hdfs.PipelineAckProto{}
+			err := readPrefixedMessage(reader, ack)
+			if err != nil {
+				s.ackError = err
+				break Acks
+			}
 
-		seqno := int(ack.GetSeqno())
-		for i, status := range ack.GetReply() {
-			if status != hdfs.Status_SUCCESS {
-				s.ackError = ackError{status: status, seqno: seqno, pipelineIndex: i}
+			seqno = int(ack.GetSeqno())
+
+			for i, status := range ack.GetReply() {
+				if status != hdfs.Status_SUCCESS {
+					s.ackError = ackError{status: status, seqno: seqno, pipelineIndex: i}
+					break Acks
+				}
+			}
+
+			if seqno != heartbeatSeqno {
 				break
 			}
 		}
 
 		if seqno != p.seqno {
 			s.ackError = ErrInvalidSeqno
-			break
+			break Acks
 		}
 	}
 
@@ -314,4 +358,20 @@ func (s *blockWriteStream) writePacket(p outboundPacket) error {
 	}
 
 	return nil
+}
+
+func (s *blockWriteStream) writeHeartbeats() {
+	ticker := time.NewTicker(heartbeatInterval)
+	defer ticker.Stop()
+
+	for {
+		select {
+		case <-ticker.C:
+			s.writeLock.Lock()
+			s.conn.Write(heartbeatPacket)
+			s.writeLock.Unlock()
+		case <-s.heartbeats:
+			return
+		}
+	}
 }

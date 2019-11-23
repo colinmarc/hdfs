@@ -13,8 +13,10 @@ import (
 // directory in HDFS.
 type FileInfo struct {
 	name   string
-	status *hdfs.HdfsFileStatusProto
+	status *FileStatus
 }
+
+type FileStatus = hdfs.HdfsFileStatusProto
 
 // Stat returns an os.FileInfo describing the named file or directory.
 func (c *Client) Stat(name string) (os.FileInfo, error) {

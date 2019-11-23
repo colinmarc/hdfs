@@ -16,6 +16,22 @@ import (
 
 const abcException = "org.apache.hadoop.hdfs.protocol.AlreadyBeingCreatedException"
 
+func appendIgnoreABC(t *testing.T, client *Client, path string) (*FileWriter, error) {
+	fw, err := client.Append(path)
+
+	// This represents a bug in the HDFS append implementation, as far as I can
+	// tell.
+	if pathErr, ok := err.(*os.PathError); ok {
+		if nnErr, ok := pathErr.Err.(Error); ok && nnErr.Exception() == abcException {
+			t.Log("Ignoring AlreadyBeingCreatedException from append once")
+
+			return client.Append(path)
+		}
+	}
+
+	return fw, err
+}
+
 func TestFileWrite(t *testing.T) {
 	client := getClient(t)
 
@@ -281,7 +297,7 @@ func TestFileAppend(t *testing.T) {
 	err = writer.Close()
 	require.NoError(t, err)
 
-	writer, err = client.Append("/_test/append/1.txt")
+	writer, err = appendIgnoreABC(t, client, "/_test/append/1.txt")
 	require.NoError(t, err)
 
 	n, err = writer.Write([]byte("foo"))
@@ -310,7 +326,7 @@ func TestFileAppendEmptyFile(t *testing.T) {
 	err := client.CreateEmptyFile("/_test/append/2.txt")
 	require.NoError(t, err)
 
-	writer, err := client.Append("/_test/append/2.txt")
+	writer, err := appendIgnoreABC(t, client, "/_test/append/2.txt")
 	require.NoError(t, err)
 
 	n, err := writer.Write([]byte("foo"))
@@ -350,7 +366,7 @@ func TestFileAppendLastBlockFull(t *testing.T) {
 	err = writer.Close()
 	require.NoError(t, err)
 
-	writer, err = client.Append("/_test/append/3.txt")
+	writer, err = appendIgnoreABC(t, client, "/_test/append/3.txt")
 	require.NoError(t, err)
 
 	n, err := writer.Write([]byte("\nfoo"))
@@ -392,17 +408,7 @@ func TestFileAppendRepeatedly(t *testing.T) {
 
 	expected := "foo"
 	for i := 0; i < 20; i++ {
-		writer, err = client.Append("/_test/append/4.txt")
-
-		// This represents a bug in the HDFS append implementation, as far as I can tell,
-		// and is safe to skip.
-		if pathErr, ok := err.(*os.PathError); ok {
-			if nnErr, ok := pathErr.Err.(Error); ok && nnErr.Exception() == abcException {
-				t.Log("Ignoring AlreadyBeingCreatedException from append")
-				continue
-			}
-		}
-
+		writer, err = appendIgnoreABC(t, client, "/_test/append/4.txt")
 		require.NoError(t, err)
 
 		s := strings.Repeat("b", rand.Intn(1024)) + "\n"

@@ -9,6 +9,7 @@ import (
 	"time"
 
 	hadoop "github.com/colinmarc/hdfs/v2/internal/protocol/hadoop_common"
+	hdfs "github.com/colinmarc/hdfs/v2/internal/protocol/hadoop_hdfs"
 	"github.com/golang/protobuf/proto"
 	krb "gopkg.in/jcmturner/gokrb5.v7/client"
 )
@@ -24,7 +25,10 @@ const (
 	standbyExceptionClass      = "org.apache.hadoop.ipc.StandbyException"
 )
 
-const backoffDuration = time.Second * 5
+const (
+	backoffDuration    = 5 * time.Second
+	leaseRenewInterval = 1 * time.Second
+)
 
 // NamenodeConnection represents an open connection to a namenode.
 type NamenodeConnection struct {
@@ -44,6 +48,7 @@ type NamenodeConnection struct {
 	hostList []*namenodeHost
 
 	reqLock sync.Mutex
+	done    chan struct{}
 }
 
 // NamenodeConnectionOptions represents the configurable options available
@@ -112,12 +117,17 @@ func NewNamenodeConnection(options NamenodeConnectionOptions) (*NamenodeConnecti
 
 		dialFunc: options.DialFunc,
 		hostList: hostList,
+
+		done: make(chan struct{}),
 	}
 
 	err := c.resolveConnection()
 	if err != nil {
 		return nil, err
 	}
+
+	// Periodically renew any file leases.
+	go c.renewLeases()
 
 	return c, nil
 }
@@ -209,6 +219,10 @@ func (c *NamenodeConnection) Execute(method string, req proto.Message, resp prot
 
 	return nil
 }
+
+// addLease increases the lease counter on the namenode. As long as the lease
+// counter is greater than zero, all leases will automatically be renewed every
+//
 
 // RPC definitions
 
@@ -322,11 +336,32 @@ func (c *NamenodeConnection) doNamenodeHandshake() error {
 	return err
 }
 
+// renewLeases periodically renews all leases for the connection.
+func (c *NamenodeConnection) renewLeases() {
+	ticker := time.NewTicker(leaseRenewInterval)
+	defer ticker.Stop()
+
+	select {
+	case <-ticker.C:
+		req := &hdfs.RenewLeaseRequestProto{ClientName: proto.String(c.ClientName)}
+		resp := &hdfs.RenewLeaseResponseProto{}
+
+		// Ignore any errors.
+		c.Execute("renewLease", req, resp)
+	case <-c.done:
+		return
+	}
+}
+
 // Close terminates all underlying socket connections to remote server.
 func (c *NamenodeConnection) Close() error {
+	c.reqLock.Lock()
+
 	if c.conn != nil {
 		return c.conn.Close()
 	}
+
+	close(c.done)
 	return nil
 }
 

@@ -16,7 +16,9 @@ import (
 	krb "gopkg.in/jcmturner/gokrb5.v7/client"
 )
 
-// Client represents a connection to an HDFS cluster.
+// Client represents a connection to an HDFS cluster. A Client will
+// automatically maintain leases for any open files, preventing other clients
+// from modifying them, until Close is called.
 type Client struct {
 	namenode *rpc.NamenodeConnection
 	defaults *hdfs.FsServerDefaultsProto

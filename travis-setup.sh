@@ -7,6 +7,9 @@ case $1 in
   cdh5)
     ./travis-setup-cdh5.sh
     ;;
+  cdh6)
+    ./travis-setup-cdh6.sh
+    ;;
   hdp2)
     ./travis-setup-hdp2.sh
     ;;

@@ -12,7 +12,7 @@ env:
 before_install:
 - export GO111MODULE=on # Travis installs into $GOPATH/src, which disables module support by default.
 install:
-- git clone https://github.com/sstephenson/bats $HOME/bats
+- test -d $HOME/bats || git clone https://github.com/sstephenson/bats $HOME/bats
 - mkdir -p $HOME/bats/build
 - "$HOME/bats/install.sh $HOME/bats/build"
 - export PATH="$PATH:$HOME/bats/build/bin"

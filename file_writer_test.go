@@ -17,19 +17,20 @@ import (
 const abcException = "org.apache.hadoop.hdfs.protocol.AlreadyBeingCreatedException"
 
 func appendIgnoreABC(t *testing.T, client *Client, path string) (*FileWriter, error) {
-	fw, err := client.Append(path)
-
 	// This represents a bug in the HDFS append implementation, as far as I can
 	// tell.
-	if pathErr, ok := err.(*os.PathError); ok {
-		if nnErr, ok := pathErr.Err.(Error); ok && nnErr.Exception() == abcException {
-			t.Log("Ignoring AlreadyBeingCreatedException from append once")
+	for {
+		fw, err := client.Append(path)
 
-			return client.Append(path)
+		if pathErr, ok := err.(*os.PathError); ok {
+			if nnErr, ok := pathErr.Err.(Error); ok && nnErr.Exception() == abcException {
+				t.Log("Ignoring AlreadyBeingCreatedException from append")
+				continue
+			}
 		}
-	}
 
-	return fw, err
+		return fw, err
+	}
 }
 
 func TestFileWrite(t *testing.T) {

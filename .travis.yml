@@ -35,6 +35,6 @@ deploy:
     all_branches: true
     condition: $PLATFORM = hdp2
 cache:
-- "$HOME/bats"
-- "$HOME/.cache/go-build"
-- "s$HOME/gopath/pkg/mod"
+- $HOME/bats
+- $HOME/.cache/go-build
+- $GOPATH/pkg/mod

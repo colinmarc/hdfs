@@ -3,7 +3,7 @@ language: go
 go_import_path: github.com/colinmarc/hdfs
 go: 1.x
 env:
-- PLATFORM=hdp3
+- PLATFORM=hdp2
 - PLATFORM=cdh5
 - PLATFORM=cdh6
 - PLATFORM=cdh6 KERBEROS=true RPC_PROTECTION=authentication

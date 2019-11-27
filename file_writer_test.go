@@ -60,6 +60,8 @@ func TestFileWrite(t *testing.T) {
 }
 
 func TestFileWriteLeaseRenewal(t *testing.T) {
+	t.Skip()
+
 	client := getClient(t)
 
 	baleet(t, "/_test/create/1.txt")

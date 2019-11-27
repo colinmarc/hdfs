@@ -58,11 +58,12 @@ func TestFileWrite(t *testing.T) {
 	assert.Equal(t, "foobar", string(bytes))
 }
 
-func TestFileWriteAfterIdleTime(t *testing.T) {
+func TestFileWriteLeaseRenewal(t *testing.T) {
 	client := getClient(t)
 
 	baleet(t, "/_test/create/1.txt")
 	mkdirp(t, "/_test/create")
+
 	writer, err := client.Create("/_test/create/1.txt")
 	require.NoError(t, err)
 
@@ -70,8 +71,8 @@ func TestFileWriteAfterIdleTime(t *testing.T) {
 	require.NoError(t, err)
 	assert.Equal(t, 3, n)
 
-	//Check that write after idle time doesn't fail
-	time.Sleep(90 * time.Second)
+	// Sleep long enough for the lease to expire.
+	time.Sleep(95 * time.Second)
 
 	n, err = writer.Write([]byte("bar"))
 	require.NoError(t, err)

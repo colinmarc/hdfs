@@ -285,27 +285,32 @@ func (c *NamenodeConnection) renewLeases() {
 	ticker := time.NewTicker(leaseRenewInterval)
 	defer ticker.Stop()
 
-	select {
-	case <-ticker.C:
-		req := &hdfs.RenewLeaseRequestProto{ClientName: proto.String(c.ClientName)}
-		resp := &hdfs.RenewLeaseResponseProto{}
+	for {
+		select {
+		case <-ticker.C:
+			req := &hdfs.RenewLeaseRequestProto{ClientName: proto.String(c.ClientName)}
+			resp := &hdfs.RenewLeaseResponseProto{}
 
-		// Ignore any errors.
-		c.Execute("renewLease", req, resp)
-	case <-c.done:
-		return
+			// Ignore any errors.
+			c.Execute("renewLease", req, resp)
+		case <-c.done:
+			return
+		}
 	}
 }
 
 // Close terminates all underlying socket connections to remote server.
 func (c *NamenodeConnection) Close() error {
+	close(c.done)
+
+	// Ensure that we're not concurrently renewing leases.
 	c.reqLock.Lock()
+	defer c.reqLock.Unlock()
 
 	if c.conn != nil {
 		return c.conn.Close()
 	}
 
-	close(c.done)
 	return nil
 }
 

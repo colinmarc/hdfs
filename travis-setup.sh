@@ -11,7 +11,7 @@ case $1 in
     ./travis-setup-cdh6.sh
     ;;
   hdp2)
-    ./travis-setup-hdp2.sh
+    ./travis-setup-hdp3.sh
     ;;
   *)
     echo "Uknown platform: $PLATFORM"

@@ -5,7 +5,7 @@ set -e
 UBUNTU_VERSION=$(lsb_release -r | awk '{print substr($2,0,2)}')
 
 sudo tee /etc/apt/sources.list.d/hdp.list <<EOF
-deb http://public-repo-1.hortonworks.com/HDP/ubuntu$UBUNTU_VERSION/2.x/updates/2.6.5.0 HDP main
+deb http://public-repo-1.hortonworks.com/HDP/ubuntu16/3.x/updates/3.1.0.0 HDP main
 EOF
 
 sudo apt-get update

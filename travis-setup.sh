@@ -10,7 +10,7 @@ case $1 in
   cdh6)
     ./travis-setup-cdh6.sh
     ;;
-  hdp2)
+  hdp3)
     ./travis-setup-hdp3.sh
     ;;
   *)

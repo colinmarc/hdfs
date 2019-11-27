@@ -285,15 +285,21 @@ func (c *NamenodeConnection) renewLeases() {
 	ticker := time.NewTicker(leaseRenewInterval)
 	defer ticker.Stop()
 
-	select {
-	case <-ticker.C:
-		req := &hdfs.RenewLeaseRequestProto{ClientName: proto.String(c.ClientName)}
-		resp := &hdfs.RenewLeaseResponseProto{}
+	for {
+		select {
+		case <-ticker.C:
+			req := &hdfs.RenewLeaseRequestProto{ClientName: proto.String(c.ClientName)}
+			resp := &hdfs.RenewLeaseResponseProto{}
 
-		// Ignore any errors.
-		c.Execute("renewLease", req, resp)
-	case <-c.done:
-		return
+			// Ignore any errors.
+			err := c.Execute("renewLease", req, resp)
+			fmt.Println("Leese renewed")
+			if err != nil {
+				fmt.Printf("Error occured, %s\n", err.Error())
+			}
+		case <-c.done:
+			return
+		}
 	}
 }
 

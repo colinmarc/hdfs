@@ -23,7 +23,7 @@ hdfs: clean $(SOURCES)
 	go build -ldflags "-X main.version=$(TRAVIS_TAG)" ./cmd/hdfs
 
 test: hdfs
-	go test -v -race ./...
+	go test -v -race -timeout 30s ./...
 	bats ./cmd/hdfs/test/*.bats
 
 clean:

@@ -481,7 +481,7 @@ func TestFileAppendDeadline(t *testing.T) {
 	err = writer.Close()
 	require.NoError(t, err)
 
-	writer, err = client.Append("/_test/append/5.txt")
+	writer, err = appendIgnoreABC(t, client, "/_test/append/5.txt")
 	require.NoError(t, err)
 
 	writer.SetDeadline(time.Now().Add(100 * time.Millisecond))
@@ -513,7 +513,7 @@ func TestFileAppendDeadlineBefore(t *testing.T) {
 	err = writer.Close()
 	require.NoError(t, err)
 
-	writer, err = client.Append("/_test/append/6.txt")
+	writer, err = appendIgnoreABC(t, client, "/_test/append/6.txt")
 	require.NoError(t, err)
 
 	writer.SetDeadline(time.Now())

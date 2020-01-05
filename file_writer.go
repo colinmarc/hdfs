@@ -14,6 +14,8 @@ import (
 // Writer and Closer, and can only be used for writes. For reads, see
 // FileReader and Client.Open.
 type FileWriter struct {
+	io.WriteCloser
+
 	client      *Client
 	name        string
 	replication int

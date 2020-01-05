@@ -17,6 +17,8 @@ import (
 // io.Reader, io.ReaderAt, io.Seeker, and io.Closer, and can only be used for
 // reads. For writes, see FileWriter and Client.Create.
 type FileReader struct {
+	io.ReadCloser
+
 	client *Client
 	name   string
 	info   os.FileInfo

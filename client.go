@@ -251,6 +251,10 @@ func (c *Client) fetchDefaults() (*hdfs.FsServerDefaultsProto, error) {
 	return c.defaults, nil
 }
 
+func (c *Client) ServerDefaults() (*hdfs.FsServerDefaultsProto, error) {
+	return c.fetchDefaults()
+}
+
 // Close terminates all underlying socket connections to remote server.
 func (c *Client) Close() error {
 	return c.namenode.Close()

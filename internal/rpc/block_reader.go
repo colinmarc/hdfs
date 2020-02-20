@@ -117,6 +117,10 @@ func (br *BlockReader) Read(b []byte) (int, error) {
 
 // Close implements io.Closer.
 func (br *BlockReader) Close() error {
+	// Close() could be called on nil BlockReader
+	if br == nil {
+		return nil
+	}
 	br.closed = true
 	if br.conn != nil {
 		br.conn.Close()

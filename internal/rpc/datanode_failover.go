@@ -13,6 +13,7 @@ var datanodeFailuresLock sync.Mutex
 // in the context of a single operation on a single block.
 type datanodeFailover struct {
 	datanodes       []string
+	datanodesLock   sync.RWMutex
 	currentDatanode string
 	err             error
 }
@@ -41,6 +42,7 @@ func (df *datanodeFailover) next() string {
 	var picked = -1
 	var oldestFailure time.Time
 
+	df.datanodesLock.RLock()
 	for i, address := range df.datanodes {
 		datanodeFailuresLock.Lock()
 		failedAt, hasFailed := datanodeFailures[address]
@@ -54,6 +56,10 @@ func (df *datanodeFailover) next() string {
 			oldestFailure = failedAt
 		}
 	}
+	df.datanodesLock.RUnlock()
+
+	df.datanodesLock.Lock()
+	defer df.datanodesLock.Unlock()
 
 	address := df.datanodes[picked]
 	df.datanodes = append(df.datanodes[:picked], df.datanodes[picked+1:]...)
@@ -63,6 +69,9 @@ func (df *datanodeFailover) next() string {
 }
 
 func (df *datanodeFailover) numRemaining() int {
+	df.datanodesLock.RLock()
+	defer df.datanodesLock.RUnlock()
+
 	return len(df.datanodes)
 }
 

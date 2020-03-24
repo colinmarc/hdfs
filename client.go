@@ -72,11 +72,13 @@ type ClientOptions struct {
 
 // ClientOptionsFromConf attempts to load any relevant configuration options
 // from the given Hadoop configuration and create a ClientOptions struct
-// suitable for creating a Client. Currently this sets the following fields
-// on the resulting ClientOptions:
+// suitable for creating a Client for the given nameservice. Currently this
+// sets the following fields on the resulting ClientOptions:
 //
-//   // Determined by fs.defaultFS (or the deprecated fs.default.name), or
-//   // fields beginning with dfs.namenode.rpc-address.
+//   // Determined by the value of the property named
+//   // "dfs.namenode.rpc-address."+ns if using a non-HA federated
+//   // architecture, or "dfs.namenode.rpc-address."+ns+"."+nnid for each nnid
+//   // found in "dfs.ha.namenodes."+ns
 //   Addresses []string
 //
 //   // Determined by dfs.client.use.datanode.hostname.
@@ -95,14 +97,30 @@ type ClientOptions struct {
 // actually configured, you should check for whether KerberosClient is set in
 // the resulting ClientOptions before proceeding:
 //
-//   options := ClientOptionsFromConf(conf)
+//   options := ClientOptionsFromConf(conf, "mynameservice")
 //   if options.KerberosClient != nil {
 //      // Replace with a valid credentialed client.
 //      options.KerberosClient = getKerberosClient()
 //   }
-func ClientOptionsFromConf(conf hadoopconf.HadoopConf) ClientOptions {
-	options := ClientOptions{Addresses: conf.Namenodes()}
+func ClientOptionsFromConf(conf hadoopconf.HadoopConf, ns string) ClientOptions {
+	options := commonClientOptionsFromConf(conf)
+	options.Addresses = conf.Namenodes(ns)
+	return options
+}
 
+// DefaultClientOptionsFromConf behaves similarly to ClientOptionsFromConf
+// except it uses the nameservice defined in fs.defaultFS (or the deprecated
+// fs.default.name) for finding the namenode addresses. If both of these
+// properties are absent, then it uses the address defined by
+// dfs.namenode.rpc-address.
+func DefaultClientOptionsFromConf(conf hadoopconf.HadoopConf) ClientOptions {
+	options := commonClientOptionsFromConf(conf)
+	options.Addresses = conf.DefaultNamenodes()
+	return options
+}
+
+func commonClientOptionsFromConf(conf hadoopconf.HadoopConf) ClientOptions {
+	options := ClientOptions{}
 	options.UseDatanodeHostname = (conf["dfs.client.use.datanode.hostname"] == "true")
 
 	if strings.ToLower(conf["hadoop.security.authentication"]) == "kerberos" {
@@ -156,7 +174,7 @@ func NewClient(options ClientOptions) (*Client, error) {
 // (including the address(es) of the namenode(s), if an empty string is passed)
 // will be loaded from the Hadoop configuration present at HADOOP_CONF_DIR or
 // HADOOP_HOME, as specified by hadoopconf.LoadFromEnvironment and
-// ClientOptionsFromConf.
+// DefaultClientOptionsFromConf.
 //
 // Note, however, that New will not attempt any Kerberos authentication; use
 // NewClient if you need that.
@@ -166,7 +184,7 @@ func New(address string) (*Client, error) {
 		return nil, err
 	}
 
-	options := ClientOptionsFromConf(conf)
+	options := DefaultClientOptionsFromConf(conf)
 	if address != "" {
 		options.Addresses = strings.Split(address, ",")
 	}

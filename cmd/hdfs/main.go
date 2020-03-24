@@ -187,7 +187,7 @@ func getClient(namenode string) (*hdfs.Client, error) {
 		return nil, fmt.Errorf("Problem loading configuration: %s", err)
 	}
 
-	options := hdfs.ClientOptionsFromConf(conf)
+	options := hdfs.DefaultClientOptionsFromConf(conf)
 	if namenode != "" {
 		options.Addresses = []string{namenode}
 	}

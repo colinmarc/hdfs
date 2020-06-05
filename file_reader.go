@@ -187,14 +187,14 @@ func (f *FileReader) Read(b []byte) (int, error) {
 		}
 	}
 
-	if f.blockReader == nil {
-		err := f.getNewBlockReader()
-		if err != nil {
-			return 0, err
-		}
-	}
-
 	for {
+		if f.blockReader == nil {
+			err := f.getNewBlockReader()
+			if err != nil {
+				return 0, err
+			}
+		}
+
 		n, err := f.blockReader.Read(b)
 		f.offset += int64(n)
 
@@ -204,9 +204,12 @@ func (f *FileReader) Read(b []byte) (int, error) {
 			return n, err
 		} else if n > 0 {
 			return n, nil
-		} else {
-			f.blockReader.Close()
-			f.getNewBlockReader()
+		}
+
+		err = f.blockReader.Close()
+		f.blockReader = nil
+		if err != nil {
+			return n, err
 		}
 	}
 }

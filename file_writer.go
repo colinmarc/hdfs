@@ -1,6 +1,7 @@
 package hdfs
 
 import (
+	"errors"
 	"io"
 	"os"
 	"time"
@@ -231,7 +232,10 @@ func (f *FileWriter) Close() error {
 
 	err := f.client.namenode.Execute("complete", completeReq, completeResp)
 	if err != nil {
-		return &os.PathError{"create", f.name, err}
+		return &os.PathError{Op: "close", Path: f.name, Err: err}
+	}
+	if *completeResp.Result != true {
+		return &os.PathError{Op: "close", Path: f.name, Err: errors.New("incomplete write")}
 	}
 
 	return nil

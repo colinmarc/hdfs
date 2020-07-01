@@ -6,9 +6,11 @@ env:
 - PLATFORM=hdp2
 - PLATFORM=cdh5
 - PLATFORM=cdh6
+- PLATFORM=cdh6 ENCRYPT_DATA_TRANSFER=true
 - PLATFORM=cdh6 KERBEROS=true RPC_PROTECTION=authentication
 - PLATFORM=cdh6 KERBEROS=true RPC_PROTECTION=integrity
 - PLATFORM=cdh6 KERBEROS=true RPC_PROTECTION=privacy
+- PLATFORM=cdh6 KERBEROS=true RPC_PROTECTION=privacy ENCRYPT_DATA_TRANSFER=true
 before_install:
 - export GO111MODULE=on # Travis installs into $GOPATH/src, which disables module support by default.
 install:

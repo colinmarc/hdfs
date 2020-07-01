@@ -223,6 +223,24 @@ func (c *NamenodeConnection) Execute(method string, req proto.Message, resp prot
 	return nil
 }
 
+// GetEncryptionKeys will use the `getDataEncryptionKey` operation on the
+// namenode in order to fetch the current data encryption keys
+func (c *NamenodeConnection) GetEncryptionKeys() *EncryptionKey {
+	req := &hdfs.GetDataEncryptionKeyRequestProto{}
+	resp := &hdfs.GetDataEncryptionKeyResponseProto{}
+
+	c.Execute("getDataEncryptionKey", req, resp)
+
+	enc := &EncryptionKey{}
+	enc.KeyID = int32(resp.DataEncryptionKey.GetKeyId())
+	enc.ExpiryDate = resp.DataEncryptionKey.GetExpiryDate()
+	enc.BlockPoolID = resp.DataEncryptionKey.GetBlockPoolId()
+	enc.Nonce = resp.DataEncryptionKey.GetNonce()
+	enc.EncryptionKey = resp.DataEncryptionKey.GetEncryptionKey()
+	enc.EncryptionAlg = resp.DataEncryptionKey.GetEncryptionAlgorithm()
+	return enc
+}
+
 // A handshake packet:
 // +-----------------------------------------------------------+
 // |  Header, 4 bytes ("hrpc")                                 |

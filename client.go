@@ -11,6 +11,7 @@ import (
 	"strings"
 
 	"github.com/colinmarc/hdfs/v2/hadoopconf"
+	"github.com/colinmarc/hdfs/v2/internal/protocol/hadoop_common"
 	hdfs "github.com/colinmarc/hdfs/v2/internal/protocol/hadoop_hdfs"
 	"github.com/colinmarc/hdfs/v2/internal/rpc"
 	krb "gopkg.in/jcmturner/gokrb5.v7/client"
@@ -68,6 +69,13 @@ type ClientOptions struct {
 	// multi-namenode setup (for example: 'nn/_HOST'). It is required if
 	// KerberosClient is provided.
 	KerberosServicePrincipleName string
+	// EncryptDataTransfer specifies whether or not data transfer for datanodes
+	// needs to utilize encryption and thus do a negotiation to get data
+	// this is specified by dfs.encrypt.data.transfer in the config
+	EncryptDataTransfer bool
+	// SecureDataNode specifies whether we're protecting our data transfer
+	// communication via dfs.data.transfer.protection
+	SecureDataNode bool
 }
 
 // ClientOptionsFromConf attempts to load any relevant configuration options
@@ -116,6 +124,26 @@ func ClientOptionsFromConf(conf hadoopconf.HadoopConf) ClientOptions {
 		options.KerberosServicePrincipleName = strings.Split(conf["dfs.namenode.kerberos.principal"], "@")[0]
 	}
 
+	dataTransferProt := strings.Split(strings.ToLower(conf["dfs.data.transfer.protection"]), ",")
+	for _, val := range dataTransferProt {
+		switch val {
+		case "privacy":
+			options.EncryptDataTransfer = true
+			fallthrough
+		case "integrity", "authentication":
+			options.SecureDataNode = true
+		}
+	}
+
+	// dfs.encrypt.data.transfer set to true overrides dfs.data.transfer.protection and
+	// requires both privacy and integrity for communication. If dfs.encrypt.data.transfer is
+	// "true" we explicitly set EncryptDataTransfer and SecureDataNode to true, regardless of
+	// what they already were.
+	if conf["dfs.encrypt.data.transfer"] == "true" {
+		options.EncryptDataTransfer = true
+		options.SecureDataNode = true
+	}
+
 	return options
 }
 
@@ -146,6 +174,20 @@ func NewClient(options ClientOptions) (*Client, error) {
 	}
 
 	return &Client{namenode: namenode, options: options}, nil
+}
+
+func (c *Client) datanodeDialFunc(token *hadoop_common.TokenProto) func(ctx context.Context, network, addr string) (net.Conn, error) {
+	if c.options.EncryptDataTransfer || c.options.SecureDataNode {
+		return (&rpc.DatanodeSaslDialer{
+			Dialer:    c.options.DatanodeDialFunc,
+			Key:       c.namenode.GetEncryptionKeys(),
+			Privacy:   c.options.EncryptDataTransfer,
+			Integrity: c.options.SecureDataNode,
+			Token:     token,
+		}).DialContext
+	}
+
+	return c.options.DatanodeDialFunc
 }
 
 // New returns Client connected to the namenode(s) specified by address, or an

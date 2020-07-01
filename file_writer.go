@@ -119,7 +119,7 @@ func (c *Client) Append(name string) (*FileWriter, error) {
 		Offset:              int64(block.B.GetNumBytes()),
 		Append:              true,
 		UseDatanodeHostname: f.client.options.UseDatanodeHostname,
-		DialFunc:            f.client.options.DatanodeDialFunc,
+		DialFunc:            f.client.datanodeDialFunc(block.GetBlockToken()),
 	}
 
 	err = f.blockWriter.SetDeadline(f.deadline)
@@ -262,12 +262,13 @@ func (f *FileWriter) startNewBlock() error {
 		return &os.PathError{"create", f.name, interpretException(err)}
 	}
 
+	block := addBlockResp.GetBlock()
 	f.blockWriter = &rpc.BlockWriter{
 		ClientName:          f.client.namenode.ClientName,
-		Block:               addBlockResp.GetBlock(),
+		Block:               block,
 		BlockSize:           f.blockSize,
 		UseDatanodeHostname: f.client.options.UseDatanodeHostname,
-		DialFunc:            f.client.options.DatanodeDialFunc,
+		DialFunc:            f.client.datanodeDialFunc(block.GetBlockToken()),
 	}
 
 	return f.blockWriter.SetDeadline(f.deadline)

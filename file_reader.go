@@ -97,11 +97,12 @@ func (f *FileReader) Checksum() ([]byte, error) {
 	paddedLength := 32
 	totalLength := 0
 	checksum := md5.New()
+
 	for _, block := range f.blocks {
 		cr := &rpc.ChecksumReader{
 			Block:               block,
 			UseDatanodeHostname: f.client.options.UseDatanodeHostname,
-			DialFunc:            f.client.options.DatanodeDialFunc,
+			DialFunc:            f.client.datanodeDialFunc(block.GetBlockToken()),
 		}
 
 		err := cr.SetDeadline(f.deadline)
@@ -405,7 +406,7 @@ func (f *FileReader) getNewBlockReader() error {
 				Block:               block,
 				Offset:              int64(off - start),
 				UseDatanodeHostname: f.client.options.UseDatanodeHostname,
-				DialFunc:            f.client.options.DatanodeDialFunc,
+				DialFunc:            f.client.datanodeDialFunc(block.GetBlockToken()),
 			}
 
 			return f.SetDeadline(f.deadline)

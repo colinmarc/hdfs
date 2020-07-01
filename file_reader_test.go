@@ -362,11 +362,11 @@ func TestFileReadDeadline(t *testing.T) {
 	file, err := client.Open("/_test/foo.txt")
 	require.NoError(t, err)
 
-	file.SetDeadline(time.Now().Add(100 * time.Millisecond))
+	file.SetDeadline(time.Now().Add(200 * time.Millisecond))
 	_, err = file.Read([]byte{0, 0})
 	assert.NoError(t, err)
 
-	time.Sleep(100 * time.Millisecond)
+	time.Sleep(200 * time.Millisecond)
 	_, err = file.Read([]byte{0, 0})
 	assert.NotNil(t, err)
 }

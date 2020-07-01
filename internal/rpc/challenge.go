@@ -32,14 +32,12 @@ type tokenChallenge struct {
 	algorithm string
 }
 
-// parseChallenge returns a tokenChallenge parsed from a challenge response from
-// the namenode.
-func parseChallenge(auth *hadoop.RpcSaslProto_SaslAuth) (*tokenChallenge, error) {
+func parseChallenge(challenge []byte) (*tokenChallenge, error) {
 	tokenChallenge := tokenChallenge{}
 
-	matched := challengeRegexp.FindAllSubmatch(auth.Challenge, -1)
+	matched := challengeRegexp.FindAllSubmatch(challenge, -1)
 	if matched == nil {
-		return nil, fmt.Errorf("invalid token challenge: %s", auth.Challenge)
+		return nil, fmt.Errorf("invalid token challenge: %s", challenge)
 	}
 
 	for _, m := range matched {
@@ -63,4 +61,82 @@ func parseChallenge(auth *hadoop.RpcSaslProto_SaslAuth) (*tokenChallenge, error)
 	}
 
 	return &tokenChallenge, nil
+}
+
+// parseChallengeAuth returns a tokenChallenge parsed from a challenge response from
+// the namenode.
+func parseChallengeAuth(auth *hadoop.RpcSaslProto_SaslAuth) (*tokenChallenge, error) {
+	return parseChallenge(auth.Challenge)
+}
+
+type cipherType uint8
+
+const (
+	cipherUnknown cipherType = 0
+	cipherDES     cipherType = 1 << iota
+	cipher3DES
+	cipherRC4
+	cipherRC440
+	cipherRC456
+	cipherAESCBC
+)
+
+func (c cipherType) String() string {
+	switch c {
+	case cipherDES:
+		return "des"
+	case cipher3DES:
+		return "3des"
+	case cipherRC4:
+		return "rc4"
+	case cipherRC440:
+		return "rc4-40"
+	case cipherRC456:
+		return "rc4-56"
+	case cipherAESCBC:
+		return "aes-cbc"
+	}
+	return ""
+}
+
+func getCipher(s string) cipherType {
+	switch s {
+	case "des":
+		return cipherDES
+	case "3des":
+		return cipher3DES
+	case "rc4":
+		return cipherRC4
+	case "rc4-40":
+		return cipherRC440
+	case "rc4-56":
+		return cipherRC456
+	case "aes-cbc":
+		return cipherAESCBC
+	}
+	return 0
+}
+
+func chooseCipher(cipherOpts []string) cipherType {
+	var avail cipherType
+	for _, c := range cipherOpts {
+		avail |= getCipher(c)
+	}
+
+	if avail&cipherRC4 != 0 {
+		return cipherRC4
+	}
+	// if Has(avail, cipher3DES) {
+	// 	return cipher3DES
+	// }
+	if avail&cipherRC456 != 0 {
+		return cipherRC456
+	}
+	if avail&cipherRC440 != 0 {
+		return cipherRC440
+	}
+	// if Has(avail, cipherDES) {
+	// 	return cipherDES
+	// }
+	return 0
 }

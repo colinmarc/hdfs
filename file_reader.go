@@ -9,7 +9,7 @@ import (
 	"time"
 
 	hdfs "github.com/colinmarc/hdfs/v2/internal/protocol/hadoop_hdfs"
-	"github.com/colinmarc/hdfs/v2/internal/rpc"
+	"github.com/colinmarc/hdfs/v2/internal/transfer"
 	"github.com/golang/protobuf/proto"
 )
 
@@ -22,7 +22,7 @@ type FileReader struct {
 	info   os.FileInfo
 
 	blocks      []*hdfs.LocatedBlockProto
-	blockReader *rpc.BlockReader
+	blockReader *transfer.BlockReader
 	deadline    time.Time
 	offset      int64
 
@@ -97,14 +97,21 @@ func (f *FileReader) Checksum() ([]byte, error) {
 	paddedLength := 32
 	totalLength := 0
 	checksum := md5.New()
+
 	for _, block := range f.blocks {
-		cr := &rpc.ChecksumReader{
-			Block:               block,
-			UseDatanodeHostname: f.client.options.UseDatanodeHostname,
-			DialFunc:            f.client.options.DatanodeDialFunc,
+		d, err := f.client.wrapDatanodeDial(f.client.options.DatanodeDialFunc,
+			block.GetBlockToken())
+		if err != nil {
+			return nil, err
 		}
 
-		err := cr.SetDeadline(f.deadline)
+		cr := &transfer.ChecksumReader{
+			Block:               block,
+			UseDatanodeHostname: f.client.options.UseDatanodeHostname,
+			DialFunc:            d,
+		}
+
+		err = cr.SetDeadline(f.deadline)
 		if err != nil {
 			return nil, err
 		}
@@ -400,12 +407,19 @@ func (f *FileReader) getNewBlockReader() error {
 		end := start + block.GetB().GetNumBytes()
 
 		if start <= off && off < end {
-			f.blockReader = &rpc.BlockReader{
+			dialFunc, err := f.client.wrapDatanodeDial(
+				f.client.options.DatanodeDialFunc,
+				block.GetBlockToken())
+			if err != nil {
+				return err
+			}
+
+			f.blockReader = &transfer.BlockReader{
 				ClientName:          f.client.namenode.ClientName,
 				Block:               block,
 				Offset:              int64(off - start),
 				UseDatanodeHostname: f.client.options.UseDatanodeHostname,
-				DialFunc:            f.client.options.DatanodeDialFunc,
+				DialFunc:            dialFunc,
 			}
 
 			return f.SetDeadline(f.deadline)

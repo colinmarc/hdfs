@@ -1,4 +1,4 @@
-package rpc
+package transfer
 
 import (
 	"bufio"
@@ -330,29 +330,22 @@ func (s *blockWriteStream) writePacket(p outboundPacket) error {
 		DataLen:           proto.Int32(int32(len(p.data))),
 	}
 
-	header := make([]byte, 6)
+	// Don't ask me why this doesn't include the header proto...
+	totalLength := len(p.data) + len(p.checksums) + 4
+
+	header := make([]byte, 6, 6+totalLength)
 	infoBytes, err := proto.Marshal(headerInfo)
 	if err != nil {
 		return err
 	}
 
-	// Don't ask me why this doesn't include the header proto...
-	totalLength := len(p.data) + len(p.checksums) + 4
 	binary.BigEndian.PutUint32(header, uint32(totalLength))
 	binary.BigEndian.PutUint16(header[4:], uint16(len(infoBytes)))
 	header = append(header, infoBytes...)
+	header = append(header, p.checksums...)
+	header = append(header, p.data...)
 
 	_, err = s.conn.Write(header)
-	if err != nil {
-		return err
-	}
-
-	_, err = s.conn.Write(p.checksums)
-	if err != nil {
-		return err
-	}
-
-	_, err = s.conn.Write(p.data)
 	if err != nil {
 		return err
 	}

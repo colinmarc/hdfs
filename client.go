@@ -8,12 +8,24 @@ import (
 	"net"
 	"os"
 	"os/user"
+	"sort"
 	"strings"
 
+	krb "gopkg.in/jcmturner/gokrb5.v7/client"
+
 	"github.com/colinmarc/hdfs/v2/hadoopconf"
+	hadoop "github.com/colinmarc/hdfs/v2/internal/protocol/hadoop_common"
 	hdfs "github.com/colinmarc/hdfs/v2/internal/protocol/hadoop_hdfs"
 	"github.com/colinmarc/hdfs/v2/internal/rpc"
-	krb "gopkg.in/jcmturner/gokrb5.v7/client"
+	"github.com/colinmarc/hdfs/v2/internal/transfer"
+)
+
+type dialContext func(ctx context.Context, network, addr string) (net.Conn, error)
+
+const (
+	DataTransferProtectionAuthentication = "authentication"
+	DataTransferProtectionIntegrity      = "integrity"
+	DataTransferProtectionPrivacy        = "privacy"
 )
 
 // Client represents a connection to an HDFS cluster. A Client will
@@ -21,8 +33,10 @@ import (
 // from modifying them, until Close is called.
 type Client struct {
 	namenode *rpc.NamenodeConnection
-	defaults *hdfs.FsServerDefaultsProto
 	options  ClientOptions
+
+	defaults      *hdfs.FsServerDefaultsProto
+	encryptionKey *hdfs.DataEncryptionKeyProto
 }
 
 // ClientOptions represents the configurable options for a client.
@@ -68,6 +82,16 @@ type ClientOptions struct {
 	// multi-namenode setup (for example: 'nn/_HOST'). It is required if
 	// KerberosClient is provided.
 	KerberosServicePrincipleName string
+	// DataTransferProtection specifies whether or not authentication, data
+	// signature integrity checks, and wire encryption is required when
+	// communicating the the datanodes. A value of "authentication" implies
+	// just authentication, a value of "integrity" implies both authentication
+	// and integrity checks, and a value of "privacy" implies all three. The
+	// Client may negotiate a higher level of protection if it is requested
+	// by the datanode; for example, if the datanode and namenode hdfs-site.xml
+	// has dfs.encrypt.data.transfer enabled, this setting is ignored and
+	// a level of "privacy" is used.
+	DataTransferProtection string
 }
 
 // ClientOptionsFromConf attempts to load any relevant configuration options
@@ -90,6 +114,10 @@ type ClientOptions struct {
 //   // Determined by dfs.namenode.kerberos.principal, with the realm
 //   // (everything after the first '@') chopped off.
 //   KerberosServicePrincipleName string
+//
+//   // Determined by dfs.data.transfer.protection or dfs.encrypt.data.transfer
+//   // (in the latter case, it is set to 'privacy').
+//   DataTransferProtection string
 //
 // Because of the way Kerberos can be forced by the Hadoop configuration but not
 // actually configured, you should check for whether KerberosClient is set in
@@ -114,6 +142,28 @@ func ClientOptionsFromConf(conf hadoopconf.HadoopConf) ClientOptions {
 
 	if conf["dfs.namenode.kerberos.principal"] != "" {
 		options.KerberosServicePrincipleName = strings.Split(conf["dfs.namenode.kerberos.principal"], "@")[0]
+	}
+
+	// Note that we take the highest setting, rather than allowing a range of
+	// alternatives. 'authentication', 'integrity', and 'privacy' are
+	// alphabetical for our convenience.
+	dataTransferProt := strings.Split(
+		strings.ToLower(conf["dfs.data.transfer.protection"]), ",")
+	sort.Strings(dataTransferProt)
+
+	for _, val := range dataTransferProt {
+		switch val {
+		case "privacy":
+			options.DataTransferProtection = "privacy"
+		case "integrity":
+			options.DataTransferProtection = "integrity"
+		case "authentication":
+			options.DataTransferProtection = "authentication"
+		}
+	}
+
+	if strings.ToLower(conf["dfs.encrypt.data.transfer"]) == "true" {
+		options.DataTransferProtection = "privacy"
 	}
 
 	return options
@@ -258,6 +308,53 @@ func (c *Client) fetchDefaults() (*hdfs.FsServerDefaultsProto, error) {
 
 	c.defaults = resp.GetServerDefaults()
 	return c.defaults, nil
+}
+
+func (c *Client) fetchDataEncryptionKey() (*hdfs.DataEncryptionKeyProto, error) {
+	if c.encryptionKey != nil {
+		return c.encryptionKey, nil
+	}
+
+	req := &hdfs.GetDataEncryptionKeyRequestProto{}
+	resp := &hdfs.GetDataEncryptionKeyResponseProto{}
+
+	err := c.namenode.Execute("getDataEncryptionKey", req, resp)
+	if err != nil {
+		return nil, err
+	}
+
+	c.encryptionKey = resp.GetDataEncryptionKey()
+	return c.encryptionKey, nil
+}
+
+func (c *Client) wrapDatanodeDial(dc dialContext, token *hadoop.TokenProto) (dialContext, error) {
+	wrap := false
+	if c.options.DataTransferProtection != "" {
+		wrap = true
+	} else {
+		defaults, err := c.fetchDefaults()
+		if err != nil {
+			return nil, err
+		}
+
+		wrap = defaults.GetEncryptDataTransfer()
+	}
+
+	if wrap {
+		key, err := c.fetchDataEncryptionKey()
+		if err != nil {
+			return nil, err
+		}
+
+		return (&transfer.SaslDialer{
+			DialFunc:   dc,
+			Key:        key,
+			Token:      token,
+			EnforceQop: c.options.DataTransferProtection,
+		}).DialContext, nil
+	}
+
+	return dc, nil
 }
 
 // Close terminates all underlying socket connections to remote server.

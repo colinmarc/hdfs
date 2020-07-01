@@ -1,4 +1,4 @@
-package rpc
+package transfer
 
 import (
 	"bytes"
@@ -101,8 +101,8 @@ func (s *blockReadStream) Read(b []byte) (int, error) {
 	for i := 0; i < chunksToRead; i++ {
 		chunkOff := i * s.chunkSize
 		chunkEnd := chunkOff + s.chunkSize
-		if chunkEnd >= len(b) {
-			chunkEnd = len(b)
+		if chunkEnd >= n {
+			chunkEnd = n
 		}
 
 		err := s.validateChecksum(b[chunkOff:chunkEnd])

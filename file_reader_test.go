@@ -164,7 +164,7 @@ func TestFileReadAt(t *testing.T) {
 	off := 0
 	for off < len(buf) {
 		n, err := file.ReadAt(buf[off:], int64(testStrOff+off))
-		assert.NoError(t, err)
+		require.NoError(t, err)
 		assert.True(t, n > 0)
 		off += n
 	}
@@ -175,7 +175,7 @@ func TestFileReadAt(t *testing.T) {
 	off = 0
 	for off < len(buf) {
 		n, err := file.ReadAt(buf[off:], int64(testStr2Off+off))
-		assert.NoError(t, err)
+		require.NoError(t, err)
 		assert.True(t, n > 0)
 		off += n
 	}
@@ -362,11 +362,11 @@ func TestFileReadDeadline(t *testing.T) {
 	file, err := client.Open("/_test/foo.txt")
 	require.NoError(t, err)
 
-	file.SetDeadline(time.Now().Add(100 * time.Millisecond))
+	file.SetDeadline(time.Now().Add(200 * time.Millisecond))
 	_, err = file.Read([]byte{0, 0})
 	assert.NoError(t, err)
 
-	time.Sleep(100 * time.Millisecond)
+	time.Sleep(200 * time.Millisecond)
 	_, err = file.Read([]byte{0, 0})
 	assert.NotNil(t, err)
 }

@@ -6,7 +6,7 @@ import (
 	"time"
 
 	hdfs "github.com/colinmarc/hdfs/v2/internal/protocol/hadoop_hdfs"
-	"github.com/colinmarc/hdfs/v2/internal/rpc"
+	"github.com/colinmarc/hdfs/v2/internal/transfer"
 	"github.com/golang/protobuf/proto"
 )
 
@@ -19,7 +19,7 @@ type FileWriter struct {
 	replication int
 	blockSize   int64
 
-	blockWriter *rpc.BlockWriter
+	blockWriter *transfer.BlockWriter
 	deadline    time.Time
 	closed      bool
 }
@@ -112,14 +112,21 @@ func (c *Client) Append(name string) (*FileWriter, error) {
 		return f, nil
 	}
 
-	f.blockWriter = &rpc.BlockWriter{
+	dialFunc, err := f.client.wrapDatanodeDial(
+		f.client.options.DatanodeDialFunc,
+		block.GetBlockToken())
+	if err != nil {
+		return nil, err
+	}
+
+	f.blockWriter = &transfer.BlockWriter{
 		ClientName:          f.client.namenode.ClientName,
 		Block:               block,
 		BlockSize:           f.blockSize,
 		Offset:              int64(block.B.GetNumBytes()),
 		Append:              true,
 		UseDatanodeHostname: f.client.options.UseDatanodeHostname,
-		DialFunc:            f.client.options.DatanodeDialFunc,
+		DialFunc:            dialFunc,
 	}
 
 	err = f.blockWriter.SetDeadline(f.deadline)
@@ -176,7 +183,7 @@ func (f *FileWriter) Write(b []byte) (int, error) {
 	for off < len(b) {
 		n, err := f.blockWriter.Write(b[off:])
 		off += n
-		if err == rpc.ErrEndOfBlock {
+		if err == transfer.ErrEndOfBlock {
 			err = f.startNewBlock()
 		}
 
@@ -262,12 +269,19 @@ func (f *FileWriter) startNewBlock() error {
 		return &os.PathError{"create", f.name, interpretException(err)}
 	}
 
-	f.blockWriter = &rpc.BlockWriter{
+	block := addBlockResp.GetBlock()
+	dialFunc, err := f.client.wrapDatanodeDial(
+		f.client.options.DatanodeDialFunc, block.GetBlockToken())
+	if err != nil {
+		return err
+	}
+
+	f.blockWriter = &transfer.BlockWriter{
 		ClientName:          f.client.namenode.ClientName,
-		Block:               addBlockResp.GetBlock(),
+		Block:               block,
 		BlockSize:           f.blockSize,
 		UseDatanodeHostname: f.client.options.UseDatanodeHostname,
-		DialFunc:            f.client.options.DatanodeDialFunc,
+		DialFunc:            dialFunc,
 	}
 
 	return f.blockWriter.SetDeadline(f.deadline)

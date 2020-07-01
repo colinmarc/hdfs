@@ -3,6 +3,17 @@
 set -e
 
 KERBEROS=${KERBEROS-"false"}
+AES=${AES-"false"}
+if [ "$DATA_TRANSFER_PROTECTION" = "privacy" ]; then
+  KERBEROS="true"
+  ENCRYPT_DATA_TRANSFER="true"
+  ENCRYPT_DATA_TRANSFER_ALG="rc4"
+  if [ "$AES" = "true" ]; then
+      ENCRYPT_DATA_TRANSFER_CIPHER="AES/CTR/NoPadding"
+  fi
+else
+  ENCRYPT_DATA_TRANSFER="false"
+fi
 
 UBUNTU_CODENAME=$(lsb_release -cs)
 UBUNTU_VERSION=$(lsb_release -rs | sed s/\\.//)
@@ -146,6 +157,22 @@ sudo tee /etc/hadoop/conf.gohdfs/hdfs-site.xml <<EOF
     <name>ignore.secure.ports.for.testing</name>
     <value>true</value>
   </property>
+  <property>
+    <name>dfs.data.transfer.protection</name>
+    <value>$DATA_TRANSFER_PROTECTION</value>
+  </property>
+  <property>
+    <name>dfs.encrypt.data.transfer</name>
+    <value>$ENCRYPT_DATA_TRANSFER</value>
+  </property>
+  <property>
+    <name>dfs.encrypt.data.transfer.algorithm</name>
+    <value>$ENCRYPT_DATA_TRANSFER_ALG</value>
+  </property>
+  <property>
+    <name>dfs.encrypt.data.transfer.cipher.suites</name>
+    <value>$ENCRYPT_DATA_TRANSFER_CIPHER</value>
+  </property>
 </configuration>
 EOF
 
@@ -157,6 +184,11 @@ sudo chown -R hdfs:hdfs /opt/hdfs
 sudo -u hdfs hdfs namenode -format -nonInteractive
 
 sudo adduser travis hadoop
+
+if [ $ENCRYPT_DATA_TRANSFER = "true" ]; then
+  sudo apt-get install -y --allow-unauthenticated hadoop-kms hadoop-kms-server
+  sudo service hadoop-kms-server restart
+fi
 
 sudo service hadoop-hdfs-datanode restart
 sudo service hadoop-hdfs-namenode restart

@@ -1,4 +1,4 @@
-package rpc
+package transfer
 
 import (
 	"context"
@@ -19,8 +19,7 @@ type ChecksumReader struct {
 	// UseDatanodeHostname specifies whether the datanodes should be connected to
 	// via their hostnames (if true) or IP addresses (if false).
 	UseDatanodeHostname bool
-	// DialFunc is used to connect to the datanodes. If nil, then
-	// (&net.Dialer{}).DialContext is used.
+	// DialFunc is used to connect to the datanodes. If nil, then (&net.Dialer{}).DialContext is used
 	DialFunc func(ctx context.Context, network, addr string) (net.Conn, error)
 
 	deadline  time.Time

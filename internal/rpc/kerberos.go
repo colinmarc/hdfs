@@ -6,11 +6,13 @@ import (
 	"net"
 	"regexp"
 
-	hadoop "github.com/colinmarc/hdfs/v2/internal/protocol/hadoop_common"
 	"gopkg.in/jcmturner/gokrb5.v7/gssapi"
 	"gopkg.in/jcmturner/gokrb5.v7/iana/keyusage"
 	"gopkg.in/jcmturner/gokrb5.v7/spnego"
 	krbtypes "gopkg.in/jcmturner/gokrb5.v7/types"
+
+	hadoop "github.com/colinmarc/hdfs/v2/internal/protocol/hadoop_common"
+	"github.com/colinmarc/hdfs/v2/internal/sasl"
 )
 
 const saslRpcCallId = -33
@@ -56,22 +58,22 @@ func (c *NamenodeConnection) doKerberosHandshake() error {
 	}
 
 	if tokenAuth != nil {
-		challenge, err := parseChallenge(tokenAuth)
+		challenge, err := sasl.ParseChallenge(tokenAuth.Challenge)
 		if err != nil {
 			return err
 		}
 
-		switch challenge.qop {
-		case qopPrivacy, qopIntegrity:
+		switch challenge.Qop {
+		case sasl.QopPrivacy, sasl.QopIntegrity:
 			// Switch to SASL RPC handler
 			c.transport = &saslTransport{
 				basicTransport: basicTransport{
 					clientID: c.ClientID,
 				},
 				sessionKey: sessionKey,
-				privacy:    challenge.qop == qopPrivacy,
+				privacy:    challenge.Qop == sasl.QopPrivacy,
 			}
-		case qopAuthentication:
+		case sasl.QopAuthentication:
 			// No special transport is required.
 		default:
 			return errors.New("unexpected QOP in challenge")

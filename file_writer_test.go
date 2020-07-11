@@ -18,14 +18,22 @@ const abcException = "org.apache.hadoop.hdfs.protocol.AlreadyBeingCreatedExcepti
 
 func appendIgnoreABC(t *testing.T, client *Client, path string) (*FileWriter, error) {
 	// This represents a bug in the HDFS append implementation, as far as I can
-	// tell.
+	// tell. Try a few times again, then skip the test.
+	retries := 0
 	for {
 		fw, err := client.Append(path)
 
 		if pathErr, ok := err.(*os.PathError); ok {
 			if nnErr, ok := pathErr.Err.(Error); ok && nnErr.Exception() == abcException {
 				t.Log("Ignoring AlreadyBeingCreatedException from append")
-				continue
+
+				if retries < 3 {
+					retries += 1
+					continue
+				} else {
+					t.Skip("skipping Append test because of repeated AlreadyBeingCreatedException")
+					return fw, nil
+				}
 			}
 		}
 

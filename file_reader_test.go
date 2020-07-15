@@ -2,12 +2,14 @@ package hdfs
 
 import (
 	"bytes"
+	"context"
 	"encoding/hex"
 	"fmt"
 	"hash/crc32"
 	"io"
 	"io/ioutil"
 	"math/rand"
+	"net"
 	"os"
 	"testing"
 	"time"
@@ -27,6 +29,14 @@ const (
 
 	testChecksum = "27c076e4987344253650d3335a5d08ce"
 )
+
+type randomReadConn struct {
+	net.Conn
+}
+
+func (r *randomReadConn) Read(b []byte) (int, error) {
+	return r.Conn.Read(b[0:rand.Intn(len(b)+1)])
+}
 
 func TestFileRead(t *testing.T) {
 	client := getClient(t)
@@ -73,6 +83,38 @@ func TestFileBigRead(t *testing.T) {
 
 func TestFileBigReadWeirdSizes(t *testing.T) {
 	client := getClient(t)
+
+	file, err := client.Open("/_test/mobydick.txt")
+	require.NoError(t, err)
+
+	hash := crc32.NewIEEE()
+	copied := 0
+	var n int64
+	for err == nil {
+		n, err = io.CopyN(hash, file, int64(rand.Intn(1000)))
+		copied += int(n)
+	}
+
+	assert.EqualValues(t, io.EOF, err)
+	assert.EqualValues(t, 0x199d1ae6, hash.Sum32())
+	assert.EqualValues(t, copied, 1257276)
+}
+
+func TestFileBigReadWeirdSizesMisalignment(t *testing.T) {
+	client := getClient(t)
+	dial := client.options.DatanodeDialFunc
+	if dial == nil {
+		dial = (&net.Dialer{}).DialContext
+	}
+
+	client.options.DatanodeDialFunc = func(ctx context.Context, network, address string) (net.Conn, error) {
+		conn, err := dial(ctx, network, address)
+		if err != nil {
+			return nil, err
+		}
+
+		return &randomReadConn{conn}, nil
+	}
 
 	file, err := client.Open("/_test/mobydick.txt")
 	require.NoError(t, err)
@@ -150,7 +192,24 @@ func TestFileReadAtEOF(t *testing.T) {
 	buf := make([]byte, 10)
 	_, err = file.ReadAt(buf, 1)
 
-	assert.Equal(t, err, io.EOF)
+	assert.Equal(t, append([]byte{'a', 'r', '\n'}, make([]byte, 7)...), buf)
+	assert.Equal(t, io.EOF, err)
+}
+
+func TestFileReadOversizedBuffer(t *testing.T) {
+	client := getClient(t)
+
+	file, err := client.Open("/_test/foo.txt")
+	require.NoError(t, err)
+
+	buf := make([]byte, 1025)
+	n, err := file.Read(buf)
+
+	assert.Equal(t, 4, n)
+	assert.Equal(t, append([]byte{'b', 'a', 'r', '\n'}, make([]byte, 1025-4)...), buf)
+	if err != io.EOF {
+		assert.NoError(t, err)
+	}
 }
 
 func TestFileSeek(t *testing.T) {

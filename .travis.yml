@@ -22,6 +22,7 @@ before_script:
 - export HADOOP_CONF_DIR="/etc/hadoop/conf"
 - find internal/protocol -name *.pb.go | xargs touch # so make doesn't try to regen protobuf files
 script: make test
+after_failure: find /var/log/hadoop-hdfs | xargs cat
 before_deploy: make release
 deploy:
   skip_cleanup: true

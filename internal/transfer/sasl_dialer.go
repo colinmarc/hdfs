@@ -1,12 +1,10 @@
 package transfer
 
 import (
-	"bytes"
 	"context"
 	"encoding/base64"
 	"errors"
 	"fmt"
-	"math"
 	"net"
 
 	"github.com/golang/protobuf/proto"
@@ -66,17 +64,14 @@ func (d *SaslDialer) wrapDatanodeConn(conn net.Conn) (net.Conn, error) {
 	// If the server defaults have EncryptDataTransfer set but the encryption
 	// key is empty, the namenode doesn't want us to encrypt the block token.
 	if d.Key != nil && len(d.Key.Nonce) > 0 {
-		buf := new(bytes.Buffer)
+		// Amusingly, this is unsigned in the proto struct but is expected
+		// to be signed here.
+		keyId := int32(d.Key.GetKeyId())
 
-		nonceBase64Len := int(math.Ceil(4 * (float64(len(d.Key.GetNonce())) / 3)))
-		buf.Grow(6 + nonceBase64Len + len(d.Key.GetBlockPoolId()))
-		buf.WriteString(
-			fmt.Sprintf("%d %s %s",
-				d.Key.GetKeyId(),
-				d.Key.GetBlockPoolId(),
-				base64.StdEncoding.EncodeToString(d.Key.Nonce)))
-
-		ourToken.Identifier = buf.Bytes()
+		ourToken.Identifier = []byte(fmt.Sprintf("%d %s %s",
+			keyId,
+			d.Key.GetBlockPoolId(),
+			base64.StdEncoding.EncodeToString(d.Key.Nonce)))
 		ourToken.Password = d.Key.EncryptionKey
 	} else {
 		ourToken.Identifier = make([]byte,

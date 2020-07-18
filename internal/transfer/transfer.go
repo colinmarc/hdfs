@@ -3,6 +3,7 @@ package transfer
 
 import (
 	"encoding/binary"
+	"errors"
 	"fmt"
 	"io"
 
@@ -17,6 +18,8 @@ const (
 	checksumBlockOp     = 0x55
 )
 
+var errInvalidResponse = errors.New("invalid response from datanode")
+
 func makePrefixedMessage(msg proto.Message) ([]byte, error) {
 	msgBytes, err := proto.Marshal(msg)
 	if err != nil {
@@ -30,21 +33,31 @@ func makePrefixedMessage(msg proto.Message) ([]byte, error) {
 
 func readPrefixedMessage(r io.Reader, msg proto.Message) error {
 	varintBytes := make([]byte, binary.MaxVarintLen32)
-	_, err := io.ReadAtLeast(r, varintBytes, binary.MaxVarintLen32)
-	if err != nil {
+	n, err := io.ReadAtLeast(r, varintBytes, binary.MaxVarintLen32)
+	if err == io.EOF {
+		return io.ErrUnexpectedEOF
+	} else if err != nil {
 		return err
 	}
 
 	respLength, varintLength := binary.Uvarint(varintBytes)
-	if varintLength < 1 {
-		return io.ErrUnexpectedEOF
+
+	// The latter case happens if the datanode sent us an empty message, and
+	// it we read too many bytes from the conn (i.e., we read bytes from the
+	// next message). Since we can't put them back in the pipe, this is
+	// irreperable. We could avoid this by reading one byte at a time until we
+	// have a varint, but in practice this shouldn't happen anyway.
+	if varintLength < 1 || varintLength+int(respLength) < n {
+		return errInvalidResponse
 	}
 
 	// We may have grabbed too many bytes when reading the varint.
 	respBytes := make([]byte, respLength)
 	extraLength := copy(respBytes, varintBytes[varintLength:])
 	_, err = io.ReadFull(r, respBytes[extraLength:])
-	if err != nil {
+	if err == io.EOF {
+		return io.ErrUnexpectedEOF
+	} else if err != nil {
 		return err
 	}
 

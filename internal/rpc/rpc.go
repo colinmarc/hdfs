@@ -12,7 +12,7 @@ import (
 	"github.com/golang/protobuf/proto"
 )
 
-var errMalformedRPCMessage = errors.New("malformed RPC message")
+var errInvalidResponse = errors.New("invalid response from namenode")
 
 // Used for client ID generation, below.
 const chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
@@ -79,7 +79,7 @@ func readRPCPacket(r io.Reader, msgs ...proto.Message) error {
 
 		msgLength, n := binary.Uvarint(packet)
 		if n <= 0 || msgLength > uint64(len(packet)) {
-			return errMalformedRPCMessage
+			return errInvalidResponse
 		}
 
 		packet = packet[n:]
@@ -94,7 +94,7 @@ func readRPCPacket(r io.Reader, msgs ...proto.Message) error {
 	}
 
 	if len(packet) > 0 {
-		return errMalformedRPCMessage
+		return errInvalidResponse
 	}
 
 	return nil

@@ -9,11 +9,11 @@ import (
 	"testing"
 
 	"github.com/colinmarc/hdfs/v2/hadoopconf"
+	krb "github.com/jcmturner/gokrb5/v8/client"
+	"github.com/jcmturner/gokrb5/v8/config"
+	"github.com/jcmturner/gokrb5/v8/credentials"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	krb "gopkg.in/jcmturner/gokrb5.v7/client"
-	"gopkg.in/jcmturner/gokrb5.v7/config"
-	"gopkg.in/jcmturner/gokrb5.v7/credentials"
 )
 
 var cachedClients = make(map[string]*Client)
@@ -75,7 +75,7 @@ func getKerberosClient(t *testing.T, username string) *krb.Client {
 		t.Skipf("Couldn't load keytab for user %s: %s", username, err)
 	}
 
-	client, err := krb.NewClientFromCCache(ccache, cfg)
+	client, err := krb.NewFromCCache(ccache, cfg)
 	if err != nil {
 		t.Fatal("Couldn't initialize krb client:", err)
 	}

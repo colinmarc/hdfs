@@ -6,9 +6,9 @@ import (
 	"os/user"
 	"strings"
 
-	krb "gopkg.in/jcmturner/gokrb5.v7/client"
-	"gopkg.in/jcmturner/gokrb5.v7/config"
-	"gopkg.in/jcmturner/gokrb5.v7/credentials"
+	krb "github.com/jcmturner/gokrb5/v8/client"
+	"github.com/jcmturner/gokrb5/v8/config"
+	"github.com/jcmturner/gokrb5/v8/credentials"
 )
 
 // TODO: Write a kerberos_windows.go and move this to kerberos_unix.go. This
@@ -48,7 +48,7 @@ func getKerberosClient() (*krb.Client, error) {
 		return nil, err
 	}
 
-	client, err := krb.NewClientFromCCache(ccache, cfg)
+	client, err := krb.NewFromCCache(ccache, cfg)
 	if err != nil {
 		return nil, err
 	}

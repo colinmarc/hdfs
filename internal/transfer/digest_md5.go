@@ -59,7 +59,7 @@ func (d *digestMD5Handshake) challengeStep1(challenge []byte) ([]byte, error) {
 	rspdigest := d.compute(true)
 
 	ret := fmt.Sprintf(`username="%s", realm="%s", nonce="%s", cnonce="%s", nc=%08x, qop=%s, digest-uri="%s/%s", response=%s, charset=utf-8`,
-		d.authID, d.token.Realm, d.token.Nonce, d.cnonce, 1, d.token.Qop, d.service, d.hostname, rspdigest)
+		d.authID, d.token.Realm, d.token.Nonce, d.cnonce, 1, d.token.Qop[0], d.service, d.hostname, rspdigest)
 
 	if d.cipher != "" {
 		ret += ", cipher=" + d.cipher
@@ -114,7 +114,7 @@ func (d *digestMD5Handshake) compute(initial bool) string {
 		d.token.Nonce,
 		fmt.Sprintf("%08x", 1),
 		d.cnonce,
-		d.token.Qop,
+		d.token.Qop[0],
 		hex.EncodeToString(h(d.a2(initial))),
 	}, ":")
 	return hex.EncodeToString(kd(x, y))
@@ -138,7 +138,7 @@ func (d *digestMD5Handshake) a2(initial bool) string {
 		a2 = ":" + digestURI
 	}
 
-	if d.token.Qop == sasl.QopPrivacy || d.token.Qop == sasl.QopIntegrity {
+	if d.token.Qop[0] == sasl.QopPrivacy || d.token.Qop[0] == sasl.QopIntegrity {
 		a2 = a2 + ":00000000000000000000000000000000"
 	}
 

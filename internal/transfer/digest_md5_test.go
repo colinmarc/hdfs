@@ -51,7 +51,7 @@ func TestMD5DigestRspAuth(t *testing.T) {
 		Algorithm: "md5-sess",
 		Charset:   "utf-8",
 		Nonce:     "OA6MG9tEQGm2hh",
-		Qop:       sasl.QopAuthentication,
+		Qop:       []string{sasl.QopAuthentication},
 		Realm:     "elwood.innosoft.com",
 	}
 	dgst.cnonce = "OA6MHXh6VqTrRk"

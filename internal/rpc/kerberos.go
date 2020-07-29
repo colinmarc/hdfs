@@ -62,7 +62,8 @@ func (c *NamenodeConnection) doKerberosHandshake() error {
 			return err
 		}
 
-		switch challenge.Qop {
+		qop := challenge.Qop[0]
+		switch qop {
 		case sasl.QopPrivacy, sasl.QopIntegrity:
 			// Switch to SASL RPC handler
 			c.transport = &saslTransport{
@@ -70,7 +71,7 @@ func (c *NamenodeConnection) doKerberosHandshake() error {
 					clientID: c.ClientID,
 				},
 				sessionKey: sessionKey,
-				privacy:    challenge.Qop == sasl.QopPrivacy,
+				privacy:    qop == sasl.QopPrivacy,
 			}
 		case sasl.QopAuthentication:
 			// No special transport is required.

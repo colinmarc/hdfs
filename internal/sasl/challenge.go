@@ -1,6 +1,7 @@
 package sasl
 
 import (
+	"errors"
 	"fmt"
 	"regexp"
 	"strings"
@@ -24,7 +25,7 @@ var challengeRegexp = regexp.MustCompile(",?([a-zA-Z0-9]+)=(\"([^\"]+)\"|([^,]+)
 type Challenge struct {
 	Realm     string
 	Nonce     string
-	Qop       string
+	Qop       []string
 	Charset   string
 	Cipher    []string
 	Algorithm string
@@ -47,7 +48,7 @@ func ParseChallenge(challenge []byte) (*Challenge, error) {
 		case "nonce":
 			ch.Nonce = val
 		case "qop":
-			ch.Qop = val
+			ch.Qop = strings.Split(val, ",")
 		case "charset":
 			ch.Charset = val
 		case "cipher":
@@ -56,6 +57,10 @@ func ParseChallenge(challenge []byte) (*Challenge, error) {
 			ch.Algorithm = val
 		default:
 		}
+	}
+
+	if len(ch.Qop) == 0 {
+		return nil, errors.New("invalid token challenge: no selected QOP")
 	}
 
 	return &ch, nil

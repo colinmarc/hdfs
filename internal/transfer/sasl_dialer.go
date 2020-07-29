@@ -115,7 +115,7 @@ func (d *SaslDialer) wrapDatanodeConn(conn net.Conn) (net.Conn, error) {
 	// Use the server's QOP unless one was specified in the local configuration.
 	privacy := false
 	integrity := false
-	switch dgst.token.Qop {
+	switch dgst.token.Qop[0] {
 	case sasl.QopPrivacy:
 		privacy = true
 		integrity = true

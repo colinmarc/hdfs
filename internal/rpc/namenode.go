@@ -48,8 +48,9 @@ type NamenodeConnection struct {
 	hostList  []*namenodeHost
 	transport transport
 
-	reqLock sync.Mutex
-	done    chan struct{}
+	reqLock   sync.Mutex
+	done      chan struct{}
+	closeOnce sync.Once
 }
 
 // NamenodeConnectionOptions represents the configurable options available
@@ -301,7 +302,10 @@ func (c *NamenodeConnection) renewLeases() {
 
 // Close terminates all underlying socket connections to remote server.
 func (c *NamenodeConnection) Close() error {
-	close(c.done)
+	// Check channel status before close.
+	c.closeOnce.Do(func() {
+		close(c.done)
+	})
 
 	// Ensure that we're not concurrently renewing leases.
 	c.reqLock.Lock()

@@ -1,10 +1,10 @@
 package hdfs
 
 import (
-	hdfs "github.com/colinmarc/hdfs/v2/internal/protocol/hadoop_hdfs"
+	hdfs "github.com/colinmarc/hdfs/v2/internal/protocol/hadoop_hdfs" // these is our file PATH
 )
 
-// FsInfo provides information about HDFS
+// FsInfo provides information about HDFS //Hadoop Distributed File System
 type FsInfo struct {
 	Capacity              uint64
 	Used                  uint64

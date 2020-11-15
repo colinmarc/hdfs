@@ -66,7 +66,8 @@ func (c *Client) CreateFile(name string, replication int, blockSize int64, perm 
 
 	err := c.namenode.Execute("create", createReq, createResp)
 	if err != nil {
-		return nil, &os.PathError{"create", name, interpretException(err)}
+		interpretedErr := interpretExceptionWithExtraRules(err, map[string]error{alreadyBeingCreatedException: os.ErrExist})
+		return nil, &os.PathError{"create", name, interpretedErr}
 	}
 
 	return &FileWriter{

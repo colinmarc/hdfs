@@ -6,6 +6,7 @@ import (
 	"io/ioutil"
 	"math/rand"
 	"os"
+	"path/filepath"
 	"strings"
 	"testing"
 	"time"
@@ -268,6 +269,40 @@ func TestCreateEmptyFile(t *testing.T) {
 
 	err = client.CreateEmptyFile("/_test/emptyfile")
 	assertPathError(t, err, "create", "/_test/emptyfile", os.ErrExist)
+}
+
+func TestCreateFileAlreadyExistsException(t *testing.T) {
+	const filePath = "/_test/create/already_exists.txt"
+
+	baleet(t, "/_test/create/being_created_file")
+	mkdirp(t, filepath.Dir(filePath))
+
+	client := getClient(t)
+
+	f, err := client.CreateFile(filePath, 1, 1048576, 0755)
+	require.NoError(t, err)
+	require.NoError(t, f.Close())
+
+	_, err = client.CreateFile(filePath, 1, 1048576, 0755)
+	assertPathError(t, err, "create", filePath, os.ErrExist) // org.apache.hadoop.fs.FileAlreadyExistsException is received from HDFS
+}
+
+func TestCreateFileAlreadyBeingCreatedException(t *testing.T) {
+	const filePath = "/_test/create/being_created.txt"
+
+	baleet(t, "/_test/create/being_created_file")
+	mkdirp(t, filepath.Dir(filePath))
+
+	client := getClient(t)
+
+	f, err := client.CreateFile(filePath, 1, 1048576, 0755)
+	require.NoError(t, err)
+	defer func() {
+		require.NoError(t, f.Close())
+	}()
+
+	_, err = client.CreateFile(filePath, 1, 1048576, 0755)
+	assertPathError(t, err, "create", filePath, os.ErrExist) // org.apache.hadoop.hdfs.protocol.AlreadyBeingCreatedException is received from HDFS
 }
 
 func TestCreateEmptyFileWithoutParent(t *testing.T) {

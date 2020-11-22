@@ -12,6 +12,12 @@ var _ = proto.Marshal
 var _ = fmt.Errorf
 var _ = math.Inf
 
+// This is a compile-time assertion to ensure that this generated file
+// is compatible with the proto package it is being compiled against.
+// A compilation error at this line likely means your copy of the
+// proto package needs to be updated.
+const _ = proto.ProtoPackageIsVersion2 // please upgrade the proto package
+
 type XAttrSetFlagProto int32
 
 const (
@@ -44,7 +50,9 @@ func (x *XAttrSetFlagProto) UnmarshalJSON(data []byte) error {
 	*x = XAttrSetFlagProto(value)
 	return nil
 }
-func (XAttrSetFlagProto) EnumDescriptor() ([]byte, []int) { return fileDescriptor1, []int{0} }
+func (XAttrSetFlagProto) EnumDescriptor() ([]byte, []int) {
+	return fileDescriptor_xattr_3c13563c4f3d77da, []int{0}
+}
 
 type XAttrProto_XAttrNamespaceProto int32
 
@@ -88,20 +96,41 @@ func (x *XAttrProto_XAttrNamespaceProto) UnmarshalJSON(data []byte) error {
 	return nil
 }
 func (XAttrProto_XAttrNamespaceProto) EnumDescriptor() ([]byte, []int) {
-	return fileDescriptor1, []int{0, 0}
+	return fileDescriptor_xattr_3c13563c4f3d77da, []int{0, 0}
 }
 
 type XAttrProto struct {
-	Namespace        *XAttrProto_XAttrNamespaceProto `protobuf:"varint,1,req,name=namespace,enum=hadoop.hdfs.XAttrProto_XAttrNamespaceProto" json:"namespace,omitempty"`
-	Name             *string                         `protobuf:"bytes,2,req,name=name" json:"name,omitempty"`
-	Value            []byte                          `protobuf:"bytes,3,opt,name=value" json:"value,omitempty"`
-	XXX_unrecognized []byte                          `json:"-"`
+	Namespace            *XAttrProto_XAttrNamespaceProto `protobuf:"varint,1,req,name=namespace,enum=hadoop.hdfs.XAttrProto_XAttrNamespaceProto" json:"namespace,omitempty"`
+	Name                 *string                         `protobuf:"bytes,2,req,name=name" json:"name,omitempty"`
+	Value                []byte                          `protobuf:"bytes,3,opt,name=value" json:"value,omitempty"`
+	XXX_NoUnkeyedLiteral struct{}                        `json:"-"`
+	XXX_unrecognized     []byte                          `json:"-"`
+	XXX_sizecache        int32                           `json:"-"`
 }
 
-func (m *XAttrProto) Reset()                    { *m = XAttrProto{} }
-func (m *XAttrProto) String() string            { return proto.CompactTextString(m) }
-func (*XAttrProto) ProtoMessage()               {}
-func (*XAttrProto) Descriptor() ([]byte, []int) { return fileDescriptor1, []int{0} }
+func (m *XAttrProto) Reset()         { *m = XAttrProto{} }
+func (m *XAttrProto) String() string { return proto.CompactTextString(m) }
+func (*XAttrProto) ProtoMessage()    {}
+func (*XAttrProto) Descriptor() ([]byte, []int) {
+	return fileDescriptor_xattr_3c13563c4f3d77da, []int{0}
+}
+func (m *XAttrProto) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_XAttrProto.Unmarshal(m, b)
+}
+func (m *XAttrProto) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_XAttrProto.Marshal(b, m, deterministic)
+}
+func (dst *XAttrProto) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_XAttrProto.Merge(dst, src)
+}
+func (m *XAttrProto) XXX_Size() int {
+	return xxx_messageInfo_XAttrProto.Size(m)
+}
+func (m *XAttrProto) XXX_DiscardUnknown() {
+	xxx_messageInfo_XAttrProto.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_XAttrProto proto.InternalMessageInfo
 
 func (m *XAttrProto) GetNamespace() XAttrProto_XAttrNamespaceProto {
 	if m != nil && m.Namespace != nil {
@@ -125,16 +154,37 @@ func (m *XAttrProto) GetValue() []byte {
 }
 
 type SetXAttrRequestProto struct {
-	Src              *string     `protobuf:"bytes,1,req,name=src" json:"src,omitempty"`
-	XAttr            *XAttrProto `protobuf:"bytes,2,opt,name=xAttr" json:"xAttr,omitempty"`
-	Flag             *uint32     `protobuf:"varint,3,opt,name=flag" json:"flag,omitempty"`
-	XXX_unrecognized []byte      `json:"-"`
+	Src                  *string     `protobuf:"bytes,1,req,name=src" json:"src,omitempty"`
+	XAttr                *XAttrProto `protobuf:"bytes,2,opt,name=xAttr" json:"xAttr,omitempty"`
+	Flag                 *uint32     `protobuf:"varint,3,opt,name=flag" json:"flag,omitempty"`
+	XXX_NoUnkeyedLiteral struct{}    `json:"-"`
+	XXX_unrecognized     []byte      `json:"-"`
+	XXX_sizecache        int32       `json:"-"`
 }
 
-func (m *SetXAttrRequestProto) Reset()                    { *m = SetXAttrRequestProto{} }
-func (m *SetXAttrRequestProto) String() string            { return proto.CompactTextString(m) }
-func (*SetXAttrRequestProto) ProtoMessage()               {}
-func (*SetXAttrRequestProto) Descriptor() ([]byte, []int) { return fileDescriptor1, []int{1} }
+func (m *SetXAttrRequestProto) Reset()         { *m = SetXAttrRequestProto{} }
+func (m *SetXAttrRequestProto) String() string { return proto.CompactTextString(m) }
+func (*SetXAttrRequestProto) ProtoMessage()    {}
+func (*SetXAttrRequestProto) Descriptor() ([]byte, []int) {
+	return fileDescriptor_xattr_3c13563c4f3d77da, []int{1}
+}
+func (m *SetXAttrRequestProto) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_SetXAttrRequestProto.Unmarshal(m, b)
+}
+func (m *SetXAttrRequestProto) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_SetXAttrRequestProto.Marshal(b, m, deterministic)
+}
+func (dst *SetXAttrRequestProto) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_SetXAttrRequestProto.Merge(dst, src)
+}
+func (m *SetXAttrRequestProto) XXX_Size() int {
+	return xxx_messageInfo_SetXAttrRequestProto.Size(m)
+}
+func (m *SetXAttrRequestProto) XXX_DiscardUnknown() {
+	xxx_messageInfo_SetXAttrRequestProto.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_SetXAttrRequestProto proto.InternalMessageInfo
 
 func (m *SetXAttrRequestProto) GetSrc() string {
 	if m != nil && m.Src != nil {
@@ -158,24 +208,66 @@ func (m *SetXAttrRequestProto) GetFlag() uint32 {
 }
 
 type SetXAttrResponseProto struct {
-	XXX_unrecognized []byte `json:"-"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
 }
 
-func (m *SetXAttrResponseProto) Reset()                    { *m = SetXAttrResponseProto{} }
-func (m *SetXAttrResponseProto) String() string            { return proto.CompactTextString(m) }
-func (*SetXAttrResponseProto) ProtoMessage()               {}
-func (*SetXAttrResponseProto) Descriptor() ([]byte, []int) { return fileDescriptor1, []int{2} }
+func (m *SetXAttrResponseProto) Reset()         { *m = SetXAttrResponseProto{} }
+func (m *SetXAttrResponseProto) String() string { return proto.CompactTextString(m) }
+func (*SetXAttrResponseProto) ProtoMessage()    {}
+func (*SetXAttrResponseProto) Descriptor() ([]byte, []int) {
+	return fileDescriptor_xattr_3c13563c4f3d77da, []int{2}
+}
+func (m *SetXAttrResponseProto) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_SetXAttrResponseProto.Unmarshal(m, b)
+}
+func (m *SetXAttrResponseProto) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_SetXAttrResponseProto.Marshal(b, m, deterministic)
+}
+func (dst *SetXAttrResponseProto) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_SetXAttrResponseProto.Merge(dst, src)
+}
+func (m *SetXAttrResponseProto) XXX_Size() int {
+	return xxx_messageInfo_SetXAttrResponseProto.Size(m)
+}
+func (m *SetXAttrResponseProto) XXX_DiscardUnknown() {
+	xxx_messageInfo_SetXAttrResponseProto.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_SetXAttrResponseProto proto.InternalMessageInfo
 
 type GetXAttrsRequestProto struct {
-	Src              *string       `protobuf:"bytes,1,req,name=src" json:"src,omitempty"`
-	XAttrs           []*XAttrProto `protobuf:"bytes,2,rep,name=xAttrs" json:"xAttrs,omitempty"`
-	XXX_unrecognized []byte        `json:"-"`
+	Src                  *string       `protobuf:"bytes,1,req,name=src" json:"src,omitempty"`
+	XAttrs               []*XAttrProto `protobuf:"bytes,2,rep,name=xAttrs" json:"xAttrs,omitempty"`
+	XXX_NoUnkeyedLiteral struct{}      `json:"-"`
+	XXX_unrecognized     []byte        `json:"-"`
+	XXX_sizecache        int32         `json:"-"`
 }
 
-func (m *GetXAttrsRequestProto) Reset()                    { *m = GetXAttrsRequestProto{} }
-func (m *GetXAttrsRequestProto) String() string            { return proto.CompactTextString(m) }
-func (*GetXAttrsRequestProto) ProtoMessage()               {}
-func (*GetXAttrsRequestProto) Descriptor() ([]byte, []int) { return fileDescriptor1, []int{3} }
+func (m *GetXAttrsRequestProto) Reset()         { *m = GetXAttrsRequestProto{} }
+func (m *GetXAttrsRequestProto) String() string { return proto.CompactTextString(m) }
+func (*GetXAttrsRequestProto) ProtoMessage()    {}
+func (*GetXAttrsRequestProto) Descriptor() ([]byte, []int) {
+	return fileDescriptor_xattr_3c13563c4f3d77da, []int{3}
+}
+func (m *GetXAttrsRequestProto) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_GetXAttrsRequestProto.Unmarshal(m, b)
+}
+func (m *GetXAttrsRequestProto) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_GetXAttrsRequestProto.Marshal(b, m, deterministic)
+}
+func (dst *GetXAttrsRequestProto) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_GetXAttrsRequestProto.Merge(dst, src)
+}
+func (m *GetXAttrsRequestProto) XXX_Size() int {
+	return xxx_messageInfo_GetXAttrsRequestProto.Size(m)
+}
+func (m *GetXAttrsRequestProto) XXX_DiscardUnknown() {
+	xxx_messageInfo_GetXAttrsRequestProto.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_GetXAttrsRequestProto proto.InternalMessageInfo
 
 func (m *GetXAttrsRequestProto) GetSrc() string {
 	if m != nil && m.Src != nil {
@@ -192,14 +284,35 @@ func (m *GetXAttrsRequestProto) GetXAttrs() []*XAttrProto {
 }
 
 type GetXAttrsResponseProto struct {
-	XAttrs           []*XAttrProto `protobuf:"bytes,1,rep,name=xAttrs" json:"xAttrs,omitempty"`
-	XXX_unrecognized []byte        `json:"-"`
+	XAttrs               []*XAttrProto `protobuf:"bytes,1,rep,name=xAttrs" json:"xAttrs,omitempty"`
+	XXX_NoUnkeyedLiteral struct{}      `json:"-"`
+	XXX_unrecognized     []byte        `json:"-"`
+	XXX_sizecache        int32         `json:"-"`
 }
 
-func (m *GetXAttrsResponseProto) Reset()                    { *m = GetXAttrsResponseProto{} }
-func (m *GetXAttrsResponseProto) String() string            { return proto.CompactTextString(m) }
-func (*GetXAttrsResponseProto) ProtoMessage()               {}
-func (*GetXAttrsResponseProto) Descriptor() ([]byte, []int) { return fileDescriptor1, []int{4} }
+func (m *GetXAttrsResponseProto) Reset()         { *m = GetXAttrsResponseProto{} }
+func (m *GetXAttrsResponseProto) String() string { return proto.CompactTextString(m) }
+func (*GetXAttrsResponseProto) ProtoMessage()    {}
+func (*GetXAttrsResponseProto) Descriptor() ([]byte, []int) {
+	return fileDescriptor_xattr_3c13563c4f3d77da, []int{4}
+}
+func (m *GetXAttrsResponseProto) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_GetXAttrsResponseProto.Unmarshal(m, b)
+}
+func (m *GetXAttrsResponseProto) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_GetXAttrsResponseProto.Marshal(b, m, deterministic)
+}
+func (dst *GetXAttrsResponseProto) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_GetXAttrsResponseProto.Merge(dst, src)
+}
+func (m *GetXAttrsResponseProto) XXX_Size() int {
+	return xxx_messageInfo_GetXAttrsResponseProto.Size(m)
+}
+func (m *GetXAttrsResponseProto) XXX_DiscardUnknown() {
+	xxx_messageInfo_GetXAttrsResponseProto.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_GetXAttrsResponseProto proto.InternalMessageInfo
 
 func (m *GetXAttrsResponseProto) GetXAttrs() []*XAttrProto {
 	if m != nil {
@@ -209,14 +322,35 @@ func (m *GetXAttrsResponseProto) GetXAttrs() []*XAttrProto {
 }
 
 type ListXAttrsRequestProto struct {
-	Src              *string `protobuf:"bytes,1,req,name=src" json:"src,omitempty"`
-	XXX_unrecognized []byte  `json:"-"`
+	Src                  *string  `protobuf:"bytes,1,req,name=src" json:"src,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
 }
 
-func (m *ListXAttrsRequestProto) Reset()                    { *m = ListXAttrsRequestProto{} }
-func (m *ListXAttrsRequestProto) String() string            { return proto.CompactTextString(m) }
-func (*ListXAttrsRequestProto) ProtoMessage()               {}
-func (*ListXAttrsRequestProto) Descriptor() ([]byte, []int) { return fileDescriptor1, []int{5} }
+func (m *ListXAttrsRequestProto) Reset()         { *m = ListXAttrsRequestProto{} }
+func (m *ListXAttrsRequestProto) String() string { return proto.CompactTextString(m) }
+func (*ListXAttrsRequestProto) ProtoMessage()    {}
+func (*ListXAttrsRequestProto) Descriptor() ([]byte, []int) {
+	return fileDescriptor_xattr_3c13563c4f3d77da, []int{5}
+}
+func (m *ListXAttrsRequestProto) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_ListXAttrsRequestProto.Unmarshal(m, b)
+}
+func (m *ListXAttrsRequestProto) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_ListXAttrsRequestProto.Marshal(b, m, deterministic)
+}
+func (dst *ListXAttrsRequestProto) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_ListXAttrsRequestProto.Merge(dst, src)
+}
+func (m *ListXAttrsRequestProto) XXX_Size() int {
+	return xxx_messageInfo_ListXAttrsRequestProto.Size(m)
+}
+func (m *ListXAttrsRequestProto) XXX_DiscardUnknown() {
+	xxx_messageInfo_ListXAttrsRequestProto.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_ListXAttrsRequestProto proto.InternalMessageInfo
 
 func (m *ListXAttrsRequestProto) GetSrc() string {
 	if m != nil && m.Src != nil {
@@ -226,14 +360,35 @@ func (m *ListXAttrsRequestProto) GetSrc() string {
 }
 
 type ListXAttrsResponseProto struct {
-	XAttrs           []*XAttrProto `protobuf:"bytes,1,rep,name=xAttrs" json:"xAttrs,omitempty"`
-	XXX_unrecognized []byte        `json:"-"`
+	XAttrs               []*XAttrProto `protobuf:"bytes,1,rep,name=xAttrs" json:"xAttrs,omitempty"`
+	XXX_NoUnkeyedLiteral struct{}      `json:"-"`
+	XXX_unrecognized     []byte        `json:"-"`
+	XXX_sizecache        int32         `json:"-"`
 }
 
-func (m *ListXAttrsResponseProto) Reset()                    { *m = ListXAttrsResponseProto{} }
-func (m *ListXAttrsResponseProto) String() string            { return proto.CompactTextString(m) }
-func (*ListXAttrsResponseProto) ProtoMessage()               {}
-func (*ListXAttrsResponseProto) Descriptor() ([]byte, []int) { return fileDescriptor1, []int{6} }
+func (m *ListXAttrsResponseProto) Reset()         { *m = ListXAttrsResponseProto{} }
+func (m *ListXAttrsResponseProto) String() string { return proto.CompactTextString(m) }
+func (*ListXAttrsResponseProto) ProtoMessage()    {}
+func (*ListXAttrsResponseProto) Descriptor() ([]byte, []int) {
+	return fileDescriptor_xattr_3c13563c4f3d77da, []int{6}
+}
+func (m *ListXAttrsResponseProto) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_ListXAttrsResponseProto.Unmarshal(m, b)
+}
+func (m *ListXAttrsResponseProto) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_ListXAttrsResponseProto.Marshal(b, m, deterministic)
+}
+func (dst *ListXAttrsResponseProto) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_ListXAttrsResponseProto.Merge(dst, src)
+}
+func (m *ListXAttrsResponseProto) XXX_Size() int {
+	return xxx_messageInfo_ListXAttrsResponseProto.Size(m)
+}
+func (m *ListXAttrsResponseProto) XXX_DiscardUnknown() {
+	xxx_messageInfo_ListXAttrsResponseProto.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_ListXAttrsResponseProto proto.InternalMessageInfo
 
 func (m *ListXAttrsResponseProto) GetXAttrs() []*XAttrProto {
 	if m != nil {
@@ -243,15 +398,36 @@ func (m *ListXAttrsResponseProto) GetXAttrs() []*XAttrProto {
 }
 
 type RemoveXAttrRequestProto struct {
-	Src              *string     `protobuf:"bytes,1,req,name=src" json:"src,omitempty"`
-	XAttr            *XAttrProto `protobuf:"bytes,2,opt,name=xAttr" json:"xAttr,omitempty"`
-	XXX_unrecognized []byte      `json:"-"`
+	Src                  *string     `protobuf:"bytes,1,req,name=src" json:"src,omitempty"`
+	XAttr                *XAttrProto `protobuf:"bytes,2,opt,name=xAttr" json:"xAttr,omitempty"`
+	XXX_NoUnkeyedLiteral struct{}    `json:"-"`
+	XXX_unrecognized     []byte      `json:"-"`
+	XXX_sizecache        int32       `json:"-"`
 }
 
-func (m *RemoveXAttrRequestProto) Reset()                    { *m = RemoveXAttrRequestProto{} }
-func (m *RemoveXAttrRequestProto) String() string            { return proto.CompactTextString(m) }
-func (*RemoveXAttrRequestProto) ProtoMessage()               {}
-func (*RemoveXAttrRequestProto) Descriptor() ([]byte, []int) { return fileDescriptor1, []int{7} }
+func (m *RemoveXAttrRequestProto) Reset()         { *m = RemoveXAttrRequestProto{} }
+func (m *RemoveXAttrRequestProto) String() string { return proto.CompactTextString(m) }
+func (*RemoveXAttrRequestProto) ProtoMessage()    {}
+func (*RemoveXAttrRequestProto) Descriptor() ([]byte, []int) {
+	return fileDescriptor_xattr_3c13563c4f3d77da, []int{7}
+}
+func (m *RemoveXAttrRequestProto) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_RemoveXAttrRequestProto.Unmarshal(m, b)
+}
+func (m *RemoveXAttrRequestProto) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_RemoveXAttrRequestProto.Marshal(b, m, deterministic)
+}
+func (dst *RemoveXAttrRequestProto) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_RemoveXAttrRequestProto.Merge(dst, src)
+}
+func (m *RemoveXAttrRequestProto) XXX_Size() int {
+	return xxx_messageInfo_RemoveXAttrRequestProto.Size(m)
+}
+func (m *RemoveXAttrRequestProto) XXX_DiscardUnknown() {
+	xxx_messageInfo_RemoveXAttrRequestProto.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_RemoveXAttrRequestProto proto.InternalMessageInfo
 
 func (m *RemoveXAttrRequestProto) GetSrc() string {
 	if m != nil && m.Src != nil {
@@ -268,13 +444,34 @@ func (m *RemoveXAttrRequestProto) GetXAttr() *XAttrProto {
 }
 
 type RemoveXAttrResponseProto struct {
-	XXX_unrecognized []byte `json:"-"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
 }
 
-func (m *RemoveXAttrResponseProto) Reset()                    { *m = RemoveXAttrResponseProto{} }
-func (m *RemoveXAttrResponseProto) String() string            { return proto.CompactTextString(m) }
-func (*RemoveXAttrResponseProto) ProtoMessage()               {}
-func (*RemoveXAttrResponseProto) Descriptor() ([]byte, []int) { return fileDescriptor1, []int{8} }
+func (m *RemoveXAttrResponseProto) Reset()         { *m = RemoveXAttrResponseProto{} }
+func (m *RemoveXAttrResponseProto) String() string { return proto.CompactTextString(m) }
+func (*RemoveXAttrResponseProto) ProtoMessage()    {}
+func (*RemoveXAttrResponseProto) Descriptor() ([]byte, []int) {
+	return fileDescriptor_xattr_3c13563c4f3d77da, []int{8}
+}
+func (m *RemoveXAttrResponseProto) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_RemoveXAttrResponseProto.Unmarshal(m, b)
+}
+func (m *RemoveXAttrResponseProto) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_RemoveXAttrResponseProto.Marshal(b, m, deterministic)
+}
+func (dst *RemoveXAttrResponseProto) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_RemoveXAttrResponseProto.Merge(dst, src)
+}
+func (m *RemoveXAttrResponseProto) XXX_Size() int {
+	return xxx_messageInfo_RemoveXAttrResponseProto.Size(m)
+}
+func (m *RemoveXAttrResponseProto) XXX_DiscardUnknown() {
+	xxx_messageInfo_RemoveXAttrResponseProto.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_RemoveXAttrResponseProto proto.InternalMessageInfo
 
 func init() {
 	proto.RegisterType((*XAttrProto)(nil), "hadoop.hdfs.XAttrProto")
@@ -290,9 +487,9 @@ func init() {
 	proto.RegisterEnum("hadoop.hdfs.XAttrProto_XAttrNamespaceProto", XAttrProto_XAttrNamespaceProto_name, XAttrProto_XAttrNamespaceProto_value)
 }
 
-func init() { proto.RegisterFile("xattr.proto", fileDescriptor1) }
+func init() { proto.RegisterFile("xattr.proto", fileDescriptor_xattr_3c13563c4f3d77da) }
 
-var fileDescriptor1 = []byte{
+var fileDescriptor_xattr_3c13563c4f3d77da = []byte{
 	// 408 bytes of a gzipped FileDescriptorProto
 	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xac, 0x93, 0xdf, 0x6e, 0xd3, 0x30,
 	0x18, 0xc5, 0x71, 0xd2, 0xfd, 0xe9, 0x97, 0x0e, 0x79, 0x66, 0x5b, 0x22, 0xae, 0x22, 0x4b, 0x48,

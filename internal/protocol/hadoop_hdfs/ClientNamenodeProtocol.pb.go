@@ -13,6 +13,12 @@ var _ = proto.Marshal
 var _ = fmt.Errorf
 var _ = math.Inf
 
+// This is a compile-time assertion to ensure that this generated file
+// is compatible with the proto package it is being compiled against.
+// A compilation error at this line likely means your copy of the
+// proto package needs to be updated.
+const _ = proto.ProtoPackageIsVersion2 // please upgrade the proto package
+
 type CreateFlagProto int32
 
 const (
@@ -54,7 +60,9 @@ func (x *CreateFlagProto) UnmarshalJSON(data []byte) error {
 	*x = CreateFlagProto(value)
 	return nil
 }
-func (CreateFlagProto) EnumDescriptor() ([]byte, []int) { return fileDescriptor4, []int{0} }
+func (CreateFlagProto) EnumDescriptor() ([]byte, []int) {
+	return fileDescriptor_ClientNamenodeProtocol_54652e2c42538454, []int{0}
+}
 
 type DatanodeReportTypeProto int32
 
@@ -94,7 +102,9 @@ func (x *DatanodeReportTypeProto) UnmarshalJSON(data []byte) error {
 	*x = DatanodeReportTypeProto(value)
 	return nil
 }
-func (DatanodeReportTypeProto) EnumDescriptor() ([]byte, []int) { return fileDescriptor4, []int{1} }
+func (DatanodeReportTypeProto) EnumDescriptor() ([]byte, []int) {
+	return fileDescriptor_ClientNamenodeProtocol_54652e2c42538454, []int{1}
+}
 
 type SafeModeActionProto int32
 
@@ -134,7 +144,9 @@ func (x *SafeModeActionProto) UnmarshalJSON(data []byte) error {
 	*x = SafeModeActionProto(value)
 	return nil
 }
-func (SafeModeActionProto) EnumDescriptor() ([]byte, []int) { return fileDescriptor4, []int{2} }
+func (SafeModeActionProto) EnumDescriptor() ([]byte, []int) {
+	return fileDescriptor_ClientNamenodeProtocol_54652e2c42538454, []int{2}
+}
 
 type RollingUpgradeActionProto int32
 
@@ -171,7 +183,9 @@ func (x *RollingUpgradeActionProto) UnmarshalJSON(data []byte) error {
 	*x = RollingUpgradeActionProto(value)
 	return nil
 }
-func (RollingUpgradeActionProto) EnumDescriptor() ([]byte, []int) { return fileDescriptor4, []int{3} }
+func (RollingUpgradeActionProto) EnumDescriptor() ([]byte, []int) {
+	return fileDescriptor_ClientNamenodeProtocol_54652e2c42538454, []int{3}
+}
 
 type CacheFlagProto int32
 
@@ -202,19 +216,42 @@ func (x *CacheFlagProto) UnmarshalJSON(data []byte) error {
 	*x = CacheFlagProto(value)
 	return nil
 }
-func (CacheFlagProto) EnumDescriptor() ([]byte, []int) { return fileDescriptor4, []int{4} }
-
-type GetBlockLocationsRequestProto struct {
-	Src              *string `protobuf:"bytes,1,req,name=src" json:"src,omitempty"`
-	Offset           *uint64 `protobuf:"varint,2,req,name=offset" json:"offset,omitempty"`
-	Length           *uint64 `protobuf:"varint,3,req,name=length" json:"length,omitempty"`
-	XXX_unrecognized []byte  `json:"-"`
+func (CacheFlagProto) EnumDescriptor() ([]byte, []int) {
+	return fileDescriptor_ClientNamenodeProtocol_54652e2c42538454, []int{4}
 }
 
-func (m *GetBlockLocationsRequestProto) Reset()                    { *m = GetBlockLocationsRequestProto{} }
-func (m *GetBlockLocationsRequestProto) String() string            { return proto.CompactTextString(m) }
-func (*GetBlockLocationsRequestProto) ProtoMessage()               {}
-func (*GetBlockLocationsRequestProto) Descriptor() ([]byte, []int) { return fileDescriptor4, []int{0} }
+type GetBlockLocationsRequestProto struct {
+	Src                  *string  `protobuf:"bytes,1,req,name=src" json:"src,omitempty"`
+	Offset               *uint64  `protobuf:"varint,2,req,name=offset" json:"offset,omitempty"`
+	Length               *uint64  `protobuf:"varint,3,req,name=length" json:"length,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
+}
+
+func (m *GetBlockLocationsRequestProto) Reset()         { *m = GetBlockLocationsRequestProto{} }
+func (m *GetBlockLocationsRequestProto) String() string { return proto.CompactTextString(m) }
+func (*GetBlockLocationsRequestProto) ProtoMessage()    {}
+func (*GetBlockLocationsRequestProto) Descriptor() ([]byte, []int) {
+	return fileDescriptor_ClientNamenodeProtocol_54652e2c42538454, []int{0}
+}
+func (m *GetBlockLocationsRequestProto) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_GetBlockLocationsRequestProto.Unmarshal(m, b)
+}
+func (m *GetBlockLocationsRequestProto) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_GetBlockLocationsRequestProto.Marshal(b, m, deterministic)
+}
+func (dst *GetBlockLocationsRequestProto) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_GetBlockLocationsRequestProto.Merge(dst, src)
+}
+func (m *GetBlockLocationsRequestProto) XXX_Size() int {
+	return xxx_messageInfo_GetBlockLocationsRequestProto.Size(m)
+}
+func (m *GetBlockLocationsRequestProto) XXX_DiscardUnknown() {
+	xxx_messageInfo_GetBlockLocationsRequestProto.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_GetBlockLocationsRequestProto proto.InternalMessageInfo
 
 func (m *GetBlockLocationsRequestProto) GetSrc() string {
 	if m != nil && m.Src != nil {
@@ -238,14 +275,35 @@ func (m *GetBlockLocationsRequestProto) GetLength() uint64 {
 }
 
 type GetBlockLocationsResponseProto struct {
-	Locations        *LocatedBlocksProto `protobuf:"bytes,1,opt,name=locations" json:"locations,omitempty"`
-	XXX_unrecognized []byte              `json:"-"`
+	Locations            *LocatedBlocksProto `protobuf:"bytes,1,opt,name=locations" json:"locations,omitempty"`
+	XXX_NoUnkeyedLiteral struct{}            `json:"-"`
+	XXX_unrecognized     []byte              `json:"-"`
+	XXX_sizecache        int32               `json:"-"`
 }
 
-func (m *GetBlockLocationsResponseProto) Reset()                    { *m = GetBlockLocationsResponseProto{} }
-func (m *GetBlockLocationsResponseProto) String() string            { return proto.CompactTextString(m) }
-func (*GetBlockLocationsResponseProto) ProtoMessage()               {}
-func (*GetBlockLocationsResponseProto) Descriptor() ([]byte, []int) { return fileDescriptor4, []int{1} }
+func (m *GetBlockLocationsResponseProto) Reset()         { *m = GetBlockLocationsResponseProto{} }
+func (m *GetBlockLocationsResponseProto) String() string { return proto.CompactTextString(m) }
+func (*GetBlockLocationsResponseProto) ProtoMessage()    {}
+func (*GetBlockLocationsResponseProto) Descriptor() ([]byte, []int) {
+	return fileDescriptor_ClientNamenodeProtocol_54652e2c42538454, []int{1}
+}
+func (m *GetBlockLocationsResponseProto) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_GetBlockLocationsResponseProto.Unmarshal(m, b)
+}
+func (m *GetBlockLocationsResponseProto) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_GetBlockLocationsResponseProto.Marshal(b, m, deterministic)
+}
+func (dst *GetBlockLocationsResponseProto) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_GetBlockLocationsResponseProto.Merge(dst, src)
+}
+func (m *GetBlockLocationsResponseProto) XXX_Size() int {
+	return xxx_messageInfo_GetBlockLocationsResponseProto.Size(m)
+}
+func (m *GetBlockLocationsResponseProto) XXX_DiscardUnknown() {
+	xxx_messageInfo_GetBlockLocationsResponseProto.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_GetBlockLocationsResponseProto proto.InternalMessageInfo
 
 func (m *GetBlockLocationsResponseProto) GetLocations() *LocatedBlocksProto {
 	if m != nil {
@@ -255,23 +313,65 @@ func (m *GetBlockLocationsResponseProto) GetLocations() *LocatedBlocksProto {
 }
 
 type GetServerDefaultsRequestProto struct {
-	XXX_unrecognized []byte `json:"-"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
 }
 
-func (m *GetServerDefaultsRequestProto) Reset()                    { *m = GetServerDefaultsRequestProto{} }
-func (m *GetServerDefaultsRequestProto) String() string            { return proto.CompactTextString(m) }
-func (*GetServerDefaultsRequestProto) ProtoMessage()               {}
-func (*GetServerDefaultsRequestProto) Descriptor() ([]byte, []int) { return fileDescriptor4, []int{2} }
+func (m *GetServerDefaultsRequestProto) Reset()         { *m = GetServerDefaultsRequestProto{} }
+func (m *GetServerDefaultsRequestProto) String() string { return proto.CompactTextString(m) }
+func (*GetServerDefaultsRequestProto) ProtoMessage()    {}
+func (*GetServerDefaultsRequestProto) Descriptor() ([]byte, []int) {
+	return fileDescriptor_ClientNamenodeProtocol_54652e2c42538454, []int{2}
+}
+func (m *GetServerDefaultsRequestProto) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_GetServerDefaultsRequestProto.Unmarshal(m, b)
+}
+func (m *GetServerDefaultsRequestProto) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_GetServerDefaultsRequestProto.Marshal(b, m, deterministic)
+}
+func (dst *GetServerDefaultsRequestProto) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_GetServerDefaultsRequestProto.Merge(dst, src)
+}
+func (m *GetServerDefaultsRequestProto) XXX_Size() int {
+	return xxx_messageInfo_GetServerDefaultsRequestProto.Size(m)
+}
+func (m *GetServerDefaultsRequestProto) XXX_DiscardUnknown() {
+	xxx_messageInfo_GetServerDefaultsRequestProto.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_GetServerDefaultsRequestProto proto.InternalMessageInfo
 
 type GetServerDefaultsResponseProto struct {
-	ServerDefaults   *FsServerDefaultsProto `protobuf:"bytes,1,req,name=serverDefaults" json:"serverDefaults,omitempty"`
-	XXX_unrecognized []byte                 `json:"-"`
+	ServerDefaults       *FsServerDefaultsProto `protobuf:"bytes,1,req,name=serverDefaults" json:"serverDefaults,omitempty"`
+	XXX_NoUnkeyedLiteral struct{}               `json:"-"`
+	XXX_unrecognized     []byte                 `json:"-"`
+	XXX_sizecache        int32                  `json:"-"`
 }
 
-func (m *GetServerDefaultsResponseProto) Reset()                    { *m = GetServerDefaultsResponseProto{} }
-func (m *GetServerDefaultsResponseProto) String() string            { return proto.CompactTextString(m) }
-func (*GetServerDefaultsResponseProto) ProtoMessage()               {}
-func (*GetServerDefaultsResponseProto) Descriptor() ([]byte, []int) { return fileDescriptor4, []int{3} }
+func (m *GetServerDefaultsResponseProto) Reset()         { *m = GetServerDefaultsResponseProto{} }
+func (m *GetServerDefaultsResponseProto) String() string { return proto.CompactTextString(m) }
+func (*GetServerDefaultsResponseProto) ProtoMessage()    {}
+func (*GetServerDefaultsResponseProto) Descriptor() ([]byte, []int) {
+	return fileDescriptor_ClientNamenodeProtocol_54652e2c42538454, []int{3}
+}
+func (m *GetServerDefaultsResponseProto) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_GetServerDefaultsResponseProto.Unmarshal(m, b)
+}
+func (m *GetServerDefaultsResponseProto) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_GetServerDefaultsResponseProto.Marshal(b, m, deterministic)
+}
+func (dst *GetServerDefaultsResponseProto) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_GetServerDefaultsResponseProto.Merge(dst, src)
+}
+func (m *GetServerDefaultsResponseProto) XXX_Size() int {
+	return xxx_messageInfo_GetServerDefaultsResponseProto.Size(m)
+}
+func (m *GetServerDefaultsResponseProto) XXX_DiscardUnknown() {
+	xxx_messageInfo_GetServerDefaultsResponseProto.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_GetServerDefaultsResponseProto proto.InternalMessageInfo
 
 func (m *GetServerDefaultsResponseProto) GetServerDefaults() *FsServerDefaultsProto {
 	if m != nil {
@@ -289,13 +389,34 @@ type CreateRequestProto struct {
 	Replication           *uint32                      `protobuf:"varint,6,req,name=replication" json:"replication,omitempty"`
 	BlockSize             *uint64                      `protobuf:"varint,7,req,name=blockSize" json:"blockSize,omitempty"`
 	CryptoProtocolVersion []CryptoProtocolVersionProto `protobuf:"varint,8,rep,name=cryptoProtocolVersion,enum=hadoop.hdfs.CryptoProtocolVersionProto" json:"cryptoProtocolVersion,omitempty"`
+	XXX_NoUnkeyedLiteral  struct{}                     `json:"-"`
 	XXX_unrecognized      []byte                       `json:"-"`
+	XXX_sizecache         int32                        `json:"-"`
 }
 
-func (m *CreateRequestProto) Reset()                    { *m = CreateRequestProto{} }
-func (m *CreateRequestProto) String() string            { return proto.CompactTextString(m) }
-func (*CreateRequestProto) ProtoMessage()               {}
-func (*CreateRequestProto) Descriptor() ([]byte, []int) { return fileDescriptor4, []int{4} }
+func (m *CreateRequestProto) Reset()         { *m = CreateRequestProto{} }
+func (m *CreateRequestProto) String() string { return proto.CompactTextString(m) }
+func (*CreateRequestProto) ProtoMessage()    {}
+func (*CreateRequestProto) Descriptor() ([]byte, []int) {
+	return fileDescriptor_ClientNamenodeProtocol_54652e2c42538454, []int{4}
+}
+func (m *CreateRequestProto) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_CreateRequestProto.Unmarshal(m, b)
+}
+func (m *CreateRequestProto) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_CreateRequestProto.Marshal(b, m, deterministic)
+}
+func (dst *CreateRequestProto) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_CreateRequestProto.Merge(dst, src)
+}
+func (m *CreateRequestProto) XXX_Size() int {
+	return xxx_messageInfo_CreateRequestProto.Size(m)
+}
+func (m *CreateRequestProto) XXX_DiscardUnknown() {
+	xxx_messageInfo_CreateRequestProto.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_CreateRequestProto proto.InternalMessageInfo
 
 func (m *CreateRequestProto) GetSrc() string {
 	if m != nil && m.Src != nil {
@@ -354,14 +475,35 @@ func (m *CreateRequestProto) GetCryptoProtocolVersion() []CryptoProtocolVersionP
 }
 
 type CreateResponseProto struct {
-	Fs               *HdfsFileStatusProto `protobuf:"bytes,1,opt,name=fs" json:"fs,omitempty"`
-	XXX_unrecognized []byte               `json:"-"`
+	Fs                   *HdfsFileStatusProto `protobuf:"bytes,1,opt,name=fs" json:"fs,omitempty"`
+	XXX_NoUnkeyedLiteral struct{}             `json:"-"`
+	XXX_unrecognized     []byte               `json:"-"`
+	XXX_sizecache        int32                `json:"-"`
 }
 
-func (m *CreateResponseProto) Reset()                    { *m = CreateResponseProto{} }
-func (m *CreateResponseProto) String() string            { return proto.CompactTextString(m) }
-func (*CreateResponseProto) ProtoMessage()               {}
-func (*CreateResponseProto) Descriptor() ([]byte, []int) { return fileDescriptor4, []int{5} }
+func (m *CreateResponseProto) Reset()         { *m = CreateResponseProto{} }
+func (m *CreateResponseProto) String() string { return proto.CompactTextString(m) }
+func (*CreateResponseProto) ProtoMessage()    {}
+func (*CreateResponseProto) Descriptor() ([]byte, []int) {
+	return fileDescriptor_ClientNamenodeProtocol_54652e2c42538454, []int{5}
+}
+func (m *CreateResponseProto) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_CreateResponseProto.Unmarshal(m, b)
+}
+func (m *CreateResponseProto) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_CreateResponseProto.Marshal(b, m, deterministic)
+}
+func (dst *CreateResponseProto) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_CreateResponseProto.Merge(dst, src)
+}
+func (m *CreateResponseProto) XXX_Size() int {
+	return xxx_messageInfo_CreateResponseProto.Size(m)
+}
+func (m *CreateResponseProto) XXX_DiscardUnknown() {
+	xxx_messageInfo_CreateResponseProto.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_CreateResponseProto proto.InternalMessageInfo
 
 func (m *CreateResponseProto) GetFs() *HdfsFileStatusProto {
 	if m != nil {
@@ -371,16 +513,37 @@ func (m *CreateResponseProto) GetFs() *HdfsFileStatusProto {
 }
 
 type AppendRequestProto struct {
-	Src              *string `protobuf:"bytes,1,req,name=src" json:"src,omitempty"`
-	ClientName       *string `protobuf:"bytes,2,req,name=clientName" json:"clientName,omitempty"`
-	Flag             *uint32 `protobuf:"varint,3,opt,name=flag" json:"flag,omitempty"`
-	XXX_unrecognized []byte  `json:"-"`
+	Src                  *string  `protobuf:"bytes,1,req,name=src" json:"src,omitempty"`
+	ClientName           *string  `protobuf:"bytes,2,req,name=clientName" json:"clientName,omitempty"`
+	Flag                 *uint32  `protobuf:"varint,3,opt,name=flag" json:"flag,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
 }
 
-func (m *AppendRequestProto) Reset()                    { *m = AppendRequestProto{} }
-func (m *AppendRequestProto) String() string            { return proto.CompactTextString(m) }
-func (*AppendRequestProto) ProtoMessage()               {}
-func (*AppendRequestProto) Descriptor() ([]byte, []int) { return fileDescriptor4, []int{6} }
+func (m *AppendRequestProto) Reset()         { *m = AppendRequestProto{} }
+func (m *AppendRequestProto) String() string { return proto.CompactTextString(m) }
+func (*AppendRequestProto) ProtoMessage()    {}
+func (*AppendRequestProto) Descriptor() ([]byte, []int) {
+	return fileDescriptor_ClientNamenodeProtocol_54652e2c42538454, []int{6}
+}
+func (m *AppendRequestProto) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_AppendRequestProto.Unmarshal(m, b)
+}
+func (m *AppendRequestProto) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_AppendRequestProto.Marshal(b, m, deterministic)
+}
+func (dst *AppendRequestProto) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_AppendRequestProto.Merge(dst, src)
+}
+func (m *AppendRequestProto) XXX_Size() int {
+	return xxx_messageInfo_AppendRequestProto.Size(m)
+}
+func (m *AppendRequestProto) XXX_DiscardUnknown() {
+	xxx_messageInfo_AppendRequestProto.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_AppendRequestProto proto.InternalMessageInfo
 
 func (m *AppendRequestProto) GetSrc() string {
 	if m != nil && m.Src != nil {
@@ -404,15 +567,36 @@ func (m *AppendRequestProto) GetFlag() uint32 {
 }
 
 type AppendResponseProto struct {
-	Block            *LocatedBlockProto   `protobuf:"bytes,1,opt,name=block" json:"block,omitempty"`
-	Stat             *HdfsFileStatusProto `protobuf:"bytes,2,opt,name=stat" json:"stat,omitempty"`
-	XXX_unrecognized []byte               `json:"-"`
+	Block                *LocatedBlockProto   `protobuf:"bytes,1,opt,name=block" json:"block,omitempty"`
+	Stat                 *HdfsFileStatusProto `protobuf:"bytes,2,opt,name=stat" json:"stat,omitempty"`
+	XXX_NoUnkeyedLiteral struct{}             `json:"-"`
+	XXX_unrecognized     []byte               `json:"-"`
+	XXX_sizecache        int32                `json:"-"`
 }
 
-func (m *AppendResponseProto) Reset()                    { *m = AppendResponseProto{} }
-func (m *AppendResponseProto) String() string            { return proto.CompactTextString(m) }
-func (*AppendResponseProto) ProtoMessage()               {}
-func (*AppendResponseProto) Descriptor() ([]byte, []int) { return fileDescriptor4, []int{7} }
+func (m *AppendResponseProto) Reset()         { *m = AppendResponseProto{} }
+func (m *AppendResponseProto) String() string { return proto.CompactTextString(m) }
+func (*AppendResponseProto) ProtoMessage()    {}
+func (*AppendResponseProto) Descriptor() ([]byte, []int) {
+	return fileDescriptor_ClientNamenodeProtocol_54652e2c42538454, []int{7}
+}
+func (m *AppendResponseProto) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_AppendResponseProto.Unmarshal(m, b)
+}
+func (m *AppendResponseProto) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_AppendResponseProto.Marshal(b, m, deterministic)
+}
+func (dst *AppendResponseProto) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_AppendResponseProto.Merge(dst, src)
+}
+func (m *AppendResponseProto) XXX_Size() int {
+	return xxx_messageInfo_AppendResponseProto.Size(m)
+}
+func (m *AppendResponseProto) XXX_DiscardUnknown() {
+	xxx_messageInfo_AppendResponseProto.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_AppendResponseProto proto.InternalMessageInfo
 
 func (m *AppendResponseProto) GetBlock() *LocatedBlockProto {
 	if m != nil {
@@ -429,15 +613,36 @@ func (m *AppendResponseProto) GetStat() *HdfsFileStatusProto {
 }
 
 type SetReplicationRequestProto struct {
-	Src              *string `protobuf:"bytes,1,req,name=src" json:"src,omitempty"`
-	Replication      *uint32 `protobuf:"varint,2,req,name=replication" json:"replication,omitempty"`
-	XXX_unrecognized []byte  `json:"-"`
+	Src                  *string  `protobuf:"bytes,1,req,name=src" json:"src,omitempty"`
+	Replication          *uint32  `protobuf:"varint,2,req,name=replication" json:"replication,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
 }
 
-func (m *SetReplicationRequestProto) Reset()                    { *m = SetReplicationRequestProto{} }
-func (m *SetReplicationRequestProto) String() string            { return proto.CompactTextString(m) }
-func (*SetReplicationRequestProto) ProtoMessage()               {}
-func (*SetReplicationRequestProto) Descriptor() ([]byte, []int) { return fileDescriptor4, []int{8} }
+func (m *SetReplicationRequestProto) Reset()         { *m = SetReplicationRequestProto{} }
+func (m *SetReplicationRequestProto) String() string { return proto.CompactTextString(m) }
+func (*SetReplicationRequestProto) ProtoMessage()    {}
+func (*SetReplicationRequestProto) Descriptor() ([]byte, []int) {
+	return fileDescriptor_ClientNamenodeProtocol_54652e2c42538454, []int{8}
+}
+func (m *SetReplicationRequestProto) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_SetReplicationRequestProto.Unmarshal(m, b)
+}
+func (m *SetReplicationRequestProto) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_SetReplicationRequestProto.Marshal(b, m, deterministic)
+}
+func (dst *SetReplicationRequestProto) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_SetReplicationRequestProto.Merge(dst, src)
+}
+func (m *SetReplicationRequestProto) XXX_Size() int {
+	return xxx_messageInfo_SetReplicationRequestProto.Size(m)
+}
+func (m *SetReplicationRequestProto) XXX_DiscardUnknown() {
+	xxx_messageInfo_SetReplicationRequestProto.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_SetReplicationRequestProto proto.InternalMessageInfo
 
 func (m *SetReplicationRequestProto) GetSrc() string {
 	if m != nil && m.Src != nil {
@@ -454,14 +659,35 @@ func (m *SetReplicationRequestProto) GetReplication() uint32 {
 }
 
 type SetReplicationResponseProto struct {
-	Result           *bool  `protobuf:"varint,1,req,name=result" json:"result,omitempty"`
-	XXX_unrecognized []byte `json:"-"`
+	Result               *bool    `protobuf:"varint,1,req,name=result" json:"result,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
 }
 
-func (m *SetReplicationResponseProto) Reset()                    { *m = SetReplicationResponseProto{} }
-func (m *SetReplicationResponseProto) String() string            { return proto.CompactTextString(m) }
-func (*SetReplicationResponseProto) ProtoMessage()               {}
-func (*SetReplicationResponseProto) Descriptor() ([]byte, []int) { return fileDescriptor4, []int{9} }
+func (m *SetReplicationResponseProto) Reset()         { *m = SetReplicationResponseProto{} }
+func (m *SetReplicationResponseProto) String() string { return proto.CompactTextString(m) }
+func (*SetReplicationResponseProto) ProtoMessage()    {}
+func (*SetReplicationResponseProto) Descriptor() ([]byte, []int) {
+	return fileDescriptor_ClientNamenodeProtocol_54652e2c42538454, []int{9}
+}
+func (m *SetReplicationResponseProto) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_SetReplicationResponseProto.Unmarshal(m, b)
+}
+func (m *SetReplicationResponseProto) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_SetReplicationResponseProto.Marshal(b, m, deterministic)
+}
+func (dst *SetReplicationResponseProto) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_SetReplicationResponseProto.Merge(dst, src)
+}
+func (m *SetReplicationResponseProto) XXX_Size() int {
+	return xxx_messageInfo_SetReplicationResponseProto.Size(m)
+}
+func (m *SetReplicationResponseProto) XXX_DiscardUnknown() {
+	xxx_messageInfo_SetReplicationResponseProto.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_SetReplicationResponseProto proto.InternalMessageInfo
 
 func (m *SetReplicationResponseProto) GetResult() bool {
 	if m != nil && m.Result != nil {
@@ -471,15 +697,36 @@ func (m *SetReplicationResponseProto) GetResult() bool {
 }
 
 type SetStoragePolicyRequestProto struct {
-	Src              *string `protobuf:"bytes,1,req,name=src" json:"src,omitempty"`
-	PolicyName       *string `protobuf:"bytes,2,req,name=policyName" json:"policyName,omitempty"`
-	XXX_unrecognized []byte  `json:"-"`
+	Src                  *string  `protobuf:"bytes,1,req,name=src" json:"src,omitempty"`
+	PolicyName           *string  `protobuf:"bytes,2,req,name=policyName" json:"policyName,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
 }
 
-func (m *SetStoragePolicyRequestProto) Reset()                    { *m = SetStoragePolicyRequestProto{} }
-func (m *SetStoragePolicyRequestProto) String() string            { return proto.CompactTextString(m) }
-func (*SetStoragePolicyRequestProto) ProtoMessage()               {}
-func (*SetStoragePolicyRequestProto) Descriptor() ([]byte, []int) { return fileDescriptor4, []int{10} }
+func (m *SetStoragePolicyRequestProto) Reset()         { *m = SetStoragePolicyRequestProto{} }
+func (m *SetStoragePolicyRequestProto) String() string { return proto.CompactTextString(m) }
+func (*SetStoragePolicyRequestProto) ProtoMessage()    {}
+func (*SetStoragePolicyRequestProto) Descriptor() ([]byte, []int) {
+	return fileDescriptor_ClientNamenodeProtocol_54652e2c42538454, []int{10}
+}
+func (m *SetStoragePolicyRequestProto) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_SetStoragePolicyRequestProto.Unmarshal(m, b)
+}
+func (m *SetStoragePolicyRequestProto) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_SetStoragePolicyRequestProto.Marshal(b, m, deterministic)
+}
+func (dst *SetStoragePolicyRequestProto) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_SetStoragePolicyRequestProto.Merge(dst, src)
+}
+func (m *SetStoragePolicyRequestProto) XXX_Size() int {
+	return xxx_messageInfo_SetStoragePolicyRequestProto.Size(m)
+}
+func (m *SetStoragePolicyRequestProto) XXX_DiscardUnknown() {
+	xxx_messageInfo_SetStoragePolicyRequestProto.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_SetStoragePolicyRequestProto proto.InternalMessageInfo
 
 func (m *SetStoragePolicyRequestProto) GetSrc() string {
 	if m != nil && m.Src != nil {
@@ -496,23 +743,65 @@ func (m *SetStoragePolicyRequestProto) GetPolicyName() string {
 }
 
 type SetStoragePolicyResponseProto struct {
-	XXX_unrecognized []byte `json:"-"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
 }
 
-func (m *SetStoragePolicyResponseProto) Reset()                    { *m = SetStoragePolicyResponseProto{} }
-func (m *SetStoragePolicyResponseProto) String() string            { return proto.CompactTextString(m) }
-func (*SetStoragePolicyResponseProto) ProtoMessage()               {}
-func (*SetStoragePolicyResponseProto) Descriptor() ([]byte, []int) { return fileDescriptor4, []int{11} }
+func (m *SetStoragePolicyResponseProto) Reset()         { *m = SetStoragePolicyResponseProto{} }
+func (m *SetStoragePolicyResponseProto) String() string { return proto.CompactTextString(m) }
+func (*SetStoragePolicyResponseProto) ProtoMessage()    {}
+func (*SetStoragePolicyResponseProto) Descriptor() ([]byte, []int) {
+	return fileDescriptor_ClientNamenodeProtocol_54652e2c42538454, []int{11}
+}
+func (m *SetStoragePolicyResponseProto) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_SetStoragePolicyResponseProto.Unmarshal(m, b)
+}
+func (m *SetStoragePolicyResponseProto) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_SetStoragePolicyResponseProto.Marshal(b, m, deterministic)
+}
+func (dst *SetStoragePolicyResponseProto) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_SetStoragePolicyResponseProto.Merge(dst, src)
+}
+func (m *SetStoragePolicyResponseProto) XXX_Size() int {
+	return xxx_messageInfo_SetStoragePolicyResponseProto.Size(m)
+}
+func (m *SetStoragePolicyResponseProto) XXX_DiscardUnknown() {
+	xxx_messageInfo_SetStoragePolicyResponseProto.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_SetStoragePolicyResponseProto proto.InternalMessageInfo
 
 type UnsetStoragePolicyRequestProto struct {
-	Src              *string `protobuf:"bytes,1,req,name=src" json:"src,omitempty"`
-	XXX_unrecognized []byte  `json:"-"`
+	Src                  *string  `protobuf:"bytes,1,req,name=src" json:"src,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
 }
 
-func (m *UnsetStoragePolicyRequestProto) Reset()                    { *m = UnsetStoragePolicyRequestProto{} }
-func (m *UnsetStoragePolicyRequestProto) String() string            { return proto.CompactTextString(m) }
-func (*UnsetStoragePolicyRequestProto) ProtoMessage()               {}
-func (*UnsetStoragePolicyRequestProto) Descriptor() ([]byte, []int) { return fileDescriptor4, []int{12} }
+func (m *UnsetStoragePolicyRequestProto) Reset()         { *m = UnsetStoragePolicyRequestProto{} }
+func (m *UnsetStoragePolicyRequestProto) String() string { return proto.CompactTextString(m) }
+func (*UnsetStoragePolicyRequestProto) ProtoMessage()    {}
+func (*UnsetStoragePolicyRequestProto) Descriptor() ([]byte, []int) {
+	return fileDescriptor_ClientNamenodeProtocol_54652e2c42538454, []int{12}
+}
+func (m *UnsetStoragePolicyRequestProto) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_UnsetStoragePolicyRequestProto.Unmarshal(m, b)
+}
+func (m *UnsetStoragePolicyRequestProto) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_UnsetStoragePolicyRequestProto.Marshal(b, m, deterministic)
+}
+func (dst *UnsetStoragePolicyRequestProto) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_UnsetStoragePolicyRequestProto.Merge(dst, src)
+}
+func (m *UnsetStoragePolicyRequestProto) XXX_Size() int {
+	return xxx_messageInfo_UnsetStoragePolicyRequestProto.Size(m)
+}
+func (m *UnsetStoragePolicyRequestProto) XXX_DiscardUnknown() {
+	xxx_messageInfo_UnsetStoragePolicyRequestProto.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_UnsetStoragePolicyRequestProto proto.InternalMessageInfo
 
 func (m *UnsetStoragePolicyRequestProto) GetSrc() string {
 	if m != nil && m.Src != nil {
@@ -522,25 +811,65 @@ func (m *UnsetStoragePolicyRequestProto) GetSrc() string {
 }
 
 type UnsetStoragePolicyResponseProto struct {
-	XXX_unrecognized []byte `json:"-"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
 }
 
 func (m *UnsetStoragePolicyResponseProto) Reset()         { *m = UnsetStoragePolicyResponseProto{} }
 func (m *UnsetStoragePolicyResponseProto) String() string { return proto.CompactTextString(m) }
 func (*UnsetStoragePolicyResponseProto) ProtoMessage()    {}
 func (*UnsetStoragePolicyResponseProto) Descriptor() ([]byte, []int) {
-	return fileDescriptor4, []int{13}
+	return fileDescriptor_ClientNamenodeProtocol_54652e2c42538454, []int{13}
 }
+func (m *UnsetStoragePolicyResponseProto) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_UnsetStoragePolicyResponseProto.Unmarshal(m, b)
+}
+func (m *UnsetStoragePolicyResponseProto) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_UnsetStoragePolicyResponseProto.Marshal(b, m, deterministic)
+}
+func (dst *UnsetStoragePolicyResponseProto) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_UnsetStoragePolicyResponseProto.Merge(dst, src)
+}
+func (m *UnsetStoragePolicyResponseProto) XXX_Size() int {
+	return xxx_messageInfo_UnsetStoragePolicyResponseProto.Size(m)
+}
+func (m *UnsetStoragePolicyResponseProto) XXX_DiscardUnknown() {
+	xxx_messageInfo_UnsetStoragePolicyResponseProto.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_UnsetStoragePolicyResponseProto proto.InternalMessageInfo
 
 type GetStoragePolicyRequestProto struct {
-	Path             *string `protobuf:"bytes,1,req,name=path" json:"path,omitempty"`
-	XXX_unrecognized []byte  `json:"-"`
+	Path                 *string  `protobuf:"bytes,1,req,name=path" json:"path,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
 }
 
-func (m *GetStoragePolicyRequestProto) Reset()                    { *m = GetStoragePolicyRequestProto{} }
-func (m *GetStoragePolicyRequestProto) String() string            { return proto.CompactTextString(m) }
-func (*GetStoragePolicyRequestProto) ProtoMessage()               {}
-func (*GetStoragePolicyRequestProto) Descriptor() ([]byte, []int) { return fileDescriptor4, []int{14} }
+func (m *GetStoragePolicyRequestProto) Reset()         { *m = GetStoragePolicyRequestProto{} }
+func (m *GetStoragePolicyRequestProto) String() string { return proto.CompactTextString(m) }
+func (*GetStoragePolicyRequestProto) ProtoMessage()    {}
+func (*GetStoragePolicyRequestProto) Descriptor() ([]byte, []int) {
+	return fileDescriptor_ClientNamenodeProtocol_54652e2c42538454, []int{14}
+}
+func (m *GetStoragePolicyRequestProto) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_GetStoragePolicyRequestProto.Unmarshal(m, b)
+}
+func (m *GetStoragePolicyRequestProto) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_GetStoragePolicyRequestProto.Marshal(b, m, deterministic)
+}
+func (dst *GetStoragePolicyRequestProto) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_GetStoragePolicyRequestProto.Merge(dst, src)
+}
+func (m *GetStoragePolicyRequestProto) XXX_Size() int {
+	return xxx_messageInfo_GetStoragePolicyRequestProto.Size(m)
+}
+func (m *GetStoragePolicyRequestProto) XXX_DiscardUnknown() {
+	xxx_messageInfo_GetStoragePolicyRequestProto.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_GetStoragePolicyRequestProto proto.InternalMessageInfo
 
 func (m *GetStoragePolicyRequestProto) GetPath() string {
 	if m != nil && m.Path != nil {
@@ -550,14 +879,35 @@ func (m *GetStoragePolicyRequestProto) GetPath() string {
 }
 
 type GetStoragePolicyResponseProto struct {
-	StoragePolicy    *BlockStoragePolicyProto `protobuf:"bytes,1,req,name=storagePolicy" json:"storagePolicy,omitempty"`
-	XXX_unrecognized []byte                   `json:"-"`
+	StoragePolicy        *BlockStoragePolicyProto `protobuf:"bytes,1,req,name=storagePolicy" json:"storagePolicy,omitempty"`
+	XXX_NoUnkeyedLiteral struct{}                 `json:"-"`
+	XXX_unrecognized     []byte                   `json:"-"`
+	XXX_sizecache        int32                    `json:"-"`
 }
 
-func (m *GetStoragePolicyResponseProto) Reset()                    { *m = GetStoragePolicyResponseProto{} }
-func (m *GetStoragePolicyResponseProto) String() string            { return proto.CompactTextString(m) }
-func (*GetStoragePolicyResponseProto) ProtoMessage()               {}
-func (*GetStoragePolicyResponseProto) Descriptor() ([]byte, []int) { return fileDescriptor4, []int{15} }
+func (m *GetStoragePolicyResponseProto) Reset()         { *m = GetStoragePolicyResponseProto{} }
+func (m *GetStoragePolicyResponseProto) String() string { return proto.CompactTextString(m) }
+func (*GetStoragePolicyResponseProto) ProtoMessage()    {}
+func (*GetStoragePolicyResponseProto) Descriptor() ([]byte, []int) {
+	return fileDescriptor_ClientNamenodeProtocol_54652e2c42538454, []int{15}
+}
+func (m *GetStoragePolicyResponseProto) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_GetStoragePolicyResponseProto.Unmarshal(m, b)
+}
+func (m *GetStoragePolicyResponseProto) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_GetStoragePolicyResponseProto.Marshal(b, m, deterministic)
+}
+func (dst *GetStoragePolicyResponseProto) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_GetStoragePolicyResponseProto.Merge(dst, src)
+}
+func (m *GetStoragePolicyResponseProto) XXX_Size() int {
+	return xxx_messageInfo_GetStoragePolicyResponseProto.Size(m)
+}
+func (m *GetStoragePolicyResponseProto) XXX_DiscardUnknown() {
+	xxx_messageInfo_GetStoragePolicyResponseProto.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_GetStoragePolicyResponseProto proto.InternalMessageInfo
 
 func (m *GetStoragePolicyResponseProto) GetStoragePolicy() *BlockStoragePolicyProto {
 	if m != nil {
@@ -567,25 +917,65 @@ func (m *GetStoragePolicyResponseProto) GetStoragePolicy() *BlockStoragePolicyPr
 }
 
 type GetStoragePoliciesRequestProto struct {
-	XXX_unrecognized []byte `json:"-"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
 }
 
-func (m *GetStoragePoliciesRequestProto) Reset()                    { *m = GetStoragePoliciesRequestProto{} }
-func (m *GetStoragePoliciesRequestProto) String() string            { return proto.CompactTextString(m) }
-func (*GetStoragePoliciesRequestProto) ProtoMessage()               {}
-func (*GetStoragePoliciesRequestProto) Descriptor() ([]byte, []int) { return fileDescriptor4, []int{16} }
+func (m *GetStoragePoliciesRequestProto) Reset()         { *m = GetStoragePoliciesRequestProto{} }
+func (m *GetStoragePoliciesRequestProto) String() string { return proto.CompactTextString(m) }
+func (*GetStoragePoliciesRequestProto) ProtoMessage()    {}
+func (*GetStoragePoliciesRequestProto) Descriptor() ([]byte, []int) {
+	return fileDescriptor_ClientNamenodeProtocol_54652e2c42538454, []int{16}
+}
+func (m *GetStoragePoliciesRequestProto) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_GetStoragePoliciesRequestProto.Unmarshal(m, b)
+}
+func (m *GetStoragePoliciesRequestProto) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_GetStoragePoliciesRequestProto.Marshal(b, m, deterministic)
+}
+func (dst *GetStoragePoliciesRequestProto) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_GetStoragePoliciesRequestProto.Merge(dst, src)
+}
+func (m *GetStoragePoliciesRequestProto) XXX_Size() int {
+	return xxx_messageInfo_GetStoragePoliciesRequestProto.Size(m)
+}
+func (m *GetStoragePoliciesRequestProto) XXX_DiscardUnknown() {
+	xxx_messageInfo_GetStoragePoliciesRequestProto.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_GetStoragePoliciesRequestProto proto.InternalMessageInfo
 
 type GetStoragePoliciesResponseProto struct {
-	Policies         []*BlockStoragePolicyProto `protobuf:"bytes,1,rep,name=policies" json:"policies,omitempty"`
-	XXX_unrecognized []byte                     `json:"-"`
+	Policies             []*BlockStoragePolicyProto `protobuf:"bytes,1,rep,name=policies" json:"policies,omitempty"`
+	XXX_NoUnkeyedLiteral struct{}                   `json:"-"`
+	XXX_unrecognized     []byte                     `json:"-"`
+	XXX_sizecache        int32                      `json:"-"`
 }
 
 func (m *GetStoragePoliciesResponseProto) Reset()         { *m = GetStoragePoliciesResponseProto{} }
 func (m *GetStoragePoliciesResponseProto) String() string { return proto.CompactTextString(m) }
 func (*GetStoragePoliciesResponseProto) ProtoMessage()    {}
 func (*GetStoragePoliciesResponseProto) Descriptor() ([]byte, []int) {
-	return fileDescriptor4, []int{17}
+	return fileDescriptor_ClientNamenodeProtocol_54652e2c42538454, []int{17}
 }
+func (m *GetStoragePoliciesResponseProto) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_GetStoragePoliciesResponseProto.Unmarshal(m, b)
+}
+func (m *GetStoragePoliciesResponseProto) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_GetStoragePoliciesResponseProto.Marshal(b, m, deterministic)
+}
+func (dst *GetStoragePoliciesResponseProto) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_GetStoragePoliciesResponseProto.Merge(dst, src)
+}
+func (m *GetStoragePoliciesResponseProto) XXX_Size() int {
+	return xxx_messageInfo_GetStoragePoliciesResponseProto.Size(m)
+}
+func (m *GetStoragePoliciesResponseProto) XXX_DiscardUnknown() {
+	xxx_messageInfo_GetStoragePoliciesResponseProto.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_GetStoragePoliciesResponseProto proto.InternalMessageInfo
 
 func (m *GetStoragePoliciesResponseProto) GetPolicies() []*BlockStoragePolicyProto {
 	if m != nil {
@@ -595,15 +985,36 @@ func (m *GetStoragePoliciesResponseProto) GetPolicies() []*BlockStoragePolicyPro
 }
 
 type SetPermissionRequestProto struct {
-	Src              *string            `protobuf:"bytes,1,req,name=src" json:"src,omitempty"`
-	Permission       *FsPermissionProto `protobuf:"bytes,2,req,name=permission" json:"permission,omitempty"`
-	XXX_unrecognized []byte             `json:"-"`
+	Src                  *string            `protobuf:"bytes,1,req,name=src" json:"src,omitempty"`
+	Permission           *FsPermissionProto `protobuf:"bytes,2,req,name=permission" json:"permission,omitempty"`
+	XXX_NoUnkeyedLiteral struct{}           `json:"-"`
+	XXX_unrecognized     []byte             `json:"-"`
+	XXX_sizecache        int32              `json:"-"`
 }
 
-func (m *SetPermissionRequestProto) Reset()                    { *m = SetPermissionRequestProto{} }
-func (m *SetPermissionRequestProto) String() string            { return proto.CompactTextString(m) }
-func (*SetPermissionRequestProto) ProtoMessage()               {}
-func (*SetPermissionRequestProto) Descriptor() ([]byte, []int) { return fileDescriptor4, []int{18} }
+func (m *SetPermissionRequestProto) Reset()         { *m = SetPermissionRequestProto{} }
+func (m *SetPermissionRequestProto) String() string { return proto.CompactTextString(m) }
+func (*SetPermissionRequestProto) ProtoMessage()    {}
+func (*SetPermissionRequestProto) Descriptor() ([]byte, []int) {
+	return fileDescriptor_ClientNamenodeProtocol_54652e2c42538454, []int{18}
+}
+func (m *SetPermissionRequestProto) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_SetPermissionRequestProto.Unmarshal(m, b)
+}
+func (m *SetPermissionRequestProto) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_SetPermissionRequestProto.Marshal(b, m, deterministic)
+}
+func (dst *SetPermissionRequestProto) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_SetPermissionRequestProto.Merge(dst, src)
+}
+func (m *SetPermissionRequestProto) XXX_Size() int {
+	return xxx_messageInfo_SetPermissionRequestProto.Size(m)
+}
+func (m *SetPermissionRequestProto) XXX_DiscardUnknown() {
+	xxx_messageInfo_SetPermissionRequestProto.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_SetPermissionRequestProto proto.InternalMessageInfo
 
 func (m *SetPermissionRequestProto) GetSrc() string {
 	if m != nil && m.Src != nil {
@@ -620,25 +1031,67 @@ func (m *SetPermissionRequestProto) GetPermission() *FsPermissionProto {
 }
 
 type SetPermissionResponseProto struct {
-	XXX_unrecognized []byte `json:"-"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
 }
 
-func (m *SetPermissionResponseProto) Reset()                    { *m = SetPermissionResponseProto{} }
-func (m *SetPermissionResponseProto) String() string            { return proto.CompactTextString(m) }
-func (*SetPermissionResponseProto) ProtoMessage()               {}
-func (*SetPermissionResponseProto) Descriptor() ([]byte, []int) { return fileDescriptor4, []int{19} }
+func (m *SetPermissionResponseProto) Reset()         { *m = SetPermissionResponseProto{} }
+func (m *SetPermissionResponseProto) String() string { return proto.CompactTextString(m) }
+func (*SetPermissionResponseProto) ProtoMessage()    {}
+func (*SetPermissionResponseProto) Descriptor() ([]byte, []int) {
+	return fileDescriptor_ClientNamenodeProtocol_54652e2c42538454, []int{19}
+}
+func (m *SetPermissionResponseProto) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_SetPermissionResponseProto.Unmarshal(m, b)
+}
+func (m *SetPermissionResponseProto) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_SetPermissionResponseProto.Marshal(b, m, deterministic)
+}
+func (dst *SetPermissionResponseProto) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_SetPermissionResponseProto.Merge(dst, src)
+}
+func (m *SetPermissionResponseProto) XXX_Size() int {
+	return xxx_messageInfo_SetPermissionResponseProto.Size(m)
+}
+func (m *SetPermissionResponseProto) XXX_DiscardUnknown() {
+	xxx_messageInfo_SetPermissionResponseProto.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_SetPermissionResponseProto proto.InternalMessageInfo
 
 type SetOwnerRequestProto struct {
-	Src              *string `protobuf:"bytes,1,req,name=src" json:"src,omitempty"`
-	Username         *string `protobuf:"bytes,2,opt,name=username" json:"username,omitempty"`
-	Groupname        *string `protobuf:"bytes,3,opt,name=groupname" json:"groupname,omitempty"`
-	XXX_unrecognized []byte  `json:"-"`
+	Src                  *string  `protobuf:"bytes,1,req,name=src" json:"src,omitempty"`
+	Username             *string  `protobuf:"bytes,2,opt,name=username" json:"username,omitempty"`
+	Groupname            *string  `protobuf:"bytes,3,opt,name=groupname" json:"groupname,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
 }
 
-func (m *SetOwnerRequestProto) Reset()                    { *m = SetOwnerRequestProto{} }
-func (m *SetOwnerRequestProto) String() string            { return proto.CompactTextString(m) }
-func (*SetOwnerRequestProto) ProtoMessage()               {}
-func (*SetOwnerRequestProto) Descriptor() ([]byte, []int) { return fileDescriptor4, []int{20} }
+func (m *SetOwnerRequestProto) Reset()         { *m = SetOwnerRequestProto{} }
+func (m *SetOwnerRequestProto) String() string { return proto.CompactTextString(m) }
+func (*SetOwnerRequestProto) ProtoMessage()    {}
+func (*SetOwnerRequestProto) Descriptor() ([]byte, []int) {
+	return fileDescriptor_ClientNamenodeProtocol_54652e2c42538454, []int{20}
+}
+func (m *SetOwnerRequestProto) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_SetOwnerRequestProto.Unmarshal(m, b)
+}
+func (m *SetOwnerRequestProto) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_SetOwnerRequestProto.Marshal(b, m, deterministic)
+}
+func (dst *SetOwnerRequestProto) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_SetOwnerRequestProto.Merge(dst, src)
+}
+func (m *SetOwnerRequestProto) XXX_Size() int {
+	return xxx_messageInfo_SetOwnerRequestProto.Size(m)
+}
+func (m *SetOwnerRequestProto) XXX_DiscardUnknown() {
+	xxx_messageInfo_SetOwnerRequestProto.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_SetOwnerRequestProto proto.InternalMessageInfo
 
 func (m *SetOwnerRequestProto) GetSrc() string {
 	if m != nil && m.Src != nil {
@@ -662,26 +1115,68 @@ func (m *SetOwnerRequestProto) GetGroupname() string {
 }
 
 type SetOwnerResponseProto struct {
-	XXX_unrecognized []byte `json:"-"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
 }
 
-func (m *SetOwnerResponseProto) Reset()                    { *m = SetOwnerResponseProto{} }
-func (m *SetOwnerResponseProto) String() string            { return proto.CompactTextString(m) }
-func (*SetOwnerResponseProto) ProtoMessage()               {}
-func (*SetOwnerResponseProto) Descriptor() ([]byte, []int) { return fileDescriptor4, []int{21} }
+func (m *SetOwnerResponseProto) Reset()         { *m = SetOwnerResponseProto{} }
+func (m *SetOwnerResponseProto) String() string { return proto.CompactTextString(m) }
+func (*SetOwnerResponseProto) ProtoMessage()    {}
+func (*SetOwnerResponseProto) Descriptor() ([]byte, []int) {
+	return fileDescriptor_ClientNamenodeProtocol_54652e2c42538454, []int{21}
+}
+func (m *SetOwnerResponseProto) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_SetOwnerResponseProto.Unmarshal(m, b)
+}
+func (m *SetOwnerResponseProto) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_SetOwnerResponseProto.Marshal(b, m, deterministic)
+}
+func (dst *SetOwnerResponseProto) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_SetOwnerResponseProto.Merge(dst, src)
+}
+func (m *SetOwnerResponseProto) XXX_Size() int {
+	return xxx_messageInfo_SetOwnerResponseProto.Size(m)
+}
+func (m *SetOwnerResponseProto) XXX_DiscardUnknown() {
+	xxx_messageInfo_SetOwnerResponseProto.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_SetOwnerResponseProto proto.InternalMessageInfo
 
 type AbandonBlockRequestProto struct {
-	B                *ExtendedBlockProto `protobuf:"bytes,1,req,name=b" json:"b,omitempty"`
-	Src              *string             `protobuf:"bytes,2,req,name=src" json:"src,omitempty"`
-	Holder           *string             `protobuf:"bytes,3,req,name=holder" json:"holder,omitempty"`
-	FileId           *uint64             `protobuf:"varint,4,opt,name=fileId,def=0" json:"fileId,omitempty"`
-	XXX_unrecognized []byte              `json:"-"`
+	B                    *ExtendedBlockProto `protobuf:"bytes,1,req,name=b" json:"b,omitempty"`
+	Src                  *string             `protobuf:"bytes,2,req,name=src" json:"src,omitempty"`
+	Holder               *string             `protobuf:"bytes,3,req,name=holder" json:"holder,omitempty"`
+	FileId               *uint64             `protobuf:"varint,4,opt,name=fileId,def=0" json:"fileId,omitempty"`
+	XXX_NoUnkeyedLiteral struct{}            `json:"-"`
+	XXX_unrecognized     []byte              `json:"-"`
+	XXX_sizecache        int32               `json:"-"`
 }
 
-func (m *AbandonBlockRequestProto) Reset()                    { *m = AbandonBlockRequestProto{} }
-func (m *AbandonBlockRequestProto) String() string            { return proto.CompactTextString(m) }
-func (*AbandonBlockRequestProto) ProtoMessage()               {}
-func (*AbandonBlockRequestProto) Descriptor() ([]byte, []int) { return fileDescriptor4, []int{22} }
+func (m *AbandonBlockRequestProto) Reset()         { *m = AbandonBlockRequestProto{} }
+func (m *AbandonBlockRequestProto) String() string { return proto.CompactTextString(m) }
+func (*AbandonBlockRequestProto) ProtoMessage()    {}
+func (*AbandonBlockRequestProto) Descriptor() ([]byte, []int) {
+	return fileDescriptor_ClientNamenodeProtocol_54652e2c42538454, []int{22}
+}
+func (m *AbandonBlockRequestProto) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_AbandonBlockRequestProto.Unmarshal(m, b)
+}
+func (m *AbandonBlockRequestProto) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_AbandonBlockRequestProto.Marshal(b, m, deterministic)
+}
+func (dst *AbandonBlockRequestProto) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_AbandonBlockRequestProto.Merge(dst, src)
+}
+func (m *AbandonBlockRequestProto) XXX_Size() int {
+	return xxx_messageInfo_AbandonBlockRequestProto.Size(m)
+}
+func (m *AbandonBlockRequestProto) XXX_DiscardUnknown() {
+	xxx_messageInfo_AbandonBlockRequestProto.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_AbandonBlockRequestProto proto.InternalMessageInfo
 
 const Default_AbandonBlockRequestProto_FileId uint64 = 0
 
@@ -714,28 +1209,70 @@ func (m *AbandonBlockRequestProto) GetFileId() uint64 {
 }
 
 type AbandonBlockResponseProto struct {
-	XXX_unrecognized []byte `json:"-"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
 }
 
-func (m *AbandonBlockResponseProto) Reset()                    { *m = AbandonBlockResponseProto{} }
-func (m *AbandonBlockResponseProto) String() string            { return proto.CompactTextString(m) }
-func (*AbandonBlockResponseProto) ProtoMessage()               {}
-func (*AbandonBlockResponseProto) Descriptor() ([]byte, []int) { return fileDescriptor4, []int{23} }
+func (m *AbandonBlockResponseProto) Reset()         { *m = AbandonBlockResponseProto{} }
+func (m *AbandonBlockResponseProto) String() string { return proto.CompactTextString(m) }
+func (*AbandonBlockResponseProto) ProtoMessage()    {}
+func (*AbandonBlockResponseProto) Descriptor() ([]byte, []int) {
+	return fileDescriptor_ClientNamenodeProtocol_54652e2c42538454, []int{23}
+}
+func (m *AbandonBlockResponseProto) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_AbandonBlockResponseProto.Unmarshal(m, b)
+}
+func (m *AbandonBlockResponseProto) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_AbandonBlockResponseProto.Marshal(b, m, deterministic)
+}
+func (dst *AbandonBlockResponseProto) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_AbandonBlockResponseProto.Merge(dst, src)
+}
+func (m *AbandonBlockResponseProto) XXX_Size() int {
+	return xxx_messageInfo_AbandonBlockResponseProto.Size(m)
+}
+func (m *AbandonBlockResponseProto) XXX_DiscardUnknown() {
+	xxx_messageInfo_AbandonBlockResponseProto.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_AbandonBlockResponseProto proto.InternalMessageInfo
 
 type AddBlockRequestProto struct {
-	Src              *string              `protobuf:"bytes,1,req,name=src" json:"src,omitempty"`
-	ClientName       *string              `protobuf:"bytes,2,req,name=clientName" json:"clientName,omitempty"`
-	Previous         *ExtendedBlockProto  `protobuf:"bytes,3,opt,name=previous" json:"previous,omitempty"`
-	ExcludeNodes     []*DatanodeInfoProto `protobuf:"bytes,4,rep,name=excludeNodes" json:"excludeNodes,omitempty"`
-	FileId           *uint64              `protobuf:"varint,5,opt,name=fileId,def=0" json:"fileId,omitempty"`
-	FavoredNodes     []string             `protobuf:"bytes,6,rep,name=favoredNodes" json:"favoredNodes,omitempty"`
-	XXX_unrecognized []byte               `json:"-"`
+	Src                  *string              `protobuf:"bytes,1,req,name=src" json:"src,omitempty"`
+	ClientName           *string              `protobuf:"bytes,2,req,name=clientName" json:"clientName,omitempty"`
+	Previous             *ExtendedBlockProto  `protobuf:"bytes,3,opt,name=previous" json:"previous,omitempty"`
+	ExcludeNodes         []*DatanodeInfoProto `protobuf:"bytes,4,rep,name=excludeNodes" json:"excludeNodes,omitempty"`
+	FileId               *uint64              `protobuf:"varint,5,opt,name=fileId,def=0" json:"fileId,omitempty"`
+	FavoredNodes         []string             `protobuf:"bytes,6,rep,name=favoredNodes" json:"favoredNodes,omitempty"`
+	XXX_NoUnkeyedLiteral struct{}             `json:"-"`
+	XXX_unrecognized     []byte               `json:"-"`
+	XXX_sizecache        int32                `json:"-"`
 }
 
-func (m *AddBlockRequestProto) Reset()                    { *m = AddBlockRequestProto{} }
-func (m *AddBlockRequestProto) String() string            { return proto.CompactTextString(m) }
-func (*AddBlockRequestProto) ProtoMessage()               {}
-func (*AddBlockRequestProto) Descriptor() ([]byte, []int) { return fileDescriptor4, []int{24} }
+func (m *AddBlockRequestProto) Reset()         { *m = AddBlockRequestProto{} }
+func (m *AddBlockRequestProto) String() string { return proto.CompactTextString(m) }
+func (*AddBlockRequestProto) ProtoMessage()    {}
+func (*AddBlockRequestProto) Descriptor() ([]byte, []int) {
+	return fileDescriptor_ClientNamenodeProtocol_54652e2c42538454, []int{24}
+}
+func (m *AddBlockRequestProto) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_AddBlockRequestProto.Unmarshal(m, b)
+}
+func (m *AddBlockRequestProto) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_AddBlockRequestProto.Marshal(b, m, deterministic)
+}
+func (dst *AddBlockRequestProto) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_AddBlockRequestProto.Merge(dst, src)
+}
+func (m *AddBlockRequestProto) XXX_Size() int {
+	return xxx_messageInfo_AddBlockRequestProto.Size(m)
+}
+func (m *AddBlockRequestProto) XXX_DiscardUnknown() {
+	xxx_messageInfo_AddBlockRequestProto.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_AddBlockRequestProto proto.InternalMessageInfo
 
 const Default_AddBlockRequestProto_FileId uint64 = 0
 
@@ -782,14 +1319,35 @@ func (m *AddBlockRequestProto) GetFavoredNodes() []string {
 }
 
 type AddBlockResponseProto struct {
-	Block            *LocatedBlockProto `protobuf:"bytes,1,req,name=block" json:"block,omitempty"`
-	XXX_unrecognized []byte             `json:"-"`
+	Block                *LocatedBlockProto `protobuf:"bytes,1,req,name=block" json:"block,omitempty"`
+	XXX_NoUnkeyedLiteral struct{}           `json:"-"`
+	XXX_unrecognized     []byte             `json:"-"`
+	XXX_sizecache        int32              `json:"-"`
 }
 
-func (m *AddBlockResponseProto) Reset()                    { *m = AddBlockResponseProto{} }
-func (m *AddBlockResponseProto) String() string            { return proto.CompactTextString(m) }
-func (*AddBlockResponseProto) ProtoMessage()               {}
-func (*AddBlockResponseProto) Descriptor() ([]byte, []int) { return fileDescriptor4, []int{25} }
+func (m *AddBlockResponseProto) Reset()         { *m = AddBlockResponseProto{} }
+func (m *AddBlockResponseProto) String() string { return proto.CompactTextString(m) }
+func (*AddBlockResponseProto) ProtoMessage()    {}
+func (*AddBlockResponseProto) Descriptor() ([]byte, []int) {
+	return fileDescriptor_ClientNamenodeProtocol_54652e2c42538454, []int{25}
+}
+func (m *AddBlockResponseProto) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_AddBlockResponseProto.Unmarshal(m, b)
+}
+func (m *AddBlockResponseProto) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_AddBlockResponseProto.Marshal(b, m, deterministic)
+}
+func (dst *AddBlockResponseProto) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_AddBlockResponseProto.Merge(dst, src)
+}
+func (m *AddBlockResponseProto) XXX_Size() int {
+	return xxx_messageInfo_AddBlockResponseProto.Size(m)
+}
+func (m *AddBlockResponseProto) XXX_DiscardUnknown() {
+	xxx_messageInfo_AddBlockResponseProto.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_AddBlockResponseProto proto.InternalMessageInfo
 
 func (m *AddBlockResponseProto) GetBlock() *LocatedBlockProto {
 	if m != nil {
@@ -807,15 +1365,34 @@ type GetAdditionalDatanodeRequestProto struct {
 	ClientName           *string              `protobuf:"bytes,6,req,name=clientName" json:"clientName,omitempty"`
 	ExistingStorageUuids []string             `protobuf:"bytes,7,rep,name=existingStorageUuids" json:"existingStorageUuids,omitempty"`
 	FileId               *uint64              `protobuf:"varint,8,opt,name=fileId,def=0" json:"fileId,omitempty"`
+	XXX_NoUnkeyedLiteral struct{}             `json:"-"`
 	XXX_unrecognized     []byte               `json:"-"`
+	XXX_sizecache        int32                `json:"-"`
 }
 
 func (m *GetAdditionalDatanodeRequestProto) Reset()         { *m = GetAdditionalDatanodeRequestProto{} }
 func (m *GetAdditionalDatanodeRequestProto) String() string { return proto.CompactTextString(m) }
 func (*GetAdditionalDatanodeRequestProto) ProtoMessage()    {}
 func (*GetAdditionalDatanodeRequestProto) Descriptor() ([]byte, []int) {
-	return fileDescriptor4, []int{26}
+	return fileDescriptor_ClientNamenodeProtocol_54652e2c42538454, []int{26}
 }
+func (m *GetAdditionalDatanodeRequestProto) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_GetAdditionalDatanodeRequestProto.Unmarshal(m, b)
+}
+func (m *GetAdditionalDatanodeRequestProto) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_GetAdditionalDatanodeRequestProto.Marshal(b, m, deterministic)
+}
+func (dst *GetAdditionalDatanodeRequestProto) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_GetAdditionalDatanodeRequestProto.Merge(dst, src)
+}
+func (m *GetAdditionalDatanodeRequestProto) XXX_Size() int {
+	return xxx_messageInfo_GetAdditionalDatanodeRequestProto.Size(m)
+}
+func (m *GetAdditionalDatanodeRequestProto) XXX_DiscardUnknown() {
+	xxx_messageInfo_GetAdditionalDatanodeRequestProto.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_GetAdditionalDatanodeRequestProto proto.InternalMessageInfo
 
 const Default_GetAdditionalDatanodeRequestProto_FileId uint64 = 0
 
@@ -876,16 +1453,35 @@ func (m *GetAdditionalDatanodeRequestProto) GetFileId() uint64 {
 }
 
 type GetAdditionalDatanodeResponseProto struct {
-	Block            *LocatedBlockProto `protobuf:"bytes,1,req,name=block" json:"block,omitempty"`
-	XXX_unrecognized []byte             `json:"-"`
+	Block                *LocatedBlockProto `protobuf:"bytes,1,req,name=block" json:"block,omitempty"`
+	XXX_NoUnkeyedLiteral struct{}           `json:"-"`
+	XXX_unrecognized     []byte             `json:"-"`
+	XXX_sizecache        int32              `json:"-"`
 }
 
 func (m *GetAdditionalDatanodeResponseProto) Reset()         { *m = GetAdditionalDatanodeResponseProto{} }
 func (m *GetAdditionalDatanodeResponseProto) String() string { return proto.CompactTextString(m) }
 func (*GetAdditionalDatanodeResponseProto) ProtoMessage()    {}
 func (*GetAdditionalDatanodeResponseProto) Descriptor() ([]byte, []int) {
-	return fileDescriptor4, []int{27}
+	return fileDescriptor_ClientNamenodeProtocol_54652e2c42538454, []int{27}
 }
+func (m *GetAdditionalDatanodeResponseProto) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_GetAdditionalDatanodeResponseProto.Unmarshal(m, b)
+}
+func (m *GetAdditionalDatanodeResponseProto) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_GetAdditionalDatanodeResponseProto.Marshal(b, m, deterministic)
+}
+func (dst *GetAdditionalDatanodeResponseProto) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_GetAdditionalDatanodeResponseProto.Merge(dst, src)
+}
+func (m *GetAdditionalDatanodeResponseProto) XXX_Size() int {
+	return xxx_messageInfo_GetAdditionalDatanodeResponseProto.Size(m)
+}
+func (m *GetAdditionalDatanodeResponseProto) XXX_DiscardUnknown() {
+	xxx_messageInfo_GetAdditionalDatanodeResponseProto.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_GetAdditionalDatanodeResponseProto proto.InternalMessageInfo
 
 func (m *GetAdditionalDatanodeResponseProto) GetBlock() *LocatedBlockProto {
 	if m != nil {
@@ -895,17 +1491,38 @@ func (m *GetAdditionalDatanodeResponseProto) GetBlock() *LocatedBlockProto {
 }
 
 type CompleteRequestProto struct {
-	Src              *string             `protobuf:"bytes,1,req,name=src" json:"src,omitempty"`
-	ClientName       *string             `protobuf:"bytes,2,req,name=clientName" json:"clientName,omitempty"`
-	Last             *ExtendedBlockProto `protobuf:"bytes,3,opt,name=last" json:"last,omitempty"`
-	FileId           *uint64             `protobuf:"varint,4,opt,name=fileId,def=0" json:"fileId,omitempty"`
-	XXX_unrecognized []byte              `json:"-"`
+	Src                  *string             `protobuf:"bytes,1,req,name=src" json:"src,omitempty"`
+	ClientName           *string             `protobuf:"bytes,2,req,name=clientName" json:"clientName,omitempty"`
+	Last                 *ExtendedBlockProto `protobuf:"bytes,3,opt,name=last" json:"last,omitempty"`
+	FileId               *uint64             `protobuf:"varint,4,opt,name=fileId,def=0" json:"fileId,omitempty"`
+	XXX_NoUnkeyedLiteral struct{}            `json:"-"`
+	XXX_unrecognized     []byte              `json:"-"`
+	XXX_sizecache        int32               `json:"-"`
 }
 
-func (m *CompleteRequestProto) Reset()                    { *m = CompleteRequestProto{} }
-func (m *CompleteRequestProto) String() string            { return proto.CompactTextString(m) }
-func (*CompleteRequestProto) ProtoMessage()               {}
-func (*CompleteRequestProto) Descriptor() ([]byte, []int) { return fileDescriptor4, []int{28} }
+func (m *CompleteRequestProto) Reset()         { *m = CompleteRequestProto{} }
+func (m *CompleteRequestProto) String() string { return proto.CompactTextString(m) }
+func (*CompleteRequestProto) ProtoMessage()    {}
+func (*CompleteRequestProto) Descriptor() ([]byte, []int) {
+	return fileDescriptor_ClientNamenodeProtocol_54652e2c42538454, []int{28}
+}
+func (m *CompleteRequestProto) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_CompleteRequestProto.Unmarshal(m, b)
+}
+func (m *CompleteRequestProto) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_CompleteRequestProto.Marshal(b, m, deterministic)
+}
+func (dst *CompleteRequestProto) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_CompleteRequestProto.Merge(dst, src)
+}
+func (m *CompleteRequestProto) XXX_Size() int {
+	return xxx_messageInfo_CompleteRequestProto.Size(m)
+}
+func (m *CompleteRequestProto) XXX_DiscardUnknown() {
+	xxx_messageInfo_CompleteRequestProto.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_CompleteRequestProto proto.InternalMessageInfo
 
 const Default_CompleteRequestProto_FileId uint64 = 0
 
@@ -938,14 +1555,35 @@ func (m *CompleteRequestProto) GetFileId() uint64 {
 }
 
 type CompleteResponseProto struct {
-	Result           *bool  `protobuf:"varint,1,req,name=result" json:"result,omitempty"`
-	XXX_unrecognized []byte `json:"-"`
+	Result               *bool    `protobuf:"varint,1,req,name=result" json:"result,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
 }
 
-func (m *CompleteResponseProto) Reset()                    { *m = CompleteResponseProto{} }
-func (m *CompleteResponseProto) String() string            { return proto.CompactTextString(m) }
-func (*CompleteResponseProto) ProtoMessage()               {}
-func (*CompleteResponseProto) Descriptor() ([]byte, []int) { return fileDescriptor4, []int{29} }
+func (m *CompleteResponseProto) Reset()         { *m = CompleteResponseProto{} }
+func (m *CompleteResponseProto) String() string { return proto.CompactTextString(m) }
+func (*CompleteResponseProto) ProtoMessage()    {}
+func (*CompleteResponseProto) Descriptor() ([]byte, []int) {
+	return fileDescriptor_ClientNamenodeProtocol_54652e2c42538454, []int{29}
+}
+func (m *CompleteResponseProto) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_CompleteResponseProto.Unmarshal(m, b)
+}
+func (m *CompleteResponseProto) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_CompleteResponseProto.Marshal(b, m, deterministic)
+}
+func (dst *CompleteResponseProto) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_CompleteResponseProto.Merge(dst, src)
+}
+func (m *CompleteResponseProto) XXX_Size() int {
+	return xxx_messageInfo_CompleteResponseProto.Size(m)
+}
+func (m *CompleteResponseProto) XXX_DiscardUnknown() {
+	xxx_messageInfo_CompleteResponseProto.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_CompleteResponseProto proto.InternalMessageInfo
 
 func (m *CompleteResponseProto) GetResult() bool {
 	if m != nil && m.Result != nil {
@@ -955,14 +1593,35 @@ func (m *CompleteResponseProto) GetResult() bool {
 }
 
 type ReportBadBlocksRequestProto struct {
-	Blocks           []*LocatedBlockProto `protobuf:"bytes,1,rep,name=blocks" json:"blocks,omitempty"`
-	XXX_unrecognized []byte               `json:"-"`
+	Blocks               []*LocatedBlockProto `protobuf:"bytes,1,rep,name=blocks" json:"blocks,omitempty"`
+	XXX_NoUnkeyedLiteral struct{}             `json:"-"`
+	XXX_unrecognized     []byte               `json:"-"`
+	XXX_sizecache        int32                `json:"-"`
 }
 
-func (m *ReportBadBlocksRequestProto) Reset()                    { *m = ReportBadBlocksRequestProto{} }
-func (m *ReportBadBlocksRequestProto) String() string            { return proto.CompactTextString(m) }
-func (*ReportBadBlocksRequestProto) ProtoMessage()               {}
-func (*ReportBadBlocksRequestProto) Descriptor() ([]byte, []int) { return fileDescriptor4, []int{30} }
+func (m *ReportBadBlocksRequestProto) Reset()         { *m = ReportBadBlocksRequestProto{} }
+func (m *ReportBadBlocksRequestProto) String() string { return proto.CompactTextString(m) }
+func (*ReportBadBlocksRequestProto) ProtoMessage()    {}
+func (*ReportBadBlocksRequestProto) Descriptor() ([]byte, []int) {
+	return fileDescriptor_ClientNamenodeProtocol_54652e2c42538454, []int{30}
+}
+func (m *ReportBadBlocksRequestProto) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_ReportBadBlocksRequestProto.Unmarshal(m, b)
+}
+func (m *ReportBadBlocksRequestProto) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_ReportBadBlocksRequestProto.Marshal(b, m, deterministic)
+}
+func (dst *ReportBadBlocksRequestProto) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_ReportBadBlocksRequestProto.Merge(dst, src)
+}
+func (m *ReportBadBlocksRequestProto) XXX_Size() int {
+	return xxx_messageInfo_ReportBadBlocksRequestProto.Size(m)
+}
+func (m *ReportBadBlocksRequestProto) XXX_DiscardUnknown() {
+	xxx_messageInfo_ReportBadBlocksRequestProto.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_ReportBadBlocksRequestProto proto.InternalMessageInfo
 
 func (m *ReportBadBlocksRequestProto) GetBlocks() []*LocatedBlockProto {
 	if m != nil {
@@ -972,24 +1631,66 @@ func (m *ReportBadBlocksRequestProto) GetBlocks() []*LocatedBlockProto {
 }
 
 type ReportBadBlocksResponseProto struct {
-	XXX_unrecognized []byte `json:"-"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
 }
 
-func (m *ReportBadBlocksResponseProto) Reset()                    { *m = ReportBadBlocksResponseProto{} }
-func (m *ReportBadBlocksResponseProto) String() string            { return proto.CompactTextString(m) }
-func (*ReportBadBlocksResponseProto) ProtoMessage()               {}
-func (*ReportBadBlocksResponseProto) Descriptor() ([]byte, []int) { return fileDescriptor4, []int{31} }
+func (m *ReportBadBlocksResponseProto) Reset()         { *m = ReportBadBlocksResponseProto{} }
+func (m *ReportBadBlocksResponseProto) String() string { return proto.CompactTextString(m) }
+func (*ReportBadBlocksResponseProto) ProtoMessage()    {}
+func (*ReportBadBlocksResponseProto) Descriptor() ([]byte, []int) {
+	return fileDescriptor_ClientNamenodeProtocol_54652e2c42538454, []int{31}
+}
+func (m *ReportBadBlocksResponseProto) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_ReportBadBlocksResponseProto.Unmarshal(m, b)
+}
+func (m *ReportBadBlocksResponseProto) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_ReportBadBlocksResponseProto.Marshal(b, m, deterministic)
+}
+func (dst *ReportBadBlocksResponseProto) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_ReportBadBlocksResponseProto.Merge(dst, src)
+}
+func (m *ReportBadBlocksResponseProto) XXX_Size() int {
+	return xxx_messageInfo_ReportBadBlocksResponseProto.Size(m)
+}
+func (m *ReportBadBlocksResponseProto) XXX_DiscardUnknown() {
+	xxx_messageInfo_ReportBadBlocksResponseProto.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_ReportBadBlocksResponseProto proto.InternalMessageInfo
 
 type ConcatRequestProto struct {
-	Trg              *string  `protobuf:"bytes,1,req,name=trg" json:"trg,omitempty"`
-	Srcs             []string `protobuf:"bytes,2,rep,name=srcs" json:"srcs,omitempty"`
-	XXX_unrecognized []byte   `json:"-"`
+	Trg                  *string  `protobuf:"bytes,1,req,name=trg" json:"trg,omitempty"`
+	Srcs                 []string `protobuf:"bytes,2,rep,name=srcs" json:"srcs,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
 }
 
-func (m *ConcatRequestProto) Reset()                    { *m = ConcatRequestProto{} }
-func (m *ConcatRequestProto) String() string            { return proto.CompactTextString(m) }
-func (*ConcatRequestProto) ProtoMessage()               {}
-func (*ConcatRequestProto) Descriptor() ([]byte, []int) { return fileDescriptor4, []int{32} }
+func (m *ConcatRequestProto) Reset()         { *m = ConcatRequestProto{} }
+func (m *ConcatRequestProto) String() string { return proto.CompactTextString(m) }
+func (*ConcatRequestProto) ProtoMessage()    {}
+func (*ConcatRequestProto) Descriptor() ([]byte, []int) {
+	return fileDescriptor_ClientNamenodeProtocol_54652e2c42538454, []int{32}
+}
+func (m *ConcatRequestProto) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_ConcatRequestProto.Unmarshal(m, b)
+}
+func (m *ConcatRequestProto) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_ConcatRequestProto.Marshal(b, m, deterministic)
+}
+func (dst *ConcatRequestProto) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_ConcatRequestProto.Merge(dst, src)
+}
+func (m *ConcatRequestProto) XXX_Size() int {
+	return xxx_messageInfo_ConcatRequestProto.Size(m)
+}
+func (m *ConcatRequestProto) XXX_DiscardUnknown() {
+	xxx_messageInfo_ConcatRequestProto.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_ConcatRequestProto proto.InternalMessageInfo
 
 func (m *ConcatRequestProto) GetTrg() string {
 	if m != nil && m.Trg != nil {
@@ -1006,25 +1707,67 @@ func (m *ConcatRequestProto) GetSrcs() []string {
 }
 
 type ConcatResponseProto struct {
-	XXX_unrecognized []byte `json:"-"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
 }
 
-func (m *ConcatResponseProto) Reset()                    { *m = ConcatResponseProto{} }
-func (m *ConcatResponseProto) String() string            { return proto.CompactTextString(m) }
-func (*ConcatResponseProto) ProtoMessage()               {}
-func (*ConcatResponseProto) Descriptor() ([]byte, []int) { return fileDescriptor4, []int{33} }
+func (m *ConcatResponseProto) Reset()         { *m = ConcatResponseProto{} }
+func (m *ConcatResponseProto) String() string { return proto.CompactTextString(m) }
+func (*ConcatResponseProto) ProtoMessage()    {}
+func (*ConcatResponseProto) Descriptor() ([]byte, []int) {
+	return fileDescriptor_ClientNamenodeProtocol_54652e2c42538454, []int{33}
+}
+func (m *ConcatResponseProto) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_ConcatResponseProto.Unmarshal(m, b)
+}
+func (m *ConcatResponseProto) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_ConcatResponseProto.Marshal(b, m, deterministic)
+}
+func (dst *ConcatResponseProto) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_ConcatResponseProto.Merge(dst, src)
+}
+func (m *ConcatResponseProto) XXX_Size() int {
+	return xxx_messageInfo_ConcatResponseProto.Size(m)
+}
+func (m *ConcatResponseProto) XXX_DiscardUnknown() {
+	xxx_messageInfo_ConcatResponseProto.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_ConcatResponseProto proto.InternalMessageInfo
 
 type TruncateRequestProto struct {
-	Src              *string `protobuf:"bytes,1,req,name=src" json:"src,omitempty"`
-	NewLength        *uint64 `protobuf:"varint,2,req,name=newLength" json:"newLength,omitempty"`
-	ClientName       *string `protobuf:"bytes,3,req,name=clientName" json:"clientName,omitempty"`
-	XXX_unrecognized []byte  `json:"-"`
+	Src                  *string  `protobuf:"bytes,1,req,name=src" json:"src,omitempty"`
+	NewLength            *uint64  `protobuf:"varint,2,req,name=newLength" json:"newLength,omitempty"`
+	ClientName           *string  `protobuf:"bytes,3,req,name=clientName" json:"clientName,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
 }
 
-func (m *TruncateRequestProto) Reset()                    { *m = TruncateRequestProto{} }
-func (m *TruncateRequestProto) String() string            { return proto.CompactTextString(m) }
-func (*TruncateRequestProto) ProtoMessage()               {}
-func (*TruncateRequestProto) Descriptor() ([]byte, []int) { return fileDescriptor4, []int{34} }
+func (m *TruncateRequestProto) Reset()         { *m = TruncateRequestProto{} }
+func (m *TruncateRequestProto) String() string { return proto.CompactTextString(m) }
+func (*TruncateRequestProto) ProtoMessage()    {}
+func (*TruncateRequestProto) Descriptor() ([]byte, []int) {
+	return fileDescriptor_ClientNamenodeProtocol_54652e2c42538454, []int{34}
+}
+func (m *TruncateRequestProto) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_TruncateRequestProto.Unmarshal(m, b)
+}
+func (m *TruncateRequestProto) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_TruncateRequestProto.Marshal(b, m, deterministic)
+}
+func (dst *TruncateRequestProto) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_TruncateRequestProto.Merge(dst, src)
+}
+func (m *TruncateRequestProto) XXX_Size() int {
+	return xxx_messageInfo_TruncateRequestProto.Size(m)
+}
+func (m *TruncateRequestProto) XXX_DiscardUnknown() {
+	xxx_messageInfo_TruncateRequestProto.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_TruncateRequestProto proto.InternalMessageInfo
 
 func (m *TruncateRequestProto) GetSrc() string {
 	if m != nil && m.Src != nil {
@@ -1048,14 +1791,35 @@ func (m *TruncateRequestProto) GetClientName() string {
 }
 
 type TruncateResponseProto struct {
-	Result           *bool  `protobuf:"varint,1,req,name=result" json:"result,omitempty"`
-	XXX_unrecognized []byte `json:"-"`
+	Result               *bool    `protobuf:"varint,1,req,name=result" json:"result,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
 }
 
-func (m *TruncateResponseProto) Reset()                    { *m = TruncateResponseProto{} }
-func (m *TruncateResponseProto) String() string            { return proto.CompactTextString(m) }
-func (*TruncateResponseProto) ProtoMessage()               {}
-func (*TruncateResponseProto) Descriptor() ([]byte, []int) { return fileDescriptor4, []int{35} }
+func (m *TruncateResponseProto) Reset()         { *m = TruncateResponseProto{} }
+func (m *TruncateResponseProto) String() string { return proto.CompactTextString(m) }
+func (*TruncateResponseProto) ProtoMessage()    {}
+func (*TruncateResponseProto) Descriptor() ([]byte, []int) {
+	return fileDescriptor_ClientNamenodeProtocol_54652e2c42538454, []int{35}
+}
+func (m *TruncateResponseProto) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_TruncateResponseProto.Unmarshal(m, b)
+}
+func (m *TruncateResponseProto) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_TruncateResponseProto.Marshal(b, m, deterministic)
+}
+func (dst *TruncateResponseProto) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_TruncateResponseProto.Merge(dst, src)
+}
+func (m *TruncateResponseProto) XXX_Size() int {
+	return xxx_messageInfo_TruncateResponseProto.Size(m)
+}
+func (m *TruncateResponseProto) XXX_DiscardUnknown() {
+	xxx_messageInfo_TruncateResponseProto.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_TruncateResponseProto proto.InternalMessageInfo
 
 func (m *TruncateResponseProto) GetResult() bool {
 	if m != nil && m.Result != nil {
@@ -1065,15 +1829,36 @@ func (m *TruncateResponseProto) GetResult() bool {
 }
 
 type RenameRequestProto struct {
-	Src              *string `protobuf:"bytes,1,req,name=src" json:"src,omitempty"`
-	Dst              *string `protobuf:"bytes,2,req,name=dst" json:"dst,omitempty"`
-	XXX_unrecognized []byte  `json:"-"`
+	Src                  *string  `protobuf:"bytes,1,req,name=src" json:"src,omitempty"`
+	Dst                  *string  `protobuf:"bytes,2,req,name=dst" json:"dst,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
 }
 
-func (m *RenameRequestProto) Reset()                    { *m = RenameRequestProto{} }
-func (m *RenameRequestProto) String() string            { return proto.CompactTextString(m) }
-func (*RenameRequestProto) ProtoMessage()               {}
-func (*RenameRequestProto) Descriptor() ([]byte, []int) { return fileDescriptor4, []int{36} }
+func (m *RenameRequestProto) Reset()         { *m = RenameRequestProto{} }
+func (m *RenameRequestProto) String() string { return proto.CompactTextString(m) }
+func (*RenameRequestProto) ProtoMessage()    {}
+func (*RenameRequestProto) Descriptor() ([]byte, []int) {
+	return fileDescriptor_ClientNamenodeProtocol_54652e2c42538454, []int{36}
+}
+func (m *RenameRequestProto) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_RenameRequestProto.Unmarshal(m, b)
+}
+func (m *RenameRequestProto) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_RenameRequestProto.Marshal(b, m, deterministic)
+}
+func (dst *RenameRequestProto) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_RenameRequestProto.Merge(dst, src)
+}
+func (m *RenameRequestProto) XXX_Size() int {
+	return xxx_messageInfo_RenameRequestProto.Size(m)
+}
+func (m *RenameRequestProto) XXX_DiscardUnknown() {
+	xxx_messageInfo_RenameRequestProto.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_RenameRequestProto proto.InternalMessageInfo
 
 func (m *RenameRequestProto) GetSrc() string {
 	if m != nil && m.Src != nil {
@@ -1090,14 +1875,35 @@ func (m *RenameRequestProto) GetDst() string {
 }
 
 type RenameResponseProto struct {
-	Result           *bool  `protobuf:"varint,1,req,name=result" json:"result,omitempty"`
-	XXX_unrecognized []byte `json:"-"`
+	Result               *bool    `protobuf:"varint,1,req,name=result" json:"result,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
 }
 
-func (m *RenameResponseProto) Reset()                    { *m = RenameResponseProto{} }
-func (m *RenameResponseProto) String() string            { return proto.CompactTextString(m) }
-func (*RenameResponseProto) ProtoMessage()               {}
-func (*RenameResponseProto) Descriptor() ([]byte, []int) { return fileDescriptor4, []int{37} }
+func (m *RenameResponseProto) Reset()         { *m = RenameResponseProto{} }
+func (m *RenameResponseProto) String() string { return proto.CompactTextString(m) }
+func (*RenameResponseProto) ProtoMessage()    {}
+func (*RenameResponseProto) Descriptor() ([]byte, []int) {
+	return fileDescriptor_ClientNamenodeProtocol_54652e2c42538454, []int{37}
+}
+func (m *RenameResponseProto) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_RenameResponseProto.Unmarshal(m, b)
+}
+func (m *RenameResponseProto) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_RenameResponseProto.Marshal(b, m, deterministic)
+}
+func (dst *RenameResponseProto) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_RenameResponseProto.Merge(dst, src)
+}
+func (m *RenameResponseProto) XXX_Size() int {
+	return xxx_messageInfo_RenameResponseProto.Size(m)
+}
+func (m *RenameResponseProto) XXX_DiscardUnknown() {
+	xxx_messageInfo_RenameResponseProto.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_RenameResponseProto proto.InternalMessageInfo
 
 func (m *RenameResponseProto) GetResult() bool {
 	if m != nil && m.Result != nil {
@@ -1107,16 +1913,37 @@ func (m *RenameResponseProto) GetResult() bool {
 }
 
 type Rename2RequestProto struct {
-	Src              *string `protobuf:"bytes,1,req,name=src" json:"src,omitempty"`
-	Dst              *string `protobuf:"bytes,2,req,name=dst" json:"dst,omitempty"`
-	OverwriteDest    *bool   `protobuf:"varint,3,req,name=overwriteDest" json:"overwriteDest,omitempty"`
-	XXX_unrecognized []byte  `json:"-"`
+	Src                  *string  `protobuf:"bytes,1,req,name=src" json:"src,omitempty"`
+	Dst                  *string  `protobuf:"bytes,2,req,name=dst" json:"dst,omitempty"`
+	OverwriteDest        *bool    `protobuf:"varint,3,req,name=overwriteDest" json:"overwriteDest,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
 }
 
-func (m *Rename2RequestProto) Reset()                    { *m = Rename2RequestProto{} }
-func (m *Rename2RequestProto) String() string            { return proto.CompactTextString(m) }
-func (*Rename2RequestProto) ProtoMessage()               {}
-func (*Rename2RequestProto) Descriptor() ([]byte, []int) { return fileDescriptor4, []int{38} }
+func (m *Rename2RequestProto) Reset()         { *m = Rename2RequestProto{} }
+func (m *Rename2RequestProto) String() string { return proto.CompactTextString(m) }
+func (*Rename2RequestProto) ProtoMessage()    {}
+func (*Rename2RequestProto) Descriptor() ([]byte, []int) {
+	return fileDescriptor_ClientNamenodeProtocol_54652e2c42538454, []int{38}
+}
+func (m *Rename2RequestProto) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_Rename2RequestProto.Unmarshal(m, b)
+}
+func (m *Rename2RequestProto) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_Rename2RequestProto.Marshal(b, m, deterministic)
+}
+func (dst *Rename2RequestProto) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_Rename2RequestProto.Merge(dst, src)
+}
+func (m *Rename2RequestProto) XXX_Size() int {
+	return xxx_messageInfo_Rename2RequestProto.Size(m)
+}
+func (m *Rename2RequestProto) XXX_DiscardUnknown() {
+	xxx_messageInfo_Rename2RequestProto.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_Rename2RequestProto proto.InternalMessageInfo
 
 func (m *Rename2RequestProto) GetSrc() string {
 	if m != nil && m.Src != nil {
@@ -1140,24 +1967,66 @@ func (m *Rename2RequestProto) GetOverwriteDest() bool {
 }
 
 type Rename2ResponseProto struct {
-	XXX_unrecognized []byte `json:"-"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
 }
 
-func (m *Rename2ResponseProto) Reset()                    { *m = Rename2ResponseProto{} }
-func (m *Rename2ResponseProto) String() string            { return proto.CompactTextString(m) }
-func (*Rename2ResponseProto) ProtoMessage()               {}
-func (*Rename2ResponseProto) Descriptor() ([]byte, []int) { return fileDescriptor4, []int{39} }
+func (m *Rename2ResponseProto) Reset()         { *m = Rename2ResponseProto{} }
+func (m *Rename2ResponseProto) String() string { return proto.CompactTextString(m) }
+func (*Rename2ResponseProto) ProtoMessage()    {}
+func (*Rename2ResponseProto) Descriptor() ([]byte, []int) {
+	return fileDescriptor_ClientNamenodeProtocol_54652e2c42538454, []int{39}
+}
+func (m *Rename2ResponseProto) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_Rename2ResponseProto.Unmarshal(m, b)
+}
+func (m *Rename2ResponseProto) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_Rename2ResponseProto.Marshal(b, m, deterministic)
+}
+func (dst *Rename2ResponseProto) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_Rename2ResponseProto.Merge(dst, src)
+}
+func (m *Rename2ResponseProto) XXX_Size() int {
+	return xxx_messageInfo_Rename2ResponseProto.Size(m)
+}
+func (m *Rename2ResponseProto) XXX_DiscardUnknown() {
+	xxx_messageInfo_Rename2ResponseProto.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_Rename2ResponseProto proto.InternalMessageInfo
 
 type DeleteRequestProto struct {
-	Src              *string `protobuf:"bytes,1,req,name=src" json:"src,omitempty"`
-	Recursive        *bool   `protobuf:"varint,2,req,name=recursive" json:"recursive,omitempty"`
-	XXX_unrecognized []byte  `json:"-"`
+	Src                  *string  `protobuf:"bytes,1,req,name=src" json:"src,omitempty"`
+	Recursive            *bool    `protobuf:"varint,2,req,name=recursive" json:"recursive,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
 }
 
-func (m *DeleteRequestProto) Reset()                    { *m = DeleteRequestProto{} }
-func (m *DeleteRequestProto) String() string            { return proto.CompactTextString(m) }
-func (*DeleteRequestProto) ProtoMessage()               {}
-func (*DeleteRequestProto) Descriptor() ([]byte, []int) { return fileDescriptor4, []int{40} }
+func (m *DeleteRequestProto) Reset()         { *m = DeleteRequestProto{} }
+func (m *DeleteRequestProto) String() string { return proto.CompactTextString(m) }
+func (*DeleteRequestProto) ProtoMessage()    {}
+func (*DeleteRequestProto) Descriptor() ([]byte, []int) {
+	return fileDescriptor_ClientNamenodeProtocol_54652e2c42538454, []int{40}
+}
+func (m *DeleteRequestProto) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_DeleteRequestProto.Unmarshal(m, b)
+}
+func (m *DeleteRequestProto) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_DeleteRequestProto.Marshal(b, m, deterministic)
+}
+func (dst *DeleteRequestProto) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_DeleteRequestProto.Merge(dst, src)
+}
+func (m *DeleteRequestProto) XXX_Size() int {
+	return xxx_messageInfo_DeleteRequestProto.Size(m)
+}
+func (m *DeleteRequestProto) XXX_DiscardUnknown() {
+	xxx_messageInfo_DeleteRequestProto.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_DeleteRequestProto proto.InternalMessageInfo
 
 func (m *DeleteRequestProto) GetSrc() string {
 	if m != nil && m.Src != nil {
@@ -1174,14 +2043,35 @@ func (m *DeleteRequestProto) GetRecursive() bool {
 }
 
 type DeleteResponseProto struct {
-	Result           *bool  `protobuf:"varint,1,req,name=result" json:"result,omitempty"`
-	XXX_unrecognized []byte `json:"-"`
+	Result               *bool    `protobuf:"varint,1,req,name=result" json:"result,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
 }
 
-func (m *DeleteResponseProto) Reset()                    { *m = DeleteResponseProto{} }
-func (m *DeleteResponseProto) String() string            { return proto.CompactTextString(m) }
-func (*DeleteResponseProto) ProtoMessage()               {}
-func (*DeleteResponseProto) Descriptor() ([]byte, []int) { return fileDescriptor4, []int{41} }
+func (m *DeleteResponseProto) Reset()         { *m = DeleteResponseProto{} }
+func (m *DeleteResponseProto) String() string { return proto.CompactTextString(m) }
+func (*DeleteResponseProto) ProtoMessage()    {}
+func (*DeleteResponseProto) Descriptor() ([]byte, []int) {
+	return fileDescriptor_ClientNamenodeProtocol_54652e2c42538454, []int{41}
+}
+func (m *DeleteResponseProto) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_DeleteResponseProto.Unmarshal(m, b)
+}
+func (m *DeleteResponseProto) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_DeleteResponseProto.Marshal(b, m, deterministic)
+}
+func (dst *DeleteResponseProto) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_DeleteResponseProto.Merge(dst, src)
+}
+func (m *DeleteResponseProto) XXX_Size() int {
+	return xxx_messageInfo_DeleteResponseProto.Size(m)
+}
+func (m *DeleteResponseProto) XXX_DiscardUnknown() {
+	xxx_messageInfo_DeleteResponseProto.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_DeleteResponseProto proto.InternalMessageInfo
 
 func (m *DeleteResponseProto) GetResult() bool {
 	if m != nil && m.Result != nil {
@@ -1191,16 +2081,37 @@ func (m *DeleteResponseProto) GetResult() bool {
 }
 
 type MkdirsRequestProto struct {
-	Src              *string            `protobuf:"bytes,1,req,name=src" json:"src,omitempty"`
-	Masked           *FsPermissionProto `protobuf:"bytes,2,req,name=masked" json:"masked,omitempty"`
-	CreateParent     *bool              `protobuf:"varint,3,req,name=createParent" json:"createParent,omitempty"`
-	XXX_unrecognized []byte             `json:"-"`
+	Src                  *string            `protobuf:"bytes,1,req,name=src" json:"src,omitempty"`
+	Masked               *FsPermissionProto `protobuf:"bytes,2,req,name=masked" json:"masked,omitempty"`
+	CreateParent         *bool              `protobuf:"varint,3,req,name=createParent" json:"createParent,omitempty"`
+	XXX_NoUnkeyedLiteral struct{}           `json:"-"`
+	XXX_unrecognized     []byte             `json:"-"`
+	XXX_sizecache        int32              `json:"-"`
 }
 
-func (m *MkdirsRequestProto) Reset()                    { *m = MkdirsRequestProto{} }
-func (m *MkdirsRequestProto) String() string            { return proto.CompactTextString(m) }
-func (*MkdirsRequestProto) ProtoMessage()               {}
-func (*MkdirsRequestProto) Descriptor() ([]byte, []int) { return fileDescriptor4, []int{42} }
+func (m *MkdirsRequestProto) Reset()         { *m = MkdirsRequestProto{} }
+func (m *MkdirsRequestProto) String() string { return proto.CompactTextString(m) }
+func (*MkdirsRequestProto) ProtoMessage()    {}
+func (*MkdirsRequestProto) Descriptor() ([]byte, []int) {
+	return fileDescriptor_ClientNamenodeProtocol_54652e2c42538454, []int{42}
+}
+func (m *MkdirsRequestProto) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_MkdirsRequestProto.Unmarshal(m, b)
+}
+func (m *MkdirsRequestProto) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_MkdirsRequestProto.Marshal(b, m, deterministic)
+}
+func (dst *MkdirsRequestProto) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_MkdirsRequestProto.Merge(dst, src)
+}
+func (m *MkdirsRequestProto) XXX_Size() int {
+	return xxx_messageInfo_MkdirsRequestProto.Size(m)
+}
+func (m *MkdirsRequestProto) XXX_DiscardUnknown() {
+	xxx_messageInfo_MkdirsRequestProto.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_MkdirsRequestProto proto.InternalMessageInfo
 
 func (m *MkdirsRequestProto) GetSrc() string {
 	if m != nil && m.Src != nil {
@@ -1224,14 +2135,35 @@ func (m *MkdirsRequestProto) GetCreateParent() bool {
 }
 
 type MkdirsResponseProto struct {
-	Result           *bool  `protobuf:"varint,1,req,name=result" json:"result,omitempty"`
-	XXX_unrecognized []byte `json:"-"`
+	Result               *bool    `protobuf:"varint,1,req,name=result" json:"result,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
 }
 
-func (m *MkdirsResponseProto) Reset()                    { *m = MkdirsResponseProto{} }
-func (m *MkdirsResponseProto) String() string            { return proto.CompactTextString(m) }
-func (*MkdirsResponseProto) ProtoMessage()               {}
-func (*MkdirsResponseProto) Descriptor() ([]byte, []int) { return fileDescriptor4, []int{43} }
+func (m *MkdirsResponseProto) Reset()         { *m = MkdirsResponseProto{} }
+func (m *MkdirsResponseProto) String() string { return proto.CompactTextString(m) }
+func (*MkdirsResponseProto) ProtoMessage()    {}
+func (*MkdirsResponseProto) Descriptor() ([]byte, []int) {
+	return fileDescriptor_ClientNamenodeProtocol_54652e2c42538454, []int{43}
+}
+func (m *MkdirsResponseProto) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_MkdirsResponseProto.Unmarshal(m, b)
+}
+func (m *MkdirsResponseProto) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_MkdirsResponseProto.Marshal(b, m, deterministic)
+}
+func (dst *MkdirsResponseProto) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_MkdirsResponseProto.Merge(dst, src)
+}
+func (m *MkdirsResponseProto) XXX_Size() int {
+	return xxx_messageInfo_MkdirsResponseProto.Size(m)
+}
+func (m *MkdirsResponseProto) XXX_DiscardUnknown() {
+	xxx_messageInfo_MkdirsResponseProto.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_MkdirsResponseProto proto.InternalMessageInfo
 
 func (m *MkdirsResponseProto) GetResult() bool {
 	if m != nil && m.Result != nil {
@@ -1241,16 +2173,37 @@ func (m *MkdirsResponseProto) GetResult() bool {
 }
 
 type GetListingRequestProto struct {
-	Src              *string `protobuf:"bytes,1,req,name=src" json:"src,omitempty"`
-	StartAfter       []byte  `protobuf:"bytes,2,req,name=startAfter" json:"startAfter,omitempty"`
-	NeedLocation     *bool   `protobuf:"varint,3,req,name=needLocation" json:"needLocation,omitempty"`
-	XXX_unrecognized []byte  `json:"-"`
+	Src                  *string  `protobuf:"bytes,1,req,name=src" json:"src,omitempty"`
+	StartAfter           []byte   `protobuf:"bytes,2,req,name=startAfter" json:"startAfter,omitempty"`
+	NeedLocation         *bool    `protobuf:"varint,3,req,name=needLocation" json:"needLocation,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
 }
 
-func (m *GetListingRequestProto) Reset()                    { *m = GetListingRequestProto{} }
-func (m *GetListingRequestProto) String() string            { return proto.CompactTextString(m) }
-func (*GetListingRequestProto) ProtoMessage()               {}
-func (*GetListingRequestProto) Descriptor() ([]byte, []int) { return fileDescriptor4, []int{44} }
+func (m *GetListingRequestProto) Reset()         { *m = GetListingRequestProto{} }
+func (m *GetListingRequestProto) String() string { return proto.CompactTextString(m) }
+func (*GetListingRequestProto) ProtoMessage()    {}
+func (*GetListingRequestProto) Descriptor() ([]byte, []int) {
+	return fileDescriptor_ClientNamenodeProtocol_54652e2c42538454, []int{44}
+}
+func (m *GetListingRequestProto) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_GetListingRequestProto.Unmarshal(m, b)
+}
+func (m *GetListingRequestProto) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_GetListingRequestProto.Marshal(b, m, deterministic)
+}
+func (dst *GetListingRequestProto) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_GetListingRequestProto.Merge(dst, src)
+}
+func (m *GetListingRequestProto) XXX_Size() int {
+	return xxx_messageInfo_GetListingRequestProto.Size(m)
+}
+func (m *GetListingRequestProto) XXX_DiscardUnknown() {
+	xxx_messageInfo_GetListingRequestProto.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_GetListingRequestProto proto.InternalMessageInfo
 
 func (m *GetListingRequestProto) GetSrc() string {
 	if m != nil && m.Src != nil {
@@ -1274,14 +2227,35 @@ func (m *GetListingRequestProto) GetNeedLocation() bool {
 }
 
 type GetListingResponseProto struct {
-	DirList          *DirectoryListingProto `protobuf:"bytes,1,opt,name=dirList" json:"dirList,omitempty"`
-	XXX_unrecognized []byte                 `json:"-"`
+	DirList              *DirectoryListingProto `protobuf:"bytes,1,opt,name=dirList" json:"dirList,omitempty"`
+	XXX_NoUnkeyedLiteral struct{}               `json:"-"`
+	XXX_unrecognized     []byte                 `json:"-"`
+	XXX_sizecache        int32                  `json:"-"`
 }
 
-func (m *GetListingResponseProto) Reset()                    { *m = GetListingResponseProto{} }
-func (m *GetListingResponseProto) String() string            { return proto.CompactTextString(m) }
-func (*GetListingResponseProto) ProtoMessage()               {}
-func (*GetListingResponseProto) Descriptor() ([]byte, []int) { return fileDescriptor4, []int{45} }
+func (m *GetListingResponseProto) Reset()         { *m = GetListingResponseProto{} }
+func (m *GetListingResponseProto) String() string { return proto.CompactTextString(m) }
+func (*GetListingResponseProto) ProtoMessage()    {}
+func (*GetListingResponseProto) Descriptor() ([]byte, []int) {
+	return fileDescriptor_ClientNamenodeProtocol_54652e2c42538454, []int{45}
+}
+func (m *GetListingResponseProto) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_GetListingResponseProto.Unmarshal(m, b)
+}
+func (m *GetListingResponseProto) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_GetListingResponseProto.Marshal(b, m, deterministic)
+}
+func (dst *GetListingResponseProto) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_GetListingResponseProto.Merge(dst, src)
+}
+func (m *GetListingResponseProto) XXX_Size() int {
+	return xxx_messageInfo_GetListingResponseProto.Size(m)
+}
+func (m *GetListingResponseProto) XXX_DiscardUnknown() {
+	xxx_messageInfo_GetListingResponseProto.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_GetListingResponseProto proto.InternalMessageInfo
 
 func (m *GetListingResponseProto) GetDirList() *DirectoryListingProto {
 	if m != nil {
@@ -1291,7 +2265,9 @@ func (m *GetListingResponseProto) GetDirList() *DirectoryListingProto {
 }
 
 type GetSnapshottableDirListingRequestProto struct {
-	XXX_unrecognized []byte `json:"-"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
 }
 
 func (m *GetSnapshottableDirListingRequestProto) Reset() {
@@ -1300,12 +2276,31 @@ func (m *GetSnapshottableDirListingRequestProto) Reset() {
 func (m *GetSnapshottableDirListingRequestProto) String() string { return proto.CompactTextString(m) }
 func (*GetSnapshottableDirListingRequestProto) ProtoMessage()    {}
 func (*GetSnapshottableDirListingRequestProto) Descriptor() ([]byte, []int) {
-	return fileDescriptor4, []int{46}
+	return fileDescriptor_ClientNamenodeProtocol_54652e2c42538454, []int{46}
 }
+func (m *GetSnapshottableDirListingRequestProto) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_GetSnapshottableDirListingRequestProto.Unmarshal(m, b)
+}
+func (m *GetSnapshottableDirListingRequestProto) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_GetSnapshottableDirListingRequestProto.Marshal(b, m, deterministic)
+}
+func (dst *GetSnapshottableDirListingRequestProto) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_GetSnapshottableDirListingRequestProto.Merge(dst, src)
+}
+func (m *GetSnapshottableDirListingRequestProto) XXX_Size() int {
+	return xxx_messageInfo_GetSnapshottableDirListingRequestProto.Size(m)
+}
+func (m *GetSnapshottableDirListingRequestProto) XXX_DiscardUnknown() {
+	xxx_messageInfo_GetSnapshottableDirListingRequestProto.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_GetSnapshottableDirListingRequestProto proto.InternalMessageInfo
 
 type GetSnapshottableDirListingResponseProto struct {
 	SnapshottableDirList *SnapshottableDirectoryListingProto `protobuf:"bytes,1,opt,name=snapshottableDirList" json:"snapshottableDirList,omitempty"`
+	XXX_NoUnkeyedLiteral struct{}                            `json:"-"`
 	XXX_unrecognized     []byte                              `json:"-"`
+	XXX_sizecache        int32                               `json:"-"`
 }
 
 func (m *GetSnapshottableDirListingResponseProto) Reset() {
@@ -1314,8 +2309,25 @@ func (m *GetSnapshottableDirListingResponseProto) Reset() {
 func (m *GetSnapshottableDirListingResponseProto) String() string { return proto.CompactTextString(m) }
 func (*GetSnapshottableDirListingResponseProto) ProtoMessage()    {}
 func (*GetSnapshottableDirListingResponseProto) Descriptor() ([]byte, []int) {
-	return fileDescriptor4, []int{47}
+	return fileDescriptor_ClientNamenodeProtocol_54652e2c42538454, []int{47}
 }
+func (m *GetSnapshottableDirListingResponseProto) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_GetSnapshottableDirListingResponseProto.Unmarshal(m, b)
+}
+func (m *GetSnapshottableDirListingResponseProto) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_GetSnapshottableDirListingResponseProto.Marshal(b, m, deterministic)
+}
+func (dst *GetSnapshottableDirListingResponseProto) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_GetSnapshottableDirListingResponseProto.Merge(dst, src)
+}
+func (m *GetSnapshottableDirListingResponseProto) XXX_Size() int {
+	return xxx_messageInfo_GetSnapshottableDirListingResponseProto.Size(m)
+}
+func (m *GetSnapshottableDirListingResponseProto) XXX_DiscardUnknown() {
+	xxx_messageInfo_GetSnapshottableDirListingResponseProto.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_GetSnapshottableDirListingResponseProto proto.InternalMessageInfo
 
 func (m *GetSnapshottableDirListingResponseProto) GetSnapshottableDirList() *SnapshottableDirectoryListingProto {
 	if m != nil {
@@ -1325,18 +2337,37 @@ func (m *GetSnapshottableDirListingResponseProto) GetSnapshottableDirList() *Sna
 }
 
 type GetSnapshotDiffReportRequestProto struct {
-	SnapshotRoot     *string `protobuf:"bytes,1,req,name=snapshotRoot" json:"snapshotRoot,omitempty"`
-	FromSnapshot     *string `protobuf:"bytes,2,req,name=fromSnapshot" json:"fromSnapshot,omitempty"`
-	ToSnapshot       *string `protobuf:"bytes,3,req,name=toSnapshot" json:"toSnapshot,omitempty"`
-	XXX_unrecognized []byte  `json:"-"`
+	SnapshotRoot         *string  `protobuf:"bytes,1,req,name=snapshotRoot" json:"snapshotRoot,omitempty"`
+	FromSnapshot         *string  `protobuf:"bytes,2,req,name=fromSnapshot" json:"fromSnapshot,omitempty"`
+	ToSnapshot           *string  `protobuf:"bytes,3,req,name=toSnapshot" json:"toSnapshot,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
 }
 
 func (m *GetSnapshotDiffReportRequestProto) Reset()         { *m = GetSnapshotDiffReportRequestProto{} }
 func (m *GetSnapshotDiffReportRequestProto) String() string { return proto.CompactTextString(m) }
 func (*GetSnapshotDiffReportRequestProto) ProtoMessage()    {}
 func (*GetSnapshotDiffReportRequestProto) Descriptor() ([]byte, []int) {
-	return fileDescriptor4, []int{48}
+	return fileDescriptor_ClientNamenodeProtocol_54652e2c42538454, []int{48}
 }
+func (m *GetSnapshotDiffReportRequestProto) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_GetSnapshotDiffReportRequestProto.Unmarshal(m, b)
+}
+func (m *GetSnapshotDiffReportRequestProto) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_GetSnapshotDiffReportRequestProto.Marshal(b, m, deterministic)
+}
+func (dst *GetSnapshotDiffReportRequestProto) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_GetSnapshotDiffReportRequestProto.Merge(dst, src)
+}
+func (m *GetSnapshotDiffReportRequestProto) XXX_Size() int {
+	return xxx_messageInfo_GetSnapshotDiffReportRequestProto.Size(m)
+}
+func (m *GetSnapshotDiffReportRequestProto) XXX_DiscardUnknown() {
+	xxx_messageInfo_GetSnapshotDiffReportRequestProto.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_GetSnapshotDiffReportRequestProto proto.InternalMessageInfo
 
 func (m *GetSnapshotDiffReportRequestProto) GetSnapshotRoot() string {
 	if m != nil && m.SnapshotRoot != nil {
@@ -1360,16 +2391,35 @@ func (m *GetSnapshotDiffReportRequestProto) GetToSnapshot() string {
 }
 
 type GetSnapshotDiffReportResponseProto struct {
-	DiffReport       *SnapshotDiffReportProto `protobuf:"bytes,1,req,name=diffReport" json:"diffReport,omitempty"`
-	XXX_unrecognized []byte                   `json:"-"`
+	DiffReport           *SnapshotDiffReportProto `protobuf:"bytes,1,req,name=diffReport" json:"diffReport,omitempty"`
+	XXX_NoUnkeyedLiteral struct{}                 `json:"-"`
+	XXX_unrecognized     []byte                   `json:"-"`
+	XXX_sizecache        int32                    `json:"-"`
 }
 
 func (m *GetSnapshotDiffReportResponseProto) Reset()         { *m = GetSnapshotDiffReportResponseProto{} }
 func (m *GetSnapshotDiffReportResponseProto) String() string { return proto.CompactTextString(m) }
 func (*GetSnapshotDiffReportResponseProto) ProtoMessage()    {}
 func (*GetSnapshotDiffReportResponseProto) Descriptor() ([]byte, []int) {
-	return fileDescriptor4, []int{49}
+	return fileDescriptor_ClientNamenodeProtocol_54652e2c42538454, []int{49}
 }
+func (m *GetSnapshotDiffReportResponseProto) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_GetSnapshotDiffReportResponseProto.Unmarshal(m, b)
+}
+func (m *GetSnapshotDiffReportResponseProto) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_GetSnapshotDiffReportResponseProto.Marshal(b, m, deterministic)
+}
+func (dst *GetSnapshotDiffReportResponseProto) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_GetSnapshotDiffReportResponseProto.Merge(dst, src)
+}
+func (m *GetSnapshotDiffReportResponseProto) XXX_Size() int {
+	return xxx_messageInfo_GetSnapshotDiffReportResponseProto.Size(m)
+}
+func (m *GetSnapshotDiffReportResponseProto) XXX_DiscardUnknown() {
+	xxx_messageInfo_GetSnapshotDiffReportResponseProto.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_GetSnapshotDiffReportResponseProto proto.InternalMessageInfo
 
 func (m *GetSnapshotDiffReportResponseProto) GetDiffReport() *SnapshotDiffReportProto {
 	if m != nil {
@@ -1379,14 +2429,35 @@ func (m *GetSnapshotDiffReportResponseProto) GetDiffReport() *SnapshotDiffReport
 }
 
 type RenewLeaseRequestProto struct {
-	ClientName       *string `protobuf:"bytes,1,req,name=clientName" json:"clientName,omitempty"`
-	XXX_unrecognized []byte  `json:"-"`
+	ClientName           *string  `protobuf:"bytes,1,req,name=clientName" json:"clientName,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
 }
 
-func (m *RenewLeaseRequestProto) Reset()                    { *m = RenewLeaseRequestProto{} }
-func (m *RenewLeaseRequestProto) String() string            { return proto.CompactTextString(m) }
-func (*RenewLeaseRequestProto) ProtoMessage()               {}
-func (*RenewLeaseRequestProto) Descriptor() ([]byte, []int) { return fileDescriptor4, []int{50} }
+func (m *RenewLeaseRequestProto) Reset()         { *m = RenewLeaseRequestProto{} }
+func (m *RenewLeaseRequestProto) String() string { return proto.CompactTextString(m) }
+func (*RenewLeaseRequestProto) ProtoMessage()    {}
+func (*RenewLeaseRequestProto) Descriptor() ([]byte, []int) {
+	return fileDescriptor_ClientNamenodeProtocol_54652e2c42538454, []int{50}
+}
+func (m *RenewLeaseRequestProto) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_RenewLeaseRequestProto.Unmarshal(m, b)
+}
+func (m *RenewLeaseRequestProto) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_RenewLeaseRequestProto.Marshal(b, m, deterministic)
+}
+func (dst *RenewLeaseRequestProto) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_RenewLeaseRequestProto.Merge(dst, src)
+}
+func (m *RenewLeaseRequestProto) XXX_Size() int {
+	return xxx_messageInfo_RenewLeaseRequestProto.Size(m)
+}
+func (m *RenewLeaseRequestProto) XXX_DiscardUnknown() {
+	xxx_messageInfo_RenewLeaseRequestProto.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_RenewLeaseRequestProto proto.InternalMessageInfo
 
 func (m *RenewLeaseRequestProto) GetClientName() string {
 	if m != nil && m.ClientName != nil {
@@ -1396,24 +2467,66 @@ func (m *RenewLeaseRequestProto) GetClientName() string {
 }
 
 type RenewLeaseResponseProto struct {
-	XXX_unrecognized []byte `json:"-"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
 }
 
-func (m *RenewLeaseResponseProto) Reset()                    { *m = RenewLeaseResponseProto{} }
-func (m *RenewLeaseResponseProto) String() string            { return proto.CompactTextString(m) }
-func (*RenewLeaseResponseProto) ProtoMessage()               {}
-func (*RenewLeaseResponseProto) Descriptor() ([]byte, []int) { return fileDescriptor4, []int{51} }
+func (m *RenewLeaseResponseProto) Reset()         { *m = RenewLeaseResponseProto{} }
+func (m *RenewLeaseResponseProto) String() string { return proto.CompactTextString(m) }
+func (*RenewLeaseResponseProto) ProtoMessage()    {}
+func (*RenewLeaseResponseProto) Descriptor() ([]byte, []int) {
+	return fileDescriptor_ClientNamenodeProtocol_54652e2c42538454, []int{51}
+}
+func (m *RenewLeaseResponseProto) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_RenewLeaseResponseProto.Unmarshal(m, b)
+}
+func (m *RenewLeaseResponseProto) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_RenewLeaseResponseProto.Marshal(b, m, deterministic)
+}
+func (dst *RenewLeaseResponseProto) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_RenewLeaseResponseProto.Merge(dst, src)
+}
+func (m *RenewLeaseResponseProto) XXX_Size() int {
+	return xxx_messageInfo_RenewLeaseResponseProto.Size(m)
+}
+func (m *RenewLeaseResponseProto) XXX_DiscardUnknown() {
+	xxx_messageInfo_RenewLeaseResponseProto.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_RenewLeaseResponseProto proto.InternalMessageInfo
 
 type RecoverLeaseRequestProto struct {
-	Src              *string `protobuf:"bytes,1,req,name=src" json:"src,omitempty"`
-	ClientName       *string `protobuf:"bytes,2,req,name=clientName" json:"clientName,omitempty"`
-	XXX_unrecognized []byte  `json:"-"`
+	Src                  *string  `protobuf:"bytes,1,req,name=src" json:"src,omitempty"`
+	ClientName           *string  `protobuf:"bytes,2,req,name=clientName" json:"clientName,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
 }
 
-func (m *RecoverLeaseRequestProto) Reset()                    { *m = RecoverLeaseRequestProto{} }
-func (m *RecoverLeaseRequestProto) String() string            { return proto.CompactTextString(m) }
-func (*RecoverLeaseRequestProto) ProtoMessage()               {}
-func (*RecoverLeaseRequestProto) Descriptor() ([]byte, []int) { return fileDescriptor4, []int{52} }
+func (m *RecoverLeaseRequestProto) Reset()         { *m = RecoverLeaseRequestProto{} }
+func (m *RecoverLeaseRequestProto) String() string { return proto.CompactTextString(m) }
+func (*RecoverLeaseRequestProto) ProtoMessage()    {}
+func (*RecoverLeaseRequestProto) Descriptor() ([]byte, []int) {
+	return fileDescriptor_ClientNamenodeProtocol_54652e2c42538454, []int{52}
+}
+func (m *RecoverLeaseRequestProto) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_RecoverLeaseRequestProto.Unmarshal(m, b)
+}
+func (m *RecoverLeaseRequestProto) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_RecoverLeaseRequestProto.Marshal(b, m, deterministic)
+}
+func (dst *RecoverLeaseRequestProto) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_RecoverLeaseRequestProto.Merge(dst, src)
+}
+func (m *RecoverLeaseRequestProto) XXX_Size() int {
+	return xxx_messageInfo_RecoverLeaseRequestProto.Size(m)
+}
+func (m *RecoverLeaseRequestProto) XXX_DiscardUnknown() {
+	xxx_messageInfo_RecoverLeaseRequestProto.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_RecoverLeaseRequestProto proto.InternalMessageInfo
 
 func (m *RecoverLeaseRequestProto) GetSrc() string {
 	if m != nil && m.Src != nil {
@@ -1430,14 +2543,35 @@ func (m *RecoverLeaseRequestProto) GetClientName() string {
 }
 
 type RecoverLeaseResponseProto struct {
-	Result           *bool  `protobuf:"varint,1,req,name=result" json:"result,omitempty"`
-	XXX_unrecognized []byte `json:"-"`
+	Result               *bool    `protobuf:"varint,1,req,name=result" json:"result,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
 }
 
-func (m *RecoverLeaseResponseProto) Reset()                    { *m = RecoverLeaseResponseProto{} }
-func (m *RecoverLeaseResponseProto) String() string            { return proto.CompactTextString(m) }
-func (*RecoverLeaseResponseProto) ProtoMessage()               {}
-func (*RecoverLeaseResponseProto) Descriptor() ([]byte, []int) { return fileDescriptor4, []int{53} }
+func (m *RecoverLeaseResponseProto) Reset()         { *m = RecoverLeaseResponseProto{} }
+func (m *RecoverLeaseResponseProto) String() string { return proto.CompactTextString(m) }
+func (*RecoverLeaseResponseProto) ProtoMessage()    {}
+func (*RecoverLeaseResponseProto) Descriptor() ([]byte, []int) {
+	return fileDescriptor_ClientNamenodeProtocol_54652e2c42538454, []int{53}
+}
+func (m *RecoverLeaseResponseProto) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_RecoverLeaseResponseProto.Unmarshal(m, b)
+}
+func (m *RecoverLeaseResponseProto) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_RecoverLeaseResponseProto.Marshal(b, m, deterministic)
+}
+func (dst *RecoverLeaseResponseProto) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_RecoverLeaseResponseProto.Merge(dst, src)
+}
+func (m *RecoverLeaseResponseProto) XXX_Size() int {
+	return xxx_messageInfo_RecoverLeaseResponseProto.Size(m)
+}
+func (m *RecoverLeaseResponseProto) XXX_DiscardUnknown() {
+	xxx_messageInfo_RecoverLeaseResponseProto.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_RecoverLeaseResponseProto proto.InternalMessageInfo
 
 func (m *RecoverLeaseResponseProto) GetResult() bool {
 	if m != nil && m.Result != nil {
@@ -1447,31 +2581,73 @@ func (m *RecoverLeaseResponseProto) GetResult() bool {
 }
 
 type GetFsStatusRequestProto struct {
-	XXX_unrecognized []byte `json:"-"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
 }
 
-func (m *GetFsStatusRequestProto) Reset()                    { *m = GetFsStatusRequestProto{} }
-func (m *GetFsStatusRequestProto) String() string            { return proto.CompactTextString(m) }
-func (*GetFsStatusRequestProto) ProtoMessage()               {}
-func (*GetFsStatusRequestProto) Descriptor() ([]byte, []int) { return fileDescriptor4, []int{54} }
+func (m *GetFsStatusRequestProto) Reset()         { *m = GetFsStatusRequestProto{} }
+func (m *GetFsStatusRequestProto) String() string { return proto.CompactTextString(m) }
+func (*GetFsStatusRequestProto) ProtoMessage()    {}
+func (*GetFsStatusRequestProto) Descriptor() ([]byte, []int) {
+	return fileDescriptor_ClientNamenodeProtocol_54652e2c42538454, []int{54}
+}
+func (m *GetFsStatusRequestProto) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_GetFsStatusRequestProto.Unmarshal(m, b)
+}
+func (m *GetFsStatusRequestProto) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_GetFsStatusRequestProto.Marshal(b, m, deterministic)
+}
+func (dst *GetFsStatusRequestProto) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_GetFsStatusRequestProto.Merge(dst, src)
+}
+func (m *GetFsStatusRequestProto) XXX_Size() int {
+	return xxx_messageInfo_GetFsStatusRequestProto.Size(m)
+}
+func (m *GetFsStatusRequestProto) XXX_DiscardUnknown() {
+	xxx_messageInfo_GetFsStatusRequestProto.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_GetFsStatusRequestProto proto.InternalMessageInfo
 
 type GetFsStatsResponseProto struct {
-	Capacity              *uint64 `protobuf:"varint,1,req,name=capacity" json:"capacity,omitempty"`
-	Used                  *uint64 `protobuf:"varint,2,req,name=used" json:"used,omitempty"`
-	Remaining             *uint64 `protobuf:"varint,3,req,name=remaining" json:"remaining,omitempty"`
-	UnderReplicated       *uint64 `protobuf:"varint,4,req,name=under_replicated,json=underReplicated" json:"under_replicated,omitempty"`
-	CorruptBlocks         *uint64 `protobuf:"varint,5,req,name=corrupt_blocks,json=corruptBlocks" json:"corrupt_blocks,omitempty"`
-	MissingBlocks         *uint64 `protobuf:"varint,6,req,name=missing_blocks,json=missingBlocks" json:"missing_blocks,omitempty"`
-	MissingReplOneBlocks  *uint64 `protobuf:"varint,7,opt,name=missing_repl_one_blocks,json=missingReplOneBlocks" json:"missing_repl_one_blocks,omitempty"`
-	BlocksInFuture        *uint64 `protobuf:"varint,8,opt,name=blocks_in_future,json=blocksInFuture" json:"blocks_in_future,omitempty"`
-	PendingDeletionBlocks *uint64 `protobuf:"varint,9,opt,name=pending_deletion_blocks,json=pendingDeletionBlocks" json:"pending_deletion_blocks,omitempty"`
-	XXX_unrecognized      []byte  `json:"-"`
+	Capacity              *uint64  `protobuf:"varint,1,req,name=capacity" json:"capacity,omitempty"`
+	Used                  *uint64  `protobuf:"varint,2,req,name=used" json:"used,omitempty"`
+	Remaining             *uint64  `protobuf:"varint,3,req,name=remaining" json:"remaining,omitempty"`
+	UnderReplicated       *uint64  `protobuf:"varint,4,req,name=under_replicated,json=underReplicated" json:"under_replicated,omitempty"`
+	CorruptBlocks         *uint64  `protobuf:"varint,5,req,name=corrupt_blocks,json=corruptBlocks" json:"corrupt_blocks,omitempty"`
+	MissingBlocks         *uint64  `protobuf:"varint,6,req,name=missing_blocks,json=missingBlocks" json:"missing_blocks,omitempty"`
+	MissingReplOneBlocks  *uint64  `protobuf:"varint,7,opt,name=missing_repl_one_blocks,json=missingReplOneBlocks" json:"missing_repl_one_blocks,omitempty"`
+	BlocksInFuture        *uint64  `protobuf:"varint,8,opt,name=blocks_in_future,json=blocksInFuture" json:"blocks_in_future,omitempty"`
+	PendingDeletionBlocks *uint64  `protobuf:"varint,9,opt,name=pending_deletion_blocks,json=pendingDeletionBlocks" json:"pending_deletion_blocks,omitempty"`
+	XXX_NoUnkeyedLiteral  struct{} `json:"-"`
+	XXX_unrecognized      []byte   `json:"-"`
+	XXX_sizecache         int32    `json:"-"`
 }
 
-func (m *GetFsStatsResponseProto) Reset()                    { *m = GetFsStatsResponseProto{} }
-func (m *GetFsStatsResponseProto) String() string            { return proto.CompactTextString(m) }
-func (*GetFsStatsResponseProto) ProtoMessage()               {}
-func (*GetFsStatsResponseProto) Descriptor() ([]byte, []int) { return fileDescriptor4, []int{55} }
+func (m *GetFsStatsResponseProto) Reset()         { *m = GetFsStatsResponseProto{} }
+func (m *GetFsStatsResponseProto) String() string { return proto.CompactTextString(m) }
+func (*GetFsStatsResponseProto) ProtoMessage()    {}
+func (*GetFsStatsResponseProto) Descriptor() ([]byte, []int) {
+	return fileDescriptor_ClientNamenodeProtocol_54652e2c42538454, []int{55}
+}
+func (m *GetFsStatsResponseProto) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_GetFsStatsResponseProto.Unmarshal(m, b)
+}
+func (m *GetFsStatsResponseProto) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_GetFsStatsResponseProto.Marshal(b, m, deterministic)
+}
+func (dst *GetFsStatsResponseProto) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_GetFsStatsResponseProto.Merge(dst, src)
+}
+func (m *GetFsStatsResponseProto) XXX_Size() int {
+	return xxx_messageInfo_GetFsStatsResponseProto.Size(m)
+}
+func (m *GetFsStatsResponseProto) XXX_DiscardUnknown() {
+	xxx_messageInfo_GetFsStatsResponseProto.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_GetFsStatsResponseProto proto.InternalMessageInfo
 
 func (m *GetFsStatsResponseProto) GetCapacity() uint64 {
 	if m != nil && m.Capacity != nil {
@@ -1537,14 +2713,35 @@ func (m *GetFsStatsResponseProto) GetPendingDeletionBlocks() uint64 {
 }
 
 type GetDatanodeReportRequestProto struct {
-	Type             *DatanodeReportTypeProto `protobuf:"varint,1,req,name=type,enum=hadoop.hdfs.DatanodeReportTypeProto" json:"type,omitempty"`
-	XXX_unrecognized []byte                   `json:"-"`
+	Type                 *DatanodeReportTypeProto `protobuf:"varint,1,req,name=type,enum=hadoop.hdfs.DatanodeReportTypeProto" json:"type,omitempty"`
+	XXX_NoUnkeyedLiteral struct{}                 `json:"-"`
+	XXX_unrecognized     []byte                   `json:"-"`
+	XXX_sizecache        int32                    `json:"-"`
 }
 
-func (m *GetDatanodeReportRequestProto) Reset()                    { *m = GetDatanodeReportRequestProto{} }
-func (m *GetDatanodeReportRequestProto) String() string            { return proto.CompactTextString(m) }
-func (*GetDatanodeReportRequestProto) ProtoMessage()               {}
-func (*GetDatanodeReportRequestProto) Descriptor() ([]byte, []int) { return fileDescriptor4, []int{56} }
+func (m *GetDatanodeReportRequestProto) Reset()         { *m = GetDatanodeReportRequestProto{} }
+func (m *GetDatanodeReportRequestProto) String() string { return proto.CompactTextString(m) }
+func (*GetDatanodeReportRequestProto) ProtoMessage()    {}
+func (*GetDatanodeReportRequestProto) Descriptor() ([]byte, []int) {
+	return fileDescriptor_ClientNamenodeProtocol_54652e2c42538454, []int{56}
+}
+func (m *GetDatanodeReportRequestProto) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_GetDatanodeReportRequestProto.Unmarshal(m, b)
+}
+func (m *GetDatanodeReportRequestProto) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_GetDatanodeReportRequestProto.Marshal(b, m, deterministic)
+}
+func (dst *GetDatanodeReportRequestProto) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_GetDatanodeReportRequestProto.Merge(dst, src)
+}
+func (m *GetDatanodeReportRequestProto) XXX_Size() int {
+	return xxx_messageInfo_GetDatanodeReportRequestProto.Size(m)
+}
+func (m *GetDatanodeReportRequestProto) XXX_DiscardUnknown() {
+	xxx_messageInfo_GetDatanodeReportRequestProto.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_GetDatanodeReportRequestProto proto.InternalMessageInfo
 
 func (m *GetDatanodeReportRequestProto) GetType() DatanodeReportTypeProto {
 	if m != nil && m.Type != nil {
@@ -1554,14 +2751,35 @@ func (m *GetDatanodeReportRequestProto) GetType() DatanodeReportTypeProto {
 }
 
 type GetDatanodeReportResponseProto struct {
-	Di               []*DatanodeInfoProto `protobuf:"bytes,1,rep,name=di" json:"di,omitempty"`
-	XXX_unrecognized []byte               `json:"-"`
+	Di                   []*DatanodeInfoProto `protobuf:"bytes,1,rep,name=di" json:"di,omitempty"`
+	XXX_NoUnkeyedLiteral struct{}             `json:"-"`
+	XXX_unrecognized     []byte               `json:"-"`
+	XXX_sizecache        int32                `json:"-"`
 }
 
-func (m *GetDatanodeReportResponseProto) Reset()                    { *m = GetDatanodeReportResponseProto{} }
-func (m *GetDatanodeReportResponseProto) String() string            { return proto.CompactTextString(m) }
-func (*GetDatanodeReportResponseProto) ProtoMessage()               {}
-func (*GetDatanodeReportResponseProto) Descriptor() ([]byte, []int) { return fileDescriptor4, []int{57} }
+func (m *GetDatanodeReportResponseProto) Reset()         { *m = GetDatanodeReportResponseProto{} }
+func (m *GetDatanodeReportResponseProto) String() string { return proto.CompactTextString(m) }
+func (*GetDatanodeReportResponseProto) ProtoMessage()    {}
+func (*GetDatanodeReportResponseProto) Descriptor() ([]byte, []int) {
+	return fileDescriptor_ClientNamenodeProtocol_54652e2c42538454, []int{57}
+}
+func (m *GetDatanodeReportResponseProto) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_GetDatanodeReportResponseProto.Unmarshal(m, b)
+}
+func (m *GetDatanodeReportResponseProto) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_GetDatanodeReportResponseProto.Marshal(b, m, deterministic)
+}
+func (dst *GetDatanodeReportResponseProto) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_GetDatanodeReportResponseProto.Merge(dst, src)
+}
+func (m *GetDatanodeReportResponseProto) XXX_Size() int {
+	return xxx_messageInfo_GetDatanodeReportResponseProto.Size(m)
+}
+func (m *GetDatanodeReportResponseProto) XXX_DiscardUnknown() {
+	xxx_messageInfo_GetDatanodeReportResponseProto.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_GetDatanodeReportResponseProto proto.InternalMessageInfo
 
 func (m *GetDatanodeReportResponseProto) GetDi() []*DatanodeInfoProto {
 	if m != nil {
@@ -1571,16 +2789,35 @@ func (m *GetDatanodeReportResponseProto) GetDi() []*DatanodeInfoProto {
 }
 
 type GetDatanodeStorageReportRequestProto struct {
-	Type             *DatanodeReportTypeProto `protobuf:"varint,1,req,name=type,enum=hadoop.hdfs.DatanodeReportTypeProto" json:"type,omitempty"`
-	XXX_unrecognized []byte                   `json:"-"`
+	Type                 *DatanodeReportTypeProto `protobuf:"varint,1,req,name=type,enum=hadoop.hdfs.DatanodeReportTypeProto" json:"type,omitempty"`
+	XXX_NoUnkeyedLiteral struct{}                 `json:"-"`
+	XXX_unrecognized     []byte                   `json:"-"`
+	XXX_sizecache        int32                    `json:"-"`
 }
 
 func (m *GetDatanodeStorageReportRequestProto) Reset()         { *m = GetDatanodeStorageReportRequestProto{} }
 func (m *GetDatanodeStorageReportRequestProto) String() string { return proto.CompactTextString(m) }
 func (*GetDatanodeStorageReportRequestProto) ProtoMessage()    {}
 func (*GetDatanodeStorageReportRequestProto) Descriptor() ([]byte, []int) {
-	return fileDescriptor4, []int{58}
+	return fileDescriptor_ClientNamenodeProtocol_54652e2c42538454, []int{58}
 }
+func (m *GetDatanodeStorageReportRequestProto) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_GetDatanodeStorageReportRequestProto.Unmarshal(m, b)
+}
+func (m *GetDatanodeStorageReportRequestProto) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_GetDatanodeStorageReportRequestProto.Marshal(b, m, deterministic)
+}
+func (dst *GetDatanodeStorageReportRequestProto) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_GetDatanodeStorageReportRequestProto.Merge(dst, src)
+}
+func (m *GetDatanodeStorageReportRequestProto) XXX_Size() int {
+	return xxx_messageInfo_GetDatanodeStorageReportRequestProto.Size(m)
+}
+func (m *GetDatanodeStorageReportRequestProto) XXX_DiscardUnknown() {
+	xxx_messageInfo_GetDatanodeStorageReportRequestProto.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_GetDatanodeStorageReportRequestProto proto.InternalMessageInfo
 
 func (m *GetDatanodeStorageReportRequestProto) GetType() DatanodeReportTypeProto {
 	if m != nil && m.Type != nil {
@@ -1590,15 +2827,36 @@ func (m *GetDatanodeStorageReportRequestProto) GetType() DatanodeReportTypeProto
 }
 
 type DatanodeStorageReportProto struct {
-	DatanodeInfo     *DatanodeInfoProto    `protobuf:"bytes,1,req,name=datanodeInfo" json:"datanodeInfo,omitempty"`
-	StorageReports   []*StorageReportProto `protobuf:"bytes,2,rep,name=storageReports" json:"storageReports,omitempty"`
-	XXX_unrecognized []byte                `json:"-"`
+	DatanodeInfo         *DatanodeInfoProto    `protobuf:"bytes,1,req,name=datanodeInfo" json:"datanodeInfo,omitempty"`
+	StorageReports       []*StorageReportProto `protobuf:"bytes,2,rep,name=storageReports" json:"storageReports,omitempty"`
+	XXX_NoUnkeyedLiteral struct{}              `json:"-"`
+	XXX_unrecognized     []byte                `json:"-"`
+	XXX_sizecache        int32                 `json:"-"`
 }
 
-func (m *DatanodeStorageReportProto) Reset()                    { *m = DatanodeStorageReportProto{} }
-func (m *DatanodeStorageReportProto) String() string            { return proto.CompactTextString(m) }
-func (*DatanodeStorageReportProto) ProtoMessage()               {}
-func (*DatanodeStorageReportProto) Descriptor() ([]byte, []int) { return fileDescriptor4, []int{59} }
+func (m *DatanodeStorageReportProto) Reset()         { *m = DatanodeStorageReportProto{} }
+func (m *DatanodeStorageReportProto) String() string { return proto.CompactTextString(m) }
+func (*DatanodeStorageReportProto) ProtoMessage()    {}
+func (*DatanodeStorageReportProto) Descriptor() ([]byte, []int) {
+	return fileDescriptor_ClientNamenodeProtocol_54652e2c42538454, []int{59}
+}
+func (m *DatanodeStorageReportProto) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_DatanodeStorageReportProto.Unmarshal(m, b)
+}
+func (m *DatanodeStorageReportProto) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_DatanodeStorageReportProto.Marshal(b, m, deterministic)
+}
+func (dst *DatanodeStorageReportProto) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_DatanodeStorageReportProto.Merge(dst, src)
+}
+func (m *DatanodeStorageReportProto) XXX_Size() int {
+	return xxx_messageInfo_DatanodeStorageReportProto.Size(m)
+}
+func (m *DatanodeStorageReportProto) XXX_DiscardUnknown() {
+	xxx_messageInfo_DatanodeStorageReportProto.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_DatanodeStorageReportProto proto.InternalMessageInfo
 
 func (m *DatanodeStorageReportProto) GetDatanodeInfo() *DatanodeInfoProto {
 	if m != nil {
@@ -1616,15 +2874,34 @@ func (m *DatanodeStorageReportProto) GetStorageReports() []*StorageReportProto {
 
 type GetDatanodeStorageReportResponseProto struct {
 	DatanodeStorageReports []*DatanodeStorageReportProto `protobuf:"bytes,1,rep,name=datanodeStorageReports" json:"datanodeStorageReports,omitempty"`
+	XXX_NoUnkeyedLiteral   struct{}                      `json:"-"`
 	XXX_unrecognized       []byte                        `json:"-"`
+	XXX_sizecache          int32                         `json:"-"`
 }
 
 func (m *GetDatanodeStorageReportResponseProto) Reset()         { *m = GetDatanodeStorageReportResponseProto{} }
 func (m *GetDatanodeStorageReportResponseProto) String() string { return proto.CompactTextString(m) }
 func (*GetDatanodeStorageReportResponseProto) ProtoMessage()    {}
 func (*GetDatanodeStorageReportResponseProto) Descriptor() ([]byte, []int) {
-	return fileDescriptor4, []int{60}
+	return fileDescriptor_ClientNamenodeProtocol_54652e2c42538454, []int{60}
 }
+func (m *GetDatanodeStorageReportResponseProto) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_GetDatanodeStorageReportResponseProto.Unmarshal(m, b)
+}
+func (m *GetDatanodeStorageReportResponseProto) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_GetDatanodeStorageReportResponseProto.Marshal(b, m, deterministic)
+}
+func (dst *GetDatanodeStorageReportResponseProto) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_GetDatanodeStorageReportResponseProto.Merge(dst, src)
+}
+func (m *GetDatanodeStorageReportResponseProto) XXX_Size() int {
+	return xxx_messageInfo_GetDatanodeStorageReportResponseProto.Size(m)
+}
+func (m *GetDatanodeStorageReportResponseProto) XXX_DiscardUnknown() {
+	xxx_messageInfo_GetDatanodeStorageReportResponseProto.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_GetDatanodeStorageReportResponseProto proto.InternalMessageInfo
 
 func (m *GetDatanodeStorageReportResponseProto) GetDatanodeStorageReports() []*DatanodeStorageReportProto {
 	if m != nil {
@@ -1634,16 +2911,35 @@ func (m *GetDatanodeStorageReportResponseProto) GetDatanodeStorageReports() []*D
 }
 
 type GetPreferredBlockSizeRequestProto struct {
-	Filename         *string `protobuf:"bytes,1,req,name=filename" json:"filename,omitempty"`
-	XXX_unrecognized []byte  `json:"-"`
+	Filename             *string  `protobuf:"bytes,1,req,name=filename" json:"filename,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
 }
 
 func (m *GetPreferredBlockSizeRequestProto) Reset()         { *m = GetPreferredBlockSizeRequestProto{} }
 func (m *GetPreferredBlockSizeRequestProto) String() string { return proto.CompactTextString(m) }
 func (*GetPreferredBlockSizeRequestProto) ProtoMessage()    {}
 func (*GetPreferredBlockSizeRequestProto) Descriptor() ([]byte, []int) {
-	return fileDescriptor4, []int{61}
+	return fileDescriptor_ClientNamenodeProtocol_54652e2c42538454, []int{61}
 }
+func (m *GetPreferredBlockSizeRequestProto) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_GetPreferredBlockSizeRequestProto.Unmarshal(m, b)
+}
+func (m *GetPreferredBlockSizeRequestProto) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_GetPreferredBlockSizeRequestProto.Marshal(b, m, deterministic)
+}
+func (dst *GetPreferredBlockSizeRequestProto) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_GetPreferredBlockSizeRequestProto.Merge(dst, src)
+}
+func (m *GetPreferredBlockSizeRequestProto) XXX_Size() int {
+	return xxx_messageInfo_GetPreferredBlockSizeRequestProto.Size(m)
+}
+func (m *GetPreferredBlockSizeRequestProto) XXX_DiscardUnknown() {
+	xxx_messageInfo_GetPreferredBlockSizeRequestProto.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_GetPreferredBlockSizeRequestProto proto.InternalMessageInfo
 
 func (m *GetPreferredBlockSizeRequestProto) GetFilename() string {
 	if m != nil && m.Filename != nil {
@@ -1653,16 +2949,35 @@ func (m *GetPreferredBlockSizeRequestProto) GetFilename() string {
 }
 
 type GetPreferredBlockSizeResponseProto struct {
-	Bsize            *uint64 `protobuf:"varint,1,req,name=bsize" json:"bsize,omitempty"`
-	XXX_unrecognized []byte  `json:"-"`
+	Bsize                *uint64  `protobuf:"varint,1,req,name=bsize" json:"bsize,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
 }
 
 func (m *GetPreferredBlockSizeResponseProto) Reset()         { *m = GetPreferredBlockSizeResponseProto{} }
 func (m *GetPreferredBlockSizeResponseProto) String() string { return proto.CompactTextString(m) }
 func (*GetPreferredBlockSizeResponseProto) ProtoMessage()    {}
 func (*GetPreferredBlockSizeResponseProto) Descriptor() ([]byte, []int) {
-	return fileDescriptor4, []int{62}
+	return fileDescriptor_ClientNamenodeProtocol_54652e2c42538454, []int{62}
 }
+func (m *GetPreferredBlockSizeResponseProto) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_GetPreferredBlockSizeResponseProto.Unmarshal(m, b)
+}
+func (m *GetPreferredBlockSizeResponseProto) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_GetPreferredBlockSizeResponseProto.Marshal(b, m, deterministic)
+}
+func (dst *GetPreferredBlockSizeResponseProto) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_GetPreferredBlockSizeResponseProto.Merge(dst, src)
+}
+func (m *GetPreferredBlockSizeResponseProto) XXX_Size() int {
+	return xxx_messageInfo_GetPreferredBlockSizeResponseProto.Size(m)
+}
+func (m *GetPreferredBlockSizeResponseProto) XXX_DiscardUnknown() {
+	xxx_messageInfo_GetPreferredBlockSizeResponseProto.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_GetPreferredBlockSizeResponseProto proto.InternalMessageInfo
 
 func (m *GetPreferredBlockSizeResponseProto) GetBsize() uint64 {
 	if m != nil && m.Bsize != nil {
@@ -1672,15 +2987,36 @@ func (m *GetPreferredBlockSizeResponseProto) GetBsize() uint64 {
 }
 
 type SetSafeModeRequestProto struct {
-	Action           *SafeModeActionProto `protobuf:"varint,1,req,name=action,enum=hadoop.hdfs.SafeModeActionProto" json:"action,omitempty"`
-	Checked          *bool                `protobuf:"varint,2,opt,name=checked,def=0" json:"checked,omitempty"`
-	XXX_unrecognized []byte               `json:"-"`
+	Action               *SafeModeActionProto `protobuf:"varint,1,req,name=action,enum=hadoop.hdfs.SafeModeActionProto" json:"action,omitempty"`
+	Checked              *bool                `protobuf:"varint,2,opt,name=checked,def=0" json:"checked,omitempty"`
+	XXX_NoUnkeyedLiteral struct{}             `json:"-"`
+	XXX_unrecognized     []byte               `json:"-"`
+	XXX_sizecache        int32                `json:"-"`
 }
 
-func (m *SetSafeModeRequestProto) Reset()                    { *m = SetSafeModeRequestProto{} }
-func (m *SetSafeModeRequestProto) String() string            { return proto.CompactTextString(m) }
-func (*SetSafeModeRequestProto) ProtoMessage()               {}
-func (*SetSafeModeRequestProto) Descriptor() ([]byte, []int) { return fileDescriptor4, []int{63} }
+func (m *SetSafeModeRequestProto) Reset()         { *m = SetSafeModeRequestProto{} }
+func (m *SetSafeModeRequestProto) String() string { return proto.CompactTextString(m) }
+func (*SetSafeModeRequestProto) ProtoMessage()    {}
+func (*SetSafeModeRequestProto) Descriptor() ([]byte, []int) {
+	return fileDescriptor_ClientNamenodeProtocol_54652e2c42538454, []int{63}
+}
+func (m *SetSafeModeRequestProto) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_SetSafeModeRequestProto.Unmarshal(m, b)
+}
+func (m *SetSafeModeRequestProto) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_SetSafeModeRequestProto.Marshal(b, m, deterministic)
+}
+func (dst *SetSafeModeRequestProto) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_SetSafeModeRequestProto.Merge(dst, src)
+}
+func (m *SetSafeModeRequestProto) XXX_Size() int {
+	return xxx_messageInfo_SetSafeModeRequestProto.Size(m)
+}
+func (m *SetSafeModeRequestProto) XXX_DiscardUnknown() {
+	xxx_messageInfo_SetSafeModeRequestProto.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_SetSafeModeRequestProto proto.InternalMessageInfo
 
 const Default_SetSafeModeRequestProto_Checked bool = false
 
@@ -1699,14 +3035,35 @@ func (m *SetSafeModeRequestProto) GetChecked() bool {
 }
 
 type SetSafeModeResponseProto struct {
-	Result           *bool  `protobuf:"varint,1,req,name=result" json:"result,omitempty"`
-	XXX_unrecognized []byte `json:"-"`
+	Result               *bool    `protobuf:"varint,1,req,name=result" json:"result,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
 }
 
-func (m *SetSafeModeResponseProto) Reset()                    { *m = SetSafeModeResponseProto{} }
-func (m *SetSafeModeResponseProto) String() string            { return proto.CompactTextString(m) }
-func (*SetSafeModeResponseProto) ProtoMessage()               {}
-func (*SetSafeModeResponseProto) Descriptor() ([]byte, []int) { return fileDescriptor4, []int{64} }
+func (m *SetSafeModeResponseProto) Reset()         { *m = SetSafeModeResponseProto{} }
+func (m *SetSafeModeResponseProto) String() string { return proto.CompactTextString(m) }
+func (*SetSafeModeResponseProto) ProtoMessage()    {}
+func (*SetSafeModeResponseProto) Descriptor() ([]byte, []int) {
+	return fileDescriptor_ClientNamenodeProtocol_54652e2c42538454, []int{64}
+}
+func (m *SetSafeModeResponseProto) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_SetSafeModeResponseProto.Unmarshal(m, b)
+}
+func (m *SetSafeModeResponseProto) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_SetSafeModeResponseProto.Marshal(b, m, deterministic)
+}
+func (dst *SetSafeModeResponseProto) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_SetSafeModeResponseProto.Merge(dst, src)
+}
+func (m *SetSafeModeResponseProto) XXX_Size() int {
+	return xxx_messageInfo_SetSafeModeResponseProto.Size(m)
+}
+func (m *SetSafeModeResponseProto) XXX_DiscardUnknown() {
+	xxx_messageInfo_SetSafeModeResponseProto.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_SetSafeModeResponseProto proto.InternalMessageInfo
 
 func (m *SetSafeModeResponseProto) GetResult() bool {
 	if m != nil && m.Result != nil {
@@ -1716,15 +3073,36 @@ func (m *SetSafeModeResponseProto) GetResult() bool {
 }
 
 type SaveNamespaceRequestProto struct {
-	TimeWindow       *uint64 `protobuf:"varint,1,opt,name=timeWindow,def=0" json:"timeWindow,omitempty"`
-	TxGap            *uint64 `protobuf:"varint,2,opt,name=txGap,def=0" json:"txGap,omitempty"`
-	XXX_unrecognized []byte  `json:"-"`
+	TimeWindow           *uint64  `protobuf:"varint,1,opt,name=timeWindow,def=0" json:"timeWindow,omitempty"`
+	TxGap                *uint64  `protobuf:"varint,2,opt,name=txGap,def=0" json:"txGap,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
 }
 
-func (m *SaveNamespaceRequestProto) Reset()                    { *m = SaveNamespaceRequestProto{} }
-func (m *SaveNamespaceRequestProto) String() string            { return proto.CompactTextString(m) }
-func (*SaveNamespaceRequestProto) ProtoMessage()               {}
-func (*SaveNamespaceRequestProto) Descriptor() ([]byte, []int) { return fileDescriptor4, []int{65} }
+func (m *SaveNamespaceRequestProto) Reset()         { *m = SaveNamespaceRequestProto{} }
+func (m *SaveNamespaceRequestProto) String() string { return proto.CompactTextString(m) }
+func (*SaveNamespaceRequestProto) ProtoMessage()    {}
+func (*SaveNamespaceRequestProto) Descriptor() ([]byte, []int) {
+	return fileDescriptor_ClientNamenodeProtocol_54652e2c42538454, []int{65}
+}
+func (m *SaveNamespaceRequestProto) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_SaveNamespaceRequestProto.Unmarshal(m, b)
+}
+func (m *SaveNamespaceRequestProto) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_SaveNamespaceRequestProto.Marshal(b, m, deterministic)
+}
+func (dst *SaveNamespaceRequestProto) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_SaveNamespaceRequestProto.Merge(dst, src)
+}
+func (m *SaveNamespaceRequestProto) XXX_Size() int {
+	return xxx_messageInfo_SaveNamespaceRequestProto.Size(m)
+}
+func (m *SaveNamespaceRequestProto) XXX_DiscardUnknown() {
+	xxx_messageInfo_SaveNamespaceRequestProto.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_SaveNamespaceRequestProto proto.InternalMessageInfo
 
 const Default_SaveNamespaceRequestProto_TimeWindow uint64 = 0
 const Default_SaveNamespaceRequestProto_TxGap uint64 = 0
@@ -1744,14 +3122,35 @@ func (m *SaveNamespaceRequestProto) GetTxGap() uint64 {
 }
 
 type SaveNamespaceResponseProto struct {
-	Saved            *bool  `protobuf:"varint,1,opt,name=saved,def=1" json:"saved,omitempty"`
-	XXX_unrecognized []byte `json:"-"`
+	Saved                *bool    `protobuf:"varint,1,opt,name=saved,def=1" json:"saved,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
 }
 
-func (m *SaveNamespaceResponseProto) Reset()                    { *m = SaveNamespaceResponseProto{} }
-func (m *SaveNamespaceResponseProto) String() string            { return proto.CompactTextString(m) }
-func (*SaveNamespaceResponseProto) ProtoMessage()               {}
-func (*SaveNamespaceResponseProto) Descriptor() ([]byte, []int) { return fileDescriptor4, []int{66} }
+func (m *SaveNamespaceResponseProto) Reset()         { *m = SaveNamespaceResponseProto{} }
+func (m *SaveNamespaceResponseProto) String() string { return proto.CompactTextString(m) }
+func (*SaveNamespaceResponseProto) ProtoMessage()    {}
+func (*SaveNamespaceResponseProto) Descriptor() ([]byte, []int) {
+	return fileDescriptor_ClientNamenodeProtocol_54652e2c42538454, []int{66}
+}
+func (m *SaveNamespaceResponseProto) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_SaveNamespaceResponseProto.Unmarshal(m, b)
+}
+func (m *SaveNamespaceResponseProto) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_SaveNamespaceResponseProto.Marshal(b, m, deterministic)
+}
+func (dst *SaveNamespaceResponseProto) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_SaveNamespaceResponseProto.Merge(dst, src)
+}
+func (m *SaveNamespaceResponseProto) XXX_Size() int {
+	return xxx_messageInfo_SaveNamespaceResponseProto.Size(m)
+}
+func (m *SaveNamespaceResponseProto) XXX_DiscardUnknown() {
+	xxx_messageInfo_SaveNamespaceResponseProto.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_SaveNamespaceResponseProto proto.InternalMessageInfo
 
 const Default_SaveNamespaceResponseProto_Saved bool = true
 
@@ -1763,23 +3162,65 @@ func (m *SaveNamespaceResponseProto) GetSaved() bool {
 }
 
 type RollEditsRequestProto struct {
-	XXX_unrecognized []byte `json:"-"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
 }
 
-func (m *RollEditsRequestProto) Reset()                    { *m = RollEditsRequestProto{} }
-func (m *RollEditsRequestProto) String() string            { return proto.CompactTextString(m) }
-func (*RollEditsRequestProto) ProtoMessage()               {}
-func (*RollEditsRequestProto) Descriptor() ([]byte, []int) { return fileDescriptor4, []int{67} }
+func (m *RollEditsRequestProto) Reset()         { *m = RollEditsRequestProto{} }
+func (m *RollEditsRequestProto) String() string { return proto.CompactTextString(m) }
+func (*RollEditsRequestProto) ProtoMessage()    {}
+func (*RollEditsRequestProto) Descriptor() ([]byte, []int) {
+	return fileDescriptor_ClientNamenodeProtocol_54652e2c42538454, []int{67}
+}
+func (m *RollEditsRequestProto) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_RollEditsRequestProto.Unmarshal(m, b)
+}
+func (m *RollEditsRequestProto) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_RollEditsRequestProto.Marshal(b, m, deterministic)
+}
+func (dst *RollEditsRequestProto) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_RollEditsRequestProto.Merge(dst, src)
+}
+func (m *RollEditsRequestProto) XXX_Size() int {
+	return xxx_messageInfo_RollEditsRequestProto.Size(m)
+}
+func (m *RollEditsRequestProto) XXX_DiscardUnknown() {
+	xxx_messageInfo_RollEditsRequestProto.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_RollEditsRequestProto proto.InternalMessageInfo
 
 type RollEditsResponseProto struct {
-	NewSegmentTxId   *uint64 `protobuf:"varint,1,req,name=newSegmentTxId" json:"newSegmentTxId,omitempty"`
-	XXX_unrecognized []byte  `json:"-"`
+	NewSegmentTxId       *uint64  `protobuf:"varint,1,req,name=newSegmentTxId" json:"newSegmentTxId,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
 }
 
-func (m *RollEditsResponseProto) Reset()                    { *m = RollEditsResponseProto{} }
-func (m *RollEditsResponseProto) String() string            { return proto.CompactTextString(m) }
-func (*RollEditsResponseProto) ProtoMessage()               {}
-func (*RollEditsResponseProto) Descriptor() ([]byte, []int) { return fileDescriptor4, []int{68} }
+func (m *RollEditsResponseProto) Reset()         { *m = RollEditsResponseProto{} }
+func (m *RollEditsResponseProto) String() string { return proto.CompactTextString(m) }
+func (*RollEditsResponseProto) ProtoMessage()    {}
+func (*RollEditsResponseProto) Descriptor() ([]byte, []int) {
+	return fileDescriptor_ClientNamenodeProtocol_54652e2c42538454, []int{68}
+}
+func (m *RollEditsResponseProto) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_RollEditsResponseProto.Unmarshal(m, b)
+}
+func (m *RollEditsResponseProto) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_RollEditsResponseProto.Marshal(b, m, deterministic)
+}
+func (dst *RollEditsResponseProto) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_RollEditsResponseProto.Merge(dst, src)
+}
+func (m *RollEditsResponseProto) XXX_Size() int {
+	return xxx_messageInfo_RollEditsResponseProto.Size(m)
+}
+func (m *RollEditsResponseProto) XXX_DiscardUnknown() {
+	xxx_messageInfo_RollEditsResponseProto.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_RollEditsResponseProto proto.InternalMessageInfo
 
 func (m *RollEditsResponseProto) GetNewSegmentTxId() uint64 {
 	if m != nil && m.NewSegmentTxId != nil {
@@ -1789,16 +3230,35 @@ func (m *RollEditsResponseProto) GetNewSegmentTxId() uint64 {
 }
 
 type RestoreFailedStorageRequestProto struct {
-	Arg              *string `protobuf:"bytes,1,req,name=arg" json:"arg,omitempty"`
-	XXX_unrecognized []byte  `json:"-"`
+	Arg                  *string  `protobuf:"bytes,1,req,name=arg" json:"arg,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
 }
 
 func (m *RestoreFailedStorageRequestProto) Reset()         { *m = RestoreFailedStorageRequestProto{} }
 func (m *RestoreFailedStorageRequestProto) String() string { return proto.CompactTextString(m) }
 func (*RestoreFailedStorageRequestProto) ProtoMessage()    {}
 func (*RestoreFailedStorageRequestProto) Descriptor() ([]byte, []int) {
-	return fileDescriptor4, []int{69}
+	return fileDescriptor_ClientNamenodeProtocol_54652e2c42538454, []int{69}
 }
+func (m *RestoreFailedStorageRequestProto) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_RestoreFailedStorageRequestProto.Unmarshal(m, b)
+}
+func (m *RestoreFailedStorageRequestProto) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_RestoreFailedStorageRequestProto.Marshal(b, m, deterministic)
+}
+func (dst *RestoreFailedStorageRequestProto) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_RestoreFailedStorageRequestProto.Merge(dst, src)
+}
+func (m *RestoreFailedStorageRequestProto) XXX_Size() int {
+	return xxx_messageInfo_RestoreFailedStorageRequestProto.Size(m)
+}
+func (m *RestoreFailedStorageRequestProto) XXX_DiscardUnknown() {
+	xxx_messageInfo_RestoreFailedStorageRequestProto.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_RestoreFailedStorageRequestProto proto.InternalMessageInfo
 
 func (m *RestoreFailedStorageRequestProto) GetArg() string {
 	if m != nil && m.Arg != nil {
@@ -1808,16 +3268,35 @@ func (m *RestoreFailedStorageRequestProto) GetArg() string {
 }
 
 type RestoreFailedStorageResponseProto struct {
-	Result           *bool  `protobuf:"varint,1,req,name=result" json:"result,omitempty"`
-	XXX_unrecognized []byte `json:"-"`
+	Result               *bool    `protobuf:"varint,1,req,name=result" json:"result,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
 }
 
 func (m *RestoreFailedStorageResponseProto) Reset()         { *m = RestoreFailedStorageResponseProto{} }
 func (m *RestoreFailedStorageResponseProto) String() string { return proto.CompactTextString(m) }
 func (*RestoreFailedStorageResponseProto) ProtoMessage()    {}
 func (*RestoreFailedStorageResponseProto) Descriptor() ([]byte, []int) {
-	return fileDescriptor4, []int{70}
+	return fileDescriptor_ClientNamenodeProtocol_54652e2c42538454, []int{70}
 }
+func (m *RestoreFailedStorageResponseProto) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_RestoreFailedStorageResponseProto.Unmarshal(m, b)
+}
+func (m *RestoreFailedStorageResponseProto) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_RestoreFailedStorageResponseProto.Marshal(b, m, deterministic)
+}
+func (dst *RestoreFailedStorageResponseProto) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_RestoreFailedStorageResponseProto.Merge(dst, src)
+}
+func (m *RestoreFailedStorageResponseProto) XXX_Size() int {
+	return xxx_messageInfo_RestoreFailedStorageResponseProto.Size(m)
+}
+func (m *RestoreFailedStorageResponseProto) XXX_DiscardUnknown() {
+	xxx_messageInfo_RestoreFailedStorageResponseProto.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_RestoreFailedStorageResponseProto proto.InternalMessageInfo
 
 func (m *RestoreFailedStorageResponseProto) GetResult() bool {
 	if m != nil && m.Result != nil {
@@ -1827,50 +3306,155 @@ func (m *RestoreFailedStorageResponseProto) GetResult() bool {
 }
 
 type RefreshNodesRequestProto struct {
-	XXX_unrecognized []byte `json:"-"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
 }
 
-func (m *RefreshNodesRequestProto) Reset()                    { *m = RefreshNodesRequestProto{} }
-func (m *RefreshNodesRequestProto) String() string            { return proto.CompactTextString(m) }
-func (*RefreshNodesRequestProto) ProtoMessage()               {}
-func (*RefreshNodesRequestProto) Descriptor() ([]byte, []int) { return fileDescriptor4, []int{71} }
+func (m *RefreshNodesRequestProto) Reset()         { *m = RefreshNodesRequestProto{} }
+func (m *RefreshNodesRequestProto) String() string { return proto.CompactTextString(m) }
+func (*RefreshNodesRequestProto) ProtoMessage()    {}
+func (*RefreshNodesRequestProto) Descriptor() ([]byte, []int) {
+	return fileDescriptor_ClientNamenodeProtocol_54652e2c42538454, []int{71}
+}
+func (m *RefreshNodesRequestProto) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_RefreshNodesRequestProto.Unmarshal(m, b)
+}
+func (m *RefreshNodesRequestProto) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_RefreshNodesRequestProto.Marshal(b, m, deterministic)
+}
+func (dst *RefreshNodesRequestProto) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_RefreshNodesRequestProto.Merge(dst, src)
+}
+func (m *RefreshNodesRequestProto) XXX_Size() int {
+	return xxx_messageInfo_RefreshNodesRequestProto.Size(m)
+}
+func (m *RefreshNodesRequestProto) XXX_DiscardUnknown() {
+	xxx_messageInfo_RefreshNodesRequestProto.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_RefreshNodesRequestProto proto.InternalMessageInfo
 
 type RefreshNodesResponseProto struct {
-	XXX_unrecognized []byte `json:"-"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
 }
 
-func (m *RefreshNodesResponseProto) Reset()                    { *m = RefreshNodesResponseProto{} }
-func (m *RefreshNodesResponseProto) String() string            { return proto.CompactTextString(m) }
-func (*RefreshNodesResponseProto) ProtoMessage()               {}
-func (*RefreshNodesResponseProto) Descriptor() ([]byte, []int) { return fileDescriptor4, []int{72} }
+func (m *RefreshNodesResponseProto) Reset()         { *m = RefreshNodesResponseProto{} }
+func (m *RefreshNodesResponseProto) String() string { return proto.CompactTextString(m) }
+func (*RefreshNodesResponseProto) ProtoMessage()    {}
+func (*RefreshNodesResponseProto) Descriptor() ([]byte, []int) {
+	return fileDescriptor_ClientNamenodeProtocol_54652e2c42538454, []int{72}
+}
+func (m *RefreshNodesResponseProto) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_RefreshNodesResponseProto.Unmarshal(m, b)
+}
+func (m *RefreshNodesResponseProto) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_RefreshNodesResponseProto.Marshal(b, m, deterministic)
+}
+func (dst *RefreshNodesResponseProto) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_RefreshNodesResponseProto.Merge(dst, src)
+}
+func (m *RefreshNodesResponseProto) XXX_Size() int {
+	return xxx_messageInfo_RefreshNodesResponseProto.Size(m)
+}
+func (m *RefreshNodesResponseProto) XXX_DiscardUnknown() {
+	xxx_messageInfo_RefreshNodesResponseProto.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_RefreshNodesResponseProto proto.InternalMessageInfo
 
 type FinalizeUpgradeRequestProto struct {
-	XXX_unrecognized []byte `json:"-"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
 }
 
-func (m *FinalizeUpgradeRequestProto) Reset()                    { *m = FinalizeUpgradeRequestProto{} }
-func (m *FinalizeUpgradeRequestProto) String() string            { return proto.CompactTextString(m) }
-func (*FinalizeUpgradeRequestProto) ProtoMessage()               {}
-func (*FinalizeUpgradeRequestProto) Descriptor() ([]byte, []int) { return fileDescriptor4, []int{73} }
+func (m *FinalizeUpgradeRequestProto) Reset()         { *m = FinalizeUpgradeRequestProto{} }
+func (m *FinalizeUpgradeRequestProto) String() string { return proto.CompactTextString(m) }
+func (*FinalizeUpgradeRequestProto) ProtoMessage()    {}
+func (*FinalizeUpgradeRequestProto) Descriptor() ([]byte, []int) {
+	return fileDescriptor_ClientNamenodeProtocol_54652e2c42538454, []int{73}
+}
+func (m *FinalizeUpgradeRequestProto) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_FinalizeUpgradeRequestProto.Unmarshal(m, b)
+}
+func (m *FinalizeUpgradeRequestProto) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_FinalizeUpgradeRequestProto.Marshal(b, m, deterministic)
+}
+func (dst *FinalizeUpgradeRequestProto) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_FinalizeUpgradeRequestProto.Merge(dst, src)
+}
+func (m *FinalizeUpgradeRequestProto) XXX_Size() int {
+	return xxx_messageInfo_FinalizeUpgradeRequestProto.Size(m)
+}
+func (m *FinalizeUpgradeRequestProto) XXX_DiscardUnknown() {
+	xxx_messageInfo_FinalizeUpgradeRequestProto.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_FinalizeUpgradeRequestProto proto.InternalMessageInfo
 
 type FinalizeUpgradeResponseProto struct {
-	XXX_unrecognized []byte `json:"-"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
 }
 
-func (m *FinalizeUpgradeResponseProto) Reset()                    { *m = FinalizeUpgradeResponseProto{} }
-func (m *FinalizeUpgradeResponseProto) String() string            { return proto.CompactTextString(m) }
-func (*FinalizeUpgradeResponseProto) ProtoMessage()               {}
-func (*FinalizeUpgradeResponseProto) Descriptor() ([]byte, []int) { return fileDescriptor4, []int{74} }
+func (m *FinalizeUpgradeResponseProto) Reset()         { *m = FinalizeUpgradeResponseProto{} }
+func (m *FinalizeUpgradeResponseProto) String() string { return proto.CompactTextString(m) }
+func (*FinalizeUpgradeResponseProto) ProtoMessage()    {}
+func (*FinalizeUpgradeResponseProto) Descriptor() ([]byte, []int) {
+	return fileDescriptor_ClientNamenodeProtocol_54652e2c42538454, []int{74}
+}
+func (m *FinalizeUpgradeResponseProto) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_FinalizeUpgradeResponseProto.Unmarshal(m, b)
+}
+func (m *FinalizeUpgradeResponseProto) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_FinalizeUpgradeResponseProto.Marshal(b, m, deterministic)
+}
+func (dst *FinalizeUpgradeResponseProto) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_FinalizeUpgradeResponseProto.Merge(dst, src)
+}
+func (m *FinalizeUpgradeResponseProto) XXX_Size() int {
+	return xxx_messageInfo_FinalizeUpgradeResponseProto.Size(m)
+}
+func (m *FinalizeUpgradeResponseProto) XXX_DiscardUnknown() {
+	xxx_messageInfo_FinalizeUpgradeResponseProto.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_FinalizeUpgradeResponseProto proto.InternalMessageInfo
 
 type RollingUpgradeRequestProto struct {
-	Action           *RollingUpgradeActionProto `protobuf:"varint,1,req,name=action,enum=hadoop.hdfs.RollingUpgradeActionProto" json:"action,omitempty"`
-	XXX_unrecognized []byte                     `json:"-"`
+	Action               *RollingUpgradeActionProto `protobuf:"varint,1,req,name=action,enum=hadoop.hdfs.RollingUpgradeActionProto" json:"action,omitempty"`
+	XXX_NoUnkeyedLiteral struct{}                   `json:"-"`
+	XXX_unrecognized     []byte                     `json:"-"`
+	XXX_sizecache        int32                      `json:"-"`
 }
 
-func (m *RollingUpgradeRequestProto) Reset()                    { *m = RollingUpgradeRequestProto{} }
-func (m *RollingUpgradeRequestProto) String() string            { return proto.CompactTextString(m) }
-func (*RollingUpgradeRequestProto) ProtoMessage()               {}
-func (*RollingUpgradeRequestProto) Descriptor() ([]byte, []int) { return fileDescriptor4, []int{75} }
+func (m *RollingUpgradeRequestProto) Reset()         { *m = RollingUpgradeRequestProto{} }
+func (m *RollingUpgradeRequestProto) String() string { return proto.CompactTextString(m) }
+func (*RollingUpgradeRequestProto) ProtoMessage()    {}
+func (*RollingUpgradeRequestProto) Descriptor() ([]byte, []int) {
+	return fileDescriptor_ClientNamenodeProtocol_54652e2c42538454, []int{75}
+}
+func (m *RollingUpgradeRequestProto) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_RollingUpgradeRequestProto.Unmarshal(m, b)
+}
+func (m *RollingUpgradeRequestProto) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_RollingUpgradeRequestProto.Marshal(b, m, deterministic)
+}
+func (dst *RollingUpgradeRequestProto) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_RollingUpgradeRequestProto.Merge(dst, src)
+}
+func (m *RollingUpgradeRequestProto) XXX_Size() int {
+	return xxx_messageInfo_RollingUpgradeRequestProto.Size(m)
+}
+func (m *RollingUpgradeRequestProto) XXX_DiscardUnknown() {
+	xxx_messageInfo_RollingUpgradeRequestProto.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_RollingUpgradeRequestProto proto.InternalMessageInfo
 
 func (m *RollingUpgradeRequestProto) GetAction() RollingUpgradeActionProto {
 	if m != nil && m.Action != nil {
@@ -1884,13 +3468,34 @@ type RollingUpgradeInfoProto struct {
 	StartTime             *uint64                    `protobuf:"varint,2,req,name=startTime" json:"startTime,omitempty"`
 	FinalizeTime          *uint64                    `protobuf:"varint,3,req,name=finalizeTime" json:"finalizeTime,omitempty"`
 	CreatedRollbackImages *bool                      `protobuf:"varint,4,req,name=createdRollbackImages" json:"createdRollbackImages,omitempty"`
+	XXX_NoUnkeyedLiteral  struct{}                   `json:"-"`
 	XXX_unrecognized      []byte                     `json:"-"`
+	XXX_sizecache         int32                      `json:"-"`
 }
 
-func (m *RollingUpgradeInfoProto) Reset()                    { *m = RollingUpgradeInfoProto{} }
-func (m *RollingUpgradeInfoProto) String() string            { return proto.CompactTextString(m) }
-func (*RollingUpgradeInfoProto) ProtoMessage()               {}
-func (*RollingUpgradeInfoProto) Descriptor() ([]byte, []int) { return fileDescriptor4, []int{76} }
+func (m *RollingUpgradeInfoProto) Reset()         { *m = RollingUpgradeInfoProto{} }
+func (m *RollingUpgradeInfoProto) String() string { return proto.CompactTextString(m) }
+func (*RollingUpgradeInfoProto) ProtoMessage()    {}
+func (*RollingUpgradeInfoProto) Descriptor() ([]byte, []int) {
+	return fileDescriptor_ClientNamenodeProtocol_54652e2c42538454, []int{76}
+}
+func (m *RollingUpgradeInfoProto) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_RollingUpgradeInfoProto.Unmarshal(m, b)
+}
+func (m *RollingUpgradeInfoProto) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_RollingUpgradeInfoProto.Marshal(b, m, deterministic)
+}
+func (dst *RollingUpgradeInfoProto) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_RollingUpgradeInfoProto.Merge(dst, src)
+}
+func (m *RollingUpgradeInfoProto) XXX_Size() int {
+	return xxx_messageInfo_RollingUpgradeInfoProto.Size(m)
+}
+func (m *RollingUpgradeInfoProto) XXX_DiscardUnknown() {
+	xxx_messageInfo_RollingUpgradeInfoProto.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_RollingUpgradeInfoProto proto.InternalMessageInfo
 
 func (m *RollingUpgradeInfoProto) GetStatus() *RollingUpgradeStatusProto {
 	if m != nil {
@@ -1921,14 +3526,35 @@ func (m *RollingUpgradeInfoProto) GetCreatedRollbackImages() bool {
 }
 
 type RollingUpgradeResponseProto struct {
-	RollingUpgradeInfo *RollingUpgradeInfoProto `protobuf:"bytes,1,opt,name=rollingUpgradeInfo" json:"rollingUpgradeInfo,omitempty"`
-	XXX_unrecognized   []byte                   `json:"-"`
+	RollingUpgradeInfo   *RollingUpgradeInfoProto `protobuf:"bytes,1,opt,name=rollingUpgradeInfo" json:"rollingUpgradeInfo,omitempty"`
+	XXX_NoUnkeyedLiteral struct{}                 `json:"-"`
+	XXX_unrecognized     []byte                   `json:"-"`
+	XXX_sizecache        int32                    `json:"-"`
 }
 
-func (m *RollingUpgradeResponseProto) Reset()                    { *m = RollingUpgradeResponseProto{} }
-func (m *RollingUpgradeResponseProto) String() string            { return proto.CompactTextString(m) }
-func (*RollingUpgradeResponseProto) ProtoMessage()               {}
-func (*RollingUpgradeResponseProto) Descriptor() ([]byte, []int) { return fileDescriptor4, []int{77} }
+func (m *RollingUpgradeResponseProto) Reset()         { *m = RollingUpgradeResponseProto{} }
+func (m *RollingUpgradeResponseProto) String() string { return proto.CompactTextString(m) }
+func (*RollingUpgradeResponseProto) ProtoMessage()    {}
+func (*RollingUpgradeResponseProto) Descriptor() ([]byte, []int) {
+	return fileDescriptor_ClientNamenodeProtocol_54652e2c42538454, []int{77}
+}
+func (m *RollingUpgradeResponseProto) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_RollingUpgradeResponseProto.Unmarshal(m, b)
+}
+func (m *RollingUpgradeResponseProto) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_RollingUpgradeResponseProto.Marshal(b, m, deterministic)
+}
+func (dst *RollingUpgradeResponseProto) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_RollingUpgradeResponseProto.Merge(dst, src)
+}
+func (m *RollingUpgradeResponseProto) XXX_Size() int {
+	return xxx_messageInfo_RollingUpgradeResponseProto.Size(m)
+}
+func (m *RollingUpgradeResponseProto) XXX_DiscardUnknown() {
+	xxx_messageInfo_RollingUpgradeResponseProto.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_RollingUpgradeResponseProto proto.InternalMessageInfo
 
 func (m *RollingUpgradeResponseProto) GetRollingUpgradeInfo() *RollingUpgradeInfoProto {
 	if m != nil {
@@ -1938,17 +3564,36 @@ func (m *RollingUpgradeResponseProto) GetRollingUpgradeInfo() *RollingUpgradeInf
 }
 
 type ListCorruptFileBlocksRequestProto struct {
-	Path             *string `protobuf:"bytes,1,req,name=path" json:"path,omitempty"`
-	Cookie           *string `protobuf:"bytes,2,opt,name=cookie" json:"cookie,omitempty"`
-	XXX_unrecognized []byte  `json:"-"`
+	Path                 *string  `protobuf:"bytes,1,req,name=path" json:"path,omitempty"`
+	Cookie               *string  `protobuf:"bytes,2,opt,name=cookie" json:"cookie,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
 }
 
 func (m *ListCorruptFileBlocksRequestProto) Reset()         { *m = ListCorruptFileBlocksRequestProto{} }
 func (m *ListCorruptFileBlocksRequestProto) String() string { return proto.CompactTextString(m) }
 func (*ListCorruptFileBlocksRequestProto) ProtoMessage()    {}
 func (*ListCorruptFileBlocksRequestProto) Descriptor() ([]byte, []int) {
-	return fileDescriptor4, []int{78}
+	return fileDescriptor_ClientNamenodeProtocol_54652e2c42538454, []int{78}
 }
+func (m *ListCorruptFileBlocksRequestProto) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_ListCorruptFileBlocksRequestProto.Unmarshal(m, b)
+}
+func (m *ListCorruptFileBlocksRequestProto) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_ListCorruptFileBlocksRequestProto.Marshal(b, m, deterministic)
+}
+func (dst *ListCorruptFileBlocksRequestProto) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_ListCorruptFileBlocksRequestProto.Merge(dst, src)
+}
+func (m *ListCorruptFileBlocksRequestProto) XXX_Size() int {
+	return xxx_messageInfo_ListCorruptFileBlocksRequestProto.Size(m)
+}
+func (m *ListCorruptFileBlocksRequestProto) XXX_DiscardUnknown() {
+	xxx_messageInfo_ListCorruptFileBlocksRequestProto.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_ListCorruptFileBlocksRequestProto proto.InternalMessageInfo
 
 func (m *ListCorruptFileBlocksRequestProto) GetPath() string {
 	if m != nil && m.Path != nil {
@@ -1965,16 +3610,35 @@ func (m *ListCorruptFileBlocksRequestProto) GetCookie() string {
 }
 
 type ListCorruptFileBlocksResponseProto struct {
-	Corrupt          *CorruptFileBlocksProto `protobuf:"bytes,1,req,name=corrupt" json:"corrupt,omitempty"`
-	XXX_unrecognized []byte                  `json:"-"`
+	Corrupt              *CorruptFileBlocksProto `protobuf:"bytes,1,req,name=corrupt" json:"corrupt,omitempty"`
+	XXX_NoUnkeyedLiteral struct{}                `json:"-"`
+	XXX_unrecognized     []byte                  `json:"-"`
+	XXX_sizecache        int32                   `json:"-"`
 }
 
 func (m *ListCorruptFileBlocksResponseProto) Reset()         { *m = ListCorruptFileBlocksResponseProto{} }
 func (m *ListCorruptFileBlocksResponseProto) String() string { return proto.CompactTextString(m) }
 func (*ListCorruptFileBlocksResponseProto) ProtoMessage()    {}
 func (*ListCorruptFileBlocksResponseProto) Descriptor() ([]byte, []int) {
-	return fileDescriptor4, []int{79}
+	return fileDescriptor_ClientNamenodeProtocol_54652e2c42538454, []int{79}
 }
+func (m *ListCorruptFileBlocksResponseProto) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_ListCorruptFileBlocksResponseProto.Unmarshal(m, b)
+}
+func (m *ListCorruptFileBlocksResponseProto) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_ListCorruptFileBlocksResponseProto.Marshal(b, m, deterministic)
+}
+func (dst *ListCorruptFileBlocksResponseProto) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_ListCorruptFileBlocksResponseProto.Merge(dst, src)
+}
+func (m *ListCorruptFileBlocksResponseProto) XXX_Size() int {
+	return xxx_messageInfo_ListCorruptFileBlocksResponseProto.Size(m)
+}
+func (m *ListCorruptFileBlocksResponseProto) XXX_DiscardUnknown() {
+	xxx_messageInfo_ListCorruptFileBlocksResponseProto.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_ListCorruptFileBlocksResponseProto proto.InternalMessageInfo
 
 func (m *ListCorruptFileBlocksResponseProto) GetCorrupt() *CorruptFileBlocksProto {
 	if m != nil {
@@ -1984,14 +3648,35 @@ func (m *ListCorruptFileBlocksResponseProto) GetCorrupt() *CorruptFileBlocksProt
 }
 
 type MetaSaveRequestProto struct {
-	Filename         *string `protobuf:"bytes,1,req,name=filename" json:"filename,omitempty"`
-	XXX_unrecognized []byte  `json:"-"`
+	Filename             *string  `protobuf:"bytes,1,req,name=filename" json:"filename,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
 }
 
-func (m *MetaSaveRequestProto) Reset()                    { *m = MetaSaveRequestProto{} }
-func (m *MetaSaveRequestProto) String() string            { return proto.CompactTextString(m) }
-func (*MetaSaveRequestProto) ProtoMessage()               {}
-func (*MetaSaveRequestProto) Descriptor() ([]byte, []int) { return fileDescriptor4, []int{80} }
+func (m *MetaSaveRequestProto) Reset()         { *m = MetaSaveRequestProto{} }
+func (m *MetaSaveRequestProto) String() string { return proto.CompactTextString(m) }
+func (*MetaSaveRequestProto) ProtoMessage()    {}
+func (*MetaSaveRequestProto) Descriptor() ([]byte, []int) {
+	return fileDescriptor_ClientNamenodeProtocol_54652e2c42538454, []int{80}
+}
+func (m *MetaSaveRequestProto) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_MetaSaveRequestProto.Unmarshal(m, b)
+}
+func (m *MetaSaveRequestProto) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_MetaSaveRequestProto.Marshal(b, m, deterministic)
+}
+func (dst *MetaSaveRequestProto) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_MetaSaveRequestProto.Merge(dst, src)
+}
+func (m *MetaSaveRequestProto) XXX_Size() int {
+	return xxx_messageInfo_MetaSaveRequestProto.Size(m)
+}
+func (m *MetaSaveRequestProto) XXX_DiscardUnknown() {
+	xxx_messageInfo_MetaSaveRequestProto.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_MetaSaveRequestProto proto.InternalMessageInfo
 
 func (m *MetaSaveRequestProto) GetFilename() string {
 	if m != nil && m.Filename != nil {
@@ -2001,23 +3686,65 @@ func (m *MetaSaveRequestProto) GetFilename() string {
 }
 
 type MetaSaveResponseProto struct {
-	XXX_unrecognized []byte `json:"-"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
 }
 
-func (m *MetaSaveResponseProto) Reset()                    { *m = MetaSaveResponseProto{} }
-func (m *MetaSaveResponseProto) String() string            { return proto.CompactTextString(m) }
-func (*MetaSaveResponseProto) ProtoMessage()               {}
-func (*MetaSaveResponseProto) Descriptor() ([]byte, []int) { return fileDescriptor4, []int{81} }
+func (m *MetaSaveResponseProto) Reset()         { *m = MetaSaveResponseProto{} }
+func (m *MetaSaveResponseProto) String() string { return proto.CompactTextString(m) }
+func (*MetaSaveResponseProto) ProtoMessage()    {}
+func (*MetaSaveResponseProto) Descriptor() ([]byte, []int) {
+	return fileDescriptor_ClientNamenodeProtocol_54652e2c42538454, []int{81}
+}
+func (m *MetaSaveResponseProto) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_MetaSaveResponseProto.Unmarshal(m, b)
+}
+func (m *MetaSaveResponseProto) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_MetaSaveResponseProto.Marshal(b, m, deterministic)
+}
+func (dst *MetaSaveResponseProto) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_MetaSaveResponseProto.Merge(dst, src)
+}
+func (m *MetaSaveResponseProto) XXX_Size() int {
+	return xxx_messageInfo_MetaSaveResponseProto.Size(m)
+}
+func (m *MetaSaveResponseProto) XXX_DiscardUnknown() {
+	xxx_messageInfo_MetaSaveResponseProto.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_MetaSaveResponseProto proto.InternalMessageInfo
 
 type GetFileInfoRequestProto struct {
-	Src              *string `protobuf:"bytes,1,req,name=src" json:"src,omitempty"`
-	XXX_unrecognized []byte  `json:"-"`
+	Src                  *string  `protobuf:"bytes,1,req,name=src" json:"src,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
 }
 
-func (m *GetFileInfoRequestProto) Reset()                    { *m = GetFileInfoRequestProto{} }
-func (m *GetFileInfoRequestProto) String() string            { return proto.CompactTextString(m) }
-func (*GetFileInfoRequestProto) ProtoMessage()               {}
-func (*GetFileInfoRequestProto) Descriptor() ([]byte, []int) { return fileDescriptor4, []int{82} }
+func (m *GetFileInfoRequestProto) Reset()         { *m = GetFileInfoRequestProto{} }
+func (m *GetFileInfoRequestProto) String() string { return proto.CompactTextString(m) }
+func (*GetFileInfoRequestProto) ProtoMessage()    {}
+func (*GetFileInfoRequestProto) Descriptor() ([]byte, []int) {
+	return fileDescriptor_ClientNamenodeProtocol_54652e2c42538454, []int{82}
+}
+func (m *GetFileInfoRequestProto) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_GetFileInfoRequestProto.Unmarshal(m, b)
+}
+func (m *GetFileInfoRequestProto) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_GetFileInfoRequestProto.Marshal(b, m, deterministic)
+}
+func (dst *GetFileInfoRequestProto) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_GetFileInfoRequestProto.Merge(dst, src)
+}
+func (m *GetFileInfoRequestProto) XXX_Size() int {
+	return xxx_messageInfo_GetFileInfoRequestProto.Size(m)
+}
+func (m *GetFileInfoRequestProto) XXX_DiscardUnknown() {
+	xxx_messageInfo_GetFileInfoRequestProto.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_GetFileInfoRequestProto proto.InternalMessageInfo
 
 func (m *GetFileInfoRequestProto) GetSrc() string {
 	if m != nil && m.Src != nil {
@@ -2027,14 +3754,35 @@ func (m *GetFileInfoRequestProto) GetSrc() string {
 }
 
 type GetFileInfoResponseProto struct {
-	Fs               *HdfsFileStatusProto `protobuf:"bytes,1,opt,name=fs" json:"fs,omitempty"`
-	XXX_unrecognized []byte               `json:"-"`
+	Fs                   *HdfsFileStatusProto `protobuf:"bytes,1,opt,name=fs" json:"fs,omitempty"`
+	XXX_NoUnkeyedLiteral struct{}             `json:"-"`
+	XXX_unrecognized     []byte               `json:"-"`
+	XXX_sizecache        int32                `json:"-"`
 }
 
-func (m *GetFileInfoResponseProto) Reset()                    { *m = GetFileInfoResponseProto{} }
-func (m *GetFileInfoResponseProto) String() string            { return proto.CompactTextString(m) }
-func (*GetFileInfoResponseProto) ProtoMessage()               {}
-func (*GetFileInfoResponseProto) Descriptor() ([]byte, []int) { return fileDescriptor4, []int{83} }
+func (m *GetFileInfoResponseProto) Reset()         { *m = GetFileInfoResponseProto{} }
+func (m *GetFileInfoResponseProto) String() string { return proto.CompactTextString(m) }
+func (*GetFileInfoResponseProto) ProtoMessage()    {}
+func (*GetFileInfoResponseProto) Descriptor() ([]byte, []int) {
+	return fileDescriptor_ClientNamenodeProtocol_54652e2c42538454, []int{83}
+}
+func (m *GetFileInfoResponseProto) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_GetFileInfoResponseProto.Unmarshal(m, b)
+}
+func (m *GetFileInfoResponseProto) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_GetFileInfoResponseProto.Marshal(b, m, deterministic)
+}
+func (dst *GetFileInfoResponseProto) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_GetFileInfoResponseProto.Merge(dst, src)
+}
+func (m *GetFileInfoResponseProto) XXX_Size() int {
+	return xxx_messageInfo_GetFileInfoResponseProto.Size(m)
+}
+func (m *GetFileInfoResponseProto) XXX_DiscardUnknown() {
+	xxx_messageInfo_GetFileInfoResponseProto.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_GetFileInfoResponseProto proto.InternalMessageInfo
 
 func (m *GetFileInfoResponseProto) GetFs() *HdfsFileStatusProto {
 	if m != nil {
@@ -2044,14 +3792,35 @@ func (m *GetFileInfoResponseProto) GetFs() *HdfsFileStatusProto {
 }
 
 type IsFileClosedRequestProto struct {
-	Src              *string `protobuf:"bytes,1,req,name=src" json:"src,omitempty"`
-	XXX_unrecognized []byte  `json:"-"`
+	Src                  *string  `protobuf:"bytes,1,req,name=src" json:"src,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
 }
 
-func (m *IsFileClosedRequestProto) Reset()                    { *m = IsFileClosedRequestProto{} }
-func (m *IsFileClosedRequestProto) String() string            { return proto.CompactTextString(m) }
-func (*IsFileClosedRequestProto) ProtoMessage()               {}
-func (*IsFileClosedRequestProto) Descriptor() ([]byte, []int) { return fileDescriptor4, []int{84} }
+func (m *IsFileClosedRequestProto) Reset()         { *m = IsFileClosedRequestProto{} }
+func (m *IsFileClosedRequestProto) String() string { return proto.CompactTextString(m) }
+func (*IsFileClosedRequestProto) ProtoMessage()    {}
+func (*IsFileClosedRequestProto) Descriptor() ([]byte, []int) {
+	return fileDescriptor_ClientNamenodeProtocol_54652e2c42538454, []int{84}
+}
+func (m *IsFileClosedRequestProto) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_IsFileClosedRequestProto.Unmarshal(m, b)
+}
+func (m *IsFileClosedRequestProto) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_IsFileClosedRequestProto.Marshal(b, m, deterministic)
+}
+func (dst *IsFileClosedRequestProto) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_IsFileClosedRequestProto.Merge(dst, src)
+}
+func (m *IsFileClosedRequestProto) XXX_Size() int {
+	return xxx_messageInfo_IsFileClosedRequestProto.Size(m)
+}
+func (m *IsFileClosedRequestProto) XXX_DiscardUnknown() {
+	xxx_messageInfo_IsFileClosedRequestProto.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_IsFileClosedRequestProto proto.InternalMessageInfo
 
 func (m *IsFileClosedRequestProto) GetSrc() string {
 	if m != nil && m.Src != nil {
@@ -2061,14 +3830,35 @@ func (m *IsFileClosedRequestProto) GetSrc() string {
 }
 
 type IsFileClosedResponseProto struct {
-	Result           *bool  `protobuf:"varint,1,req,name=result" json:"result,omitempty"`
-	XXX_unrecognized []byte `json:"-"`
+	Result               *bool    `protobuf:"varint,1,req,name=result" json:"result,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
 }
 
-func (m *IsFileClosedResponseProto) Reset()                    { *m = IsFileClosedResponseProto{} }
-func (m *IsFileClosedResponseProto) String() string            { return proto.CompactTextString(m) }
-func (*IsFileClosedResponseProto) ProtoMessage()               {}
-func (*IsFileClosedResponseProto) Descriptor() ([]byte, []int) { return fileDescriptor4, []int{85} }
+func (m *IsFileClosedResponseProto) Reset()         { *m = IsFileClosedResponseProto{} }
+func (m *IsFileClosedResponseProto) String() string { return proto.CompactTextString(m) }
+func (*IsFileClosedResponseProto) ProtoMessage()    {}
+func (*IsFileClosedResponseProto) Descriptor() ([]byte, []int) {
+	return fileDescriptor_ClientNamenodeProtocol_54652e2c42538454, []int{85}
+}
+func (m *IsFileClosedResponseProto) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_IsFileClosedResponseProto.Unmarshal(m, b)
+}
+func (m *IsFileClosedResponseProto) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_IsFileClosedResponseProto.Marshal(b, m, deterministic)
+}
+func (dst *IsFileClosedResponseProto) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_IsFileClosedResponseProto.Merge(dst, src)
+}
+func (m *IsFileClosedResponseProto) XXX_Size() int {
+	return xxx_messageInfo_IsFileClosedResponseProto.Size(m)
+}
+func (m *IsFileClosedResponseProto) XXX_DiscardUnknown() {
+	xxx_messageInfo_IsFileClosedResponseProto.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_IsFileClosedResponseProto proto.InternalMessageInfo
 
 func (m *IsFileClosedResponseProto) GetResult() bool {
 	if m != nil && m.Result != nil {
@@ -2078,18 +3868,39 @@ func (m *IsFileClosedResponseProto) GetResult() bool {
 }
 
 type CacheDirectiveInfoProto struct {
-	Id               *int64                             `protobuf:"varint,1,opt,name=id" json:"id,omitempty"`
-	Path             *string                            `protobuf:"bytes,2,opt,name=path" json:"path,omitempty"`
-	Replication      *uint32                            `protobuf:"varint,3,opt,name=replication" json:"replication,omitempty"`
-	Pool             *string                            `protobuf:"bytes,4,opt,name=pool" json:"pool,omitempty"`
-	Expiration       *CacheDirectiveInfoExpirationProto `protobuf:"bytes,5,opt,name=expiration" json:"expiration,omitempty"`
-	XXX_unrecognized []byte                             `json:"-"`
+	Id                   *int64                             `protobuf:"varint,1,opt,name=id" json:"id,omitempty"`
+	Path                 *string                            `protobuf:"bytes,2,opt,name=path" json:"path,omitempty"`
+	Replication          *uint32                            `protobuf:"varint,3,opt,name=replication" json:"replication,omitempty"`
+	Pool                 *string                            `protobuf:"bytes,4,opt,name=pool" json:"pool,omitempty"`
+	Expiration           *CacheDirectiveInfoExpirationProto `protobuf:"bytes,5,opt,name=expiration" json:"expiration,omitempty"`
+	XXX_NoUnkeyedLiteral struct{}                           `json:"-"`
+	XXX_unrecognized     []byte                             `json:"-"`
+	XXX_sizecache        int32                              `json:"-"`
 }
 
-func (m *CacheDirectiveInfoProto) Reset()                    { *m = CacheDirectiveInfoProto{} }
-func (m *CacheDirectiveInfoProto) String() string            { return proto.CompactTextString(m) }
-func (*CacheDirectiveInfoProto) ProtoMessage()               {}
-func (*CacheDirectiveInfoProto) Descriptor() ([]byte, []int) { return fileDescriptor4, []int{86} }
+func (m *CacheDirectiveInfoProto) Reset()         { *m = CacheDirectiveInfoProto{} }
+func (m *CacheDirectiveInfoProto) String() string { return proto.CompactTextString(m) }
+func (*CacheDirectiveInfoProto) ProtoMessage()    {}
+func (*CacheDirectiveInfoProto) Descriptor() ([]byte, []int) {
+	return fileDescriptor_ClientNamenodeProtocol_54652e2c42538454, []int{86}
+}
+func (m *CacheDirectiveInfoProto) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_CacheDirectiveInfoProto.Unmarshal(m, b)
+}
+func (m *CacheDirectiveInfoProto) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_CacheDirectiveInfoProto.Marshal(b, m, deterministic)
+}
+func (dst *CacheDirectiveInfoProto) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_CacheDirectiveInfoProto.Merge(dst, src)
+}
+func (m *CacheDirectiveInfoProto) XXX_Size() int {
+	return xxx_messageInfo_CacheDirectiveInfoProto.Size(m)
+}
+func (m *CacheDirectiveInfoProto) XXX_DiscardUnknown() {
+	xxx_messageInfo_CacheDirectiveInfoProto.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_CacheDirectiveInfoProto proto.InternalMessageInfo
 
 func (m *CacheDirectiveInfoProto) GetId() int64 {
 	if m != nil && m.Id != nil {
@@ -2127,17 +3938,36 @@ func (m *CacheDirectiveInfoProto) GetExpiration() *CacheDirectiveInfoExpirationP
 }
 
 type CacheDirectiveInfoExpirationProto struct {
-	Millis           *int64 `protobuf:"varint,1,req,name=millis" json:"millis,omitempty"`
-	IsRelative       *bool  `protobuf:"varint,2,req,name=isRelative" json:"isRelative,omitempty"`
-	XXX_unrecognized []byte `json:"-"`
+	Millis               *int64   `protobuf:"varint,1,req,name=millis" json:"millis,omitempty"`
+	IsRelative           *bool    `protobuf:"varint,2,req,name=isRelative" json:"isRelative,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
 }
 
 func (m *CacheDirectiveInfoExpirationProto) Reset()         { *m = CacheDirectiveInfoExpirationProto{} }
 func (m *CacheDirectiveInfoExpirationProto) String() string { return proto.CompactTextString(m) }
 func (*CacheDirectiveInfoExpirationProto) ProtoMessage()    {}
 func (*CacheDirectiveInfoExpirationProto) Descriptor() ([]byte, []int) {
-	return fileDescriptor4, []int{87}
+	return fileDescriptor_ClientNamenodeProtocol_54652e2c42538454, []int{87}
 }
+func (m *CacheDirectiveInfoExpirationProto) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_CacheDirectiveInfoExpirationProto.Unmarshal(m, b)
+}
+func (m *CacheDirectiveInfoExpirationProto) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_CacheDirectiveInfoExpirationProto.Marshal(b, m, deterministic)
+}
+func (dst *CacheDirectiveInfoExpirationProto) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_CacheDirectiveInfoExpirationProto.Merge(dst, src)
+}
+func (m *CacheDirectiveInfoExpirationProto) XXX_Size() int {
+	return xxx_messageInfo_CacheDirectiveInfoExpirationProto.Size(m)
+}
+func (m *CacheDirectiveInfoExpirationProto) XXX_DiscardUnknown() {
+	xxx_messageInfo_CacheDirectiveInfoExpirationProto.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_CacheDirectiveInfoExpirationProto proto.InternalMessageInfo
 
 func (m *CacheDirectiveInfoExpirationProto) GetMillis() int64 {
 	if m != nil && m.Millis != nil {
@@ -2154,18 +3984,39 @@ func (m *CacheDirectiveInfoExpirationProto) GetIsRelative() bool {
 }
 
 type CacheDirectiveStatsProto struct {
-	BytesNeeded      *int64 `protobuf:"varint,1,req,name=bytesNeeded" json:"bytesNeeded,omitempty"`
-	BytesCached      *int64 `protobuf:"varint,2,req,name=bytesCached" json:"bytesCached,omitempty"`
-	FilesNeeded      *int64 `protobuf:"varint,3,req,name=filesNeeded" json:"filesNeeded,omitempty"`
-	FilesCached      *int64 `protobuf:"varint,4,req,name=filesCached" json:"filesCached,omitempty"`
-	HasExpired       *bool  `protobuf:"varint,5,req,name=hasExpired" json:"hasExpired,omitempty"`
-	XXX_unrecognized []byte `json:"-"`
+	BytesNeeded          *int64   `protobuf:"varint,1,req,name=bytesNeeded" json:"bytesNeeded,omitempty"`
+	BytesCached          *int64   `protobuf:"varint,2,req,name=bytesCached" json:"bytesCached,omitempty"`
+	FilesNeeded          *int64   `protobuf:"varint,3,req,name=filesNeeded" json:"filesNeeded,omitempty"`
+	FilesCached          *int64   `protobuf:"varint,4,req,name=filesCached" json:"filesCached,omitempty"`
+	HasExpired           *bool    `protobuf:"varint,5,req,name=hasExpired" json:"hasExpired,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
 }
 
-func (m *CacheDirectiveStatsProto) Reset()                    { *m = CacheDirectiveStatsProto{} }
-func (m *CacheDirectiveStatsProto) String() string            { return proto.CompactTextString(m) }
-func (*CacheDirectiveStatsProto) ProtoMessage()               {}
-func (*CacheDirectiveStatsProto) Descriptor() ([]byte, []int) { return fileDescriptor4, []int{88} }
+func (m *CacheDirectiveStatsProto) Reset()         { *m = CacheDirectiveStatsProto{} }
+func (m *CacheDirectiveStatsProto) String() string { return proto.CompactTextString(m) }
+func (*CacheDirectiveStatsProto) ProtoMessage()    {}
+func (*CacheDirectiveStatsProto) Descriptor() ([]byte, []int) {
+	return fileDescriptor_ClientNamenodeProtocol_54652e2c42538454, []int{88}
+}
+func (m *CacheDirectiveStatsProto) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_CacheDirectiveStatsProto.Unmarshal(m, b)
+}
+func (m *CacheDirectiveStatsProto) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_CacheDirectiveStatsProto.Marshal(b, m, deterministic)
+}
+func (dst *CacheDirectiveStatsProto) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_CacheDirectiveStatsProto.Merge(dst, src)
+}
+func (m *CacheDirectiveStatsProto) XXX_Size() int {
+	return xxx_messageInfo_CacheDirectiveStatsProto.Size(m)
+}
+func (m *CacheDirectiveStatsProto) XXX_DiscardUnknown() {
+	xxx_messageInfo_CacheDirectiveStatsProto.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_CacheDirectiveStatsProto proto.InternalMessageInfo
 
 func (m *CacheDirectiveStatsProto) GetBytesNeeded() int64 {
 	if m != nil && m.BytesNeeded != nil {
@@ -2203,15 +4054,36 @@ func (m *CacheDirectiveStatsProto) GetHasExpired() bool {
 }
 
 type AddCacheDirectiveRequestProto struct {
-	Info             *CacheDirectiveInfoProto `protobuf:"bytes,1,req,name=info" json:"info,omitempty"`
-	CacheFlags       *uint32                  `protobuf:"varint,2,opt,name=cacheFlags" json:"cacheFlags,omitempty"`
-	XXX_unrecognized []byte                   `json:"-"`
+	Info                 *CacheDirectiveInfoProto `protobuf:"bytes,1,req,name=info" json:"info,omitempty"`
+	CacheFlags           *uint32                  `protobuf:"varint,2,opt,name=cacheFlags" json:"cacheFlags,omitempty"`
+	XXX_NoUnkeyedLiteral struct{}                 `json:"-"`
+	XXX_unrecognized     []byte                   `json:"-"`
+	XXX_sizecache        int32                    `json:"-"`
 }
 
-func (m *AddCacheDirectiveRequestProto) Reset()                    { *m = AddCacheDirectiveRequestProto{} }
-func (m *AddCacheDirectiveRequestProto) String() string            { return proto.CompactTextString(m) }
-func (*AddCacheDirectiveRequestProto) ProtoMessage()               {}
-func (*AddCacheDirectiveRequestProto) Descriptor() ([]byte, []int) { return fileDescriptor4, []int{89} }
+func (m *AddCacheDirectiveRequestProto) Reset()         { *m = AddCacheDirectiveRequestProto{} }
+func (m *AddCacheDirectiveRequestProto) String() string { return proto.CompactTextString(m) }
+func (*AddCacheDirectiveRequestProto) ProtoMessage()    {}
+func (*AddCacheDirectiveRequestProto) Descriptor() ([]byte, []int) {
+	return fileDescriptor_ClientNamenodeProtocol_54652e2c42538454, []int{89}
+}
+func (m *AddCacheDirectiveRequestProto) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_AddCacheDirectiveRequestProto.Unmarshal(m, b)
+}
+func (m *AddCacheDirectiveRequestProto) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_AddCacheDirectiveRequestProto.Marshal(b, m, deterministic)
+}
+func (dst *AddCacheDirectiveRequestProto) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_AddCacheDirectiveRequestProto.Merge(dst, src)
+}
+func (m *AddCacheDirectiveRequestProto) XXX_Size() int {
+	return xxx_messageInfo_AddCacheDirectiveRequestProto.Size(m)
+}
+func (m *AddCacheDirectiveRequestProto) XXX_DiscardUnknown() {
+	xxx_messageInfo_AddCacheDirectiveRequestProto.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_AddCacheDirectiveRequestProto proto.InternalMessageInfo
 
 func (m *AddCacheDirectiveRequestProto) GetInfo() *CacheDirectiveInfoProto {
 	if m != nil {
@@ -2228,14 +4100,35 @@ func (m *AddCacheDirectiveRequestProto) GetCacheFlags() uint32 {
 }
 
 type AddCacheDirectiveResponseProto struct {
-	Id               *int64 `protobuf:"varint,1,req,name=id" json:"id,omitempty"`
-	XXX_unrecognized []byte `json:"-"`
+	Id                   *int64   `protobuf:"varint,1,req,name=id" json:"id,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
 }
 
-func (m *AddCacheDirectiveResponseProto) Reset()                    { *m = AddCacheDirectiveResponseProto{} }
-func (m *AddCacheDirectiveResponseProto) String() string            { return proto.CompactTextString(m) }
-func (*AddCacheDirectiveResponseProto) ProtoMessage()               {}
-func (*AddCacheDirectiveResponseProto) Descriptor() ([]byte, []int) { return fileDescriptor4, []int{90} }
+func (m *AddCacheDirectiveResponseProto) Reset()         { *m = AddCacheDirectiveResponseProto{} }
+func (m *AddCacheDirectiveResponseProto) String() string { return proto.CompactTextString(m) }
+func (*AddCacheDirectiveResponseProto) ProtoMessage()    {}
+func (*AddCacheDirectiveResponseProto) Descriptor() ([]byte, []int) {
+	return fileDescriptor_ClientNamenodeProtocol_54652e2c42538454, []int{90}
+}
+func (m *AddCacheDirectiveResponseProto) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_AddCacheDirectiveResponseProto.Unmarshal(m, b)
+}
+func (m *AddCacheDirectiveResponseProto) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_AddCacheDirectiveResponseProto.Marshal(b, m, deterministic)
+}
+func (dst *AddCacheDirectiveResponseProto) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_AddCacheDirectiveResponseProto.Merge(dst, src)
+}
+func (m *AddCacheDirectiveResponseProto) XXX_Size() int {
+	return xxx_messageInfo_AddCacheDirectiveResponseProto.Size(m)
+}
+func (m *AddCacheDirectiveResponseProto) XXX_DiscardUnknown() {
+	xxx_messageInfo_AddCacheDirectiveResponseProto.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_AddCacheDirectiveResponseProto proto.InternalMessageInfo
 
 func (m *AddCacheDirectiveResponseProto) GetId() int64 {
 	if m != nil && m.Id != nil {
@@ -2245,17 +4138,36 @@ func (m *AddCacheDirectiveResponseProto) GetId() int64 {
 }
 
 type ModifyCacheDirectiveRequestProto struct {
-	Info             *CacheDirectiveInfoProto `protobuf:"bytes,1,req,name=info" json:"info,omitempty"`
-	CacheFlags       *uint32                  `protobuf:"varint,2,opt,name=cacheFlags" json:"cacheFlags,omitempty"`
-	XXX_unrecognized []byte                   `json:"-"`
+	Info                 *CacheDirectiveInfoProto `protobuf:"bytes,1,req,name=info" json:"info,omitempty"`
+	CacheFlags           *uint32                  `protobuf:"varint,2,opt,name=cacheFlags" json:"cacheFlags,omitempty"`
+	XXX_NoUnkeyedLiteral struct{}                 `json:"-"`
+	XXX_unrecognized     []byte                   `json:"-"`
+	XXX_sizecache        int32                    `json:"-"`
 }
 
 func (m *ModifyCacheDirectiveRequestProto) Reset()         { *m = ModifyCacheDirectiveRequestProto{} }
 func (m *ModifyCacheDirectiveRequestProto) String() string { return proto.CompactTextString(m) }
 func (*ModifyCacheDirectiveRequestProto) ProtoMessage()    {}
 func (*ModifyCacheDirectiveRequestProto) Descriptor() ([]byte, []int) {
-	return fileDescriptor4, []int{91}
+	return fileDescriptor_ClientNamenodeProtocol_54652e2c42538454, []int{91}
 }
+func (m *ModifyCacheDirectiveRequestProto) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_ModifyCacheDirectiveRequestProto.Unmarshal(m, b)
+}
+func (m *ModifyCacheDirectiveRequestProto) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_ModifyCacheDirectiveRequestProto.Marshal(b, m, deterministic)
+}
+func (dst *ModifyCacheDirectiveRequestProto) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_ModifyCacheDirectiveRequestProto.Merge(dst, src)
+}
+func (m *ModifyCacheDirectiveRequestProto) XXX_Size() int {
+	return xxx_messageInfo_ModifyCacheDirectiveRequestProto.Size(m)
+}
+func (m *ModifyCacheDirectiveRequestProto) XXX_DiscardUnknown() {
+	xxx_messageInfo_ModifyCacheDirectiveRequestProto.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_ModifyCacheDirectiveRequestProto proto.InternalMessageInfo
 
 func (m *ModifyCacheDirectiveRequestProto) GetInfo() *CacheDirectiveInfoProto {
 	if m != nil {
@@ -2272,27 +4184,65 @@ func (m *ModifyCacheDirectiveRequestProto) GetCacheFlags() uint32 {
 }
 
 type ModifyCacheDirectiveResponseProto struct {
-	XXX_unrecognized []byte `json:"-"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
 }
 
 func (m *ModifyCacheDirectiveResponseProto) Reset()         { *m = ModifyCacheDirectiveResponseProto{} }
 func (m *ModifyCacheDirectiveResponseProto) String() string { return proto.CompactTextString(m) }
 func (*ModifyCacheDirectiveResponseProto) ProtoMessage()    {}
 func (*ModifyCacheDirectiveResponseProto) Descriptor() ([]byte, []int) {
-	return fileDescriptor4, []int{92}
+	return fileDescriptor_ClientNamenodeProtocol_54652e2c42538454, []int{92}
+}
+func (m *ModifyCacheDirectiveResponseProto) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_ModifyCacheDirectiveResponseProto.Unmarshal(m, b)
+}
+func (m *ModifyCacheDirectiveResponseProto) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_ModifyCacheDirectiveResponseProto.Marshal(b, m, deterministic)
+}
+func (dst *ModifyCacheDirectiveResponseProto) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_ModifyCacheDirectiveResponseProto.Merge(dst, src)
+}
+func (m *ModifyCacheDirectiveResponseProto) XXX_Size() int {
+	return xxx_messageInfo_ModifyCacheDirectiveResponseProto.Size(m)
+}
+func (m *ModifyCacheDirectiveResponseProto) XXX_DiscardUnknown() {
+	xxx_messageInfo_ModifyCacheDirectiveResponseProto.DiscardUnknown(m)
 }
 
+var xxx_messageInfo_ModifyCacheDirectiveResponseProto proto.InternalMessageInfo
+
 type RemoveCacheDirectiveRequestProto struct {
-	Id               *int64 `protobuf:"varint,1,req,name=id" json:"id,omitempty"`
-	XXX_unrecognized []byte `json:"-"`
+	Id                   *int64   `protobuf:"varint,1,req,name=id" json:"id,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
 }
 
 func (m *RemoveCacheDirectiveRequestProto) Reset()         { *m = RemoveCacheDirectiveRequestProto{} }
 func (m *RemoveCacheDirectiveRequestProto) String() string { return proto.CompactTextString(m) }
 func (*RemoveCacheDirectiveRequestProto) ProtoMessage()    {}
 func (*RemoveCacheDirectiveRequestProto) Descriptor() ([]byte, []int) {
-	return fileDescriptor4, []int{93}
+	return fileDescriptor_ClientNamenodeProtocol_54652e2c42538454, []int{93}
 }
+func (m *RemoveCacheDirectiveRequestProto) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_RemoveCacheDirectiveRequestProto.Unmarshal(m, b)
+}
+func (m *RemoveCacheDirectiveRequestProto) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_RemoveCacheDirectiveRequestProto.Marshal(b, m, deterministic)
+}
+func (dst *RemoveCacheDirectiveRequestProto) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_RemoveCacheDirectiveRequestProto.Merge(dst, src)
+}
+func (m *RemoveCacheDirectiveRequestProto) XXX_Size() int {
+	return xxx_messageInfo_RemoveCacheDirectiveRequestProto.Size(m)
+}
+func (m *RemoveCacheDirectiveRequestProto) XXX_DiscardUnknown() {
+	xxx_messageInfo_RemoveCacheDirectiveRequestProto.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_RemoveCacheDirectiveRequestProto proto.InternalMessageInfo
 
 func (m *RemoveCacheDirectiveRequestProto) GetId() int64 {
 	if m != nil && m.Id != nil {
@@ -2302,28 +4252,66 @@ func (m *RemoveCacheDirectiveRequestProto) GetId() int64 {
 }
 
 type RemoveCacheDirectiveResponseProto struct {
-	XXX_unrecognized []byte `json:"-"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
 }
 
 func (m *RemoveCacheDirectiveResponseProto) Reset()         { *m = RemoveCacheDirectiveResponseProto{} }
 func (m *RemoveCacheDirectiveResponseProto) String() string { return proto.CompactTextString(m) }
 func (*RemoveCacheDirectiveResponseProto) ProtoMessage()    {}
 func (*RemoveCacheDirectiveResponseProto) Descriptor() ([]byte, []int) {
-	return fileDescriptor4, []int{94}
+	return fileDescriptor_ClientNamenodeProtocol_54652e2c42538454, []int{94}
+}
+func (m *RemoveCacheDirectiveResponseProto) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_RemoveCacheDirectiveResponseProto.Unmarshal(m, b)
+}
+func (m *RemoveCacheDirectiveResponseProto) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_RemoveCacheDirectiveResponseProto.Marshal(b, m, deterministic)
+}
+func (dst *RemoveCacheDirectiveResponseProto) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_RemoveCacheDirectiveResponseProto.Merge(dst, src)
+}
+func (m *RemoveCacheDirectiveResponseProto) XXX_Size() int {
+	return xxx_messageInfo_RemoveCacheDirectiveResponseProto.Size(m)
+}
+func (m *RemoveCacheDirectiveResponseProto) XXX_DiscardUnknown() {
+	xxx_messageInfo_RemoveCacheDirectiveResponseProto.DiscardUnknown(m)
 }
 
+var xxx_messageInfo_RemoveCacheDirectiveResponseProto proto.InternalMessageInfo
+
 type ListCacheDirectivesRequestProto struct {
-	PrevId           *int64                   `protobuf:"varint,1,req,name=prevId" json:"prevId,omitempty"`
-	Filter           *CacheDirectiveInfoProto `protobuf:"bytes,2,req,name=filter" json:"filter,omitempty"`
-	XXX_unrecognized []byte                   `json:"-"`
+	PrevId               *int64                   `protobuf:"varint,1,req,name=prevId" json:"prevId,omitempty"`
+	Filter               *CacheDirectiveInfoProto `protobuf:"bytes,2,req,name=filter" json:"filter,omitempty"`
+	XXX_NoUnkeyedLiteral struct{}                 `json:"-"`
+	XXX_unrecognized     []byte                   `json:"-"`
+	XXX_sizecache        int32                    `json:"-"`
 }
 
 func (m *ListCacheDirectivesRequestProto) Reset()         { *m = ListCacheDirectivesRequestProto{} }
 func (m *ListCacheDirectivesRequestProto) String() string { return proto.CompactTextString(m) }
 func (*ListCacheDirectivesRequestProto) ProtoMessage()    {}
 func (*ListCacheDirectivesRequestProto) Descriptor() ([]byte, []int) {
-	return fileDescriptor4, []int{95}
+	return fileDescriptor_ClientNamenodeProtocol_54652e2c42538454, []int{95}
 }
+func (m *ListCacheDirectivesRequestProto) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_ListCacheDirectivesRequestProto.Unmarshal(m, b)
+}
+func (m *ListCacheDirectivesRequestProto) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_ListCacheDirectivesRequestProto.Marshal(b, m, deterministic)
+}
+func (dst *ListCacheDirectivesRequestProto) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_ListCacheDirectivesRequestProto.Merge(dst, src)
+}
+func (m *ListCacheDirectivesRequestProto) XXX_Size() int {
+	return xxx_messageInfo_ListCacheDirectivesRequestProto.Size(m)
+}
+func (m *ListCacheDirectivesRequestProto) XXX_DiscardUnknown() {
+	xxx_messageInfo_ListCacheDirectivesRequestProto.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_ListCacheDirectivesRequestProto proto.InternalMessageInfo
 
 func (m *ListCacheDirectivesRequestProto) GetPrevId() int64 {
 	if m != nil && m.PrevId != nil {
@@ -2340,15 +4328,36 @@ func (m *ListCacheDirectivesRequestProto) GetFilter() *CacheDirectiveInfoProto {
 }
 
 type CacheDirectiveEntryProto struct {
-	Info             *CacheDirectiveInfoProto  `protobuf:"bytes,1,req,name=info" json:"info,omitempty"`
-	Stats            *CacheDirectiveStatsProto `protobuf:"bytes,2,req,name=stats" json:"stats,omitempty"`
-	XXX_unrecognized []byte                    `json:"-"`
+	Info                 *CacheDirectiveInfoProto  `protobuf:"bytes,1,req,name=info" json:"info,omitempty"`
+	Stats                *CacheDirectiveStatsProto `protobuf:"bytes,2,req,name=stats" json:"stats,omitempty"`
+	XXX_NoUnkeyedLiteral struct{}                  `json:"-"`
+	XXX_unrecognized     []byte                    `json:"-"`
+	XXX_sizecache        int32                     `json:"-"`
 }
 
-func (m *CacheDirectiveEntryProto) Reset()                    { *m = CacheDirectiveEntryProto{} }
-func (m *CacheDirectiveEntryProto) String() string            { return proto.CompactTextString(m) }
-func (*CacheDirectiveEntryProto) ProtoMessage()               {}
-func (*CacheDirectiveEntryProto) Descriptor() ([]byte, []int) { return fileDescriptor4, []int{96} }
+func (m *CacheDirectiveEntryProto) Reset()         { *m = CacheDirectiveEntryProto{} }
+func (m *CacheDirectiveEntryProto) String() string { return proto.CompactTextString(m) }
+func (*CacheDirectiveEntryProto) ProtoMessage()    {}
+func (*CacheDirectiveEntryProto) Descriptor() ([]byte, []int) {
+	return fileDescriptor_ClientNamenodeProtocol_54652e2c42538454, []int{96}
+}
+func (m *CacheDirectiveEntryProto) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_CacheDirectiveEntryProto.Unmarshal(m, b)
+}
+func (m *CacheDirectiveEntryProto) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_CacheDirectiveEntryProto.Marshal(b, m, deterministic)
+}
+func (dst *CacheDirectiveEntryProto) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_CacheDirectiveEntryProto.Merge(dst, src)
+}
+func (m *CacheDirectiveEntryProto) XXX_Size() int {
+	return xxx_messageInfo_CacheDirectiveEntryProto.Size(m)
+}
+func (m *CacheDirectiveEntryProto) XXX_DiscardUnknown() {
+	xxx_messageInfo_CacheDirectiveEntryProto.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_CacheDirectiveEntryProto proto.InternalMessageInfo
 
 func (m *CacheDirectiveEntryProto) GetInfo() *CacheDirectiveInfoProto {
 	if m != nil {
@@ -2365,17 +4374,36 @@ func (m *CacheDirectiveEntryProto) GetStats() *CacheDirectiveStatsProto {
 }
 
 type ListCacheDirectivesResponseProto struct {
-	Elements         []*CacheDirectiveEntryProto `protobuf:"bytes,1,rep,name=elements" json:"elements,omitempty"`
-	HasMore          *bool                       `protobuf:"varint,2,req,name=hasMore" json:"hasMore,omitempty"`
-	XXX_unrecognized []byte                      `json:"-"`
+	Elements             []*CacheDirectiveEntryProto `protobuf:"bytes,1,rep,name=elements" json:"elements,omitempty"`
+	HasMore              *bool                       `protobuf:"varint,2,req,name=hasMore" json:"hasMore,omitempty"`
+	XXX_NoUnkeyedLiteral struct{}                    `json:"-"`
+	XXX_unrecognized     []byte                      `json:"-"`
+	XXX_sizecache        int32                       `json:"-"`
 }
 
 func (m *ListCacheDirectivesResponseProto) Reset()         { *m = ListCacheDirectivesResponseProto{} }
 func (m *ListCacheDirectivesResponseProto) String() string { return proto.CompactTextString(m) }
 func (*ListCacheDirectivesResponseProto) ProtoMessage()    {}
 func (*ListCacheDirectivesResponseProto) Descriptor() ([]byte, []int) {
-	return fileDescriptor4, []int{97}
+	return fileDescriptor_ClientNamenodeProtocol_54652e2c42538454, []int{97}
 }
+func (m *ListCacheDirectivesResponseProto) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_ListCacheDirectivesResponseProto.Unmarshal(m, b)
+}
+func (m *ListCacheDirectivesResponseProto) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_ListCacheDirectivesResponseProto.Marshal(b, m, deterministic)
+}
+func (dst *ListCacheDirectivesResponseProto) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_ListCacheDirectivesResponseProto.Merge(dst, src)
+}
+func (m *ListCacheDirectivesResponseProto) XXX_Size() int {
+	return xxx_messageInfo_ListCacheDirectivesResponseProto.Size(m)
+}
+func (m *ListCacheDirectivesResponseProto) XXX_DiscardUnknown() {
+	xxx_messageInfo_ListCacheDirectivesResponseProto.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_ListCacheDirectivesResponseProto proto.InternalMessageInfo
 
 func (m *ListCacheDirectivesResponseProto) GetElements() []*CacheDirectiveEntryProto {
 	if m != nil {
@@ -2392,19 +4420,40 @@ func (m *ListCacheDirectivesResponseProto) GetHasMore() bool {
 }
 
 type CachePoolInfoProto struct {
-	PoolName          *string `protobuf:"bytes,1,opt,name=poolName" json:"poolName,omitempty"`
-	OwnerName         *string `protobuf:"bytes,2,opt,name=ownerName" json:"ownerName,omitempty"`
-	GroupName         *string `protobuf:"bytes,3,opt,name=groupName" json:"groupName,omitempty"`
-	Mode              *int32  `protobuf:"varint,4,opt,name=mode" json:"mode,omitempty"`
-	Limit             *int64  `protobuf:"varint,5,opt,name=limit" json:"limit,omitempty"`
-	MaxRelativeExpiry *int64  `protobuf:"varint,6,opt,name=maxRelativeExpiry" json:"maxRelativeExpiry,omitempty"`
-	XXX_unrecognized  []byte  `json:"-"`
+	PoolName             *string  `protobuf:"bytes,1,opt,name=poolName" json:"poolName,omitempty"`
+	OwnerName            *string  `protobuf:"bytes,2,opt,name=ownerName" json:"ownerName,omitempty"`
+	GroupName            *string  `protobuf:"bytes,3,opt,name=groupName" json:"groupName,omitempty"`
+	Mode                 *int32   `protobuf:"varint,4,opt,name=mode" json:"mode,omitempty"`
+	Limit                *int64   `protobuf:"varint,5,opt,name=limit" json:"limit,omitempty"`
+	MaxRelativeExpiry    *int64   `protobuf:"varint,6,opt,name=maxRelativeExpiry" json:"maxRelativeExpiry,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
 }
 
-func (m *CachePoolInfoProto) Reset()                    { *m = CachePoolInfoProto{} }
-func (m *CachePoolInfoProto) String() string            { return proto.CompactTextString(m) }
-func (*CachePoolInfoProto) ProtoMessage()               {}
-func (*CachePoolInfoProto) Descriptor() ([]byte, []int) { return fileDescriptor4, []int{98} }
+func (m *CachePoolInfoProto) Reset()         { *m = CachePoolInfoProto{} }
+func (m *CachePoolInfoProto) String() string { return proto.CompactTextString(m) }
+func (*CachePoolInfoProto) ProtoMessage()    {}
+func (*CachePoolInfoProto) Descriptor() ([]byte, []int) {
+	return fileDescriptor_ClientNamenodeProtocol_54652e2c42538454, []int{98}
+}
+func (m *CachePoolInfoProto) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_CachePoolInfoProto.Unmarshal(m, b)
+}
+func (m *CachePoolInfoProto) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_CachePoolInfoProto.Marshal(b, m, deterministic)
+}
+func (dst *CachePoolInfoProto) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_CachePoolInfoProto.Merge(dst, src)
+}
+func (m *CachePoolInfoProto) XXX_Size() int {
+	return xxx_messageInfo_CachePoolInfoProto.Size(m)
+}
+func (m *CachePoolInfoProto) XXX_DiscardUnknown() {
+	xxx_messageInfo_CachePoolInfoProto.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_CachePoolInfoProto proto.InternalMessageInfo
 
 func (m *CachePoolInfoProto) GetPoolName() string {
 	if m != nil && m.PoolName != nil {
@@ -2449,18 +4498,39 @@ func (m *CachePoolInfoProto) GetMaxRelativeExpiry() int64 {
 }
 
 type CachePoolStatsProto struct {
-	BytesNeeded      *int64 `protobuf:"varint,1,req,name=bytesNeeded" json:"bytesNeeded,omitempty"`
-	BytesCached      *int64 `protobuf:"varint,2,req,name=bytesCached" json:"bytesCached,omitempty"`
-	BytesOverlimit   *int64 `protobuf:"varint,3,req,name=bytesOverlimit" json:"bytesOverlimit,omitempty"`
-	FilesNeeded      *int64 `protobuf:"varint,4,req,name=filesNeeded" json:"filesNeeded,omitempty"`
-	FilesCached      *int64 `protobuf:"varint,5,req,name=filesCached" json:"filesCached,omitempty"`
-	XXX_unrecognized []byte `json:"-"`
+	BytesNeeded          *int64   `protobuf:"varint,1,req,name=bytesNeeded" json:"bytesNeeded,omitempty"`
+	BytesCached          *int64   `protobuf:"varint,2,req,name=bytesCached" json:"bytesCached,omitempty"`
+	BytesOverlimit       *int64   `protobuf:"varint,3,req,name=bytesOverlimit" json:"bytesOverlimit,omitempty"`
+	FilesNeeded          *int64   `protobuf:"varint,4,req,name=filesNeeded" json:"filesNeeded,omitempty"`
+	FilesCached          *int64   `protobuf:"varint,5,req,name=filesCached" json:"filesCached,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
 }
 
-func (m *CachePoolStatsProto) Reset()                    { *m = CachePoolStatsProto{} }
-func (m *CachePoolStatsProto) String() string            { return proto.CompactTextString(m) }
-func (*CachePoolStatsProto) ProtoMessage()               {}
-func (*CachePoolStatsProto) Descriptor() ([]byte, []int) { return fileDescriptor4, []int{99} }
+func (m *CachePoolStatsProto) Reset()         { *m = CachePoolStatsProto{} }
+func (m *CachePoolStatsProto) String() string { return proto.CompactTextString(m) }
+func (*CachePoolStatsProto) ProtoMessage()    {}
+func (*CachePoolStatsProto) Descriptor() ([]byte, []int) {
+	return fileDescriptor_ClientNamenodeProtocol_54652e2c42538454, []int{99}
+}
+func (m *CachePoolStatsProto) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_CachePoolStatsProto.Unmarshal(m, b)
+}
+func (m *CachePoolStatsProto) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_CachePoolStatsProto.Marshal(b, m, deterministic)
+}
+func (dst *CachePoolStatsProto) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_CachePoolStatsProto.Merge(dst, src)
+}
+func (m *CachePoolStatsProto) XXX_Size() int {
+	return xxx_messageInfo_CachePoolStatsProto.Size(m)
+}
+func (m *CachePoolStatsProto) XXX_DiscardUnknown() {
+	xxx_messageInfo_CachePoolStatsProto.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_CachePoolStatsProto proto.InternalMessageInfo
 
 func (m *CachePoolStatsProto) GetBytesNeeded() int64 {
 	if m != nil && m.BytesNeeded != nil {
@@ -2498,14 +4568,35 @@ func (m *CachePoolStatsProto) GetFilesCached() int64 {
 }
 
 type AddCachePoolRequestProto struct {
-	Info             *CachePoolInfoProto `protobuf:"bytes,1,req,name=info" json:"info,omitempty"`
-	XXX_unrecognized []byte              `json:"-"`
+	Info                 *CachePoolInfoProto `protobuf:"bytes,1,req,name=info" json:"info,omitempty"`
+	XXX_NoUnkeyedLiteral struct{}            `json:"-"`
+	XXX_unrecognized     []byte              `json:"-"`
+	XXX_sizecache        int32               `json:"-"`
 }
 
-func (m *AddCachePoolRequestProto) Reset()                    { *m = AddCachePoolRequestProto{} }
-func (m *AddCachePoolRequestProto) String() string            { return proto.CompactTextString(m) }
-func (*AddCachePoolRequestProto) ProtoMessage()               {}
-func (*AddCachePoolRequestProto) Descriptor() ([]byte, []int) { return fileDescriptor4, []int{100} }
+func (m *AddCachePoolRequestProto) Reset()         { *m = AddCachePoolRequestProto{} }
+func (m *AddCachePoolRequestProto) String() string { return proto.CompactTextString(m) }
+func (*AddCachePoolRequestProto) ProtoMessage()    {}
+func (*AddCachePoolRequestProto) Descriptor() ([]byte, []int) {
+	return fileDescriptor_ClientNamenodeProtocol_54652e2c42538454, []int{100}
+}
+func (m *AddCachePoolRequestProto) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_AddCachePoolRequestProto.Unmarshal(m, b)
+}
+func (m *AddCachePoolRequestProto) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_AddCachePoolRequestProto.Marshal(b, m, deterministic)
+}
+func (dst *AddCachePoolRequestProto) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_AddCachePoolRequestProto.Merge(dst, src)
+}
+func (m *AddCachePoolRequestProto) XXX_Size() int {
+	return xxx_messageInfo_AddCachePoolRequestProto.Size(m)
+}
+func (m *AddCachePoolRequestProto) XXX_DiscardUnknown() {
+	xxx_messageInfo_AddCachePoolRequestProto.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_AddCachePoolRequestProto proto.InternalMessageInfo
 
 func (m *AddCachePoolRequestProto) GetInfo() *CachePoolInfoProto {
 	if m != nil {
@@ -2515,23 +4606,65 @@ func (m *AddCachePoolRequestProto) GetInfo() *CachePoolInfoProto {
 }
 
 type AddCachePoolResponseProto struct {
-	XXX_unrecognized []byte `json:"-"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
 }
 
-func (m *AddCachePoolResponseProto) Reset()                    { *m = AddCachePoolResponseProto{} }
-func (m *AddCachePoolResponseProto) String() string            { return proto.CompactTextString(m) }
-func (*AddCachePoolResponseProto) ProtoMessage()               {}
-func (*AddCachePoolResponseProto) Descriptor() ([]byte, []int) { return fileDescriptor4, []int{101} }
+func (m *AddCachePoolResponseProto) Reset()         { *m = AddCachePoolResponseProto{} }
+func (m *AddCachePoolResponseProto) String() string { return proto.CompactTextString(m) }
+func (*AddCachePoolResponseProto) ProtoMessage()    {}
+func (*AddCachePoolResponseProto) Descriptor() ([]byte, []int) {
+	return fileDescriptor_ClientNamenodeProtocol_54652e2c42538454, []int{101}
+}
+func (m *AddCachePoolResponseProto) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_AddCachePoolResponseProto.Unmarshal(m, b)
+}
+func (m *AddCachePoolResponseProto) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_AddCachePoolResponseProto.Marshal(b, m, deterministic)
+}
+func (dst *AddCachePoolResponseProto) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_AddCachePoolResponseProto.Merge(dst, src)
+}
+func (m *AddCachePoolResponseProto) XXX_Size() int {
+	return xxx_messageInfo_AddCachePoolResponseProto.Size(m)
+}
+func (m *AddCachePoolResponseProto) XXX_DiscardUnknown() {
+	xxx_messageInfo_AddCachePoolResponseProto.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_AddCachePoolResponseProto proto.InternalMessageInfo
 
 type ModifyCachePoolRequestProto struct {
-	Info             *CachePoolInfoProto `protobuf:"bytes,1,req,name=info" json:"info,omitempty"`
-	XXX_unrecognized []byte              `json:"-"`
+	Info                 *CachePoolInfoProto `protobuf:"bytes,1,req,name=info" json:"info,omitempty"`
+	XXX_NoUnkeyedLiteral struct{}            `json:"-"`
+	XXX_unrecognized     []byte              `json:"-"`
+	XXX_sizecache        int32               `json:"-"`
 }
 
-func (m *ModifyCachePoolRequestProto) Reset()                    { *m = ModifyCachePoolRequestProto{} }
-func (m *ModifyCachePoolRequestProto) String() string            { return proto.CompactTextString(m) }
-func (*ModifyCachePoolRequestProto) ProtoMessage()               {}
-func (*ModifyCachePoolRequestProto) Descriptor() ([]byte, []int) { return fileDescriptor4, []int{102} }
+func (m *ModifyCachePoolRequestProto) Reset()         { *m = ModifyCachePoolRequestProto{} }
+func (m *ModifyCachePoolRequestProto) String() string { return proto.CompactTextString(m) }
+func (*ModifyCachePoolRequestProto) ProtoMessage()    {}
+func (*ModifyCachePoolRequestProto) Descriptor() ([]byte, []int) {
+	return fileDescriptor_ClientNamenodeProtocol_54652e2c42538454, []int{102}
+}
+func (m *ModifyCachePoolRequestProto) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_ModifyCachePoolRequestProto.Unmarshal(m, b)
+}
+func (m *ModifyCachePoolRequestProto) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_ModifyCachePoolRequestProto.Marshal(b, m, deterministic)
+}
+func (dst *ModifyCachePoolRequestProto) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_ModifyCachePoolRequestProto.Merge(dst, src)
+}
+func (m *ModifyCachePoolRequestProto) XXX_Size() int {
+	return xxx_messageInfo_ModifyCachePoolRequestProto.Size(m)
+}
+func (m *ModifyCachePoolRequestProto) XXX_DiscardUnknown() {
+	xxx_messageInfo_ModifyCachePoolRequestProto.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_ModifyCachePoolRequestProto proto.InternalMessageInfo
 
 func (m *ModifyCachePoolRequestProto) GetInfo() *CachePoolInfoProto {
 	if m != nil {
@@ -2541,23 +4674,65 @@ func (m *ModifyCachePoolRequestProto) GetInfo() *CachePoolInfoProto {
 }
 
 type ModifyCachePoolResponseProto struct {
-	XXX_unrecognized []byte `json:"-"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
 }
 
-func (m *ModifyCachePoolResponseProto) Reset()                    { *m = ModifyCachePoolResponseProto{} }
-func (m *ModifyCachePoolResponseProto) String() string            { return proto.CompactTextString(m) }
-func (*ModifyCachePoolResponseProto) ProtoMessage()               {}
-func (*ModifyCachePoolResponseProto) Descriptor() ([]byte, []int) { return fileDescriptor4, []int{103} }
+func (m *ModifyCachePoolResponseProto) Reset()         { *m = ModifyCachePoolResponseProto{} }
+func (m *ModifyCachePoolResponseProto) String() string { return proto.CompactTextString(m) }
+func (*ModifyCachePoolResponseProto) ProtoMessage()    {}
+func (*ModifyCachePoolResponseProto) Descriptor() ([]byte, []int) {
+	return fileDescriptor_ClientNamenodeProtocol_54652e2c42538454, []int{103}
+}
+func (m *ModifyCachePoolResponseProto) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_ModifyCachePoolResponseProto.Unmarshal(m, b)
+}
+func (m *ModifyCachePoolResponseProto) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_ModifyCachePoolResponseProto.Marshal(b, m, deterministic)
+}
+func (dst *ModifyCachePoolResponseProto) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_ModifyCachePoolResponseProto.Merge(dst, src)
+}
+func (m *ModifyCachePoolResponseProto) XXX_Size() int {
+	return xxx_messageInfo_ModifyCachePoolResponseProto.Size(m)
+}
+func (m *ModifyCachePoolResponseProto) XXX_DiscardUnknown() {
+	xxx_messageInfo_ModifyCachePoolResponseProto.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_ModifyCachePoolResponseProto proto.InternalMessageInfo
 
 type RemoveCachePoolRequestProto struct {
-	PoolName         *string `protobuf:"bytes,1,req,name=poolName" json:"poolName,omitempty"`
-	XXX_unrecognized []byte  `json:"-"`
+	PoolName             *string  `protobuf:"bytes,1,req,name=poolName" json:"poolName,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
 }
 
-func (m *RemoveCachePoolRequestProto) Reset()                    { *m = RemoveCachePoolRequestProto{} }
-func (m *RemoveCachePoolRequestProto) String() string            { return proto.CompactTextString(m) }
-func (*RemoveCachePoolRequestProto) ProtoMessage()               {}
-func (*RemoveCachePoolRequestProto) Descriptor() ([]byte, []int) { return fileDescriptor4, []int{104} }
+func (m *RemoveCachePoolRequestProto) Reset()         { *m = RemoveCachePoolRequestProto{} }
+func (m *RemoveCachePoolRequestProto) String() string { return proto.CompactTextString(m) }
+func (*RemoveCachePoolRequestProto) ProtoMessage()    {}
+func (*RemoveCachePoolRequestProto) Descriptor() ([]byte, []int) {
+	return fileDescriptor_ClientNamenodeProtocol_54652e2c42538454, []int{104}
+}
+func (m *RemoveCachePoolRequestProto) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_RemoveCachePoolRequestProto.Unmarshal(m, b)
+}
+func (m *RemoveCachePoolRequestProto) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_RemoveCachePoolRequestProto.Marshal(b, m, deterministic)
+}
+func (dst *RemoveCachePoolRequestProto) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_RemoveCachePoolRequestProto.Merge(dst, src)
+}
+func (m *RemoveCachePoolRequestProto) XXX_Size() int {
+	return xxx_messageInfo_RemoveCachePoolRequestProto.Size(m)
+}
+func (m *RemoveCachePoolRequestProto) XXX_DiscardUnknown() {
+	xxx_messageInfo_RemoveCachePoolRequestProto.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_RemoveCachePoolRequestProto proto.InternalMessageInfo
 
 func (m *RemoveCachePoolRequestProto) GetPoolName() string {
 	if m != nil && m.PoolName != nil {
@@ -2567,23 +4742,65 @@ func (m *RemoveCachePoolRequestProto) GetPoolName() string {
 }
 
 type RemoveCachePoolResponseProto struct {
-	XXX_unrecognized []byte `json:"-"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
 }
 
-func (m *RemoveCachePoolResponseProto) Reset()                    { *m = RemoveCachePoolResponseProto{} }
-func (m *RemoveCachePoolResponseProto) String() string            { return proto.CompactTextString(m) }
-func (*RemoveCachePoolResponseProto) ProtoMessage()               {}
-func (*RemoveCachePoolResponseProto) Descriptor() ([]byte, []int) { return fileDescriptor4, []int{105} }
+func (m *RemoveCachePoolResponseProto) Reset()         { *m = RemoveCachePoolResponseProto{} }
+func (m *RemoveCachePoolResponseProto) String() string { return proto.CompactTextString(m) }
+func (*RemoveCachePoolResponseProto) ProtoMessage()    {}
+func (*RemoveCachePoolResponseProto) Descriptor() ([]byte, []int) {
+	return fileDescriptor_ClientNamenodeProtocol_54652e2c42538454, []int{105}
+}
+func (m *RemoveCachePoolResponseProto) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_RemoveCachePoolResponseProto.Unmarshal(m, b)
+}
+func (m *RemoveCachePoolResponseProto) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_RemoveCachePoolResponseProto.Marshal(b, m, deterministic)
+}
+func (dst *RemoveCachePoolResponseProto) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_RemoveCachePoolResponseProto.Merge(dst, src)
+}
+func (m *RemoveCachePoolResponseProto) XXX_Size() int {
+	return xxx_messageInfo_RemoveCachePoolResponseProto.Size(m)
+}
+func (m *RemoveCachePoolResponseProto) XXX_DiscardUnknown() {
+	xxx_messageInfo_RemoveCachePoolResponseProto.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_RemoveCachePoolResponseProto proto.InternalMessageInfo
 
 type ListCachePoolsRequestProto struct {
-	PrevPoolName     *string `protobuf:"bytes,1,req,name=prevPoolName" json:"prevPoolName,omitempty"`
-	XXX_unrecognized []byte  `json:"-"`
+	PrevPoolName         *string  `protobuf:"bytes,1,req,name=prevPoolName" json:"prevPoolName,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
 }
 
-func (m *ListCachePoolsRequestProto) Reset()                    { *m = ListCachePoolsRequestProto{} }
-func (m *ListCachePoolsRequestProto) String() string            { return proto.CompactTextString(m) }
-func (*ListCachePoolsRequestProto) ProtoMessage()               {}
-func (*ListCachePoolsRequestProto) Descriptor() ([]byte, []int) { return fileDescriptor4, []int{106} }
+func (m *ListCachePoolsRequestProto) Reset()         { *m = ListCachePoolsRequestProto{} }
+func (m *ListCachePoolsRequestProto) String() string { return proto.CompactTextString(m) }
+func (*ListCachePoolsRequestProto) ProtoMessage()    {}
+func (*ListCachePoolsRequestProto) Descriptor() ([]byte, []int) {
+	return fileDescriptor_ClientNamenodeProtocol_54652e2c42538454, []int{106}
+}
+func (m *ListCachePoolsRequestProto) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_ListCachePoolsRequestProto.Unmarshal(m, b)
+}
+func (m *ListCachePoolsRequestProto) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_ListCachePoolsRequestProto.Marshal(b, m, deterministic)
+}
+func (dst *ListCachePoolsRequestProto) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_ListCachePoolsRequestProto.Merge(dst, src)
+}
+func (m *ListCachePoolsRequestProto) XXX_Size() int {
+	return xxx_messageInfo_ListCachePoolsRequestProto.Size(m)
+}
+func (m *ListCachePoolsRequestProto) XXX_DiscardUnknown() {
+	xxx_messageInfo_ListCachePoolsRequestProto.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_ListCachePoolsRequestProto proto.InternalMessageInfo
 
 func (m *ListCachePoolsRequestProto) GetPrevPoolName() string {
 	if m != nil && m.PrevPoolName != nil {
@@ -2593,15 +4810,36 @@ func (m *ListCachePoolsRequestProto) GetPrevPoolName() string {
 }
 
 type ListCachePoolsResponseProto struct {
-	Entries          []*CachePoolEntryProto `protobuf:"bytes,1,rep,name=entries" json:"entries,omitempty"`
-	HasMore          *bool                  `protobuf:"varint,2,req,name=hasMore" json:"hasMore,omitempty"`
-	XXX_unrecognized []byte                 `json:"-"`
+	Entries              []*CachePoolEntryProto `protobuf:"bytes,1,rep,name=entries" json:"entries,omitempty"`
+	HasMore              *bool                  `protobuf:"varint,2,req,name=hasMore" json:"hasMore,omitempty"`
+	XXX_NoUnkeyedLiteral struct{}               `json:"-"`
+	XXX_unrecognized     []byte                 `json:"-"`
+	XXX_sizecache        int32                  `json:"-"`
 }
 
-func (m *ListCachePoolsResponseProto) Reset()                    { *m = ListCachePoolsResponseProto{} }
-func (m *ListCachePoolsResponseProto) String() string            { return proto.CompactTextString(m) }
-func (*ListCachePoolsResponseProto) ProtoMessage()               {}
-func (*ListCachePoolsResponseProto) Descriptor() ([]byte, []int) { return fileDescriptor4, []int{107} }
+func (m *ListCachePoolsResponseProto) Reset()         { *m = ListCachePoolsResponseProto{} }
+func (m *ListCachePoolsResponseProto) String() string { return proto.CompactTextString(m) }
+func (*ListCachePoolsResponseProto) ProtoMessage()    {}
+func (*ListCachePoolsResponseProto) Descriptor() ([]byte, []int) {
+	return fileDescriptor_ClientNamenodeProtocol_54652e2c42538454, []int{107}
+}
+func (m *ListCachePoolsResponseProto) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_ListCachePoolsResponseProto.Unmarshal(m, b)
+}
+func (m *ListCachePoolsResponseProto) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_ListCachePoolsResponseProto.Marshal(b, m, deterministic)
+}
+func (dst *ListCachePoolsResponseProto) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_ListCachePoolsResponseProto.Merge(dst, src)
+}
+func (m *ListCachePoolsResponseProto) XXX_Size() int {
+	return xxx_messageInfo_ListCachePoolsResponseProto.Size(m)
+}
+func (m *ListCachePoolsResponseProto) XXX_DiscardUnknown() {
+	xxx_messageInfo_ListCachePoolsResponseProto.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_ListCachePoolsResponseProto proto.InternalMessageInfo
 
 func (m *ListCachePoolsResponseProto) GetEntries() []*CachePoolEntryProto {
 	if m != nil {
@@ -2618,15 +4856,36 @@ func (m *ListCachePoolsResponseProto) GetHasMore() bool {
 }
 
 type CachePoolEntryProto struct {
-	Info             *CachePoolInfoProto  `protobuf:"bytes,1,req,name=info" json:"info,omitempty"`
-	Stats            *CachePoolStatsProto `protobuf:"bytes,2,req,name=stats" json:"stats,omitempty"`
-	XXX_unrecognized []byte               `json:"-"`
+	Info                 *CachePoolInfoProto  `protobuf:"bytes,1,req,name=info" json:"info,omitempty"`
+	Stats                *CachePoolStatsProto `protobuf:"bytes,2,req,name=stats" json:"stats,omitempty"`
+	XXX_NoUnkeyedLiteral struct{}             `json:"-"`
+	XXX_unrecognized     []byte               `json:"-"`
+	XXX_sizecache        int32                `json:"-"`
 }
 
-func (m *CachePoolEntryProto) Reset()                    { *m = CachePoolEntryProto{} }
-func (m *CachePoolEntryProto) String() string            { return proto.CompactTextString(m) }
-func (*CachePoolEntryProto) ProtoMessage()               {}
-func (*CachePoolEntryProto) Descriptor() ([]byte, []int) { return fileDescriptor4, []int{108} }
+func (m *CachePoolEntryProto) Reset()         { *m = CachePoolEntryProto{} }
+func (m *CachePoolEntryProto) String() string { return proto.CompactTextString(m) }
+func (*CachePoolEntryProto) ProtoMessage()    {}
+func (*CachePoolEntryProto) Descriptor() ([]byte, []int) {
+	return fileDescriptor_ClientNamenodeProtocol_54652e2c42538454, []int{108}
+}
+func (m *CachePoolEntryProto) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_CachePoolEntryProto.Unmarshal(m, b)
+}
+func (m *CachePoolEntryProto) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_CachePoolEntryProto.Marshal(b, m, deterministic)
+}
+func (dst *CachePoolEntryProto) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_CachePoolEntryProto.Merge(dst, src)
+}
+func (m *CachePoolEntryProto) XXX_Size() int {
+	return xxx_messageInfo_CachePoolEntryProto.Size(m)
+}
+func (m *CachePoolEntryProto) XXX_DiscardUnknown() {
+	xxx_messageInfo_CachePoolEntryProto.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_CachePoolEntryProto proto.InternalMessageInfo
 
 func (m *CachePoolEntryProto) GetInfo() *CachePoolInfoProto {
 	if m != nil {
@@ -2643,14 +4902,35 @@ func (m *CachePoolEntryProto) GetStats() *CachePoolStatsProto {
 }
 
 type GetFileLinkInfoRequestProto struct {
-	Src              *string `protobuf:"bytes,1,req,name=src" json:"src,omitempty"`
-	XXX_unrecognized []byte  `json:"-"`
+	Src                  *string  `protobuf:"bytes,1,req,name=src" json:"src,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
 }
 
-func (m *GetFileLinkInfoRequestProto) Reset()                    { *m = GetFileLinkInfoRequestProto{} }
-func (m *GetFileLinkInfoRequestProto) String() string            { return proto.CompactTextString(m) }
-func (*GetFileLinkInfoRequestProto) ProtoMessage()               {}
-func (*GetFileLinkInfoRequestProto) Descriptor() ([]byte, []int) { return fileDescriptor4, []int{109} }
+func (m *GetFileLinkInfoRequestProto) Reset()         { *m = GetFileLinkInfoRequestProto{} }
+func (m *GetFileLinkInfoRequestProto) String() string { return proto.CompactTextString(m) }
+func (*GetFileLinkInfoRequestProto) ProtoMessage()    {}
+func (*GetFileLinkInfoRequestProto) Descriptor() ([]byte, []int) {
+	return fileDescriptor_ClientNamenodeProtocol_54652e2c42538454, []int{109}
+}
+func (m *GetFileLinkInfoRequestProto) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_GetFileLinkInfoRequestProto.Unmarshal(m, b)
+}
+func (m *GetFileLinkInfoRequestProto) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_GetFileLinkInfoRequestProto.Marshal(b, m, deterministic)
+}
+func (dst *GetFileLinkInfoRequestProto) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_GetFileLinkInfoRequestProto.Merge(dst, src)
+}
+func (m *GetFileLinkInfoRequestProto) XXX_Size() int {
+	return xxx_messageInfo_GetFileLinkInfoRequestProto.Size(m)
+}
+func (m *GetFileLinkInfoRequestProto) XXX_DiscardUnknown() {
+	xxx_messageInfo_GetFileLinkInfoRequestProto.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_GetFileLinkInfoRequestProto proto.InternalMessageInfo
 
 func (m *GetFileLinkInfoRequestProto) GetSrc() string {
 	if m != nil && m.Src != nil {
@@ -2660,14 +4940,35 @@ func (m *GetFileLinkInfoRequestProto) GetSrc() string {
 }
 
 type GetFileLinkInfoResponseProto struct {
-	Fs               *HdfsFileStatusProto `protobuf:"bytes,1,opt,name=fs" json:"fs,omitempty"`
-	XXX_unrecognized []byte               `json:"-"`
+	Fs                   *HdfsFileStatusProto `protobuf:"bytes,1,opt,name=fs" json:"fs,omitempty"`
+	XXX_NoUnkeyedLiteral struct{}             `json:"-"`
+	XXX_unrecognized     []byte               `json:"-"`
+	XXX_sizecache        int32                `json:"-"`
 }
 
-func (m *GetFileLinkInfoResponseProto) Reset()                    { *m = GetFileLinkInfoResponseProto{} }
-func (m *GetFileLinkInfoResponseProto) String() string            { return proto.CompactTextString(m) }
-func (*GetFileLinkInfoResponseProto) ProtoMessage()               {}
-func (*GetFileLinkInfoResponseProto) Descriptor() ([]byte, []int) { return fileDescriptor4, []int{110} }
+func (m *GetFileLinkInfoResponseProto) Reset()         { *m = GetFileLinkInfoResponseProto{} }
+func (m *GetFileLinkInfoResponseProto) String() string { return proto.CompactTextString(m) }
+func (*GetFileLinkInfoResponseProto) ProtoMessage()    {}
+func (*GetFileLinkInfoResponseProto) Descriptor() ([]byte, []int) {
+	return fileDescriptor_ClientNamenodeProtocol_54652e2c42538454, []int{110}
+}
+func (m *GetFileLinkInfoResponseProto) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_GetFileLinkInfoResponseProto.Unmarshal(m, b)
+}
+func (m *GetFileLinkInfoResponseProto) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_GetFileLinkInfoResponseProto.Marshal(b, m, deterministic)
+}
+func (dst *GetFileLinkInfoResponseProto) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_GetFileLinkInfoResponseProto.Merge(dst, src)
+}
+func (m *GetFileLinkInfoResponseProto) XXX_Size() int {
+	return xxx_messageInfo_GetFileLinkInfoResponseProto.Size(m)
+}
+func (m *GetFileLinkInfoResponseProto) XXX_DiscardUnknown() {
+	xxx_messageInfo_GetFileLinkInfoResponseProto.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_GetFileLinkInfoResponseProto proto.InternalMessageInfo
 
 func (m *GetFileLinkInfoResponseProto) GetFs() *HdfsFileStatusProto {
 	if m != nil {
@@ -2677,14 +4978,35 @@ func (m *GetFileLinkInfoResponseProto) GetFs() *HdfsFileStatusProto {
 }
 
 type GetContentSummaryRequestProto struct {
-	Path             *string `protobuf:"bytes,1,req,name=path" json:"path,omitempty"`
-	XXX_unrecognized []byte  `json:"-"`
+	Path                 *string  `protobuf:"bytes,1,req,name=path" json:"path,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
 }
 
-func (m *GetContentSummaryRequestProto) Reset()                    { *m = GetContentSummaryRequestProto{} }
-func (m *GetContentSummaryRequestProto) String() string            { return proto.CompactTextString(m) }
-func (*GetContentSummaryRequestProto) ProtoMessage()               {}
-func (*GetContentSummaryRequestProto) Descriptor() ([]byte, []int) { return fileDescriptor4, []int{111} }
+func (m *GetContentSummaryRequestProto) Reset()         { *m = GetContentSummaryRequestProto{} }
+func (m *GetContentSummaryRequestProto) String() string { return proto.CompactTextString(m) }
+func (*GetContentSummaryRequestProto) ProtoMessage()    {}
+func (*GetContentSummaryRequestProto) Descriptor() ([]byte, []int) {
+	return fileDescriptor_ClientNamenodeProtocol_54652e2c42538454, []int{111}
+}
+func (m *GetContentSummaryRequestProto) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_GetContentSummaryRequestProto.Unmarshal(m, b)
+}
+func (m *GetContentSummaryRequestProto) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_GetContentSummaryRequestProto.Marshal(b, m, deterministic)
+}
+func (dst *GetContentSummaryRequestProto) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_GetContentSummaryRequestProto.Merge(dst, src)
+}
+func (m *GetContentSummaryRequestProto) XXX_Size() int {
+	return xxx_messageInfo_GetContentSummaryRequestProto.Size(m)
+}
+func (m *GetContentSummaryRequestProto) XXX_DiscardUnknown() {
+	xxx_messageInfo_GetContentSummaryRequestProto.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_GetContentSummaryRequestProto proto.InternalMessageInfo
 
 func (m *GetContentSummaryRequestProto) GetPath() string {
 	if m != nil && m.Path != nil {
@@ -2694,16 +5016,35 @@ func (m *GetContentSummaryRequestProto) GetPath() string {
 }
 
 type GetContentSummaryResponseProto struct {
-	Summary          *ContentSummaryProto `protobuf:"bytes,1,req,name=summary" json:"summary,omitempty"`
-	XXX_unrecognized []byte               `json:"-"`
+	Summary              *ContentSummaryProto `protobuf:"bytes,1,req,name=summary" json:"summary,omitempty"`
+	XXX_NoUnkeyedLiteral struct{}             `json:"-"`
+	XXX_unrecognized     []byte               `json:"-"`
+	XXX_sizecache        int32                `json:"-"`
 }
 
 func (m *GetContentSummaryResponseProto) Reset()         { *m = GetContentSummaryResponseProto{} }
 func (m *GetContentSummaryResponseProto) String() string { return proto.CompactTextString(m) }
 func (*GetContentSummaryResponseProto) ProtoMessage()    {}
 func (*GetContentSummaryResponseProto) Descriptor() ([]byte, []int) {
-	return fileDescriptor4, []int{112}
+	return fileDescriptor_ClientNamenodeProtocol_54652e2c42538454, []int{112}
 }
+func (m *GetContentSummaryResponseProto) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_GetContentSummaryResponseProto.Unmarshal(m, b)
+}
+func (m *GetContentSummaryResponseProto) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_GetContentSummaryResponseProto.Marshal(b, m, deterministic)
+}
+func (dst *GetContentSummaryResponseProto) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_GetContentSummaryResponseProto.Merge(dst, src)
+}
+func (m *GetContentSummaryResponseProto) XXX_Size() int {
+	return xxx_messageInfo_GetContentSummaryResponseProto.Size(m)
+}
+func (m *GetContentSummaryResponseProto) XXX_DiscardUnknown() {
+	xxx_messageInfo_GetContentSummaryResponseProto.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_GetContentSummaryResponseProto proto.InternalMessageInfo
 
 func (m *GetContentSummaryResponseProto) GetSummary() *ContentSummaryProto {
 	if m != nil {
@@ -2713,14 +5054,35 @@ func (m *GetContentSummaryResponseProto) GetSummary() *ContentSummaryProto {
 }
 
 type GetQuotaUsageRequestProto struct {
-	Path             *string `protobuf:"bytes,1,req,name=path" json:"path,omitempty"`
-	XXX_unrecognized []byte  `json:"-"`
+	Path                 *string  `protobuf:"bytes,1,req,name=path" json:"path,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
 }
 
-func (m *GetQuotaUsageRequestProto) Reset()                    { *m = GetQuotaUsageRequestProto{} }
-func (m *GetQuotaUsageRequestProto) String() string            { return proto.CompactTextString(m) }
-func (*GetQuotaUsageRequestProto) ProtoMessage()               {}
-func (*GetQuotaUsageRequestProto) Descriptor() ([]byte, []int) { return fileDescriptor4, []int{113} }
+func (m *GetQuotaUsageRequestProto) Reset()         { *m = GetQuotaUsageRequestProto{} }
+func (m *GetQuotaUsageRequestProto) String() string { return proto.CompactTextString(m) }
+func (*GetQuotaUsageRequestProto) ProtoMessage()    {}
+func (*GetQuotaUsageRequestProto) Descriptor() ([]byte, []int) {
+	return fileDescriptor_ClientNamenodeProtocol_54652e2c42538454, []int{113}
+}
+func (m *GetQuotaUsageRequestProto) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_GetQuotaUsageRequestProto.Unmarshal(m, b)
+}
+func (m *GetQuotaUsageRequestProto) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_GetQuotaUsageRequestProto.Marshal(b, m, deterministic)
+}
+func (dst *GetQuotaUsageRequestProto) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_GetQuotaUsageRequestProto.Merge(dst, src)
+}
+func (m *GetQuotaUsageRequestProto) XXX_Size() int {
+	return xxx_messageInfo_GetQuotaUsageRequestProto.Size(m)
+}
+func (m *GetQuotaUsageRequestProto) XXX_DiscardUnknown() {
+	xxx_messageInfo_GetQuotaUsageRequestProto.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_GetQuotaUsageRequestProto proto.InternalMessageInfo
 
 func (m *GetQuotaUsageRequestProto) GetPath() string {
 	if m != nil && m.Path != nil {
@@ -2730,14 +5092,35 @@ func (m *GetQuotaUsageRequestProto) GetPath() string {
 }
 
 type GetQuotaUsageResponseProto struct {
-	Usage            *QuotaUsageProto `protobuf:"bytes,1,req,name=usage" json:"usage,omitempty"`
-	XXX_unrecognized []byte           `json:"-"`
+	Usage                *QuotaUsageProto `protobuf:"bytes,1,req,name=usage" json:"usage,omitempty"`
+	XXX_NoUnkeyedLiteral struct{}         `json:"-"`
+	XXX_unrecognized     []byte           `json:"-"`
+	XXX_sizecache        int32            `json:"-"`
 }
 
-func (m *GetQuotaUsageResponseProto) Reset()                    { *m = GetQuotaUsageResponseProto{} }
-func (m *GetQuotaUsageResponseProto) String() string            { return proto.CompactTextString(m) }
-func (*GetQuotaUsageResponseProto) ProtoMessage()               {}
-func (*GetQuotaUsageResponseProto) Descriptor() ([]byte, []int) { return fileDescriptor4, []int{114} }
+func (m *GetQuotaUsageResponseProto) Reset()         { *m = GetQuotaUsageResponseProto{} }
+func (m *GetQuotaUsageResponseProto) String() string { return proto.CompactTextString(m) }
+func (*GetQuotaUsageResponseProto) ProtoMessage()    {}
+func (*GetQuotaUsageResponseProto) Descriptor() ([]byte, []int) {
+	return fileDescriptor_ClientNamenodeProtocol_54652e2c42538454, []int{114}
+}
+func (m *GetQuotaUsageResponseProto) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_GetQuotaUsageResponseProto.Unmarshal(m, b)
+}
+func (m *GetQuotaUsageResponseProto) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_GetQuotaUsageResponseProto.Marshal(b, m, deterministic)
+}
+func (dst *GetQuotaUsageResponseProto) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_GetQuotaUsageResponseProto.Merge(dst, src)
+}
+func (m *GetQuotaUsageResponseProto) XXX_Size() int {
+	return xxx_messageInfo_GetQuotaUsageResponseProto.Size(m)
+}
+func (m *GetQuotaUsageResponseProto) XXX_DiscardUnknown() {
+	xxx_messageInfo_GetQuotaUsageResponseProto.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_GetQuotaUsageResponseProto proto.InternalMessageInfo
 
 func (m *GetQuotaUsageResponseProto) GetUsage() *QuotaUsageProto {
 	if m != nil {
@@ -2747,17 +5130,38 @@ func (m *GetQuotaUsageResponseProto) GetUsage() *QuotaUsageProto {
 }
 
 type SetQuotaRequestProto struct {
-	Path              *string           `protobuf:"bytes,1,req,name=path" json:"path,omitempty"`
-	NamespaceQuota    *uint64           `protobuf:"varint,2,req,name=namespaceQuota" json:"namespaceQuota,omitempty"`
-	StoragespaceQuota *uint64           `protobuf:"varint,3,req,name=storagespaceQuota" json:"storagespaceQuota,omitempty"`
-	StorageType       *StorageTypeProto `protobuf:"varint,4,opt,name=storageType,enum=hadoop.hdfs.StorageTypeProto" json:"storageType,omitempty"`
-	XXX_unrecognized  []byte            `json:"-"`
+	Path                 *string           `protobuf:"bytes,1,req,name=path" json:"path,omitempty"`
+	NamespaceQuota       *uint64           `protobuf:"varint,2,req,name=namespaceQuota" json:"namespaceQuota,omitempty"`
+	StoragespaceQuota    *uint64           `protobuf:"varint,3,req,name=storagespaceQuota" json:"storagespaceQuota,omitempty"`
+	StorageType          *StorageTypeProto `protobuf:"varint,4,opt,name=storageType,enum=hadoop.hdfs.StorageTypeProto" json:"storageType,omitempty"`
+	XXX_NoUnkeyedLiteral struct{}          `json:"-"`
+	XXX_unrecognized     []byte            `json:"-"`
+	XXX_sizecache        int32             `json:"-"`
 }
 
-func (m *SetQuotaRequestProto) Reset()                    { *m = SetQuotaRequestProto{} }
-func (m *SetQuotaRequestProto) String() string            { return proto.CompactTextString(m) }
-func (*SetQuotaRequestProto) ProtoMessage()               {}
-func (*SetQuotaRequestProto) Descriptor() ([]byte, []int) { return fileDescriptor4, []int{115} }
+func (m *SetQuotaRequestProto) Reset()         { *m = SetQuotaRequestProto{} }
+func (m *SetQuotaRequestProto) String() string { return proto.CompactTextString(m) }
+func (*SetQuotaRequestProto) ProtoMessage()    {}
+func (*SetQuotaRequestProto) Descriptor() ([]byte, []int) {
+	return fileDescriptor_ClientNamenodeProtocol_54652e2c42538454, []int{115}
+}
+func (m *SetQuotaRequestProto) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_SetQuotaRequestProto.Unmarshal(m, b)
+}
+func (m *SetQuotaRequestProto) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_SetQuotaRequestProto.Marshal(b, m, deterministic)
+}
+func (dst *SetQuotaRequestProto) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_SetQuotaRequestProto.Merge(dst, src)
+}
+func (m *SetQuotaRequestProto) XXX_Size() int {
+	return xxx_messageInfo_SetQuotaRequestProto.Size(m)
+}
+func (m *SetQuotaRequestProto) XXX_DiscardUnknown() {
+	xxx_messageInfo_SetQuotaRequestProto.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_SetQuotaRequestProto proto.InternalMessageInfo
 
 func (m *SetQuotaRequestProto) GetPath() string {
 	if m != nil && m.Path != nil {
@@ -2788,26 +5192,68 @@ func (m *SetQuotaRequestProto) GetStorageType() StorageTypeProto {
 }
 
 type SetQuotaResponseProto struct {
-	XXX_unrecognized []byte `json:"-"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
 }
 
-func (m *SetQuotaResponseProto) Reset()                    { *m = SetQuotaResponseProto{} }
-func (m *SetQuotaResponseProto) String() string            { return proto.CompactTextString(m) }
-func (*SetQuotaResponseProto) ProtoMessage()               {}
-func (*SetQuotaResponseProto) Descriptor() ([]byte, []int) { return fileDescriptor4, []int{116} }
+func (m *SetQuotaResponseProto) Reset()         { *m = SetQuotaResponseProto{} }
+func (m *SetQuotaResponseProto) String() string { return proto.CompactTextString(m) }
+func (*SetQuotaResponseProto) ProtoMessage()    {}
+func (*SetQuotaResponseProto) Descriptor() ([]byte, []int) {
+	return fileDescriptor_ClientNamenodeProtocol_54652e2c42538454, []int{116}
+}
+func (m *SetQuotaResponseProto) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_SetQuotaResponseProto.Unmarshal(m, b)
+}
+func (m *SetQuotaResponseProto) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_SetQuotaResponseProto.Marshal(b, m, deterministic)
+}
+func (dst *SetQuotaResponseProto) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_SetQuotaResponseProto.Merge(dst, src)
+}
+func (m *SetQuotaResponseProto) XXX_Size() int {
+	return xxx_messageInfo_SetQuotaResponseProto.Size(m)
+}
+func (m *SetQuotaResponseProto) XXX_DiscardUnknown() {
+	xxx_messageInfo_SetQuotaResponseProto.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_SetQuotaResponseProto proto.InternalMessageInfo
 
 type FsyncRequestProto struct {
-	Src              *string `protobuf:"bytes,1,req,name=src" json:"src,omitempty"`
-	Client           *string `protobuf:"bytes,2,req,name=client" json:"client,omitempty"`
-	LastBlockLength  *int64  `protobuf:"zigzag64,3,opt,name=lastBlockLength,def=-1" json:"lastBlockLength,omitempty"`
-	FileId           *uint64 `protobuf:"varint,4,opt,name=fileId,def=0" json:"fileId,omitempty"`
-	XXX_unrecognized []byte  `json:"-"`
+	Src                  *string  `protobuf:"bytes,1,req,name=src" json:"src,omitempty"`
+	Client               *string  `protobuf:"bytes,2,req,name=client" json:"client,omitempty"`
+	LastBlockLength      *int64   `protobuf:"zigzag64,3,opt,name=lastBlockLength,def=-1" json:"lastBlockLength,omitempty"`
+	FileId               *uint64  `protobuf:"varint,4,opt,name=fileId,def=0" json:"fileId,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
 }
 
-func (m *FsyncRequestProto) Reset()                    { *m = FsyncRequestProto{} }
-func (m *FsyncRequestProto) String() string            { return proto.CompactTextString(m) }
-func (*FsyncRequestProto) ProtoMessage()               {}
-func (*FsyncRequestProto) Descriptor() ([]byte, []int) { return fileDescriptor4, []int{117} }
+func (m *FsyncRequestProto) Reset()         { *m = FsyncRequestProto{} }
+func (m *FsyncRequestProto) String() string { return proto.CompactTextString(m) }
+func (*FsyncRequestProto) ProtoMessage()    {}
+func (*FsyncRequestProto) Descriptor() ([]byte, []int) {
+	return fileDescriptor_ClientNamenodeProtocol_54652e2c42538454, []int{117}
+}
+func (m *FsyncRequestProto) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_FsyncRequestProto.Unmarshal(m, b)
+}
+func (m *FsyncRequestProto) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_FsyncRequestProto.Marshal(b, m, deterministic)
+}
+func (dst *FsyncRequestProto) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_FsyncRequestProto.Merge(dst, src)
+}
+func (m *FsyncRequestProto) XXX_Size() int {
+	return xxx_messageInfo_FsyncRequestProto.Size(m)
+}
+func (m *FsyncRequestProto) XXX_DiscardUnknown() {
+	xxx_messageInfo_FsyncRequestProto.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_FsyncRequestProto proto.InternalMessageInfo
 
 const Default_FsyncRequestProto_LastBlockLength int64 = -1
 const Default_FsyncRequestProto_FileId uint64 = 0
@@ -2841,25 +5287,67 @@ func (m *FsyncRequestProto) GetFileId() uint64 {
 }
 
 type FsyncResponseProto struct {
-	XXX_unrecognized []byte `json:"-"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
 }
 
-func (m *FsyncResponseProto) Reset()                    { *m = FsyncResponseProto{} }
-func (m *FsyncResponseProto) String() string            { return proto.CompactTextString(m) }
-func (*FsyncResponseProto) ProtoMessage()               {}
-func (*FsyncResponseProto) Descriptor() ([]byte, []int) { return fileDescriptor4, []int{118} }
+func (m *FsyncResponseProto) Reset()         { *m = FsyncResponseProto{} }
+func (m *FsyncResponseProto) String() string { return proto.CompactTextString(m) }
+func (*FsyncResponseProto) ProtoMessage()    {}
+func (*FsyncResponseProto) Descriptor() ([]byte, []int) {
+	return fileDescriptor_ClientNamenodeProtocol_54652e2c42538454, []int{118}
+}
+func (m *FsyncResponseProto) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_FsyncResponseProto.Unmarshal(m, b)
+}
+func (m *FsyncResponseProto) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_FsyncResponseProto.Marshal(b, m, deterministic)
+}
+func (dst *FsyncResponseProto) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_FsyncResponseProto.Merge(dst, src)
+}
+func (m *FsyncResponseProto) XXX_Size() int {
+	return xxx_messageInfo_FsyncResponseProto.Size(m)
+}
+func (m *FsyncResponseProto) XXX_DiscardUnknown() {
+	xxx_messageInfo_FsyncResponseProto.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_FsyncResponseProto proto.InternalMessageInfo
 
 type SetTimesRequestProto struct {
-	Src              *string `protobuf:"bytes,1,req,name=src" json:"src,omitempty"`
-	Mtime            *uint64 `protobuf:"varint,2,req,name=mtime" json:"mtime,omitempty"`
-	Atime            *uint64 `protobuf:"varint,3,req,name=atime" json:"atime,omitempty"`
-	XXX_unrecognized []byte  `json:"-"`
+	Src                  *string  `protobuf:"bytes,1,req,name=src" json:"src,omitempty"`
+	Mtime                *uint64  `protobuf:"varint,2,req,name=mtime" json:"mtime,omitempty"`
+	Atime                *uint64  `protobuf:"varint,3,req,name=atime" json:"atime,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
 }
 
-func (m *SetTimesRequestProto) Reset()                    { *m = SetTimesRequestProto{} }
-func (m *SetTimesRequestProto) String() string            { return proto.CompactTextString(m) }
-func (*SetTimesRequestProto) ProtoMessage()               {}
-func (*SetTimesRequestProto) Descriptor() ([]byte, []int) { return fileDescriptor4, []int{119} }
+func (m *SetTimesRequestProto) Reset()         { *m = SetTimesRequestProto{} }
+func (m *SetTimesRequestProto) String() string { return proto.CompactTextString(m) }
+func (*SetTimesRequestProto) ProtoMessage()    {}
+func (*SetTimesRequestProto) Descriptor() ([]byte, []int) {
+	return fileDescriptor_ClientNamenodeProtocol_54652e2c42538454, []int{119}
+}
+func (m *SetTimesRequestProto) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_SetTimesRequestProto.Unmarshal(m, b)
+}
+func (m *SetTimesRequestProto) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_SetTimesRequestProto.Marshal(b, m, deterministic)
+}
+func (dst *SetTimesRequestProto) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_SetTimesRequestProto.Merge(dst, src)
+}
+func (m *SetTimesRequestProto) XXX_Size() int {
+	return xxx_messageInfo_SetTimesRequestProto.Size(m)
+}
+func (m *SetTimesRequestProto) XXX_DiscardUnknown() {
+	xxx_messageInfo_SetTimesRequestProto.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_SetTimesRequestProto proto.InternalMessageInfo
 
 func (m *SetTimesRequestProto) GetSrc() string {
 	if m != nil && m.Src != nil {
@@ -2883,26 +5371,68 @@ func (m *SetTimesRequestProto) GetAtime() uint64 {
 }
 
 type SetTimesResponseProto struct {
-	XXX_unrecognized []byte `json:"-"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
 }
 
-func (m *SetTimesResponseProto) Reset()                    { *m = SetTimesResponseProto{} }
-func (m *SetTimesResponseProto) String() string            { return proto.CompactTextString(m) }
-func (*SetTimesResponseProto) ProtoMessage()               {}
-func (*SetTimesResponseProto) Descriptor() ([]byte, []int) { return fileDescriptor4, []int{120} }
+func (m *SetTimesResponseProto) Reset()         { *m = SetTimesResponseProto{} }
+func (m *SetTimesResponseProto) String() string { return proto.CompactTextString(m) }
+func (*SetTimesResponseProto) ProtoMessage()    {}
+func (*SetTimesResponseProto) Descriptor() ([]byte, []int) {
+	return fileDescriptor_ClientNamenodeProtocol_54652e2c42538454, []int{120}
+}
+func (m *SetTimesResponseProto) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_SetTimesResponseProto.Unmarshal(m, b)
+}
+func (m *SetTimesResponseProto) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_SetTimesResponseProto.Marshal(b, m, deterministic)
+}
+func (dst *SetTimesResponseProto) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_SetTimesResponseProto.Merge(dst, src)
+}
+func (m *SetTimesResponseProto) XXX_Size() int {
+	return xxx_messageInfo_SetTimesResponseProto.Size(m)
+}
+func (m *SetTimesResponseProto) XXX_DiscardUnknown() {
+	xxx_messageInfo_SetTimesResponseProto.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_SetTimesResponseProto proto.InternalMessageInfo
 
 type CreateSymlinkRequestProto struct {
-	Target           *string            `protobuf:"bytes,1,req,name=target" json:"target,omitempty"`
-	Link             *string            `protobuf:"bytes,2,req,name=link" json:"link,omitempty"`
-	DirPerm          *FsPermissionProto `protobuf:"bytes,3,req,name=dirPerm" json:"dirPerm,omitempty"`
-	CreateParent     *bool              `protobuf:"varint,4,req,name=createParent" json:"createParent,omitempty"`
-	XXX_unrecognized []byte             `json:"-"`
+	Target               *string            `protobuf:"bytes,1,req,name=target" json:"target,omitempty"`
+	Link                 *string            `protobuf:"bytes,2,req,name=link" json:"link,omitempty"`
+	DirPerm              *FsPermissionProto `protobuf:"bytes,3,req,name=dirPerm" json:"dirPerm,omitempty"`
+	CreateParent         *bool              `protobuf:"varint,4,req,name=createParent" json:"createParent,omitempty"`
+	XXX_NoUnkeyedLiteral struct{}           `json:"-"`
+	XXX_unrecognized     []byte             `json:"-"`
+	XXX_sizecache        int32              `json:"-"`
 }
 
-func (m *CreateSymlinkRequestProto) Reset()                    { *m = CreateSymlinkRequestProto{} }
-func (m *CreateSymlinkRequestProto) String() string            { return proto.CompactTextString(m) }
-func (*CreateSymlinkRequestProto) ProtoMessage()               {}
-func (*CreateSymlinkRequestProto) Descriptor() ([]byte, []int) { return fileDescriptor4, []int{121} }
+func (m *CreateSymlinkRequestProto) Reset()         { *m = CreateSymlinkRequestProto{} }
+func (m *CreateSymlinkRequestProto) String() string { return proto.CompactTextString(m) }
+func (*CreateSymlinkRequestProto) ProtoMessage()    {}
+func (*CreateSymlinkRequestProto) Descriptor() ([]byte, []int) {
+	return fileDescriptor_ClientNamenodeProtocol_54652e2c42538454, []int{121}
+}
+func (m *CreateSymlinkRequestProto) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_CreateSymlinkRequestProto.Unmarshal(m, b)
+}
+func (m *CreateSymlinkRequestProto) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_CreateSymlinkRequestProto.Marshal(b, m, deterministic)
+}
+func (dst *CreateSymlinkRequestProto) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_CreateSymlinkRequestProto.Merge(dst, src)
+}
+func (m *CreateSymlinkRequestProto) XXX_Size() int {
+	return xxx_messageInfo_CreateSymlinkRequestProto.Size(m)
+}
+func (m *CreateSymlinkRequestProto) XXX_DiscardUnknown() {
+	xxx_messageInfo_CreateSymlinkRequestProto.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_CreateSymlinkRequestProto proto.InternalMessageInfo
 
 func (m *CreateSymlinkRequestProto) GetTarget() string {
 	if m != nil && m.Target != nil {
@@ -2933,23 +5463,65 @@ func (m *CreateSymlinkRequestProto) GetCreateParent() bool {
 }
 
 type CreateSymlinkResponseProto struct {
-	XXX_unrecognized []byte `json:"-"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
 }
 
-func (m *CreateSymlinkResponseProto) Reset()                    { *m = CreateSymlinkResponseProto{} }
-func (m *CreateSymlinkResponseProto) String() string            { return proto.CompactTextString(m) }
-func (*CreateSymlinkResponseProto) ProtoMessage()               {}
-func (*CreateSymlinkResponseProto) Descriptor() ([]byte, []int) { return fileDescriptor4, []int{122} }
+func (m *CreateSymlinkResponseProto) Reset()         { *m = CreateSymlinkResponseProto{} }
+func (m *CreateSymlinkResponseProto) String() string { return proto.CompactTextString(m) }
+func (*CreateSymlinkResponseProto) ProtoMessage()    {}
+func (*CreateSymlinkResponseProto) Descriptor() ([]byte, []int) {
+	return fileDescriptor_ClientNamenodeProtocol_54652e2c42538454, []int{122}
+}
+func (m *CreateSymlinkResponseProto) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_CreateSymlinkResponseProto.Unmarshal(m, b)
+}
+func (m *CreateSymlinkResponseProto) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_CreateSymlinkResponseProto.Marshal(b, m, deterministic)
+}
+func (dst *CreateSymlinkResponseProto) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_CreateSymlinkResponseProto.Merge(dst, src)
+}
+func (m *CreateSymlinkResponseProto) XXX_Size() int {
+	return xxx_messageInfo_CreateSymlinkResponseProto.Size(m)
+}
+func (m *CreateSymlinkResponseProto) XXX_DiscardUnknown() {
+	xxx_messageInfo_CreateSymlinkResponseProto.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_CreateSymlinkResponseProto proto.InternalMessageInfo
 
 type GetLinkTargetRequestProto struct {
-	Path             *string `protobuf:"bytes,1,req,name=path" json:"path,omitempty"`
-	XXX_unrecognized []byte  `json:"-"`
+	Path                 *string  `protobuf:"bytes,1,req,name=path" json:"path,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
 }
 
-func (m *GetLinkTargetRequestProto) Reset()                    { *m = GetLinkTargetRequestProto{} }
-func (m *GetLinkTargetRequestProto) String() string            { return proto.CompactTextString(m) }
-func (*GetLinkTargetRequestProto) ProtoMessage()               {}
-func (*GetLinkTargetRequestProto) Descriptor() ([]byte, []int) { return fileDescriptor4, []int{123} }
+func (m *GetLinkTargetRequestProto) Reset()         { *m = GetLinkTargetRequestProto{} }
+func (m *GetLinkTargetRequestProto) String() string { return proto.CompactTextString(m) }
+func (*GetLinkTargetRequestProto) ProtoMessage()    {}
+func (*GetLinkTargetRequestProto) Descriptor() ([]byte, []int) {
+	return fileDescriptor_ClientNamenodeProtocol_54652e2c42538454, []int{123}
+}
+func (m *GetLinkTargetRequestProto) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_GetLinkTargetRequestProto.Unmarshal(m, b)
+}
+func (m *GetLinkTargetRequestProto) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_GetLinkTargetRequestProto.Marshal(b, m, deterministic)
+}
+func (dst *GetLinkTargetRequestProto) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_GetLinkTargetRequestProto.Merge(dst, src)
+}
+func (m *GetLinkTargetRequestProto) XXX_Size() int {
+	return xxx_messageInfo_GetLinkTargetRequestProto.Size(m)
+}
+func (m *GetLinkTargetRequestProto) XXX_DiscardUnknown() {
+	xxx_messageInfo_GetLinkTargetRequestProto.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_GetLinkTargetRequestProto proto.InternalMessageInfo
 
 func (m *GetLinkTargetRequestProto) GetPath() string {
 	if m != nil && m.Path != nil {
@@ -2959,14 +5531,35 @@ func (m *GetLinkTargetRequestProto) GetPath() string {
 }
 
 type GetLinkTargetResponseProto struct {
-	TargetPath       *string `protobuf:"bytes,1,opt,name=targetPath" json:"targetPath,omitempty"`
-	XXX_unrecognized []byte  `json:"-"`
+	TargetPath           *string  `protobuf:"bytes,1,opt,name=targetPath" json:"targetPath,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
 }
 
-func (m *GetLinkTargetResponseProto) Reset()                    { *m = GetLinkTargetResponseProto{} }
-func (m *GetLinkTargetResponseProto) String() string            { return proto.CompactTextString(m) }
-func (*GetLinkTargetResponseProto) ProtoMessage()               {}
-func (*GetLinkTargetResponseProto) Descriptor() ([]byte, []int) { return fileDescriptor4, []int{124} }
+func (m *GetLinkTargetResponseProto) Reset()         { *m = GetLinkTargetResponseProto{} }
+func (m *GetLinkTargetResponseProto) String() string { return proto.CompactTextString(m) }
+func (*GetLinkTargetResponseProto) ProtoMessage()    {}
+func (*GetLinkTargetResponseProto) Descriptor() ([]byte, []int) {
+	return fileDescriptor_ClientNamenodeProtocol_54652e2c42538454, []int{124}
+}
+func (m *GetLinkTargetResponseProto) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_GetLinkTargetResponseProto.Unmarshal(m, b)
+}
+func (m *GetLinkTargetResponseProto) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_GetLinkTargetResponseProto.Marshal(b, m, deterministic)
+}
+func (dst *GetLinkTargetResponseProto) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_GetLinkTargetResponseProto.Merge(dst, src)
+}
+func (m *GetLinkTargetResponseProto) XXX_Size() int {
+	return xxx_messageInfo_GetLinkTargetResponseProto.Size(m)
+}
+func (m *GetLinkTargetResponseProto) XXX_DiscardUnknown() {
+	xxx_messageInfo_GetLinkTargetResponseProto.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_GetLinkTargetResponseProto proto.InternalMessageInfo
 
 func (m *GetLinkTargetResponseProto) GetTargetPath() string {
 	if m != nil && m.TargetPath != nil {
@@ -2976,17 +5569,36 @@ func (m *GetLinkTargetResponseProto) GetTargetPath() string {
 }
 
 type UpdateBlockForPipelineRequestProto struct {
-	Block            *ExtendedBlockProto `protobuf:"bytes,1,req,name=block" json:"block,omitempty"`
-	ClientName       *string             `protobuf:"bytes,2,req,name=clientName" json:"clientName,omitempty"`
-	XXX_unrecognized []byte              `json:"-"`
+	Block                *ExtendedBlockProto `protobuf:"bytes,1,req,name=block" json:"block,omitempty"`
+	ClientName           *string             `protobuf:"bytes,2,req,name=clientName" json:"clientName,omitempty"`
+	XXX_NoUnkeyedLiteral struct{}            `json:"-"`
+	XXX_unrecognized     []byte              `json:"-"`
+	XXX_sizecache        int32               `json:"-"`
 }
 
 func (m *UpdateBlockForPipelineRequestProto) Reset()         { *m = UpdateBlockForPipelineRequestProto{} }
 func (m *UpdateBlockForPipelineRequestProto) String() string { return proto.CompactTextString(m) }
 func (*UpdateBlockForPipelineRequestProto) ProtoMessage()    {}
 func (*UpdateBlockForPipelineRequestProto) Descriptor() ([]byte, []int) {
-	return fileDescriptor4, []int{125}
+	return fileDescriptor_ClientNamenodeProtocol_54652e2c42538454, []int{125}
 }
+func (m *UpdateBlockForPipelineRequestProto) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_UpdateBlockForPipelineRequestProto.Unmarshal(m, b)
+}
+func (m *UpdateBlockForPipelineRequestProto) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_UpdateBlockForPipelineRequestProto.Marshal(b, m, deterministic)
+}
+func (dst *UpdateBlockForPipelineRequestProto) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_UpdateBlockForPipelineRequestProto.Merge(dst, src)
+}
+func (m *UpdateBlockForPipelineRequestProto) XXX_Size() int {
+	return xxx_messageInfo_UpdateBlockForPipelineRequestProto.Size(m)
+}
+func (m *UpdateBlockForPipelineRequestProto) XXX_DiscardUnknown() {
+	xxx_messageInfo_UpdateBlockForPipelineRequestProto.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_UpdateBlockForPipelineRequestProto proto.InternalMessageInfo
 
 func (m *UpdateBlockForPipelineRequestProto) GetBlock() *ExtendedBlockProto {
 	if m != nil {
@@ -3003,16 +5615,35 @@ func (m *UpdateBlockForPipelineRequestProto) GetClientName() string {
 }
 
 type UpdateBlockForPipelineResponseProto struct {
-	Block            *LocatedBlockProto `protobuf:"bytes,1,req,name=block" json:"block,omitempty"`
-	XXX_unrecognized []byte             `json:"-"`
+	Block                *LocatedBlockProto `protobuf:"bytes,1,req,name=block" json:"block,omitempty"`
+	XXX_NoUnkeyedLiteral struct{}           `json:"-"`
+	XXX_unrecognized     []byte             `json:"-"`
+	XXX_sizecache        int32              `json:"-"`
 }
 
 func (m *UpdateBlockForPipelineResponseProto) Reset()         { *m = UpdateBlockForPipelineResponseProto{} }
 func (m *UpdateBlockForPipelineResponseProto) String() string { return proto.CompactTextString(m) }
 func (*UpdateBlockForPipelineResponseProto) ProtoMessage()    {}
 func (*UpdateBlockForPipelineResponseProto) Descriptor() ([]byte, []int) {
-	return fileDescriptor4, []int{126}
+	return fileDescriptor_ClientNamenodeProtocol_54652e2c42538454, []int{126}
 }
+func (m *UpdateBlockForPipelineResponseProto) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_UpdateBlockForPipelineResponseProto.Unmarshal(m, b)
+}
+func (m *UpdateBlockForPipelineResponseProto) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_UpdateBlockForPipelineResponseProto.Marshal(b, m, deterministic)
+}
+func (dst *UpdateBlockForPipelineResponseProto) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_UpdateBlockForPipelineResponseProto.Merge(dst, src)
+}
+func (m *UpdateBlockForPipelineResponseProto) XXX_Size() int {
+	return xxx_messageInfo_UpdateBlockForPipelineResponseProto.Size(m)
+}
+func (m *UpdateBlockForPipelineResponseProto) XXX_DiscardUnknown() {
+	xxx_messageInfo_UpdateBlockForPipelineResponseProto.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_UpdateBlockForPipelineResponseProto proto.InternalMessageInfo
 
 func (m *UpdateBlockForPipelineResponseProto) GetBlock() *LocatedBlockProto {
 	if m != nil {
@@ -3022,18 +5653,39 @@ func (m *UpdateBlockForPipelineResponseProto) GetBlock() *LocatedBlockProto {
 }
 
 type UpdatePipelineRequestProto struct {
-	ClientName       *string             `protobuf:"bytes,1,req,name=clientName" json:"clientName,omitempty"`
-	OldBlock         *ExtendedBlockProto `protobuf:"bytes,2,req,name=oldBlock" json:"oldBlock,omitempty"`
-	NewBlock         *ExtendedBlockProto `protobuf:"bytes,3,req,name=newBlock" json:"newBlock,omitempty"`
-	NewNodes         []*DatanodeIDProto  `protobuf:"bytes,4,rep,name=newNodes" json:"newNodes,omitempty"`
-	StorageIDs       []string            `protobuf:"bytes,5,rep,name=storageIDs" json:"storageIDs,omitempty"`
-	XXX_unrecognized []byte              `json:"-"`
+	ClientName           *string             `protobuf:"bytes,1,req,name=clientName" json:"clientName,omitempty"`
+	OldBlock             *ExtendedBlockProto `protobuf:"bytes,2,req,name=oldBlock" json:"oldBlock,omitempty"`
+	NewBlock             *ExtendedBlockProto `protobuf:"bytes,3,req,name=newBlock" json:"newBlock,omitempty"`
+	NewNodes             []*DatanodeIDProto  `protobuf:"bytes,4,rep,name=newNodes" json:"newNodes,omitempty"`
+	StorageIDs           []string            `protobuf:"bytes,5,rep,name=storageIDs" json:"storageIDs,omitempty"`
+	XXX_NoUnkeyedLiteral struct{}            `json:"-"`
+	XXX_unrecognized     []byte              `json:"-"`
+	XXX_sizecache        int32               `json:"-"`
 }
 
-func (m *UpdatePipelineRequestProto) Reset()                    { *m = UpdatePipelineRequestProto{} }
-func (m *UpdatePipelineRequestProto) String() string            { return proto.CompactTextString(m) }
-func (*UpdatePipelineRequestProto) ProtoMessage()               {}
-func (*UpdatePipelineRequestProto) Descriptor() ([]byte, []int) { return fileDescriptor4, []int{127} }
+func (m *UpdatePipelineRequestProto) Reset()         { *m = UpdatePipelineRequestProto{} }
+func (m *UpdatePipelineRequestProto) String() string { return proto.CompactTextString(m) }
+func (*UpdatePipelineRequestProto) ProtoMessage()    {}
+func (*UpdatePipelineRequestProto) Descriptor() ([]byte, []int) {
+	return fileDescriptor_ClientNamenodeProtocol_54652e2c42538454, []int{127}
+}
+func (m *UpdatePipelineRequestProto) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_UpdatePipelineRequestProto.Unmarshal(m, b)
+}
+func (m *UpdatePipelineRequestProto) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_UpdatePipelineRequestProto.Marshal(b, m, deterministic)
+}
+func (dst *UpdatePipelineRequestProto) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_UpdatePipelineRequestProto.Merge(dst, src)
+}
+func (m *UpdatePipelineRequestProto) XXX_Size() int {
+	return xxx_messageInfo_UpdatePipelineRequestProto.Size(m)
+}
+func (m *UpdatePipelineRequestProto) XXX_DiscardUnknown() {
+	xxx_messageInfo_UpdatePipelineRequestProto.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_UpdatePipelineRequestProto proto.InternalMessageInfo
 
 func (m *UpdatePipelineRequestProto) GetClientName() string {
 	if m != nil && m.ClientName != nil {
@@ -3071,25 +5723,65 @@ func (m *UpdatePipelineRequestProto) GetStorageIDs() []string {
 }
 
 type UpdatePipelineResponseProto struct {
-	XXX_unrecognized []byte `json:"-"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
 }
 
-func (m *UpdatePipelineResponseProto) Reset()                    { *m = UpdatePipelineResponseProto{} }
-func (m *UpdatePipelineResponseProto) String() string            { return proto.CompactTextString(m) }
-func (*UpdatePipelineResponseProto) ProtoMessage()               {}
-func (*UpdatePipelineResponseProto) Descriptor() ([]byte, []int) { return fileDescriptor4, []int{128} }
+func (m *UpdatePipelineResponseProto) Reset()         { *m = UpdatePipelineResponseProto{} }
+func (m *UpdatePipelineResponseProto) String() string { return proto.CompactTextString(m) }
+func (*UpdatePipelineResponseProto) ProtoMessage()    {}
+func (*UpdatePipelineResponseProto) Descriptor() ([]byte, []int) {
+	return fileDescriptor_ClientNamenodeProtocol_54652e2c42538454, []int{128}
+}
+func (m *UpdatePipelineResponseProto) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_UpdatePipelineResponseProto.Unmarshal(m, b)
+}
+func (m *UpdatePipelineResponseProto) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_UpdatePipelineResponseProto.Marshal(b, m, deterministic)
+}
+func (dst *UpdatePipelineResponseProto) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_UpdatePipelineResponseProto.Merge(dst, src)
+}
+func (m *UpdatePipelineResponseProto) XXX_Size() int {
+	return xxx_messageInfo_UpdatePipelineResponseProto.Size(m)
+}
+func (m *UpdatePipelineResponseProto) XXX_DiscardUnknown() {
+	xxx_messageInfo_UpdatePipelineResponseProto.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_UpdatePipelineResponseProto proto.InternalMessageInfo
 
 type SetBalancerBandwidthRequestProto struct {
-	Bandwidth        *int64 `protobuf:"varint,1,req,name=bandwidth" json:"bandwidth,omitempty"`
-	XXX_unrecognized []byte `json:"-"`
+	Bandwidth            *int64   `protobuf:"varint,1,req,name=bandwidth" json:"bandwidth,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
 }
 
 func (m *SetBalancerBandwidthRequestProto) Reset()         { *m = SetBalancerBandwidthRequestProto{} }
 func (m *SetBalancerBandwidthRequestProto) String() string { return proto.CompactTextString(m) }
 func (*SetBalancerBandwidthRequestProto) ProtoMessage()    {}
 func (*SetBalancerBandwidthRequestProto) Descriptor() ([]byte, []int) {
-	return fileDescriptor4, []int{129}
+	return fileDescriptor_ClientNamenodeProtocol_54652e2c42538454, []int{129}
 }
+func (m *SetBalancerBandwidthRequestProto) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_SetBalancerBandwidthRequestProto.Unmarshal(m, b)
+}
+func (m *SetBalancerBandwidthRequestProto) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_SetBalancerBandwidthRequestProto.Marshal(b, m, deterministic)
+}
+func (dst *SetBalancerBandwidthRequestProto) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_SetBalancerBandwidthRequestProto.Merge(dst, src)
+}
+func (m *SetBalancerBandwidthRequestProto) XXX_Size() int {
+	return xxx_messageInfo_SetBalancerBandwidthRequestProto.Size(m)
+}
+func (m *SetBalancerBandwidthRequestProto) XXX_DiscardUnknown() {
+	xxx_messageInfo_SetBalancerBandwidthRequestProto.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_SetBalancerBandwidthRequestProto proto.InternalMessageInfo
 
 func (m *SetBalancerBandwidthRequestProto) GetBandwidth() int64 {
 	if m != nil && m.Bandwidth != nil {
@@ -3099,38 +5791,95 @@ func (m *SetBalancerBandwidthRequestProto) GetBandwidth() int64 {
 }
 
 type SetBalancerBandwidthResponseProto struct {
-	XXX_unrecognized []byte `json:"-"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
 }
 
 func (m *SetBalancerBandwidthResponseProto) Reset()         { *m = SetBalancerBandwidthResponseProto{} }
 func (m *SetBalancerBandwidthResponseProto) String() string { return proto.CompactTextString(m) }
 func (*SetBalancerBandwidthResponseProto) ProtoMessage()    {}
 func (*SetBalancerBandwidthResponseProto) Descriptor() ([]byte, []int) {
-	return fileDescriptor4, []int{130}
+	return fileDescriptor_ClientNamenodeProtocol_54652e2c42538454, []int{130}
+}
+func (m *SetBalancerBandwidthResponseProto) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_SetBalancerBandwidthResponseProto.Unmarshal(m, b)
+}
+func (m *SetBalancerBandwidthResponseProto) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_SetBalancerBandwidthResponseProto.Marshal(b, m, deterministic)
+}
+func (dst *SetBalancerBandwidthResponseProto) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_SetBalancerBandwidthResponseProto.Merge(dst, src)
+}
+func (m *SetBalancerBandwidthResponseProto) XXX_Size() int {
+	return xxx_messageInfo_SetBalancerBandwidthResponseProto.Size(m)
+}
+func (m *SetBalancerBandwidthResponseProto) XXX_DiscardUnknown() {
+	xxx_messageInfo_SetBalancerBandwidthResponseProto.DiscardUnknown(m)
 }
 
+var xxx_messageInfo_SetBalancerBandwidthResponseProto proto.InternalMessageInfo
+
 type GetDataEncryptionKeyRequestProto struct {
-	XXX_unrecognized []byte `json:"-"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
 }
 
 func (m *GetDataEncryptionKeyRequestProto) Reset()         { *m = GetDataEncryptionKeyRequestProto{} }
 func (m *GetDataEncryptionKeyRequestProto) String() string { return proto.CompactTextString(m) }
 func (*GetDataEncryptionKeyRequestProto) ProtoMessage()    {}
 func (*GetDataEncryptionKeyRequestProto) Descriptor() ([]byte, []int) {
-	return fileDescriptor4, []int{131}
+	return fileDescriptor_ClientNamenodeProtocol_54652e2c42538454, []int{131}
+}
+func (m *GetDataEncryptionKeyRequestProto) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_GetDataEncryptionKeyRequestProto.Unmarshal(m, b)
+}
+func (m *GetDataEncryptionKeyRequestProto) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_GetDataEncryptionKeyRequestProto.Marshal(b, m, deterministic)
+}
+func (dst *GetDataEncryptionKeyRequestProto) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_GetDataEncryptionKeyRequestProto.Merge(dst, src)
+}
+func (m *GetDataEncryptionKeyRequestProto) XXX_Size() int {
+	return xxx_messageInfo_GetDataEncryptionKeyRequestProto.Size(m)
+}
+func (m *GetDataEncryptionKeyRequestProto) XXX_DiscardUnknown() {
+	xxx_messageInfo_GetDataEncryptionKeyRequestProto.DiscardUnknown(m)
 }
 
+var xxx_messageInfo_GetDataEncryptionKeyRequestProto proto.InternalMessageInfo
+
 type GetDataEncryptionKeyResponseProto struct {
-	DataEncryptionKey *DataEncryptionKeyProto `protobuf:"bytes,1,opt,name=dataEncryptionKey" json:"dataEncryptionKey,omitempty"`
-	XXX_unrecognized  []byte                  `json:"-"`
+	DataEncryptionKey    *DataEncryptionKeyProto `protobuf:"bytes,1,opt,name=dataEncryptionKey" json:"dataEncryptionKey,omitempty"`
+	XXX_NoUnkeyedLiteral struct{}                `json:"-"`
+	XXX_unrecognized     []byte                  `json:"-"`
+	XXX_sizecache        int32                   `json:"-"`
 }
 
 func (m *GetDataEncryptionKeyResponseProto) Reset()         { *m = GetDataEncryptionKeyResponseProto{} }
 func (m *GetDataEncryptionKeyResponseProto) String() string { return proto.CompactTextString(m) }
 func (*GetDataEncryptionKeyResponseProto) ProtoMessage()    {}
 func (*GetDataEncryptionKeyResponseProto) Descriptor() ([]byte, []int) {
-	return fileDescriptor4, []int{132}
+	return fileDescriptor_ClientNamenodeProtocol_54652e2c42538454, []int{132}
 }
+func (m *GetDataEncryptionKeyResponseProto) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_GetDataEncryptionKeyResponseProto.Unmarshal(m, b)
+}
+func (m *GetDataEncryptionKeyResponseProto) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_GetDataEncryptionKeyResponseProto.Marshal(b, m, deterministic)
+}
+func (dst *GetDataEncryptionKeyResponseProto) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_GetDataEncryptionKeyResponseProto.Merge(dst, src)
+}
+func (m *GetDataEncryptionKeyResponseProto) XXX_Size() int {
+	return xxx_messageInfo_GetDataEncryptionKeyResponseProto.Size(m)
+}
+func (m *GetDataEncryptionKeyResponseProto) XXX_DiscardUnknown() {
+	xxx_messageInfo_GetDataEncryptionKeyResponseProto.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_GetDataEncryptionKeyResponseProto proto.InternalMessageInfo
 
 func (m *GetDataEncryptionKeyResponseProto) GetDataEncryptionKey() *DataEncryptionKeyProto {
 	if m != nil {
@@ -3140,15 +5889,36 @@ func (m *GetDataEncryptionKeyResponseProto) GetDataEncryptionKey() *DataEncrypti
 }
 
 type CreateSnapshotRequestProto struct {
-	SnapshotRoot     *string `protobuf:"bytes,1,req,name=snapshotRoot" json:"snapshotRoot,omitempty"`
-	SnapshotName     *string `protobuf:"bytes,2,opt,name=snapshotName" json:"snapshotName,omitempty"`
-	XXX_unrecognized []byte  `json:"-"`
+	SnapshotRoot         *string  `protobuf:"bytes,1,req,name=snapshotRoot" json:"snapshotRoot,omitempty"`
+	SnapshotName         *string  `protobuf:"bytes,2,opt,name=snapshotName" json:"snapshotName,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
 }
 
-func (m *CreateSnapshotRequestProto) Reset()                    { *m = CreateSnapshotRequestProto{} }
-func (m *CreateSnapshotRequestProto) String() string            { return proto.CompactTextString(m) }
-func (*CreateSnapshotRequestProto) ProtoMessage()               {}
-func (*CreateSnapshotRequestProto) Descriptor() ([]byte, []int) { return fileDescriptor4, []int{133} }
+func (m *CreateSnapshotRequestProto) Reset()         { *m = CreateSnapshotRequestProto{} }
+func (m *CreateSnapshotRequestProto) String() string { return proto.CompactTextString(m) }
+func (*CreateSnapshotRequestProto) ProtoMessage()    {}
+func (*CreateSnapshotRequestProto) Descriptor() ([]byte, []int) {
+	return fileDescriptor_ClientNamenodeProtocol_54652e2c42538454, []int{133}
+}
+func (m *CreateSnapshotRequestProto) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_CreateSnapshotRequestProto.Unmarshal(m, b)
+}
+func (m *CreateSnapshotRequestProto) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_CreateSnapshotRequestProto.Marshal(b, m, deterministic)
+}
+func (dst *CreateSnapshotRequestProto) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_CreateSnapshotRequestProto.Merge(dst, src)
+}
+func (m *CreateSnapshotRequestProto) XXX_Size() int {
+	return xxx_messageInfo_CreateSnapshotRequestProto.Size(m)
+}
+func (m *CreateSnapshotRequestProto) XXX_DiscardUnknown() {
+	xxx_messageInfo_CreateSnapshotRequestProto.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_CreateSnapshotRequestProto proto.InternalMessageInfo
 
 func (m *CreateSnapshotRequestProto) GetSnapshotRoot() string {
 	if m != nil && m.SnapshotRoot != nil {
@@ -3165,14 +5935,35 @@ func (m *CreateSnapshotRequestProto) GetSnapshotName() string {
 }
 
 type CreateSnapshotResponseProto struct {
-	SnapshotPath     *string `protobuf:"bytes,1,req,name=snapshotPath" json:"snapshotPath,omitempty"`
-	XXX_unrecognized []byte  `json:"-"`
+	SnapshotPath         *string  `protobuf:"bytes,1,req,name=snapshotPath" json:"snapshotPath,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
 }
 
-func (m *CreateSnapshotResponseProto) Reset()                    { *m = CreateSnapshotResponseProto{} }
-func (m *CreateSnapshotResponseProto) String() string            { return proto.CompactTextString(m) }
-func (*CreateSnapshotResponseProto) ProtoMessage()               {}
-func (*CreateSnapshotResponseProto) Descriptor() ([]byte, []int) { return fileDescriptor4, []int{134} }
+func (m *CreateSnapshotResponseProto) Reset()         { *m = CreateSnapshotResponseProto{} }
+func (m *CreateSnapshotResponseProto) String() string { return proto.CompactTextString(m) }
+func (*CreateSnapshotResponseProto) ProtoMessage()    {}
+func (*CreateSnapshotResponseProto) Descriptor() ([]byte, []int) {
+	return fileDescriptor_ClientNamenodeProtocol_54652e2c42538454, []int{134}
+}
+func (m *CreateSnapshotResponseProto) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_CreateSnapshotResponseProto.Unmarshal(m, b)
+}
+func (m *CreateSnapshotResponseProto) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_CreateSnapshotResponseProto.Marshal(b, m, deterministic)
+}
+func (dst *CreateSnapshotResponseProto) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_CreateSnapshotResponseProto.Merge(dst, src)
+}
+func (m *CreateSnapshotResponseProto) XXX_Size() int {
+	return xxx_messageInfo_CreateSnapshotResponseProto.Size(m)
+}
+func (m *CreateSnapshotResponseProto) XXX_DiscardUnknown() {
+	xxx_messageInfo_CreateSnapshotResponseProto.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_CreateSnapshotResponseProto proto.InternalMessageInfo
 
 func (m *CreateSnapshotResponseProto) GetSnapshotPath() string {
 	if m != nil && m.SnapshotPath != nil {
@@ -3182,16 +5973,37 @@ func (m *CreateSnapshotResponseProto) GetSnapshotPath() string {
 }
 
 type RenameSnapshotRequestProto struct {
-	SnapshotRoot     *string `protobuf:"bytes,1,req,name=snapshotRoot" json:"snapshotRoot,omitempty"`
-	SnapshotOldName  *string `protobuf:"bytes,2,req,name=snapshotOldName" json:"snapshotOldName,omitempty"`
-	SnapshotNewName  *string `protobuf:"bytes,3,req,name=snapshotNewName" json:"snapshotNewName,omitempty"`
-	XXX_unrecognized []byte  `json:"-"`
+	SnapshotRoot         *string  `protobuf:"bytes,1,req,name=snapshotRoot" json:"snapshotRoot,omitempty"`
+	SnapshotOldName      *string  `protobuf:"bytes,2,req,name=snapshotOldName" json:"snapshotOldName,omitempty"`
+	SnapshotNewName      *string  `protobuf:"bytes,3,req,name=snapshotNewName" json:"snapshotNewName,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
 }
 
-func (m *RenameSnapshotRequestProto) Reset()                    { *m = RenameSnapshotRequestProto{} }
-func (m *RenameSnapshotRequestProto) String() string            { return proto.CompactTextString(m) }
-func (*RenameSnapshotRequestProto) ProtoMessage()               {}
-func (*RenameSnapshotRequestProto) Descriptor() ([]byte, []int) { return fileDescriptor4, []int{135} }
+func (m *RenameSnapshotRequestProto) Reset()         { *m = RenameSnapshotRequestProto{} }
+func (m *RenameSnapshotRequestProto) String() string { return proto.CompactTextString(m) }
+func (*RenameSnapshotRequestProto) ProtoMessage()    {}
+func (*RenameSnapshotRequestProto) Descriptor() ([]byte, []int) {
+	return fileDescriptor_ClientNamenodeProtocol_54652e2c42538454, []int{135}
+}
+func (m *RenameSnapshotRequestProto) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_RenameSnapshotRequestProto.Unmarshal(m, b)
+}
+func (m *RenameSnapshotRequestProto) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_RenameSnapshotRequestProto.Marshal(b, m, deterministic)
+}
+func (dst *RenameSnapshotRequestProto) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_RenameSnapshotRequestProto.Merge(dst, src)
+}
+func (m *RenameSnapshotRequestProto) XXX_Size() int {
+	return xxx_messageInfo_RenameSnapshotRequestProto.Size(m)
+}
+func (m *RenameSnapshotRequestProto) XXX_DiscardUnknown() {
+	xxx_messageInfo_RenameSnapshotRequestProto.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_RenameSnapshotRequestProto proto.InternalMessageInfo
 
 func (m *RenameSnapshotRequestProto) GetSnapshotRoot() string {
 	if m != nil && m.SnapshotRoot != nil {
@@ -3215,23 +6027,65 @@ func (m *RenameSnapshotRequestProto) GetSnapshotNewName() string {
 }
 
 type RenameSnapshotResponseProto struct {
-	XXX_unrecognized []byte `json:"-"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
 }
 
-func (m *RenameSnapshotResponseProto) Reset()                    { *m = RenameSnapshotResponseProto{} }
-func (m *RenameSnapshotResponseProto) String() string            { return proto.CompactTextString(m) }
-func (*RenameSnapshotResponseProto) ProtoMessage()               {}
-func (*RenameSnapshotResponseProto) Descriptor() ([]byte, []int) { return fileDescriptor4, []int{136} }
+func (m *RenameSnapshotResponseProto) Reset()         { *m = RenameSnapshotResponseProto{} }
+func (m *RenameSnapshotResponseProto) String() string { return proto.CompactTextString(m) }
+func (*RenameSnapshotResponseProto) ProtoMessage()    {}
+func (*RenameSnapshotResponseProto) Descriptor() ([]byte, []int) {
+	return fileDescriptor_ClientNamenodeProtocol_54652e2c42538454, []int{136}
+}
+func (m *RenameSnapshotResponseProto) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_RenameSnapshotResponseProto.Unmarshal(m, b)
+}
+func (m *RenameSnapshotResponseProto) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_RenameSnapshotResponseProto.Marshal(b, m, deterministic)
+}
+func (dst *RenameSnapshotResponseProto) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_RenameSnapshotResponseProto.Merge(dst, src)
+}
+func (m *RenameSnapshotResponseProto) XXX_Size() int {
+	return xxx_messageInfo_RenameSnapshotResponseProto.Size(m)
+}
+func (m *RenameSnapshotResponseProto) XXX_DiscardUnknown() {
+	xxx_messageInfo_RenameSnapshotResponseProto.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_RenameSnapshotResponseProto proto.InternalMessageInfo
 
 type AllowSnapshotRequestProto struct {
-	SnapshotRoot     *string `protobuf:"bytes,1,req,name=snapshotRoot" json:"snapshotRoot,omitempty"`
-	XXX_unrecognized []byte  `json:"-"`
+	SnapshotRoot         *string  `protobuf:"bytes,1,req,name=snapshotRoot" json:"snapshotRoot,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
 }
 
-func (m *AllowSnapshotRequestProto) Reset()                    { *m = AllowSnapshotRequestProto{} }
-func (m *AllowSnapshotRequestProto) String() string            { return proto.CompactTextString(m) }
-func (*AllowSnapshotRequestProto) ProtoMessage()               {}
-func (*AllowSnapshotRequestProto) Descriptor() ([]byte, []int) { return fileDescriptor4, []int{137} }
+func (m *AllowSnapshotRequestProto) Reset()         { *m = AllowSnapshotRequestProto{} }
+func (m *AllowSnapshotRequestProto) String() string { return proto.CompactTextString(m) }
+func (*AllowSnapshotRequestProto) ProtoMessage()    {}
+func (*AllowSnapshotRequestProto) Descriptor() ([]byte, []int) {
+	return fileDescriptor_ClientNamenodeProtocol_54652e2c42538454, []int{137}
+}
+func (m *AllowSnapshotRequestProto) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_AllowSnapshotRequestProto.Unmarshal(m, b)
+}
+func (m *AllowSnapshotRequestProto) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_AllowSnapshotRequestProto.Marshal(b, m, deterministic)
+}
+func (dst *AllowSnapshotRequestProto) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_AllowSnapshotRequestProto.Merge(dst, src)
+}
+func (m *AllowSnapshotRequestProto) XXX_Size() int {
+	return xxx_messageInfo_AllowSnapshotRequestProto.Size(m)
+}
+func (m *AllowSnapshotRequestProto) XXX_DiscardUnknown() {
+	xxx_messageInfo_AllowSnapshotRequestProto.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_AllowSnapshotRequestProto proto.InternalMessageInfo
 
 func (m *AllowSnapshotRequestProto) GetSnapshotRoot() string {
 	if m != nil && m.SnapshotRoot != nil {
@@ -3241,23 +6095,65 @@ func (m *AllowSnapshotRequestProto) GetSnapshotRoot() string {
 }
 
 type AllowSnapshotResponseProto struct {
-	XXX_unrecognized []byte `json:"-"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
 }
 
-func (m *AllowSnapshotResponseProto) Reset()                    { *m = AllowSnapshotResponseProto{} }
-func (m *AllowSnapshotResponseProto) String() string            { return proto.CompactTextString(m) }
-func (*AllowSnapshotResponseProto) ProtoMessage()               {}
-func (*AllowSnapshotResponseProto) Descriptor() ([]byte, []int) { return fileDescriptor4, []int{138} }
+func (m *AllowSnapshotResponseProto) Reset()         { *m = AllowSnapshotResponseProto{} }
+func (m *AllowSnapshotResponseProto) String() string { return proto.CompactTextString(m) }
+func (*AllowSnapshotResponseProto) ProtoMessage()    {}
+func (*AllowSnapshotResponseProto) Descriptor() ([]byte, []int) {
+	return fileDescriptor_ClientNamenodeProtocol_54652e2c42538454, []int{138}
+}
+func (m *AllowSnapshotResponseProto) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_AllowSnapshotResponseProto.Unmarshal(m, b)
+}
+func (m *AllowSnapshotResponseProto) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_AllowSnapshotResponseProto.Marshal(b, m, deterministic)
+}
+func (dst *AllowSnapshotResponseProto) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_AllowSnapshotResponseProto.Merge(dst, src)
+}
+func (m *AllowSnapshotResponseProto) XXX_Size() int {
+	return xxx_messageInfo_AllowSnapshotResponseProto.Size(m)
+}
+func (m *AllowSnapshotResponseProto) XXX_DiscardUnknown() {
+	xxx_messageInfo_AllowSnapshotResponseProto.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_AllowSnapshotResponseProto proto.InternalMessageInfo
 
 type DisallowSnapshotRequestProto struct {
-	SnapshotRoot     *string `protobuf:"bytes,1,req,name=snapshotRoot" json:"snapshotRoot,omitempty"`
-	XXX_unrecognized []byte  `json:"-"`
+	SnapshotRoot         *string  `protobuf:"bytes,1,req,name=snapshotRoot" json:"snapshotRoot,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
 }
 
-func (m *DisallowSnapshotRequestProto) Reset()                    { *m = DisallowSnapshotRequestProto{} }
-func (m *DisallowSnapshotRequestProto) String() string            { return proto.CompactTextString(m) }
-func (*DisallowSnapshotRequestProto) ProtoMessage()               {}
-func (*DisallowSnapshotRequestProto) Descriptor() ([]byte, []int) { return fileDescriptor4, []int{139} }
+func (m *DisallowSnapshotRequestProto) Reset()         { *m = DisallowSnapshotRequestProto{} }
+func (m *DisallowSnapshotRequestProto) String() string { return proto.CompactTextString(m) }
+func (*DisallowSnapshotRequestProto) ProtoMessage()    {}
+func (*DisallowSnapshotRequestProto) Descriptor() ([]byte, []int) {
+	return fileDescriptor_ClientNamenodeProtocol_54652e2c42538454, []int{139}
+}
+func (m *DisallowSnapshotRequestProto) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_DisallowSnapshotRequestProto.Unmarshal(m, b)
+}
+func (m *DisallowSnapshotRequestProto) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_DisallowSnapshotRequestProto.Marshal(b, m, deterministic)
+}
+func (dst *DisallowSnapshotRequestProto) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_DisallowSnapshotRequestProto.Merge(dst, src)
+}
+func (m *DisallowSnapshotRequestProto) XXX_Size() int {
+	return xxx_messageInfo_DisallowSnapshotRequestProto.Size(m)
+}
+func (m *DisallowSnapshotRequestProto) XXX_DiscardUnknown() {
+	xxx_messageInfo_DisallowSnapshotRequestProto.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_DisallowSnapshotRequestProto proto.InternalMessageInfo
 
 func (m *DisallowSnapshotRequestProto) GetSnapshotRoot() string {
 	if m != nil && m.SnapshotRoot != nil {
@@ -3267,24 +6163,66 @@ func (m *DisallowSnapshotRequestProto) GetSnapshotRoot() string {
 }
 
 type DisallowSnapshotResponseProto struct {
-	XXX_unrecognized []byte `json:"-"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
 }
 
-func (m *DisallowSnapshotResponseProto) Reset()                    { *m = DisallowSnapshotResponseProto{} }
-func (m *DisallowSnapshotResponseProto) String() string            { return proto.CompactTextString(m) }
-func (*DisallowSnapshotResponseProto) ProtoMessage()               {}
-func (*DisallowSnapshotResponseProto) Descriptor() ([]byte, []int) { return fileDescriptor4, []int{140} }
+func (m *DisallowSnapshotResponseProto) Reset()         { *m = DisallowSnapshotResponseProto{} }
+func (m *DisallowSnapshotResponseProto) String() string { return proto.CompactTextString(m) }
+func (*DisallowSnapshotResponseProto) ProtoMessage()    {}
+func (*DisallowSnapshotResponseProto) Descriptor() ([]byte, []int) {
+	return fileDescriptor_ClientNamenodeProtocol_54652e2c42538454, []int{140}
+}
+func (m *DisallowSnapshotResponseProto) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_DisallowSnapshotResponseProto.Unmarshal(m, b)
+}
+func (m *DisallowSnapshotResponseProto) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_DisallowSnapshotResponseProto.Marshal(b, m, deterministic)
+}
+func (dst *DisallowSnapshotResponseProto) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_DisallowSnapshotResponseProto.Merge(dst, src)
+}
+func (m *DisallowSnapshotResponseProto) XXX_Size() int {
+	return xxx_messageInfo_DisallowSnapshotResponseProto.Size(m)
+}
+func (m *DisallowSnapshotResponseProto) XXX_DiscardUnknown() {
+	xxx_messageInfo_DisallowSnapshotResponseProto.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_DisallowSnapshotResponseProto proto.InternalMessageInfo
 
 type DeleteSnapshotRequestProto struct {
-	SnapshotRoot     *string `protobuf:"bytes,1,req,name=snapshotRoot" json:"snapshotRoot,omitempty"`
-	SnapshotName     *string `protobuf:"bytes,2,req,name=snapshotName" json:"snapshotName,omitempty"`
-	XXX_unrecognized []byte  `json:"-"`
+	SnapshotRoot         *string  `protobuf:"bytes,1,req,name=snapshotRoot" json:"snapshotRoot,omitempty"`
+	SnapshotName         *string  `protobuf:"bytes,2,req,name=snapshotName" json:"snapshotName,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
 }
 
-func (m *DeleteSnapshotRequestProto) Reset()                    { *m = DeleteSnapshotRequestProto{} }
-func (m *DeleteSnapshotRequestProto) String() string            { return proto.CompactTextString(m) }
-func (*DeleteSnapshotRequestProto) ProtoMessage()               {}
-func (*DeleteSnapshotRequestProto) Descriptor() ([]byte, []int) { return fileDescriptor4, []int{141} }
+func (m *DeleteSnapshotRequestProto) Reset()         { *m = DeleteSnapshotRequestProto{} }
+func (m *DeleteSnapshotRequestProto) String() string { return proto.CompactTextString(m) }
+func (*DeleteSnapshotRequestProto) ProtoMessage()    {}
+func (*DeleteSnapshotRequestProto) Descriptor() ([]byte, []int) {
+	return fileDescriptor_ClientNamenodeProtocol_54652e2c42538454, []int{141}
+}
+func (m *DeleteSnapshotRequestProto) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_DeleteSnapshotRequestProto.Unmarshal(m, b)
+}
+func (m *DeleteSnapshotRequestProto) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_DeleteSnapshotRequestProto.Marshal(b, m, deterministic)
+}
+func (dst *DeleteSnapshotRequestProto) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_DeleteSnapshotRequestProto.Merge(dst, src)
+}
+func (m *DeleteSnapshotRequestProto) XXX_Size() int {
+	return xxx_messageInfo_DeleteSnapshotRequestProto.Size(m)
+}
+func (m *DeleteSnapshotRequestProto) XXX_DiscardUnknown() {
+	xxx_messageInfo_DeleteSnapshotRequestProto.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_DeleteSnapshotRequestProto proto.InternalMessageInfo
 
 func (m *DeleteSnapshotRequestProto) GetSnapshotRoot() string {
 	if m != nil && m.SnapshotRoot != nil {
@@ -3301,24 +6239,66 @@ func (m *DeleteSnapshotRequestProto) GetSnapshotName() string {
 }
 
 type DeleteSnapshotResponseProto struct {
-	XXX_unrecognized []byte `json:"-"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
 }
 
-func (m *DeleteSnapshotResponseProto) Reset()                    { *m = DeleteSnapshotResponseProto{} }
-func (m *DeleteSnapshotResponseProto) String() string            { return proto.CompactTextString(m) }
-func (*DeleteSnapshotResponseProto) ProtoMessage()               {}
-func (*DeleteSnapshotResponseProto) Descriptor() ([]byte, []int) { return fileDescriptor4, []int{142} }
+func (m *DeleteSnapshotResponseProto) Reset()         { *m = DeleteSnapshotResponseProto{} }
+func (m *DeleteSnapshotResponseProto) String() string { return proto.CompactTextString(m) }
+func (*DeleteSnapshotResponseProto) ProtoMessage()    {}
+func (*DeleteSnapshotResponseProto) Descriptor() ([]byte, []int) {
+	return fileDescriptor_ClientNamenodeProtocol_54652e2c42538454, []int{142}
+}
+func (m *DeleteSnapshotResponseProto) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_DeleteSnapshotResponseProto.Unmarshal(m, b)
+}
+func (m *DeleteSnapshotResponseProto) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_DeleteSnapshotResponseProto.Marshal(b, m, deterministic)
+}
+func (dst *DeleteSnapshotResponseProto) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_DeleteSnapshotResponseProto.Merge(dst, src)
+}
+func (m *DeleteSnapshotResponseProto) XXX_Size() int {
+	return xxx_messageInfo_DeleteSnapshotResponseProto.Size(m)
+}
+func (m *DeleteSnapshotResponseProto) XXX_DiscardUnknown() {
+	xxx_messageInfo_DeleteSnapshotResponseProto.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_DeleteSnapshotResponseProto proto.InternalMessageInfo
 
 type CheckAccessRequestProto struct {
-	Path             *string                      `protobuf:"bytes,1,req,name=path" json:"path,omitempty"`
-	Mode             *AclEntryProto_FsActionProto `protobuf:"varint,2,req,name=mode,enum=hadoop.hdfs.AclEntryProto_FsActionProto" json:"mode,omitempty"`
-	XXX_unrecognized []byte                       `json:"-"`
+	Path                 *string                      `protobuf:"bytes,1,req,name=path" json:"path,omitempty"`
+	Mode                 *AclEntryProto_FsActionProto `protobuf:"varint,2,req,name=mode,enum=hadoop.hdfs.AclEntryProto_FsActionProto" json:"mode,omitempty"`
+	XXX_NoUnkeyedLiteral struct{}                     `json:"-"`
+	XXX_unrecognized     []byte                       `json:"-"`
+	XXX_sizecache        int32                        `json:"-"`
 }
 
-func (m *CheckAccessRequestProto) Reset()                    { *m = CheckAccessRequestProto{} }
-func (m *CheckAccessRequestProto) String() string            { return proto.CompactTextString(m) }
-func (*CheckAccessRequestProto) ProtoMessage()               {}
-func (*CheckAccessRequestProto) Descriptor() ([]byte, []int) { return fileDescriptor4, []int{143} }
+func (m *CheckAccessRequestProto) Reset()         { *m = CheckAccessRequestProto{} }
+func (m *CheckAccessRequestProto) String() string { return proto.CompactTextString(m) }
+func (*CheckAccessRequestProto) ProtoMessage()    {}
+func (*CheckAccessRequestProto) Descriptor() ([]byte, []int) {
+	return fileDescriptor_ClientNamenodeProtocol_54652e2c42538454, []int{143}
+}
+func (m *CheckAccessRequestProto) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_CheckAccessRequestProto.Unmarshal(m, b)
+}
+func (m *CheckAccessRequestProto) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_CheckAccessRequestProto.Marshal(b, m, deterministic)
+}
+func (dst *CheckAccessRequestProto) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_CheckAccessRequestProto.Merge(dst, src)
+}
+func (m *CheckAccessRequestProto) XXX_Size() int {
+	return xxx_messageInfo_CheckAccessRequestProto.Size(m)
+}
+func (m *CheckAccessRequestProto) XXX_DiscardUnknown() {
+	xxx_messageInfo_CheckAccessRequestProto.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_CheckAccessRequestProto proto.InternalMessageInfo
 
 func (m *CheckAccessRequestProto) GetPath() string {
 	if m != nil && m.Path != nil {
@@ -3335,36 +6315,95 @@ func (m *CheckAccessRequestProto) GetMode() AclEntryProto_FsActionProto {
 }
 
 type CheckAccessResponseProto struct {
-	XXX_unrecognized []byte `json:"-"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
 }
 
-func (m *CheckAccessResponseProto) Reset()                    { *m = CheckAccessResponseProto{} }
-func (m *CheckAccessResponseProto) String() string            { return proto.CompactTextString(m) }
-func (*CheckAccessResponseProto) ProtoMessage()               {}
-func (*CheckAccessResponseProto) Descriptor() ([]byte, []int) { return fileDescriptor4, []int{144} }
+func (m *CheckAccessResponseProto) Reset()         { *m = CheckAccessResponseProto{} }
+func (m *CheckAccessResponseProto) String() string { return proto.CompactTextString(m) }
+func (*CheckAccessResponseProto) ProtoMessage()    {}
+func (*CheckAccessResponseProto) Descriptor() ([]byte, []int) {
+	return fileDescriptor_ClientNamenodeProtocol_54652e2c42538454, []int{144}
+}
+func (m *CheckAccessResponseProto) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_CheckAccessResponseProto.Unmarshal(m, b)
+}
+func (m *CheckAccessResponseProto) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_CheckAccessResponseProto.Marshal(b, m, deterministic)
+}
+func (dst *CheckAccessResponseProto) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_CheckAccessResponseProto.Merge(dst, src)
+}
+func (m *CheckAccessResponseProto) XXX_Size() int {
+	return xxx_messageInfo_CheckAccessResponseProto.Size(m)
+}
+func (m *CheckAccessResponseProto) XXX_DiscardUnknown() {
+	xxx_messageInfo_CheckAccessResponseProto.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_CheckAccessResponseProto proto.InternalMessageInfo
 
 type GetCurrentEditLogTxidRequestProto struct {
-	XXX_unrecognized []byte `json:"-"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
 }
 
 func (m *GetCurrentEditLogTxidRequestProto) Reset()         { *m = GetCurrentEditLogTxidRequestProto{} }
 func (m *GetCurrentEditLogTxidRequestProto) String() string { return proto.CompactTextString(m) }
 func (*GetCurrentEditLogTxidRequestProto) ProtoMessage()    {}
 func (*GetCurrentEditLogTxidRequestProto) Descriptor() ([]byte, []int) {
-	return fileDescriptor4, []int{145}
+	return fileDescriptor_ClientNamenodeProtocol_54652e2c42538454, []int{145}
+}
+func (m *GetCurrentEditLogTxidRequestProto) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_GetCurrentEditLogTxidRequestProto.Unmarshal(m, b)
+}
+func (m *GetCurrentEditLogTxidRequestProto) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_GetCurrentEditLogTxidRequestProto.Marshal(b, m, deterministic)
+}
+func (dst *GetCurrentEditLogTxidRequestProto) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_GetCurrentEditLogTxidRequestProto.Merge(dst, src)
+}
+func (m *GetCurrentEditLogTxidRequestProto) XXX_Size() int {
+	return xxx_messageInfo_GetCurrentEditLogTxidRequestProto.Size(m)
+}
+func (m *GetCurrentEditLogTxidRequestProto) XXX_DiscardUnknown() {
+	xxx_messageInfo_GetCurrentEditLogTxidRequestProto.DiscardUnknown(m)
 }
 
+var xxx_messageInfo_GetCurrentEditLogTxidRequestProto proto.InternalMessageInfo
+
 type GetCurrentEditLogTxidResponseProto struct {
-	Txid             *int64 `protobuf:"varint,1,req,name=txid" json:"txid,omitempty"`
-	XXX_unrecognized []byte `json:"-"`
+	Txid                 *int64   `protobuf:"varint,1,req,name=txid" json:"txid,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
 }
 
 func (m *GetCurrentEditLogTxidResponseProto) Reset()         { *m = GetCurrentEditLogTxidResponseProto{} }
 func (m *GetCurrentEditLogTxidResponseProto) String() string { return proto.CompactTextString(m) }
 func (*GetCurrentEditLogTxidResponseProto) ProtoMessage()    {}
 func (*GetCurrentEditLogTxidResponseProto) Descriptor() ([]byte, []int) {
-	return fileDescriptor4, []int{146}
+	return fileDescriptor_ClientNamenodeProtocol_54652e2c42538454, []int{146}
 }
+func (m *GetCurrentEditLogTxidResponseProto) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_GetCurrentEditLogTxidResponseProto.Unmarshal(m, b)
+}
+func (m *GetCurrentEditLogTxidResponseProto) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_GetCurrentEditLogTxidResponseProto.Marshal(b, m, deterministic)
+}
+func (dst *GetCurrentEditLogTxidResponseProto) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_GetCurrentEditLogTxidResponseProto.Merge(dst, src)
+}
+func (m *GetCurrentEditLogTxidResponseProto) XXX_Size() int {
+	return xxx_messageInfo_GetCurrentEditLogTxidResponseProto.Size(m)
+}
+func (m *GetCurrentEditLogTxidResponseProto) XXX_DiscardUnknown() {
+	xxx_messageInfo_GetCurrentEditLogTxidResponseProto.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_GetCurrentEditLogTxidResponseProto proto.InternalMessageInfo
 
 func (m *GetCurrentEditLogTxidResponseProto) GetTxid() int64 {
 	if m != nil && m.Txid != nil {
@@ -3374,14 +6413,35 @@ func (m *GetCurrentEditLogTxidResponseProto) GetTxid() int64 {
 }
 
 type GetEditsFromTxidRequestProto struct {
-	Txid             *int64 `protobuf:"varint,1,req,name=txid" json:"txid,omitempty"`
-	XXX_unrecognized []byte `json:"-"`
+	Txid                 *int64   `protobuf:"varint,1,req,name=txid" json:"txid,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
 }
 
-func (m *GetEditsFromTxidRequestProto) Reset()                    { *m = GetEditsFromTxidRequestProto{} }
-func (m *GetEditsFromTxidRequestProto) String() string            { return proto.CompactTextString(m) }
-func (*GetEditsFromTxidRequestProto) ProtoMessage()               {}
-func (*GetEditsFromTxidRequestProto) Descriptor() ([]byte, []int) { return fileDescriptor4, []int{147} }
+func (m *GetEditsFromTxidRequestProto) Reset()         { *m = GetEditsFromTxidRequestProto{} }
+func (m *GetEditsFromTxidRequestProto) String() string { return proto.CompactTextString(m) }
+func (*GetEditsFromTxidRequestProto) ProtoMessage()    {}
+func (*GetEditsFromTxidRequestProto) Descriptor() ([]byte, []int) {
+	return fileDescriptor_ClientNamenodeProtocol_54652e2c42538454, []int{147}
+}
+func (m *GetEditsFromTxidRequestProto) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_GetEditsFromTxidRequestProto.Unmarshal(m, b)
+}
+func (m *GetEditsFromTxidRequestProto) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_GetEditsFromTxidRequestProto.Marshal(b, m, deterministic)
+}
+func (dst *GetEditsFromTxidRequestProto) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_GetEditsFromTxidRequestProto.Merge(dst, src)
+}
+func (m *GetEditsFromTxidRequestProto) XXX_Size() int {
+	return xxx_messageInfo_GetEditsFromTxidRequestProto.Size(m)
+}
+func (m *GetEditsFromTxidRequestProto) XXX_DiscardUnknown() {
+	xxx_messageInfo_GetEditsFromTxidRequestProto.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_GetEditsFromTxidRequestProto proto.InternalMessageInfo
 
 func (m *GetEditsFromTxidRequestProto) GetTxid() int64 {
 	if m != nil && m.Txid != nil {
@@ -3391,14 +6451,35 @@ func (m *GetEditsFromTxidRequestProto) GetTxid() int64 {
 }
 
 type GetEditsFromTxidResponseProto struct {
-	EventsList       *EventsListProto `protobuf:"bytes,1,req,name=eventsList" json:"eventsList,omitempty"`
-	XXX_unrecognized []byte           `json:"-"`
+	EventsList           *EventsListProto `protobuf:"bytes,1,req,name=eventsList" json:"eventsList,omitempty"`
+	XXX_NoUnkeyedLiteral struct{}         `json:"-"`
+	XXX_unrecognized     []byte           `json:"-"`
+	XXX_sizecache        int32            `json:"-"`
 }
 
-func (m *GetEditsFromTxidResponseProto) Reset()                    { *m = GetEditsFromTxidResponseProto{} }
-func (m *GetEditsFromTxidResponseProto) String() string            { return proto.CompactTextString(m) }
-func (*GetEditsFromTxidResponseProto) ProtoMessage()               {}
-func (*GetEditsFromTxidResponseProto) Descriptor() ([]byte, []int) { return fileDescriptor4, []int{148} }
+func (m *GetEditsFromTxidResponseProto) Reset()         { *m = GetEditsFromTxidResponseProto{} }
+func (m *GetEditsFromTxidResponseProto) String() string { return proto.CompactTextString(m) }
+func (*GetEditsFromTxidResponseProto) ProtoMessage()    {}
+func (*GetEditsFromTxidResponseProto) Descriptor() ([]byte, []int) {
+	return fileDescriptor_ClientNamenodeProtocol_54652e2c42538454, []int{148}
+}
+func (m *GetEditsFromTxidResponseProto) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_GetEditsFromTxidResponseProto.Unmarshal(m, b)
+}
+func (m *GetEditsFromTxidResponseProto) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_GetEditsFromTxidResponseProto.Marshal(b, m, deterministic)
+}
+func (dst *GetEditsFromTxidResponseProto) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_GetEditsFromTxidResponseProto.Merge(dst, src)
+}
+func (m *GetEditsFromTxidResponseProto) XXX_Size() int {
+	return xxx_messageInfo_GetEditsFromTxidResponseProto.Size(m)
+}
+func (m *GetEditsFromTxidResponseProto) XXX_DiscardUnknown() {
+	xxx_messageInfo_GetEditsFromTxidResponseProto.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_GetEditsFromTxidResponseProto proto.InternalMessageInfo
 
 func (m *GetEditsFromTxidResponseProto) GetEventsList() *EventsListProto {
 	if m != nil {
@@ -3564,9 +6645,11 @@ func init() {
 	proto.RegisterEnum("hadoop.hdfs.CacheFlagProto", CacheFlagProto_name, CacheFlagProto_value)
 }
 
-func init() { proto.RegisterFile("ClientNamenodeProtocol.proto", fileDescriptor4) }
+func init() {
+	proto.RegisterFile("ClientNamenodeProtocol.proto", fileDescriptor_ClientNamenodeProtocol_54652e2c42538454)
+}
 
-var fileDescriptor4 = []byte{
+var fileDescriptor_ClientNamenodeProtocol_54652e2c42538454 = []byte{
 	// 5410 bytes of a gzipped FileDescriptorProto
 	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xc4, 0x5c, 0x5b, 0x73, 0xdc, 0x46,
 	0x76, 0xae, 0x19, 0x0e, 0x29, 0xf2, 0x48, 0xa2, 0xc6, 0x10, 0x29, 0x8e, 0x86, 0x94, 0x34, 0x82,

@@ -12,20 +12,47 @@ var _ = proto.Marshal
 var _ = fmt.Errorf
 var _ = math.Inf
 
+// This is a compile-time assertion to ensure that this generated file
+// is compatible with the proto package it is being compiled against.
+// A compilation error at this line likely means your copy of the
+// proto package needs to be updated.
+const _ = proto.ProtoPackageIsVersion2 // please upgrade the proto package
+
 // *
 // Security token identifier
 type TokenProto struct {
-	Identifier       []byte  `protobuf:"bytes,1,req,name=identifier" json:"identifier,omitempty"`
-	Password         []byte  `protobuf:"bytes,2,req,name=password" json:"password,omitempty"`
-	Kind             *string `protobuf:"bytes,3,req,name=kind" json:"kind,omitempty"`
-	Service          *string `protobuf:"bytes,4,req,name=service" json:"service,omitempty"`
-	XXX_unrecognized []byte  `json:"-"`
+	Identifier           []byte   `protobuf:"bytes,1,req,name=identifier" json:"identifier,omitempty"`
+	Password             []byte   `protobuf:"bytes,2,req,name=password" json:"password,omitempty"`
+	Kind                 *string  `protobuf:"bytes,3,req,name=kind" json:"kind,omitempty"`
+	Service              *string  `protobuf:"bytes,4,req,name=service" json:"service,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
 }
 
-func (m *TokenProto) Reset()                    { *m = TokenProto{} }
-func (m *TokenProto) String() string            { return proto.CompactTextString(m) }
-func (*TokenProto) ProtoMessage()               {}
-func (*TokenProto) Descriptor() ([]byte, []int) { return fileDescriptor7, []int{0} }
+func (m *TokenProto) Reset()         { *m = TokenProto{} }
+func (m *TokenProto) String() string { return proto.CompactTextString(m) }
+func (*TokenProto) ProtoMessage()    {}
+func (*TokenProto) Descriptor() ([]byte, []int) {
+	return fileDescriptor_Security_119a3831738d9692, []int{0}
+}
+func (m *TokenProto) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_TokenProto.Unmarshal(m, b)
+}
+func (m *TokenProto) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_TokenProto.Marshal(b, m, deterministic)
+}
+func (dst *TokenProto) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_TokenProto.Merge(dst, src)
+}
+func (m *TokenProto) XXX_Size() int {
+	return xxx_messageInfo_TokenProto.Size(m)
+}
+func (m *TokenProto) XXX_DiscardUnknown() {
+	xxx_messageInfo_TokenProto.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_TokenProto proto.InternalMessageInfo
 
 func (m *TokenProto) GetIdentifier() []byte {
 	if m != nil {
@@ -56,14 +83,35 @@ func (m *TokenProto) GetService() string {
 }
 
 type GetDelegationTokenRequestProto struct {
-	Renewer          *string `protobuf:"bytes,1,req,name=renewer" json:"renewer,omitempty"`
-	XXX_unrecognized []byte  `json:"-"`
+	Renewer              *string  `protobuf:"bytes,1,req,name=renewer" json:"renewer,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
 }
 
-func (m *GetDelegationTokenRequestProto) Reset()                    { *m = GetDelegationTokenRequestProto{} }
-func (m *GetDelegationTokenRequestProto) String() string            { return proto.CompactTextString(m) }
-func (*GetDelegationTokenRequestProto) ProtoMessage()               {}
-func (*GetDelegationTokenRequestProto) Descriptor() ([]byte, []int) { return fileDescriptor7, []int{1} }
+func (m *GetDelegationTokenRequestProto) Reset()         { *m = GetDelegationTokenRequestProto{} }
+func (m *GetDelegationTokenRequestProto) String() string { return proto.CompactTextString(m) }
+func (*GetDelegationTokenRequestProto) ProtoMessage()    {}
+func (*GetDelegationTokenRequestProto) Descriptor() ([]byte, []int) {
+	return fileDescriptor_Security_119a3831738d9692, []int{1}
+}
+func (m *GetDelegationTokenRequestProto) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_GetDelegationTokenRequestProto.Unmarshal(m, b)
+}
+func (m *GetDelegationTokenRequestProto) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_GetDelegationTokenRequestProto.Marshal(b, m, deterministic)
+}
+func (dst *GetDelegationTokenRequestProto) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_GetDelegationTokenRequestProto.Merge(dst, src)
+}
+func (m *GetDelegationTokenRequestProto) XXX_Size() int {
+	return xxx_messageInfo_GetDelegationTokenRequestProto.Size(m)
+}
+func (m *GetDelegationTokenRequestProto) XXX_DiscardUnknown() {
+	xxx_messageInfo_GetDelegationTokenRequestProto.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_GetDelegationTokenRequestProto proto.InternalMessageInfo
 
 func (m *GetDelegationTokenRequestProto) GetRenewer() string {
 	if m != nil && m.Renewer != nil {
@@ -73,14 +121,35 @@ func (m *GetDelegationTokenRequestProto) GetRenewer() string {
 }
 
 type GetDelegationTokenResponseProto struct {
-	Token            *TokenProto `protobuf:"bytes,1,opt,name=token" json:"token,omitempty"`
-	XXX_unrecognized []byte      `json:"-"`
+	Token                *TokenProto `protobuf:"bytes,1,opt,name=token" json:"token,omitempty"`
+	XXX_NoUnkeyedLiteral struct{}    `json:"-"`
+	XXX_unrecognized     []byte      `json:"-"`
+	XXX_sizecache        int32       `json:"-"`
 }
 
-func (m *GetDelegationTokenResponseProto) Reset()                    { *m = GetDelegationTokenResponseProto{} }
-func (m *GetDelegationTokenResponseProto) String() string            { return proto.CompactTextString(m) }
-func (*GetDelegationTokenResponseProto) ProtoMessage()               {}
-func (*GetDelegationTokenResponseProto) Descriptor() ([]byte, []int) { return fileDescriptor7, []int{2} }
+func (m *GetDelegationTokenResponseProto) Reset()         { *m = GetDelegationTokenResponseProto{} }
+func (m *GetDelegationTokenResponseProto) String() string { return proto.CompactTextString(m) }
+func (*GetDelegationTokenResponseProto) ProtoMessage()    {}
+func (*GetDelegationTokenResponseProto) Descriptor() ([]byte, []int) {
+	return fileDescriptor_Security_119a3831738d9692, []int{2}
+}
+func (m *GetDelegationTokenResponseProto) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_GetDelegationTokenResponseProto.Unmarshal(m, b)
+}
+func (m *GetDelegationTokenResponseProto) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_GetDelegationTokenResponseProto.Marshal(b, m, deterministic)
+}
+func (dst *GetDelegationTokenResponseProto) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_GetDelegationTokenResponseProto.Merge(dst, src)
+}
+func (m *GetDelegationTokenResponseProto) XXX_Size() int {
+	return xxx_messageInfo_GetDelegationTokenResponseProto.Size(m)
+}
+func (m *GetDelegationTokenResponseProto) XXX_DiscardUnknown() {
+	xxx_messageInfo_GetDelegationTokenResponseProto.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_GetDelegationTokenResponseProto proto.InternalMessageInfo
 
 func (m *GetDelegationTokenResponseProto) GetToken() *TokenProto {
 	if m != nil {
@@ -90,16 +159,35 @@ func (m *GetDelegationTokenResponseProto) GetToken() *TokenProto {
 }
 
 type RenewDelegationTokenRequestProto struct {
-	Token            *TokenProto `protobuf:"bytes,1,req,name=token" json:"token,omitempty"`
-	XXX_unrecognized []byte      `json:"-"`
+	Token                *TokenProto `protobuf:"bytes,1,req,name=token" json:"token,omitempty"`
+	XXX_NoUnkeyedLiteral struct{}    `json:"-"`
+	XXX_unrecognized     []byte      `json:"-"`
+	XXX_sizecache        int32       `json:"-"`
 }
 
 func (m *RenewDelegationTokenRequestProto) Reset()         { *m = RenewDelegationTokenRequestProto{} }
 func (m *RenewDelegationTokenRequestProto) String() string { return proto.CompactTextString(m) }
 func (*RenewDelegationTokenRequestProto) ProtoMessage()    {}
 func (*RenewDelegationTokenRequestProto) Descriptor() ([]byte, []int) {
-	return fileDescriptor7, []int{3}
+	return fileDescriptor_Security_119a3831738d9692, []int{3}
 }
+func (m *RenewDelegationTokenRequestProto) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_RenewDelegationTokenRequestProto.Unmarshal(m, b)
+}
+func (m *RenewDelegationTokenRequestProto) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_RenewDelegationTokenRequestProto.Marshal(b, m, deterministic)
+}
+func (dst *RenewDelegationTokenRequestProto) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_RenewDelegationTokenRequestProto.Merge(dst, src)
+}
+func (m *RenewDelegationTokenRequestProto) XXX_Size() int {
+	return xxx_messageInfo_RenewDelegationTokenRequestProto.Size(m)
+}
+func (m *RenewDelegationTokenRequestProto) XXX_DiscardUnknown() {
+	xxx_messageInfo_RenewDelegationTokenRequestProto.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_RenewDelegationTokenRequestProto proto.InternalMessageInfo
 
 func (m *RenewDelegationTokenRequestProto) GetToken() *TokenProto {
 	if m != nil {
@@ -109,16 +197,35 @@ func (m *RenewDelegationTokenRequestProto) GetToken() *TokenProto {
 }
 
 type RenewDelegationTokenResponseProto struct {
-	NewExpiryTime    *uint64 `protobuf:"varint,1,req,name=newExpiryTime" json:"newExpiryTime,omitempty"`
-	XXX_unrecognized []byte  `json:"-"`
+	NewExpiryTime        *uint64  `protobuf:"varint,1,req,name=newExpiryTime" json:"newExpiryTime,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
 }
 
 func (m *RenewDelegationTokenResponseProto) Reset()         { *m = RenewDelegationTokenResponseProto{} }
 func (m *RenewDelegationTokenResponseProto) String() string { return proto.CompactTextString(m) }
 func (*RenewDelegationTokenResponseProto) ProtoMessage()    {}
 func (*RenewDelegationTokenResponseProto) Descriptor() ([]byte, []int) {
-	return fileDescriptor7, []int{4}
+	return fileDescriptor_Security_119a3831738d9692, []int{4}
 }
+func (m *RenewDelegationTokenResponseProto) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_RenewDelegationTokenResponseProto.Unmarshal(m, b)
+}
+func (m *RenewDelegationTokenResponseProto) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_RenewDelegationTokenResponseProto.Marshal(b, m, deterministic)
+}
+func (dst *RenewDelegationTokenResponseProto) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_RenewDelegationTokenResponseProto.Merge(dst, src)
+}
+func (m *RenewDelegationTokenResponseProto) XXX_Size() int {
+	return xxx_messageInfo_RenewDelegationTokenResponseProto.Size(m)
+}
+func (m *RenewDelegationTokenResponseProto) XXX_DiscardUnknown() {
+	xxx_messageInfo_RenewDelegationTokenResponseProto.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_RenewDelegationTokenResponseProto proto.InternalMessageInfo
 
 func (m *RenewDelegationTokenResponseProto) GetNewExpiryTime() uint64 {
 	if m != nil && m.NewExpiryTime != nil {
@@ -128,16 +235,35 @@ func (m *RenewDelegationTokenResponseProto) GetNewExpiryTime() uint64 {
 }
 
 type CancelDelegationTokenRequestProto struct {
-	Token            *TokenProto `protobuf:"bytes,1,req,name=token" json:"token,omitempty"`
-	XXX_unrecognized []byte      `json:"-"`
+	Token                *TokenProto `protobuf:"bytes,1,req,name=token" json:"token,omitempty"`
+	XXX_NoUnkeyedLiteral struct{}    `json:"-"`
+	XXX_unrecognized     []byte      `json:"-"`
+	XXX_sizecache        int32       `json:"-"`
 }
 
 func (m *CancelDelegationTokenRequestProto) Reset()         { *m = CancelDelegationTokenRequestProto{} }
 func (m *CancelDelegationTokenRequestProto) String() string { return proto.CompactTextString(m) }
 func (*CancelDelegationTokenRequestProto) ProtoMessage()    {}
 func (*CancelDelegationTokenRequestProto) Descriptor() ([]byte, []int) {
-	return fileDescriptor7, []int{5}
+	return fileDescriptor_Security_119a3831738d9692, []int{5}
 }
+func (m *CancelDelegationTokenRequestProto) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_CancelDelegationTokenRequestProto.Unmarshal(m, b)
+}
+func (m *CancelDelegationTokenRequestProto) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_CancelDelegationTokenRequestProto.Marshal(b, m, deterministic)
+}
+func (dst *CancelDelegationTokenRequestProto) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_CancelDelegationTokenRequestProto.Merge(dst, src)
+}
+func (m *CancelDelegationTokenRequestProto) XXX_Size() int {
+	return xxx_messageInfo_CancelDelegationTokenRequestProto.Size(m)
+}
+func (m *CancelDelegationTokenRequestProto) XXX_DiscardUnknown() {
+	xxx_messageInfo_CancelDelegationTokenRequestProto.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_CancelDelegationTokenRequestProto proto.InternalMessageInfo
 
 func (m *CancelDelegationTokenRequestProto) GetToken() *TokenProto {
 	if m != nil {
@@ -147,15 +273,34 @@ func (m *CancelDelegationTokenRequestProto) GetToken() *TokenProto {
 }
 
 type CancelDelegationTokenResponseProto struct {
-	XXX_unrecognized []byte `json:"-"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
 }
 
 func (m *CancelDelegationTokenResponseProto) Reset()         { *m = CancelDelegationTokenResponseProto{} }
 func (m *CancelDelegationTokenResponseProto) String() string { return proto.CompactTextString(m) }
 func (*CancelDelegationTokenResponseProto) ProtoMessage()    {}
 func (*CancelDelegationTokenResponseProto) Descriptor() ([]byte, []int) {
-	return fileDescriptor7, []int{6}
+	return fileDescriptor_Security_119a3831738d9692, []int{6}
 }
+func (m *CancelDelegationTokenResponseProto) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_CancelDelegationTokenResponseProto.Unmarshal(m, b)
+}
+func (m *CancelDelegationTokenResponseProto) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_CancelDelegationTokenResponseProto.Marshal(b, m, deterministic)
+}
+func (dst *CancelDelegationTokenResponseProto) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_CancelDelegationTokenResponseProto.Merge(dst, src)
+}
+func (m *CancelDelegationTokenResponseProto) XXX_Size() int {
+	return xxx_messageInfo_CancelDelegationTokenResponseProto.Size(m)
+}
+func (m *CancelDelegationTokenResponseProto) XXX_DiscardUnknown() {
+	xxx_messageInfo_CancelDelegationTokenResponseProto.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_CancelDelegationTokenResponseProto proto.InternalMessageInfo
 
 func init() {
 	proto.RegisterType((*TokenProto)(nil), "hadoop.common.TokenProto")
@@ -167,9 +312,9 @@ func init() {
 	proto.RegisterType((*CancelDelegationTokenResponseProto)(nil), "hadoop.common.CancelDelegationTokenResponseProto")
 }
 
-func init() { proto.RegisterFile("Security.proto", fileDescriptor7) }
+func init() { proto.RegisterFile("Security.proto", fileDescriptor_Security_119a3831738d9692) }
 
-var fileDescriptor7 = []byte{
+var fileDescriptor_Security_119a3831738d9692 = []byte{
 	// 303 bytes of a gzipped FileDescriptorProto
 	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xac, 0x92, 0xb1, 0x4e, 0xf3, 0x30,
 	0x10, 0xc7, 0xe5, 0x7c, 0xfd, 0x54, 0x7a, 0x50, 0x86, 0x4c, 0x86, 0xa1, 0xa4, 0x56, 0x87, 0x4e,

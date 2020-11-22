@@ -12,17 +12,44 @@ var _ = proto.Marshal
 var _ = fmt.Errorf
 var _ = math.Inf
 
+// This is a compile-time assertion to ensure that this generated file
+// is compatible with the proto package it is being compiled against.
+// A compilation error at this line likely means your copy of the
+// proto package needs to be updated.
+const _ = proto.ProtoPackageIsVersion2 // please upgrade the proto package
+
 // *
 //  Get groups for user request.
 type GetGroupsForUserRequestProto struct {
-	User             *string `protobuf:"bytes,1,req,name=user" json:"user,omitempty"`
-	XXX_unrecognized []byte  `json:"-"`
+	User                 *string  `protobuf:"bytes,1,req,name=user" json:"user,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
 }
 
-func (m *GetGroupsForUserRequestProto) Reset()                    { *m = GetGroupsForUserRequestProto{} }
-func (m *GetGroupsForUserRequestProto) String() string            { return proto.CompactTextString(m) }
-func (*GetGroupsForUserRequestProto) ProtoMessage()               {}
-func (*GetGroupsForUserRequestProto) Descriptor() ([]byte, []int) { return fileDescriptor10, []int{0} }
+func (m *GetGroupsForUserRequestProto) Reset()         { *m = GetGroupsForUserRequestProto{} }
+func (m *GetGroupsForUserRequestProto) String() string { return proto.CompactTextString(m) }
+func (*GetGroupsForUserRequestProto) ProtoMessage()    {}
+func (*GetGroupsForUserRequestProto) Descriptor() ([]byte, []int) {
+	return fileDescriptor_GetUserMappingsProtocol_063dd4deb3b36e91, []int{0}
+}
+func (m *GetGroupsForUserRequestProto) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_GetGroupsForUserRequestProto.Unmarshal(m, b)
+}
+func (m *GetGroupsForUserRequestProto) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_GetGroupsForUserRequestProto.Marshal(b, m, deterministic)
+}
+func (dst *GetGroupsForUserRequestProto) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_GetGroupsForUserRequestProto.Merge(dst, src)
+}
+func (m *GetGroupsForUserRequestProto) XXX_Size() int {
+	return xxx_messageInfo_GetGroupsForUserRequestProto.Size(m)
+}
+func (m *GetGroupsForUserRequestProto) XXX_DiscardUnknown() {
+	xxx_messageInfo_GetGroupsForUserRequestProto.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_GetGroupsForUserRequestProto proto.InternalMessageInfo
 
 func (m *GetGroupsForUserRequestProto) GetUser() string {
 	if m != nil && m.User != nil {
@@ -34,14 +61,35 @@ func (m *GetGroupsForUserRequestProto) GetUser() string {
 // *
 // Response for get groups.
 type GetGroupsForUserResponseProto struct {
-	Groups           []string `protobuf:"bytes,1,rep,name=groups" json:"groups,omitempty"`
-	XXX_unrecognized []byte   `json:"-"`
+	Groups               []string `protobuf:"bytes,1,rep,name=groups" json:"groups,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
 }
 
-func (m *GetGroupsForUserResponseProto) Reset()                    { *m = GetGroupsForUserResponseProto{} }
-func (m *GetGroupsForUserResponseProto) String() string            { return proto.CompactTextString(m) }
-func (*GetGroupsForUserResponseProto) ProtoMessage()               {}
-func (*GetGroupsForUserResponseProto) Descriptor() ([]byte, []int) { return fileDescriptor10, []int{1} }
+func (m *GetGroupsForUserResponseProto) Reset()         { *m = GetGroupsForUserResponseProto{} }
+func (m *GetGroupsForUserResponseProto) String() string { return proto.CompactTextString(m) }
+func (*GetGroupsForUserResponseProto) ProtoMessage()    {}
+func (*GetGroupsForUserResponseProto) Descriptor() ([]byte, []int) {
+	return fileDescriptor_GetUserMappingsProtocol_063dd4deb3b36e91, []int{1}
+}
+func (m *GetGroupsForUserResponseProto) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_GetGroupsForUserResponseProto.Unmarshal(m, b)
+}
+func (m *GetGroupsForUserResponseProto) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_GetGroupsForUserResponseProto.Marshal(b, m, deterministic)
+}
+func (dst *GetGroupsForUserResponseProto) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_GetGroupsForUserResponseProto.Merge(dst, src)
+}
+func (m *GetGroupsForUserResponseProto) XXX_Size() int {
+	return xxx_messageInfo_GetGroupsForUserResponseProto.Size(m)
+}
+func (m *GetGroupsForUserResponseProto) XXX_DiscardUnknown() {
+	xxx_messageInfo_GetGroupsForUserResponseProto.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_GetGroupsForUserResponseProto proto.InternalMessageInfo
 
 func (m *GetGroupsForUserResponseProto) GetGroups() []string {
 	if m != nil {
@@ -55,9 +103,11 @@ func init() {
 	proto.RegisterType((*GetGroupsForUserResponseProto)(nil), "hadoop.common.GetGroupsForUserResponseProto")
 }
 
-func init() { proto.RegisterFile("GetUserMappingsProtocol.proto", fileDescriptor10) }
+func init() {
+	proto.RegisterFile("GetUserMappingsProtocol.proto", fileDescriptor_GetUserMappingsProtocol_063dd4deb3b36e91)
+}
 
-var fileDescriptor10 = []byte{
+var fileDescriptor_GetUserMappingsProtocol_063dd4deb3b36e91 = []byte{
 	// 213 bytes of a gzipped FileDescriptorProto
 	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xe2, 0x92, 0x75, 0x4f, 0x2d, 0x09,
 	0x2d, 0x4e, 0x2d, 0xf2, 0x4d, 0x2c, 0x28, 0xc8, 0xcc, 0x4b, 0x2f, 0x0e, 0x28, 0xca, 0x2f, 0xc9,

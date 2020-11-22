@@ -12,36 +12,86 @@ var _ = proto.Marshal
 var _ = fmt.Errorf
 var _ = math.Inf
 
+// This is a compile-time assertion to ensure that this generated file
+// is compatible with the proto package it is being compiled against.
+// A compilation error at this line likely means your copy of the
+// proto package needs to be updated.
+const _ = proto.ProtoPackageIsVersion2 // please upgrade the proto package
+
 // *
 //  Refresh callqueue request.
 type RefreshCallQueueRequestProto struct {
-	XXX_unrecognized []byte `json:"-"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
 }
 
-func (m *RefreshCallQueueRequestProto) Reset()                    { *m = RefreshCallQueueRequestProto{} }
-func (m *RefreshCallQueueRequestProto) String() string            { return proto.CompactTextString(m) }
-func (*RefreshCallQueueRequestProto) ProtoMessage()               {}
-func (*RefreshCallQueueRequestProto) Descriptor() ([]byte, []int) { return fileDescriptor6, []int{0} }
+func (m *RefreshCallQueueRequestProto) Reset()         { *m = RefreshCallQueueRequestProto{} }
+func (m *RefreshCallQueueRequestProto) String() string { return proto.CompactTextString(m) }
+func (*RefreshCallQueueRequestProto) ProtoMessage()    {}
+func (*RefreshCallQueueRequestProto) Descriptor() ([]byte, []int) {
+	return fileDescriptor_RefreshCallQueueProtocol_bc79c9fb9fc890b9, []int{0}
+}
+func (m *RefreshCallQueueRequestProto) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_RefreshCallQueueRequestProto.Unmarshal(m, b)
+}
+func (m *RefreshCallQueueRequestProto) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_RefreshCallQueueRequestProto.Marshal(b, m, deterministic)
+}
+func (dst *RefreshCallQueueRequestProto) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_RefreshCallQueueRequestProto.Merge(dst, src)
+}
+func (m *RefreshCallQueueRequestProto) XXX_Size() int {
+	return xxx_messageInfo_RefreshCallQueueRequestProto.Size(m)
+}
+func (m *RefreshCallQueueRequestProto) XXX_DiscardUnknown() {
+	xxx_messageInfo_RefreshCallQueueRequestProto.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_RefreshCallQueueRequestProto proto.InternalMessageInfo
 
 // *
 // void response.
 type RefreshCallQueueResponseProto struct {
-	XXX_unrecognized []byte `json:"-"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
 }
 
-func (m *RefreshCallQueueResponseProto) Reset()                    { *m = RefreshCallQueueResponseProto{} }
-func (m *RefreshCallQueueResponseProto) String() string            { return proto.CompactTextString(m) }
-func (*RefreshCallQueueResponseProto) ProtoMessage()               {}
-func (*RefreshCallQueueResponseProto) Descriptor() ([]byte, []int) { return fileDescriptor6, []int{1} }
+func (m *RefreshCallQueueResponseProto) Reset()         { *m = RefreshCallQueueResponseProto{} }
+func (m *RefreshCallQueueResponseProto) String() string { return proto.CompactTextString(m) }
+func (*RefreshCallQueueResponseProto) ProtoMessage()    {}
+func (*RefreshCallQueueResponseProto) Descriptor() ([]byte, []int) {
+	return fileDescriptor_RefreshCallQueueProtocol_bc79c9fb9fc890b9, []int{1}
+}
+func (m *RefreshCallQueueResponseProto) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_RefreshCallQueueResponseProto.Unmarshal(m, b)
+}
+func (m *RefreshCallQueueResponseProto) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_RefreshCallQueueResponseProto.Marshal(b, m, deterministic)
+}
+func (dst *RefreshCallQueueResponseProto) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_RefreshCallQueueResponseProto.Merge(dst, src)
+}
+func (m *RefreshCallQueueResponseProto) XXX_Size() int {
+	return xxx_messageInfo_RefreshCallQueueResponseProto.Size(m)
+}
+func (m *RefreshCallQueueResponseProto) XXX_DiscardUnknown() {
+	xxx_messageInfo_RefreshCallQueueResponseProto.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_RefreshCallQueueResponseProto proto.InternalMessageInfo
 
 func init() {
 	proto.RegisterType((*RefreshCallQueueRequestProto)(nil), "hadoop.common.RefreshCallQueueRequestProto")
 	proto.RegisterType((*RefreshCallQueueResponseProto)(nil), "hadoop.common.RefreshCallQueueResponseProto")
 }
 
-func init() { proto.RegisterFile("RefreshCallQueueProtocol.proto", fileDescriptor6) }
+func init() {
+	proto.RegisterFile("RefreshCallQueueProtocol.proto", fileDescriptor_RefreshCallQueueProtocol_bc79c9fb9fc890b9)
+}
 
-var fileDescriptor6 = []byte{
+var fileDescriptor_RefreshCallQueueProtocol_bc79c9fb9fc890b9 = []byte{
 	// 168 bytes of a gzipped FileDescriptorProto
 	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xe2, 0x92, 0x0b, 0x4a, 0x4d, 0x2b,
 	0x4a, 0x2d, 0xce, 0x70, 0x4e, 0xcc, 0xc9, 0x09, 0x2c, 0x4d, 0x2d, 0x4d, 0x0d, 0x28, 0xca, 0x2f,

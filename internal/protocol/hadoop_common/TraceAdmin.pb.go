@@ -12,25 +12,73 @@ var _ = proto.Marshal
 var _ = fmt.Errorf
 var _ = math.Inf
 
+// This is a compile-time assertion to ensure that this generated file
+// is compatible with the proto package it is being compiled against.
+// A compilation error at this line likely means your copy of the
+// proto package needs to be updated.
+const _ = proto.ProtoPackageIsVersion2 // please upgrade the proto package
+
 type ListSpanReceiversRequestProto struct {
-	XXX_unrecognized []byte `json:"-"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
 }
 
-func (m *ListSpanReceiversRequestProto) Reset()                    { *m = ListSpanReceiversRequestProto{} }
-func (m *ListSpanReceiversRequestProto) String() string            { return proto.CompactTextString(m) }
-func (*ListSpanReceiversRequestProto) ProtoMessage()               {}
-func (*ListSpanReceiversRequestProto) Descriptor() ([]byte, []int) { return fileDescriptor5, []int{0} }
+func (m *ListSpanReceiversRequestProto) Reset()         { *m = ListSpanReceiversRequestProto{} }
+func (m *ListSpanReceiversRequestProto) String() string { return proto.CompactTextString(m) }
+func (*ListSpanReceiversRequestProto) ProtoMessage()    {}
+func (*ListSpanReceiversRequestProto) Descriptor() ([]byte, []int) {
+	return fileDescriptor_TraceAdmin_27d3226e901b26a8, []int{0}
+}
+func (m *ListSpanReceiversRequestProto) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_ListSpanReceiversRequestProto.Unmarshal(m, b)
+}
+func (m *ListSpanReceiversRequestProto) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_ListSpanReceiversRequestProto.Marshal(b, m, deterministic)
+}
+func (dst *ListSpanReceiversRequestProto) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_ListSpanReceiversRequestProto.Merge(dst, src)
+}
+func (m *ListSpanReceiversRequestProto) XXX_Size() int {
+	return xxx_messageInfo_ListSpanReceiversRequestProto.Size(m)
+}
+func (m *ListSpanReceiversRequestProto) XXX_DiscardUnknown() {
+	xxx_messageInfo_ListSpanReceiversRequestProto.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_ListSpanReceiversRequestProto proto.InternalMessageInfo
 
 type SpanReceiverListInfo struct {
-	Id               *int64  `protobuf:"varint,1,req,name=id" json:"id,omitempty"`
-	ClassName        *string `protobuf:"bytes,2,req,name=className" json:"className,omitempty"`
-	XXX_unrecognized []byte  `json:"-"`
+	Id                   *int64   `protobuf:"varint,1,req,name=id" json:"id,omitempty"`
+	ClassName            *string  `protobuf:"bytes,2,req,name=className" json:"className,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
 }
 
-func (m *SpanReceiverListInfo) Reset()                    { *m = SpanReceiverListInfo{} }
-func (m *SpanReceiverListInfo) String() string            { return proto.CompactTextString(m) }
-func (*SpanReceiverListInfo) ProtoMessage()               {}
-func (*SpanReceiverListInfo) Descriptor() ([]byte, []int) { return fileDescriptor5, []int{1} }
+func (m *SpanReceiverListInfo) Reset()         { *m = SpanReceiverListInfo{} }
+func (m *SpanReceiverListInfo) String() string { return proto.CompactTextString(m) }
+func (*SpanReceiverListInfo) ProtoMessage()    {}
+func (*SpanReceiverListInfo) Descriptor() ([]byte, []int) {
+	return fileDescriptor_TraceAdmin_27d3226e901b26a8, []int{1}
+}
+func (m *SpanReceiverListInfo) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_SpanReceiverListInfo.Unmarshal(m, b)
+}
+func (m *SpanReceiverListInfo) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_SpanReceiverListInfo.Marshal(b, m, deterministic)
+}
+func (dst *SpanReceiverListInfo) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_SpanReceiverListInfo.Merge(dst, src)
+}
+func (m *SpanReceiverListInfo) XXX_Size() int {
+	return xxx_messageInfo_SpanReceiverListInfo.Size(m)
+}
+func (m *SpanReceiverListInfo) XXX_DiscardUnknown() {
+	xxx_messageInfo_SpanReceiverListInfo.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_SpanReceiverListInfo proto.InternalMessageInfo
 
 func (m *SpanReceiverListInfo) GetId() int64 {
 	if m != nil && m.Id != nil {
@@ -47,14 +95,35 @@ func (m *SpanReceiverListInfo) GetClassName() string {
 }
 
 type ListSpanReceiversResponseProto struct {
-	Descriptions     []*SpanReceiverListInfo `protobuf:"bytes,1,rep,name=descriptions" json:"descriptions,omitempty"`
-	XXX_unrecognized []byte                  `json:"-"`
+	Descriptions         []*SpanReceiverListInfo `protobuf:"bytes,1,rep,name=descriptions" json:"descriptions,omitempty"`
+	XXX_NoUnkeyedLiteral struct{}                `json:"-"`
+	XXX_unrecognized     []byte                  `json:"-"`
+	XXX_sizecache        int32                   `json:"-"`
 }
 
-func (m *ListSpanReceiversResponseProto) Reset()                    { *m = ListSpanReceiversResponseProto{} }
-func (m *ListSpanReceiversResponseProto) String() string            { return proto.CompactTextString(m) }
-func (*ListSpanReceiversResponseProto) ProtoMessage()               {}
-func (*ListSpanReceiversResponseProto) Descriptor() ([]byte, []int) { return fileDescriptor5, []int{2} }
+func (m *ListSpanReceiversResponseProto) Reset()         { *m = ListSpanReceiversResponseProto{} }
+func (m *ListSpanReceiversResponseProto) String() string { return proto.CompactTextString(m) }
+func (*ListSpanReceiversResponseProto) ProtoMessage()    {}
+func (*ListSpanReceiversResponseProto) Descriptor() ([]byte, []int) {
+	return fileDescriptor_TraceAdmin_27d3226e901b26a8, []int{2}
+}
+func (m *ListSpanReceiversResponseProto) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_ListSpanReceiversResponseProto.Unmarshal(m, b)
+}
+func (m *ListSpanReceiversResponseProto) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_ListSpanReceiversResponseProto.Marshal(b, m, deterministic)
+}
+func (dst *ListSpanReceiversResponseProto) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_ListSpanReceiversResponseProto.Merge(dst, src)
+}
+func (m *ListSpanReceiversResponseProto) XXX_Size() int {
+	return xxx_messageInfo_ListSpanReceiversResponseProto.Size(m)
+}
+func (m *ListSpanReceiversResponseProto) XXX_DiscardUnknown() {
+	xxx_messageInfo_ListSpanReceiversResponseProto.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_ListSpanReceiversResponseProto proto.InternalMessageInfo
 
 func (m *ListSpanReceiversResponseProto) GetDescriptions() []*SpanReceiverListInfo {
 	if m != nil {
@@ -64,15 +133,36 @@ func (m *ListSpanReceiversResponseProto) GetDescriptions() []*SpanReceiverListIn
 }
 
 type ConfigPair struct {
-	Key              *string `protobuf:"bytes,1,req,name=key" json:"key,omitempty"`
-	Value            *string `protobuf:"bytes,2,req,name=value" json:"value,omitempty"`
-	XXX_unrecognized []byte  `json:"-"`
+	Key                  *string  `protobuf:"bytes,1,req,name=key" json:"key,omitempty"`
+	Value                *string  `protobuf:"bytes,2,req,name=value" json:"value,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
 }
 
-func (m *ConfigPair) Reset()                    { *m = ConfigPair{} }
-func (m *ConfigPair) String() string            { return proto.CompactTextString(m) }
-func (*ConfigPair) ProtoMessage()               {}
-func (*ConfigPair) Descriptor() ([]byte, []int) { return fileDescriptor5, []int{3} }
+func (m *ConfigPair) Reset()         { *m = ConfigPair{} }
+func (m *ConfigPair) String() string { return proto.CompactTextString(m) }
+func (*ConfigPair) ProtoMessage()    {}
+func (*ConfigPair) Descriptor() ([]byte, []int) {
+	return fileDescriptor_TraceAdmin_27d3226e901b26a8, []int{3}
+}
+func (m *ConfigPair) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_ConfigPair.Unmarshal(m, b)
+}
+func (m *ConfigPair) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_ConfigPair.Marshal(b, m, deterministic)
+}
+func (dst *ConfigPair) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_ConfigPair.Merge(dst, src)
+}
+func (m *ConfigPair) XXX_Size() int {
+	return xxx_messageInfo_ConfigPair.Size(m)
+}
+func (m *ConfigPair) XXX_DiscardUnknown() {
+	xxx_messageInfo_ConfigPair.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_ConfigPair proto.InternalMessageInfo
 
 func (m *ConfigPair) GetKey() string {
 	if m != nil && m.Key != nil {
@@ -89,15 +179,36 @@ func (m *ConfigPair) GetValue() string {
 }
 
 type AddSpanReceiverRequestProto struct {
-	ClassName        *string       `protobuf:"bytes,1,req,name=className" json:"className,omitempty"`
-	Config           []*ConfigPair `protobuf:"bytes,2,rep,name=config" json:"config,omitempty"`
-	XXX_unrecognized []byte        `json:"-"`
+	ClassName            *string       `protobuf:"bytes,1,req,name=className" json:"className,omitempty"`
+	Config               []*ConfigPair `protobuf:"bytes,2,rep,name=config" json:"config,omitempty"`
+	XXX_NoUnkeyedLiteral struct{}      `json:"-"`
+	XXX_unrecognized     []byte        `json:"-"`
+	XXX_sizecache        int32         `json:"-"`
 }
 
-func (m *AddSpanReceiverRequestProto) Reset()                    { *m = AddSpanReceiverRequestProto{} }
-func (m *AddSpanReceiverRequestProto) String() string            { return proto.CompactTextString(m) }
-func (*AddSpanReceiverRequestProto) ProtoMessage()               {}
-func (*AddSpanReceiverRequestProto) Descriptor() ([]byte, []int) { return fileDescriptor5, []int{4} }
+func (m *AddSpanReceiverRequestProto) Reset()         { *m = AddSpanReceiverRequestProto{} }
+func (m *AddSpanReceiverRequestProto) String() string { return proto.CompactTextString(m) }
+func (*AddSpanReceiverRequestProto) ProtoMessage()    {}
+func (*AddSpanReceiverRequestProto) Descriptor() ([]byte, []int) {
+	return fileDescriptor_TraceAdmin_27d3226e901b26a8, []int{4}
+}
+func (m *AddSpanReceiverRequestProto) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_AddSpanReceiverRequestProto.Unmarshal(m, b)
+}
+func (m *AddSpanReceiverRequestProto) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_AddSpanReceiverRequestProto.Marshal(b, m, deterministic)
+}
+func (dst *AddSpanReceiverRequestProto) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_AddSpanReceiverRequestProto.Merge(dst, src)
+}
+func (m *AddSpanReceiverRequestProto) XXX_Size() int {
+	return xxx_messageInfo_AddSpanReceiverRequestProto.Size(m)
+}
+func (m *AddSpanReceiverRequestProto) XXX_DiscardUnknown() {
+	xxx_messageInfo_AddSpanReceiverRequestProto.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_AddSpanReceiverRequestProto proto.InternalMessageInfo
 
 func (m *AddSpanReceiverRequestProto) GetClassName() string {
 	if m != nil && m.ClassName != nil {
@@ -114,14 +225,35 @@ func (m *AddSpanReceiverRequestProto) GetConfig() []*ConfigPair {
 }
 
 type AddSpanReceiverResponseProto struct {
-	Id               *int64 `protobuf:"varint,1,req,name=id" json:"id,omitempty"`
-	XXX_unrecognized []byte `json:"-"`
+	Id                   *int64   `protobuf:"varint,1,req,name=id" json:"id,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
 }
 
-func (m *AddSpanReceiverResponseProto) Reset()                    { *m = AddSpanReceiverResponseProto{} }
-func (m *AddSpanReceiverResponseProto) String() string            { return proto.CompactTextString(m) }
-func (*AddSpanReceiverResponseProto) ProtoMessage()               {}
-func (*AddSpanReceiverResponseProto) Descriptor() ([]byte, []int) { return fileDescriptor5, []int{5} }
+func (m *AddSpanReceiverResponseProto) Reset()         { *m = AddSpanReceiverResponseProto{} }
+func (m *AddSpanReceiverResponseProto) String() string { return proto.CompactTextString(m) }
+func (*AddSpanReceiverResponseProto) ProtoMessage()    {}
+func (*AddSpanReceiverResponseProto) Descriptor() ([]byte, []int) {
+	return fileDescriptor_TraceAdmin_27d3226e901b26a8, []int{5}
+}
+func (m *AddSpanReceiverResponseProto) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_AddSpanReceiverResponseProto.Unmarshal(m, b)
+}
+func (m *AddSpanReceiverResponseProto) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_AddSpanReceiverResponseProto.Marshal(b, m, deterministic)
+}
+func (dst *AddSpanReceiverResponseProto) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_AddSpanReceiverResponseProto.Merge(dst, src)
+}
+func (m *AddSpanReceiverResponseProto) XXX_Size() int {
+	return xxx_messageInfo_AddSpanReceiverResponseProto.Size(m)
+}
+func (m *AddSpanReceiverResponseProto) XXX_DiscardUnknown() {
+	xxx_messageInfo_AddSpanReceiverResponseProto.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_AddSpanReceiverResponseProto proto.InternalMessageInfo
 
 func (m *AddSpanReceiverResponseProto) GetId() int64 {
 	if m != nil && m.Id != nil {
@@ -131,14 +263,35 @@ func (m *AddSpanReceiverResponseProto) GetId() int64 {
 }
 
 type RemoveSpanReceiverRequestProto struct {
-	Id               *int64 `protobuf:"varint,1,req,name=id" json:"id,omitempty"`
-	XXX_unrecognized []byte `json:"-"`
+	Id                   *int64   `protobuf:"varint,1,req,name=id" json:"id,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
 }
 
-func (m *RemoveSpanReceiverRequestProto) Reset()                    { *m = RemoveSpanReceiverRequestProto{} }
-func (m *RemoveSpanReceiverRequestProto) String() string            { return proto.CompactTextString(m) }
-func (*RemoveSpanReceiverRequestProto) ProtoMessage()               {}
-func (*RemoveSpanReceiverRequestProto) Descriptor() ([]byte, []int) { return fileDescriptor5, []int{6} }
+func (m *RemoveSpanReceiverRequestProto) Reset()         { *m = RemoveSpanReceiverRequestProto{} }
+func (m *RemoveSpanReceiverRequestProto) String() string { return proto.CompactTextString(m) }
+func (*RemoveSpanReceiverRequestProto) ProtoMessage()    {}
+func (*RemoveSpanReceiverRequestProto) Descriptor() ([]byte, []int) {
+	return fileDescriptor_TraceAdmin_27d3226e901b26a8, []int{6}
+}
+func (m *RemoveSpanReceiverRequestProto) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_RemoveSpanReceiverRequestProto.Unmarshal(m, b)
+}
+func (m *RemoveSpanReceiverRequestProto) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_RemoveSpanReceiverRequestProto.Marshal(b, m, deterministic)
+}
+func (dst *RemoveSpanReceiverRequestProto) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_RemoveSpanReceiverRequestProto.Merge(dst, src)
+}
+func (m *RemoveSpanReceiverRequestProto) XXX_Size() int {
+	return xxx_messageInfo_RemoveSpanReceiverRequestProto.Size(m)
+}
+func (m *RemoveSpanReceiverRequestProto) XXX_DiscardUnknown() {
+	xxx_messageInfo_RemoveSpanReceiverRequestProto.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_RemoveSpanReceiverRequestProto proto.InternalMessageInfo
 
 func (m *RemoveSpanReceiverRequestProto) GetId() int64 {
 	if m != nil && m.Id != nil {
@@ -148,13 +301,34 @@ func (m *RemoveSpanReceiverRequestProto) GetId() int64 {
 }
 
 type RemoveSpanReceiverResponseProto struct {
-	XXX_unrecognized []byte `json:"-"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
 }
 
-func (m *RemoveSpanReceiverResponseProto) Reset()                    { *m = RemoveSpanReceiverResponseProto{} }
-func (m *RemoveSpanReceiverResponseProto) String() string            { return proto.CompactTextString(m) }
-func (*RemoveSpanReceiverResponseProto) ProtoMessage()               {}
-func (*RemoveSpanReceiverResponseProto) Descriptor() ([]byte, []int) { return fileDescriptor5, []int{7} }
+func (m *RemoveSpanReceiverResponseProto) Reset()         { *m = RemoveSpanReceiverResponseProto{} }
+func (m *RemoveSpanReceiverResponseProto) String() string { return proto.CompactTextString(m) }
+func (*RemoveSpanReceiverResponseProto) ProtoMessage()    {}
+func (*RemoveSpanReceiverResponseProto) Descriptor() ([]byte, []int) {
+	return fileDescriptor_TraceAdmin_27d3226e901b26a8, []int{7}
+}
+func (m *RemoveSpanReceiverResponseProto) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_RemoveSpanReceiverResponseProto.Unmarshal(m, b)
+}
+func (m *RemoveSpanReceiverResponseProto) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_RemoveSpanReceiverResponseProto.Marshal(b, m, deterministic)
+}
+func (dst *RemoveSpanReceiverResponseProto) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_RemoveSpanReceiverResponseProto.Merge(dst, src)
+}
+func (m *RemoveSpanReceiverResponseProto) XXX_Size() int {
+	return xxx_messageInfo_RemoveSpanReceiverResponseProto.Size(m)
+}
+func (m *RemoveSpanReceiverResponseProto) XXX_DiscardUnknown() {
+	xxx_messageInfo_RemoveSpanReceiverResponseProto.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_RemoveSpanReceiverResponseProto proto.InternalMessageInfo
 
 func init() {
 	proto.RegisterType((*ListSpanReceiversRequestProto)(nil), "hadoop.common.ListSpanReceiversRequestProto")
@@ -167,9 +341,9 @@ func init() {
 	proto.RegisterType((*RemoveSpanReceiverResponseProto)(nil), "hadoop.common.RemoveSpanReceiverResponseProto")
 }
 
-func init() { proto.RegisterFile("TraceAdmin.proto", fileDescriptor5) }
+func init() { proto.RegisterFile("TraceAdmin.proto", fileDescriptor_TraceAdmin_27d3226e901b26a8) }
 
-var fileDescriptor5 = []byte{
+var fileDescriptor_TraceAdmin_27d3226e901b26a8 = []byte{
 	// 385 bytes of a gzipped FileDescriptorProto
 	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0x8c, 0x92, 0xef, 0x4e, 0xea, 0x30,
 	0x18, 0xc6, 0xb3, 0x91, 0x73, 0x12, 0xde, 0xc3, 0x39, 0x07, 0x1a, 0x3e, 0x0c, 0x44, 0xc0, 0xf9,

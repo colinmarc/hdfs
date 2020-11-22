@@ -12,19 +12,44 @@ var _ = proto.Marshal
 var _ = fmt.Errorf
 var _ = math.Inf
 
+// This is a compile-time assertion to ensure that this generated file
+// is compatible with the proto package it is being compiled against.
+// A compilation error at this line likely means your copy of the
+// proto package needs to be updated.
+const _ = proto.ProtoPackageIsVersion2 // please upgrade the proto package
+
 // *
 // Request to get protocol versions for all supported rpc kinds.
 type GetProtocolVersionsRequestProto struct {
-	Protocol         *string `protobuf:"bytes,1,req,name=protocol" json:"protocol,omitempty"`
-	XXX_unrecognized []byte  `json:"-"`
+	Protocol             *string  `protobuf:"bytes,1,req,name=protocol" json:"protocol,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
 }
 
 func (m *GetProtocolVersionsRequestProto) Reset()         { *m = GetProtocolVersionsRequestProto{} }
 func (m *GetProtocolVersionsRequestProto) String() string { return proto.CompactTextString(m) }
 func (*GetProtocolVersionsRequestProto) ProtoMessage()    {}
 func (*GetProtocolVersionsRequestProto) Descriptor() ([]byte, []int) {
-	return fileDescriptor12, []int{0}
+	return fileDescriptor_ProtocolInfo_4d6fe92aef344566, []int{0}
 }
+func (m *GetProtocolVersionsRequestProto) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_GetProtocolVersionsRequestProto.Unmarshal(m, b)
+}
+func (m *GetProtocolVersionsRequestProto) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_GetProtocolVersionsRequestProto.Marshal(b, m, deterministic)
+}
+func (dst *GetProtocolVersionsRequestProto) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_GetProtocolVersionsRequestProto.Merge(dst, src)
+}
+func (m *GetProtocolVersionsRequestProto) XXX_Size() int {
+	return xxx_messageInfo_GetProtocolVersionsRequestProto.Size(m)
+}
+func (m *GetProtocolVersionsRequestProto) XXX_DiscardUnknown() {
+	xxx_messageInfo_GetProtocolVersionsRequestProto.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_GetProtocolVersionsRequestProto proto.InternalMessageInfo
 
 func (m *GetProtocolVersionsRequestProto) GetProtocol() string {
 	if m != nil && m.Protocol != nil {
@@ -36,15 +61,36 @@ func (m *GetProtocolVersionsRequestProto) GetProtocol() string {
 // *
 // Protocol version with corresponding rpc kind.
 type ProtocolVersionProto struct {
-	RpcKind          *string  `protobuf:"bytes,1,req,name=rpcKind" json:"rpcKind,omitempty"`
-	Versions         []uint64 `protobuf:"varint,2,rep,name=versions" json:"versions,omitempty"`
-	XXX_unrecognized []byte   `json:"-"`
+	RpcKind              *string  `protobuf:"bytes,1,req,name=rpcKind" json:"rpcKind,omitempty"`
+	Versions             []uint64 `protobuf:"varint,2,rep,name=versions" json:"versions,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
 }
 
-func (m *ProtocolVersionProto) Reset()                    { *m = ProtocolVersionProto{} }
-func (m *ProtocolVersionProto) String() string            { return proto.CompactTextString(m) }
-func (*ProtocolVersionProto) ProtoMessage()               {}
-func (*ProtocolVersionProto) Descriptor() ([]byte, []int) { return fileDescriptor12, []int{1} }
+func (m *ProtocolVersionProto) Reset()         { *m = ProtocolVersionProto{} }
+func (m *ProtocolVersionProto) String() string { return proto.CompactTextString(m) }
+func (*ProtocolVersionProto) ProtoMessage()    {}
+func (*ProtocolVersionProto) Descriptor() ([]byte, []int) {
+	return fileDescriptor_ProtocolInfo_4d6fe92aef344566, []int{1}
+}
+func (m *ProtocolVersionProto) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_ProtocolVersionProto.Unmarshal(m, b)
+}
+func (m *ProtocolVersionProto) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_ProtocolVersionProto.Marshal(b, m, deterministic)
+}
+func (dst *ProtocolVersionProto) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_ProtocolVersionProto.Merge(dst, src)
+}
+func (m *ProtocolVersionProto) XXX_Size() int {
+	return xxx_messageInfo_ProtocolVersionProto.Size(m)
+}
+func (m *ProtocolVersionProto) XXX_DiscardUnknown() {
+	xxx_messageInfo_ProtocolVersionProto.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_ProtocolVersionProto proto.InternalMessageInfo
 
 func (m *ProtocolVersionProto) GetRpcKind() string {
 	if m != nil && m.RpcKind != nil {
@@ -63,16 +109,35 @@ func (m *ProtocolVersionProto) GetVersions() []uint64 {
 // *
 // Get protocol version response.
 type GetProtocolVersionsResponseProto struct {
-	ProtocolVersions []*ProtocolVersionProto `protobuf:"bytes,1,rep,name=protocolVersions" json:"protocolVersions,omitempty"`
-	XXX_unrecognized []byte                  `json:"-"`
+	ProtocolVersions     []*ProtocolVersionProto `protobuf:"bytes,1,rep,name=protocolVersions" json:"protocolVersions,omitempty"`
+	XXX_NoUnkeyedLiteral struct{}                `json:"-"`
+	XXX_unrecognized     []byte                  `json:"-"`
+	XXX_sizecache        int32                   `json:"-"`
 }
 
 func (m *GetProtocolVersionsResponseProto) Reset()         { *m = GetProtocolVersionsResponseProto{} }
 func (m *GetProtocolVersionsResponseProto) String() string { return proto.CompactTextString(m) }
 func (*GetProtocolVersionsResponseProto) ProtoMessage()    {}
 func (*GetProtocolVersionsResponseProto) Descriptor() ([]byte, []int) {
-	return fileDescriptor12, []int{2}
+	return fileDescriptor_ProtocolInfo_4d6fe92aef344566, []int{2}
 }
+func (m *GetProtocolVersionsResponseProto) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_GetProtocolVersionsResponseProto.Unmarshal(m, b)
+}
+func (m *GetProtocolVersionsResponseProto) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_GetProtocolVersionsResponseProto.Marshal(b, m, deterministic)
+}
+func (dst *GetProtocolVersionsResponseProto) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_GetProtocolVersionsResponseProto.Merge(dst, src)
+}
+func (m *GetProtocolVersionsResponseProto) XXX_Size() int {
+	return xxx_messageInfo_GetProtocolVersionsResponseProto.Size(m)
+}
+func (m *GetProtocolVersionsResponseProto) XXX_DiscardUnknown() {
+	xxx_messageInfo_GetProtocolVersionsResponseProto.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_GetProtocolVersionsResponseProto proto.InternalMessageInfo
 
 func (m *GetProtocolVersionsResponseProto) GetProtocolVersions() []*ProtocolVersionProto {
 	if m != nil {
@@ -84,17 +149,36 @@ func (m *GetProtocolVersionsResponseProto) GetProtocolVersions() []*ProtocolVers
 // *
 // Get protocol signature request.
 type GetProtocolSignatureRequestProto struct {
-	Protocol         *string `protobuf:"bytes,1,req,name=protocol" json:"protocol,omitempty"`
-	RpcKind          *string `protobuf:"bytes,2,req,name=rpcKind" json:"rpcKind,omitempty"`
-	XXX_unrecognized []byte  `json:"-"`
+	Protocol             *string  `protobuf:"bytes,1,req,name=protocol" json:"protocol,omitempty"`
+	RpcKind              *string  `protobuf:"bytes,2,req,name=rpcKind" json:"rpcKind,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
 }
 
 func (m *GetProtocolSignatureRequestProto) Reset()         { *m = GetProtocolSignatureRequestProto{} }
 func (m *GetProtocolSignatureRequestProto) String() string { return proto.CompactTextString(m) }
 func (*GetProtocolSignatureRequestProto) ProtoMessage()    {}
 func (*GetProtocolSignatureRequestProto) Descriptor() ([]byte, []int) {
-	return fileDescriptor12, []int{3}
+	return fileDescriptor_ProtocolInfo_4d6fe92aef344566, []int{3}
 }
+func (m *GetProtocolSignatureRequestProto) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_GetProtocolSignatureRequestProto.Unmarshal(m, b)
+}
+func (m *GetProtocolSignatureRequestProto) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_GetProtocolSignatureRequestProto.Marshal(b, m, deterministic)
+}
+func (dst *GetProtocolSignatureRequestProto) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_GetProtocolSignatureRequestProto.Merge(dst, src)
+}
+func (m *GetProtocolSignatureRequestProto) XXX_Size() int {
+	return xxx_messageInfo_GetProtocolSignatureRequestProto.Size(m)
+}
+func (m *GetProtocolSignatureRequestProto) XXX_DiscardUnknown() {
+	xxx_messageInfo_GetProtocolSignatureRequestProto.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_GetProtocolSignatureRequestProto proto.InternalMessageInfo
 
 func (m *GetProtocolSignatureRequestProto) GetProtocol() string {
 	if m != nil && m.Protocol != nil {
@@ -113,16 +197,35 @@ func (m *GetProtocolSignatureRequestProto) GetRpcKind() string {
 // *
 // Get protocol signature response.
 type GetProtocolSignatureResponseProto struct {
-	ProtocolSignature []*ProtocolSignatureProto `protobuf:"bytes,1,rep,name=protocolSignature" json:"protocolSignature,omitempty"`
-	XXX_unrecognized  []byte                    `json:"-"`
+	ProtocolSignature    []*ProtocolSignatureProto `protobuf:"bytes,1,rep,name=protocolSignature" json:"protocolSignature,omitempty"`
+	XXX_NoUnkeyedLiteral struct{}                  `json:"-"`
+	XXX_unrecognized     []byte                    `json:"-"`
+	XXX_sizecache        int32                     `json:"-"`
 }
 
 func (m *GetProtocolSignatureResponseProto) Reset()         { *m = GetProtocolSignatureResponseProto{} }
 func (m *GetProtocolSignatureResponseProto) String() string { return proto.CompactTextString(m) }
 func (*GetProtocolSignatureResponseProto) ProtoMessage()    {}
 func (*GetProtocolSignatureResponseProto) Descriptor() ([]byte, []int) {
-	return fileDescriptor12, []int{4}
+	return fileDescriptor_ProtocolInfo_4d6fe92aef344566, []int{4}
 }
+func (m *GetProtocolSignatureResponseProto) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_GetProtocolSignatureResponseProto.Unmarshal(m, b)
+}
+func (m *GetProtocolSignatureResponseProto) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_GetProtocolSignatureResponseProto.Marshal(b, m, deterministic)
+}
+func (dst *GetProtocolSignatureResponseProto) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_GetProtocolSignatureResponseProto.Merge(dst, src)
+}
+func (m *GetProtocolSignatureResponseProto) XXX_Size() int {
+	return xxx_messageInfo_GetProtocolSignatureResponseProto.Size(m)
+}
+func (m *GetProtocolSignatureResponseProto) XXX_DiscardUnknown() {
+	xxx_messageInfo_GetProtocolSignatureResponseProto.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_GetProtocolSignatureResponseProto proto.InternalMessageInfo
 
 func (m *GetProtocolSignatureResponseProto) GetProtocolSignature() []*ProtocolSignatureProto {
 	if m != nil {
@@ -132,15 +235,36 @@ func (m *GetProtocolSignatureResponseProto) GetProtocolSignature() []*ProtocolSi
 }
 
 type ProtocolSignatureProto struct {
-	Version          *uint64  `protobuf:"varint,1,req,name=version" json:"version,omitempty"`
-	Methods          []uint32 `protobuf:"varint,2,rep,name=methods" json:"methods,omitempty"`
-	XXX_unrecognized []byte   `json:"-"`
+	Version              *uint64  `protobuf:"varint,1,req,name=version" json:"version,omitempty"`
+	Methods              []uint32 `protobuf:"varint,2,rep,name=methods" json:"methods,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
 }
 
-func (m *ProtocolSignatureProto) Reset()                    { *m = ProtocolSignatureProto{} }
-func (m *ProtocolSignatureProto) String() string            { return proto.CompactTextString(m) }
-func (*ProtocolSignatureProto) ProtoMessage()               {}
-func (*ProtocolSignatureProto) Descriptor() ([]byte, []int) { return fileDescriptor12, []int{5} }
+func (m *ProtocolSignatureProto) Reset()         { *m = ProtocolSignatureProto{} }
+func (m *ProtocolSignatureProto) String() string { return proto.CompactTextString(m) }
+func (*ProtocolSignatureProto) ProtoMessage()    {}
+func (*ProtocolSignatureProto) Descriptor() ([]byte, []int) {
+	return fileDescriptor_ProtocolInfo_4d6fe92aef344566, []int{5}
+}
+func (m *ProtocolSignatureProto) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_ProtocolSignatureProto.Unmarshal(m, b)
+}
+func (m *ProtocolSignatureProto) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_ProtocolSignatureProto.Marshal(b, m, deterministic)
+}
+func (dst *ProtocolSignatureProto) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_ProtocolSignatureProto.Merge(dst, src)
+}
+func (m *ProtocolSignatureProto) XXX_Size() int {
+	return xxx_messageInfo_ProtocolSignatureProto.Size(m)
+}
+func (m *ProtocolSignatureProto) XXX_DiscardUnknown() {
+	xxx_messageInfo_ProtocolSignatureProto.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_ProtocolSignatureProto proto.InternalMessageInfo
 
 func (m *ProtocolSignatureProto) GetVersion() uint64 {
 	if m != nil && m.Version != nil {
@@ -165,9 +289,9 @@ func init() {
 	proto.RegisterType((*ProtocolSignatureProto)(nil), "hadoop.common.ProtocolSignatureProto")
 }
 
-func init() { proto.RegisterFile("ProtocolInfo.proto", fileDescriptor12) }
+func init() { proto.RegisterFile("ProtocolInfo.proto", fileDescriptor_ProtocolInfo_4d6fe92aef344566) }
 
-var fileDescriptor12 = []byte{
+var fileDescriptor_ProtocolInfo_4d6fe92aef344566 = []byte{
 	// 339 bytes of a gzipped FileDescriptorProto
 	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0x8c, 0x53, 0x51, 0x4b, 0xf3, 0x30,
 	0x14, 0xa5, 0xdd, 0xe0, 0xfb, 0xbc, 0x32, 0xd0, 0x6e, 0x48, 0xd9, 0x83, 0xd6, 0x88, 0xb0, 0xa7,

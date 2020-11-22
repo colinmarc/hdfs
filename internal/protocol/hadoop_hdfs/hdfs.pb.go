@@ -13,6 +13,12 @@ var _ = proto.Marshal
 var _ = fmt.Errorf
 var _ = math.Inf
 
+// This is a compile-time assertion to ensure that this generated file
+// is compatible with the proto package it is being compiled against.
+// A compilation error at this line likely means your copy of the
+// proto package needs to be updated.
+const _ = proto.ProtoPackageIsVersion2 // please upgrade the proto package
+
 // *
 // Types of recognized storage media.
 type StorageTypeProto int32
@@ -53,7 +59,9 @@ func (x *StorageTypeProto) UnmarshalJSON(data []byte) error {
 	*x = StorageTypeProto(value)
 	return nil
 }
-func (StorageTypeProto) EnumDescriptor() ([]byte, []int) { return fileDescriptor8, []int{0} }
+func (StorageTypeProto) EnumDescriptor() ([]byte, []int) {
+	return fileDescriptor_hdfs_a39209040b2db4d3, []int{0}
+}
 
 // *
 // Cipher suite.
@@ -89,7 +97,9 @@ func (x *CipherSuiteProto) UnmarshalJSON(data []byte) error {
 	*x = CipherSuiteProto(value)
 	return nil
 }
-func (CipherSuiteProto) EnumDescriptor() ([]byte, []int) { return fileDescriptor8, []int{1} }
+func (CipherSuiteProto) EnumDescriptor() ([]byte, []int) {
+	return fileDescriptor_hdfs_a39209040b2db4d3, []int{1}
+}
 
 // *
 // Crypto protocol version used to access encrypted files.
@@ -125,7 +135,9 @@ func (x *CryptoProtocolVersionProto) UnmarshalJSON(data []byte) error {
 	*x = CryptoProtocolVersionProto(value)
 	return nil
 }
-func (CryptoProtocolVersionProto) EnumDescriptor() ([]byte, []int) { return fileDescriptor8, []int{2} }
+func (CryptoProtocolVersionProto) EnumDescriptor() ([]byte, []int) {
+	return fileDescriptor_hdfs_a39209040b2db4d3, []int{2}
+}
 
 // *
 // Checksum algorithms/types used in HDFS
@@ -166,7 +178,45 @@ func (x *ChecksumTypeProto) UnmarshalJSON(data []byte) error {
 	*x = ChecksumTypeProto(value)
 	return nil
 }
-func (ChecksumTypeProto) EnumDescriptor() ([]byte, []int) { return fileDescriptor8, []int{3} }
+func (ChecksumTypeProto) EnumDescriptor() ([]byte, []int) {
+	return fileDescriptor_hdfs_a39209040b2db4d3, []int{3}
+}
+
+type BlockChecksumTypeProto int32
+
+const (
+	BlockChecksumTypeProto_MD5CRC        BlockChecksumTypeProto = 1
+	BlockChecksumTypeProto_COMPOSITE_CRC BlockChecksumTypeProto = 2
+)
+
+var BlockChecksumTypeProto_name = map[int32]string{
+	1: "MD5CRC",
+	2: "COMPOSITE_CRC",
+}
+var BlockChecksumTypeProto_value = map[string]int32{
+	"MD5CRC":        1,
+	"COMPOSITE_CRC": 2,
+}
+
+func (x BlockChecksumTypeProto) Enum() *BlockChecksumTypeProto {
+	p := new(BlockChecksumTypeProto)
+	*p = x
+	return p
+}
+func (x BlockChecksumTypeProto) String() string {
+	return proto.EnumName(BlockChecksumTypeProto_name, int32(x))
+}
+func (x *BlockChecksumTypeProto) UnmarshalJSON(data []byte) error {
+	value, err := proto.UnmarshalJSONEnum(BlockChecksumTypeProto_value, data, "BlockChecksumTypeProto")
+	if err != nil {
+		return err
+	}
+	*x = BlockChecksumTypeProto(value)
+	return nil
+}
+func (BlockChecksumTypeProto) EnumDescriptor() ([]byte, []int) {
+	return fileDescriptor_hdfs_a39209040b2db4d3, []int{4}
+}
 
 type DatanodeInfoProto_AdminState int32
 
@@ -204,7 +254,7 @@ func (x *DatanodeInfoProto_AdminState) UnmarshalJSON(data []byte) error {
 	return nil
 }
 func (DatanodeInfoProto_AdminState) EnumDescriptor() ([]byte, []int) {
-	return fileDescriptor8, []int{4, 0}
+	return fileDescriptor_hdfs_a39209040b2db4d3, []int{4, 0}
 }
 
 type DatanodeStorageProto_StorageState int32
@@ -240,7 +290,7 @@ func (x *DatanodeStorageProto_StorageState) UnmarshalJSON(data []byte) error {
 	return nil
 }
 func (DatanodeStorageProto_StorageState) EnumDescriptor() ([]byte, []int) {
-	return fileDescriptor8, []int{5, 0}
+	return fileDescriptor_hdfs_a39209040b2db4d3, []int{5, 0}
 }
 
 type HdfsFileStatusProto_FileType int32
@@ -279,23 +329,44 @@ func (x *HdfsFileStatusProto_FileType) UnmarshalJSON(data []byte) error {
 	return nil
 }
 func (HdfsFileStatusProto_FileType) EnumDescriptor() ([]byte, []int) {
-	return fileDescriptor8, []int{25, 0}
+	return fileDescriptor_hdfs_a39209040b2db4d3, []int{25, 0}
 }
 
 // *
 // Extended block idenfies a block
 type ExtendedBlockProto struct {
-	PoolId           *string `protobuf:"bytes,1,req,name=poolId" json:"poolId,omitempty"`
-	BlockId          *uint64 `protobuf:"varint,2,req,name=blockId" json:"blockId,omitempty"`
-	GenerationStamp  *uint64 `protobuf:"varint,3,req,name=generationStamp" json:"generationStamp,omitempty"`
-	NumBytes         *uint64 `protobuf:"varint,4,opt,name=numBytes,def=0" json:"numBytes,omitempty"`
-	XXX_unrecognized []byte  `json:"-"`
+	PoolId               *string  `protobuf:"bytes,1,req,name=poolId" json:"poolId,omitempty"`
+	BlockId              *uint64  `protobuf:"varint,2,req,name=blockId" json:"blockId,omitempty"`
+	GenerationStamp      *uint64  `protobuf:"varint,3,req,name=generationStamp" json:"generationStamp,omitempty"`
+	NumBytes             *uint64  `protobuf:"varint,4,opt,name=numBytes,def=0" json:"numBytes,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
 }
 
-func (m *ExtendedBlockProto) Reset()                    { *m = ExtendedBlockProto{} }
-func (m *ExtendedBlockProto) String() string            { return proto.CompactTextString(m) }
-func (*ExtendedBlockProto) ProtoMessage()               {}
-func (*ExtendedBlockProto) Descriptor() ([]byte, []int) { return fileDescriptor8, []int{0} }
+func (m *ExtendedBlockProto) Reset()         { *m = ExtendedBlockProto{} }
+func (m *ExtendedBlockProto) String() string { return proto.CompactTextString(m) }
+func (*ExtendedBlockProto) ProtoMessage()    {}
+func (*ExtendedBlockProto) Descriptor() ([]byte, []int) {
+	return fileDescriptor_hdfs_a39209040b2db4d3, []int{0}
+}
+func (m *ExtendedBlockProto) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_ExtendedBlockProto.Unmarshal(m, b)
+}
+func (m *ExtendedBlockProto) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_ExtendedBlockProto.Marshal(b, m, deterministic)
+}
+func (dst *ExtendedBlockProto) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_ExtendedBlockProto.Merge(dst, src)
+}
+func (m *ExtendedBlockProto) XXX_Size() int {
+	return xxx_messageInfo_ExtendedBlockProto.Size(m)
+}
+func (m *ExtendedBlockProto) XXX_DiscardUnknown() {
+	xxx_messageInfo_ExtendedBlockProto.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_ExtendedBlockProto proto.InternalMessageInfo
 
 const Default_ExtendedBlockProto_NumBytes uint64 = 0
 
@@ -336,17 +407,38 @@ type DatanodeIDProto struct {
 	// upgraded clusters this is the same
 	// as the original StorageID of the
 	// Datanode.
-	XferPort         *uint32 `protobuf:"varint,4,req,name=xferPort" json:"xferPort,omitempty"`
-	InfoPort         *uint32 `protobuf:"varint,5,req,name=infoPort" json:"infoPort,omitempty"`
-	IpcPort          *uint32 `protobuf:"varint,6,req,name=ipcPort" json:"ipcPort,omitempty"`
-	InfoSecurePort   *uint32 `protobuf:"varint,7,opt,name=infoSecurePort,def=0" json:"infoSecurePort,omitempty"`
-	XXX_unrecognized []byte  `json:"-"`
+	XferPort             *uint32  `protobuf:"varint,4,req,name=xferPort" json:"xferPort,omitempty"`
+	InfoPort             *uint32  `protobuf:"varint,5,req,name=infoPort" json:"infoPort,omitempty"`
+	IpcPort              *uint32  `protobuf:"varint,6,req,name=ipcPort" json:"ipcPort,omitempty"`
+	InfoSecurePort       *uint32  `protobuf:"varint,7,opt,name=infoSecurePort,def=0" json:"infoSecurePort,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
 }
 
-func (m *DatanodeIDProto) Reset()                    { *m = DatanodeIDProto{} }
-func (m *DatanodeIDProto) String() string            { return proto.CompactTextString(m) }
-func (*DatanodeIDProto) ProtoMessage()               {}
-func (*DatanodeIDProto) Descriptor() ([]byte, []int) { return fileDescriptor8, []int{1} }
+func (m *DatanodeIDProto) Reset()         { *m = DatanodeIDProto{} }
+func (m *DatanodeIDProto) String() string { return proto.CompactTextString(m) }
+func (*DatanodeIDProto) ProtoMessage()    {}
+func (*DatanodeIDProto) Descriptor() ([]byte, []int) {
+	return fileDescriptor_hdfs_a39209040b2db4d3, []int{1}
+}
+func (m *DatanodeIDProto) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_DatanodeIDProto.Unmarshal(m, b)
+}
+func (m *DatanodeIDProto) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_DatanodeIDProto.Marshal(b, m, deterministic)
+}
+func (dst *DatanodeIDProto) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_DatanodeIDProto.Merge(dst, src)
+}
+func (m *DatanodeIDProto) XXX_Size() int {
+	return xxx_messageInfo_DatanodeIDProto.Size(m)
+}
+func (m *DatanodeIDProto) XXX_DiscardUnknown() {
+	xxx_messageInfo_DatanodeIDProto.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_DatanodeIDProto proto.InternalMessageInfo
 
 const Default_DatanodeIDProto_InfoSecurePort uint32 = 0
 
@@ -402,16 +494,37 @@ func (m *DatanodeIDProto) GetInfoSecurePort() uint32 {
 // *
 // Datanode local information
 type DatanodeLocalInfoProto struct {
-	SoftwareVersion  *string `protobuf:"bytes,1,req,name=softwareVersion" json:"softwareVersion,omitempty"`
-	ConfigVersion    *string `protobuf:"bytes,2,req,name=configVersion" json:"configVersion,omitempty"`
-	Uptime           *uint64 `protobuf:"varint,3,req,name=uptime" json:"uptime,omitempty"`
-	XXX_unrecognized []byte  `json:"-"`
+	SoftwareVersion      *string  `protobuf:"bytes,1,req,name=softwareVersion" json:"softwareVersion,omitempty"`
+	ConfigVersion        *string  `protobuf:"bytes,2,req,name=configVersion" json:"configVersion,omitempty"`
+	Uptime               *uint64  `protobuf:"varint,3,req,name=uptime" json:"uptime,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
 }
 
-func (m *DatanodeLocalInfoProto) Reset()                    { *m = DatanodeLocalInfoProto{} }
-func (m *DatanodeLocalInfoProto) String() string            { return proto.CompactTextString(m) }
-func (*DatanodeLocalInfoProto) ProtoMessage()               {}
-func (*DatanodeLocalInfoProto) Descriptor() ([]byte, []int) { return fileDescriptor8, []int{2} }
+func (m *DatanodeLocalInfoProto) Reset()         { *m = DatanodeLocalInfoProto{} }
+func (m *DatanodeLocalInfoProto) String() string { return proto.CompactTextString(m) }
+func (*DatanodeLocalInfoProto) ProtoMessage()    {}
+func (*DatanodeLocalInfoProto) Descriptor() ([]byte, []int) {
+	return fileDescriptor_hdfs_a39209040b2db4d3, []int{2}
+}
+func (m *DatanodeLocalInfoProto) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_DatanodeLocalInfoProto.Unmarshal(m, b)
+}
+func (m *DatanodeLocalInfoProto) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_DatanodeLocalInfoProto.Marshal(b, m, deterministic)
+}
+func (dst *DatanodeLocalInfoProto) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_DatanodeLocalInfoProto.Merge(dst, src)
+}
+func (m *DatanodeLocalInfoProto) XXX_Size() int {
+	return xxx_messageInfo_DatanodeLocalInfoProto.Size(m)
+}
+func (m *DatanodeLocalInfoProto) XXX_DiscardUnknown() {
+	xxx_messageInfo_DatanodeLocalInfoProto.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_DatanodeLocalInfoProto proto.InternalMessageInfo
 
 func (m *DatanodeLocalInfoProto) GetSoftwareVersion() string {
 	if m != nil && m.SoftwareVersion != nil {
@@ -437,14 +550,35 @@ func (m *DatanodeLocalInfoProto) GetUptime() uint64 {
 // *
 // DatanodeInfo array
 type DatanodeInfosProto struct {
-	Datanodes        []*DatanodeInfoProto `protobuf:"bytes,1,rep,name=datanodes" json:"datanodes,omitempty"`
-	XXX_unrecognized []byte               `json:"-"`
+	Datanodes            []*DatanodeInfoProto `protobuf:"bytes,1,rep,name=datanodes" json:"datanodes,omitempty"`
+	XXX_NoUnkeyedLiteral struct{}             `json:"-"`
+	XXX_unrecognized     []byte               `json:"-"`
+	XXX_sizecache        int32                `json:"-"`
 }
 
-func (m *DatanodeInfosProto) Reset()                    { *m = DatanodeInfosProto{} }
-func (m *DatanodeInfosProto) String() string            { return proto.CompactTextString(m) }
-func (*DatanodeInfosProto) ProtoMessage()               {}
-func (*DatanodeInfosProto) Descriptor() ([]byte, []int) { return fileDescriptor8, []int{3} }
+func (m *DatanodeInfosProto) Reset()         { *m = DatanodeInfosProto{} }
+func (m *DatanodeInfosProto) String() string { return proto.CompactTextString(m) }
+func (*DatanodeInfosProto) ProtoMessage()    {}
+func (*DatanodeInfosProto) Descriptor() ([]byte, []int) {
+	return fileDescriptor_hdfs_a39209040b2db4d3, []int{3}
+}
+func (m *DatanodeInfosProto) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_DatanodeInfosProto.Unmarshal(m, b)
+}
+func (m *DatanodeInfosProto) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_DatanodeInfosProto.Marshal(b, m, deterministic)
+}
+func (dst *DatanodeInfosProto) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_DatanodeInfosProto.Merge(dst, src)
+}
+func (m *DatanodeInfosProto) XXX_Size() int {
+	return xxx_messageInfo_DatanodeInfosProto.Size(m)
+}
+func (m *DatanodeInfosProto) XXX_DiscardUnknown() {
+	xxx_messageInfo_DatanodeInfosProto.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_DatanodeInfosProto proto.InternalMessageInfo
 
 func (m *DatanodeInfosProto) GetDatanodes() []*DatanodeInfoProto {
 	if m != nil {
@@ -456,26 +590,47 @@ func (m *DatanodeInfosProto) GetDatanodes() []*DatanodeInfoProto {
 // *
 // The status of a Datanode
 type DatanodeInfoProto struct {
-	Id                  *DatanodeIDProto              `protobuf:"bytes,1,req,name=id" json:"id,omitempty"`
-	Capacity            *uint64                       `protobuf:"varint,2,opt,name=capacity,def=0" json:"capacity,omitempty"`
-	DfsUsed             *uint64                       `protobuf:"varint,3,opt,name=dfsUsed,def=0" json:"dfsUsed,omitempty"`
-	Remaining           *uint64                       `protobuf:"varint,4,opt,name=remaining,def=0" json:"remaining,omitempty"`
-	BlockPoolUsed       *uint64                       `protobuf:"varint,5,opt,name=blockPoolUsed,def=0" json:"blockPoolUsed,omitempty"`
-	LastUpdate          *uint64                       `protobuf:"varint,6,opt,name=lastUpdate,def=0" json:"lastUpdate,omitempty"`
-	XceiverCount        *uint32                       `protobuf:"varint,7,opt,name=xceiverCount,def=0" json:"xceiverCount,omitempty"`
-	Location            *string                       `protobuf:"bytes,8,opt,name=location" json:"location,omitempty"`
-	AdminState          *DatanodeInfoProto_AdminState `protobuf:"varint,10,opt,name=adminState,enum=hadoop.hdfs.DatanodeInfoProto_AdminState,def=0" json:"adminState,omitempty"`
-	CacheCapacity       *uint64                       `protobuf:"varint,11,opt,name=cacheCapacity,def=0" json:"cacheCapacity,omitempty"`
-	CacheUsed           *uint64                       `protobuf:"varint,12,opt,name=cacheUsed,def=0" json:"cacheUsed,omitempty"`
-	LastUpdateMonotonic *uint64                       `protobuf:"varint,13,opt,name=lastUpdateMonotonic,def=0" json:"lastUpdateMonotonic,omitempty"`
-	UpgradeDomain       *string                       `protobuf:"bytes,14,opt,name=upgradeDomain" json:"upgradeDomain,omitempty"`
-	XXX_unrecognized    []byte                        `json:"-"`
+	Id                   *DatanodeIDProto              `protobuf:"bytes,1,req,name=id" json:"id,omitempty"`
+	Capacity             *uint64                       `protobuf:"varint,2,opt,name=capacity,def=0" json:"capacity,omitempty"`
+	DfsUsed              *uint64                       `protobuf:"varint,3,opt,name=dfsUsed,def=0" json:"dfsUsed,omitempty"`
+	Remaining            *uint64                       `protobuf:"varint,4,opt,name=remaining,def=0" json:"remaining,omitempty"`
+	BlockPoolUsed        *uint64                       `protobuf:"varint,5,opt,name=blockPoolUsed,def=0" json:"blockPoolUsed,omitempty"`
+	LastUpdate           *uint64                       `protobuf:"varint,6,opt,name=lastUpdate,def=0" json:"lastUpdate,omitempty"`
+	XceiverCount         *uint32                       `protobuf:"varint,7,opt,name=xceiverCount,def=0" json:"xceiverCount,omitempty"`
+	Location             *string                       `protobuf:"bytes,8,opt,name=location" json:"location,omitempty"`
+	AdminState           *DatanodeInfoProto_AdminState `protobuf:"varint,10,opt,name=adminState,enum=hadoop.hdfs.DatanodeInfoProto_AdminState,def=0" json:"adminState,omitempty"`
+	CacheCapacity        *uint64                       `protobuf:"varint,11,opt,name=cacheCapacity,def=0" json:"cacheCapacity,omitempty"`
+	CacheUsed            *uint64                       `protobuf:"varint,12,opt,name=cacheUsed,def=0" json:"cacheUsed,omitempty"`
+	LastUpdateMonotonic  *uint64                       `protobuf:"varint,13,opt,name=lastUpdateMonotonic,def=0" json:"lastUpdateMonotonic,omitempty"`
+	UpgradeDomain        *string                       `protobuf:"bytes,14,opt,name=upgradeDomain" json:"upgradeDomain,omitempty"`
+	XXX_NoUnkeyedLiteral struct{}                      `json:"-"`
+	XXX_unrecognized     []byte                        `json:"-"`
+	XXX_sizecache        int32                         `json:"-"`
 }
 
-func (m *DatanodeInfoProto) Reset()                    { *m = DatanodeInfoProto{} }
-func (m *DatanodeInfoProto) String() string            { return proto.CompactTextString(m) }
-func (*DatanodeInfoProto) ProtoMessage()               {}
-func (*DatanodeInfoProto) Descriptor() ([]byte, []int) { return fileDescriptor8, []int{4} }
+func (m *DatanodeInfoProto) Reset()         { *m = DatanodeInfoProto{} }
+func (m *DatanodeInfoProto) String() string { return proto.CompactTextString(m) }
+func (*DatanodeInfoProto) ProtoMessage()    {}
+func (*DatanodeInfoProto) Descriptor() ([]byte, []int) {
+	return fileDescriptor_hdfs_a39209040b2db4d3, []int{4}
+}
+func (m *DatanodeInfoProto) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_DatanodeInfoProto.Unmarshal(m, b)
+}
+func (m *DatanodeInfoProto) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_DatanodeInfoProto.Marshal(b, m, deterministic)
+}
+func (dst *DatanodeInfoProto) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_DatanodeInfoProto.Merge(dst, src)
+}
+func (m *DatanodeInfoProto) XXX_Size() int {
+	return xxx_messageInfo_DatanodeInfoProto.Size(m)
+}
+func (m *DatanodeInfoProto) XXX_DiscardUnknown() {
+	xxx_messageInfo_DatanodeInfoProto.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_DatanodeInfoProto proto.InternalMessageInfo
 
 const Default_DatanodeInfoProto_Capacity uint64 = 0
 const Default_DatanodeInfoProto_DfsUsed uint64 = 0
@@ -582,16 +737,37 @@ func (m *DatanodeInfoProto) GetUpgradeDomain() string {
 // *
 // Represents a storage available on the datanode
 type DatanodeStorageProto struct {
-	StorageUuid      *string                            `protobuf:"bytes,1,req,name=storageUuid" json:"storageUuid,omitempty"`
-	State            *DatanodeStorageProto_StorageState `protobuf:"varint,2,opt,name=state,enum=hadoop.hdfs.DatanodeStorageProto_StorageState,def=0" json:"state,omitempty"`
-	StorageType      *StorageTypeProto                  `protobuf:"varint,3,opt,name=storageType,enum=hadoop.hdfs.StorageTypeProto,def=1" json:"storageType,omitempty"`
-	XXX_unrecognized []byte                             `json:"-"`
+	StorageUuid          *string                            `protobuf:"bytes,1,req,name=storageUuid" json:"storageUuid,omitempty"`
+	State                *DatanodeStorageProto_StorageState `protobuf:"varint,2,opt,name=state,enum=hadoop.hdfs.DatanodeStorageProto_StorageState,def=0" json:"state,omitempty"`
+	StorageType          *StorageTypeProto                  `protobuf:"varint,3,opt,name=storageType,enum=hadoop.hdfs.StorageTypeProto,def=1" json:"storageType,omitempty"`
+	XXX_NoUnkeyedLiteral struct{}                           `json:"-"`
+	XXX_unrecognized     []byte                             `json:"-"`
+	XXX_sizecache        int32                              `json:"-"`
 }
 
-func (m *DatanodeStorageProto) Reset()                    { *m = DatanodeStorageProto{} }
-func (m *DatanodeStorageProto) String() string            { return proto.CompactTextString(m) }
-func (*DatanodeStorageProto) ProtoMessage()               {}
-func (*DatanodeStorageProto) Descriptor() ([]byte, []int) { return fileDescriptor8, []int{5} }
+func (m *DatanodeStorageProto) Reset()         { *m = DatanodeStorageProto{} }
+func (m *DatanodeStorageProto) String() string { return proto.CompactTextString(m) }
+func (*DatanodeStorageProto) ProtoMessage()    {}
+func (*DatanodeStorageProto) Descriptor() ([]byte, []int) {
+	return fileDescriptor_hdfs_a39209040b2db4d3, []int{5}
+}
+func (m *DatanodeStorageProto) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_DatanodeStorageProto.Unmarshal(m, b)
+}
+func (m *DatanodeStorageProto) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_DatanodeStorageProto.Marshal(b, m, deterministic)
+}
+func (dst *DatanodeStorageProto) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_DatanodeStorageProto.Merge(dst, src)
+}
+func (m *DatanodeStorageProto) XXX_Size() int {
+	return xxx_messageInfo_DatanodeStorageProto.Size(m)
+}
+func (m *DatanodeStorageProto) XXX_DiscardUnknown() {
+	xxx_messageInfo_DatanodeStorageProto.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_DatanodeStorageProto proto.InternalMessageInfo
 
 const Default_DatanodeStorageProto_State DatanodeStorageProto_StorageState = DatanodeStorageProto_NORMAL
 const Default_DatanodeStorageProto_StorageType StorageTypeProto = StorageTypeProto_DISK
@@ -618,20 +794,41 @@ func (m *DatanodeStorageProto) GetStorageType() StorageTypeProto {
 }
 
 type StorageReportProto struct {
-	StorageUuid      *string               `protobuf:"bytes,1,req,name=storageUuid" json:"storageUuid,omitempty"`
-	Failed           *bool                 `protobuf:"varint,2,opt,name=failed,def=0" json:"failed,omitempty"`
-	Capacity         *uint64               `protobuf:"varint,3,opt,name=capacity,def=0" json:"capacity,omitempty"`
-	DfsUsed          *uint64               `protobuf:"varint,4,opt,name=dfsUsed,def=0" json:"dfsUsed,omitempty"`
-	Remaining        *uint64               `protobuf:"varint,5,opt,name=remaining,def=0" json:"remaining,omitempty"`
-	BlockPoolUsed    *uint64               `protobuf:"varint,6,opt,name=blockPoolUsed,def=0" json:"blockPoolUsed,omitempty"`
-	Storage          *DatanodeStorageProto `protobuf:"bytes,7,opt,name=storage" json:"storage,omitempty"`
-	XXX_unrecognized []byte                `json:"-"`
+	StorageUuid          *string               `protobuf:"bytes,1,req,name=storageUuid" json:"storageUuid,omitempty"` // Deprecated: Do not use.
+	Failed               *bool                 `protobuf:"varint,2,opt,name=failed,def=0" json:"failed,omitempty"`
+	Capacity             *uint64               `protobuf:"varint,3,opt,name=capacity,def=0" json:"capacity,omitempty"`
+	DfsUsed              *uint64               `protobuf:"varint,4,opt,name=dfsUsed,def=0" json:"dfsUsed,omitempty"`
+	Remaining            *uint64               `protobuf:"varint,5,opt,name=remaining,def=0" json:"remaining,omitempty"`
+	BlockPoolUsed        *uint64               `protobuf:"varint,6,opt,name=blockPoolUsed,def=0" json:"blockPoolUsed,omitempty"`
+	Storage              *DatanodeStorageProto `protobuf:"bytes,7,opt,name=storage" json:"storage,omitempty"`
+	XXX_NoUnkeyedLiteral struct{}              `json:"-"`
+	XXX_unrecognized     []byte                `json:"-"`
+	XXX_sizecache        int32                 `json:"-"`
 }
 
-func (m *StorageReportProto) Reset()                    { *m = StorageReportProto{} }
-func (m *StorageReportProto) String() string            { return proto.CompactTextString(m) }
-func (*StorageReportProto) ProtoMessage()               {}
-func (*StorageReportProto) Descriptor() ([]byte, []int) { return fileDescriptor8, []int{6} }
+func (m *StorageReportProto) Reset()         { *m = StorageReportProto{} }
+func (m *StorageReportProto) String() string { return proto.CompactTextString(m) }
+func (*StorageReportProto) ProtoMessage()    {}
+func (*StorageReportProto) Descriptor() ([]byte, []int) {
+	return fileDescriptor_hdfs_a39209040b2db4d3, []int{6}
+}
+func (m *StorageReportProto) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_StorageReportProto.Unmarshal(m, b)
+}
+func (m *StorageReportProto) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_StorageReportProto.Marshal(b, m, deterministic)
+}
+func (dst *StorageReportProto) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_StorageReportProto.Merge(dst, src)
+}
+func (m *StorageReportProto) XXX_Size() int {
+	return xxx_messageInfo_StorageReportProto.Size(m)
+}
+func (m *StorageReportProto) XXX_DiscardUnknown() {
+	xxx_messageInfo_StorageReportProto.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_StorageReportProto proto.InternalMessageInfo
 
 const Default_StorageReportProto_Failed bool = false
 const Default_StorageReportProto_Capacity uint64 = 0
@@ -639,6 +836,7 @@ const Default_StorageReportProto_DfsUsed uint64 = 0
 const Default_StorageReportProto_Remaining uint64 = 0
 const Default_StorageReportProto_BlockPoolUsed uint64 = 0
 
+// Deprecated: Do not use.
 func (m *StorageReportProto) GetStorageUuid() string {
 	if m != nil && m.StorageUuid != nil {
 		return *m.StorageUuid
@@ -691,20 +889,41 @@ func (m *StorageReportProto) GetStorage() *DatanodeStorageProto {
 // *
 // Summary of a file or directory
 type ContentSummaryProto struct {
-	Length           *uint64                     `protobuf:"varint,1,req,name=length" json:"length,omitempty"`
-	FileCount        *uint64                     `protobuf:"varint,2,req,name=fileCount" json:"fileCount,omitempty"`
-	DirectoryCount   *uint64                     `protobuf:"varint,3,req,name=directoryCount" json:"directoryCount,omitempty"`
-	Quota            *uint64                     `protobuf:"varint,4,req,name=quota" json:"quota,omitempty"`
-	SpaceConsumed    *uint64                     `protobuf:"varint,5,req,name=spaceConsumed" json:"spaceConsumed,omitempty"`
-	SpaceQuota       *uint64                     `protobuf:"varint,6,req,name=spaceQuota" json:"spaceQuota,omitempty"`
-	TypeQuotaInfos   *StorageTypeQuotaInfosProto `protobuf:"bytes,7,opt,name=typeQuotaInfos" json:"typeQuotaInfos,omitempty"`
-	XXX_unrecognized []byte                      `json:"-"`
+	Length               *uint64                     `protobuf:"varint,1,req,name=length" json:"length,omitempty"`
+	FileCount            *uint64                     `protobuf:"varint,2,req,name=fileCount" json:"fileCount,omitempty"`
+	DirectoryCount       *uint64                     `protobuf:"varint,3,req,name=directoryCount" json:"directoryCount,omitempty"`
+	Quota                *uint64                     `protobuf:"varint,4,req,name=quota" json:"quota,omitempty"`
+	SpaceConsumed        *uint64                     `protobuf:"varint,5,req,name=spaceConsumed" json:"spaceConsumed,omitempty"`
+	SpaceQuota           *uint64                     `protobuf:"varint,6,req,name=spaceQuota" json:"spaceQuota,omitempty"`
+	TypeQuotaInfos       *StorageTypeQuotaInfosProto `protobuf:"bytes,7,opt,name=typeQuotaInfos" json:"typeQuotaInfos,omitempty"`
+	XXX_NoUnkeyedLiteral struct{}                    `json:"-"`
+	XXX_unrecognized     []byte                      `json:"-"`
+	XXX_sizecache        int32                       `json:"-"`
 }
 
-func (m *ContentSummaryProto) Reset()                    { *m = ContentSummaryProto{} }
-func (m *ContentSummaryProto) String() string            { return proto.CompactTextString(m) }
-func (*ContentSummaryProto) ProtoMessage()               {}
-func (*ContentSummaryProto) Descriptor() ([]byte, []int) { return fileDescriptor8, []int{7} }
+func (m *ContentSummaryProto) Reset()         { *m = ContentSummaryProto{} }
+func (m *ContentSummaryProto) String() string { return proto.CompactTextString(m) }
+func (*ContentSummaryProto) ProtoMessage()    {}
+func (*ContentSummaryProto) Descriptor() ([]byte, []int) {
+	return fileDescriptor_hdfs_a39209040b2db4d3, []int{7}
+}
+func (m *ContentSummaryProto) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_ContentSummaryProto.Unmarshal(m, b)
+}
+func (m *ContentSummaryProto) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_ContentSummaryProto.Marshal(b, m, deterministic)
+}
+func (dst *ContentSummaryProto) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_ContentSummaryProto.Merge(dst, src)
+}
+func (m *ContentSummaryProto) XXX_Size() int {
+	return xxx_messageInfo_ContentSummaryProto.Size(m)
+}
+func (m *ContentSummaryProto) XXX_DiscardUnknown() {
+	xxx_messageInfo_ContentSummaryProto.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_ContentSummaryProto proto.InternalMessageInfo
 
 func (m *ContentSummaryProto) GetLength() uint64 {
 	if m != nil && m.Length != nil {
@@ -763,13 +982,34 @@ type QuotaUsageProto struct {
 	SpaceConsumed         *uint64                     `protobuf:"varint,3,req,name=spaceConsumed" json:"spaceConsumed,omitempty"`
 	SpaceQuota            *uint64                     `protobuf:"varint,4,req,name=spaceQuota" json:"spaceQuota,omitempty"`
 	TypeQuotaInfos        *StorageTypeQuotaInfosProto `protobuf:"bytes,5,opt,name=typeQuotaInfos" json:"typeQuotaInfos,omitempty"`
+	XXX_NoUnkeyedLiteral  struct{}                    `json:"-"`
 	XXX_unrecognized      []byte                      `json:"-"`
+	XXX_sizecache         int32                       `json:"-"`
 }
 
-func (m *QuotaUsageProto) Reset()                    { *m = QuotaUsageProto{} }
-func (m *QuotaUsageProto) String() string            { return proto.CompactTextString(m) }
-func (*QuotaUsageProto) ProtoMessage()               {}
-func (*QuotaUsageProto) Descriptor() ([]byte, []int) { return fileDescriptor8, []int{8} }
+func (m *QuotaUsageProto) Reset()         { *m = QuotaUsageProto{} }
+func (m *QuotaUsageProto) String() string { return proto.CompactTextString(m) }
+func (*QuotaUsageProto) ProtoMessage()    {}
+func (*QuotaUsageProto) Descriptor() ([]byte, []int) {
+	return fileDescriptor_hdfs_a39209040b2db4d3, []int{8}
+}
+func (m *QuotaUsageProto) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_QuotaUsageProto.Unmarshal(m, b)
+}
+func (m *QuotaUsageProto) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_QuotaUsageProto.Marshal(b, m, deterministic)
+}
+func (dst *QuotaUsageProto) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_QuotaUsageProto.Merge(dst, src)
+}
+func (m *QuotaUsageProto) XXX_Size() int {
+	return xxx_messageInfo_QuotaUsageProto.Size(m)
+}
+func (m *QuotaUsageProto) XXX_DiscardUnknown() {
+	xxx_messageInfo_QuotaUsageProto.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_QuotaUsageProto proto.InternalMessageInfo
 
 func (m *QuotaUsageProto) GetFileAndDirectoryCount() uint64 {
 	if m != nil && m.FileAndDirectoryCount != nil {
@@ -809,14 +1049,35 @@ func (m *QuotaUsageProto) GetTypeQuotaInfos() *StorageTypeQuotaInfosProto {
 // *
 // Storage type quota and usage information of a file or directory
 type StorageTypeQuotaInfosProto struct {
-	TypeQuotaInfo    []*StorageTypeQuotaInfoProto `protobuf:"bytes,1,rep,name=typeQuotaInfo" json:"typeQuotaInfo,omitempty"`
-	XXX_unrecognized []byte                       `json:"-"`
+	TypeQuotaInfo        []*StorageTypeQuotaInfoProto `protobuf:"bytes,1,rep,name=typeQuotaInfo" json:"typeQuotaInfo,omitempty"`
+	XXX_NoUnkeyedLiteral struct{}                     `json:"-"`
+	XXX_unrecognized     []byte                       `json:"-"`
+	XXX_sizecache        int32                        `json:"-"`
 }
 
-func (m *StorageTypeQuotaInfosProto) Reset()                    { *m = StorageTypeQuotaInfosProto{} }
-func (m *StorageTypeQuotaInfosProto) String() string            { return proto.CompactTextString(m) }
-func (*StorageTypeQuotaInfosProto) ProtoMessage()               {}
-func (*StorageTypeQuotaInfosProto) Descriptor() ([]byte, []int) { return fileDescriptor8, []int{9} }
+func (m *StorageTypeQuotaInfosProto) Reset()         { *m = StorageTypeQuotaInfosProto{} }
+func (m *StorageTypeQuotaInfosProto) String() string { return proto.CompactTextString(m) }
+func (*StorageTypeQuotaInfosProto) ProtoMessage()    {}
+func (*StorageTypeQuotaInfosProto) Descriptor() ([]byte, []int) {
+	return fileDescriptor_hdfs_a39209040b2db4d3, []int{9}
+}
+func (m *StorageTypeQuotaInfosProto) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_StorageTypeQuotaInfosProto.Unmarshal(m, b)
+}
+func (m *StorageTypeQuotaInfosProto) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_StorageTypeQuotaInfosProto.Marshal(b, m, deterministic)
+}
+func (dst *StorageTypeQuotaInfosProto) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_StorageTypeQuotaInfosProto.Merge(dst, src)
+}
+func (m *StorageTypeQuotaInfosProto) XXX_Size() int {
+	return xxx_messageInfo_StorageTypeQuotaInfosProto.Size(m)
+}
+func (m *StorageTypeQuotaInfosProto) XXX_DiscardUnknown() {
+	xxx_messageInfo_StorageTypeQuotaInfosProto.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_StorageTypeQuotaInfosProto proto.InternalMessageInfo
 
 func (m *StorageTypeQuotaInfosProto) GetTypeQuotaInfo() []*StorageTypeQuotaInfoProto {
 	if m != nil {
@@ -826,16 +1087,37 @@ func (m *StorageTypeQuotaInfosProto) GetTypeQuotaInfo() []*StorageTypeQuotaInfoP
 }
 
 type StorageTypeQuotaInfoProto struct {
-	Type             *StorageTypeProto `protobuf:"varint,1,req,name=type,enum=hadoop.hdfs.StorageTypeProto" json:"type,omitempty"`
-	Quota            *uint64           `protobuf:"varint,2,req,name=quota" json:"quota,omitempty"`
-	Consumed         *uint64           `protobuf:"varint,3,req,name=consumed" json:"consumed,omitempty"`
-	XXX_unrecognized []byte            `json:"-"`
+	Type                 *StorageTypeProto `protobuf:"varint,1,req,name=type,enum=hadoop.hdfs.StorageTypeProto" json:"type,omitempty"`
+	Quota                *uint64           `protobuf:"varint,2,req,name=quota" json:"quota,omitempty"`
+	Consumed             *uint64           `protobuf:"varint,3,req,name=consumed" json:"consumed,omitempty"`
+	XXX_NoUnkeyedLiteral struct{}          `json:"-"`
+	XXX_unrecognized     []byte            `json:"-"`
+	XXX_sizecache        int32             `json:"-"`
 }
 
-func (m *StorageTypeQuotaInfoProto) Reset()                    { *m = StorageTypeQuotaInfoProto{} }
-func (m *StorageTypeQuotaInfoProto) String() string            { return proto.CompactTextString(m) }
-func (*StorageTypeQuotaInfoProto) ProtoMessage()               {}
-func (*StorageTypeQuotaInfoProto) Descriptor() ([]byte, []int) { return fileDescriptor8, []int{10} }
+func (m *StorageTypeQuotaInfoProto) Reset()         { *m = StorageTypeQuotaInfoProto{} }
+func (m *StorageTypeQuotaInfoProto) String() string { return proto.CompactTextString(m) }
+func (*StorageTypeQuotaInfoProto) ProtoMessage()    {}
+func (*StorageTypeQuotaInfoProto) Descriptor() ([]byte, []int) {
+	return fileDescriptor_hdfs_a39209040b2db4d3, []int{10}
+}
+func (m *StorageTypeQuotaInfoProto) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_StorageTypeQuotaInfoProto.Unmarshal(m, b)
+}
+func (m *StorageTypeQuotaInfoProto) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_StorageTypeQuotaInfoProto.Marshal(b, m, deterministic)
+}
+func (dst *StorageTypeQuotaInfoProto) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_StorageTypeQuotaInfoProto.Merge(dst, src)
+}
+func (m *StorageTypeQuotaInfoProto) XXX_Size() int {
+	return xxx_messageInfo_StorageTypeQuotaInfoProto.Size(m)
+}
+func (m *StorageTypeQuotaInfoProto) XXX_DiscardUnknown() {
+	xxx_messageInfo_StorageTypeQuotaInfoProto.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_StorageTypeQuotaInfoProto proto.InternalMessageInfo
 
 func (m *StorageTypeQuotaInfoProto) GetType() StorageTypeProto {
 	if m != nil && m.Type != nil {
@@ -863,15 +1145,36 @@ func (m *StorageTypeQuotaInfoProto) GetConsumed() uint64 {
 // used for iterative calls to NameNode.listCorruptFileBlocks.
 //
 type CorruptFileBlocksProto struct {
-	Files            []string `protobuf:"bytes,1,rep,name=files" json:"files,omitempty"`
-	Cookie           *string  `protobuf:"bytes,2,req,name=cookie" json:"cookie,omitempty"`
-	XXX_unrecognized []byte   `json:"-"`
+	Files                []string `protobuf:"bytes,1,rep,name=files" json:"files,omitempty"`
+	Cookie               *string  `protobuf:"bytes,2,req,name=cookie" json:"cookie,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
 }
 
-func (m *CorruptFileBlocksProto) Reset()                    { *m = CorruptFileBlocksProto{} }
-func (m *CorruptFileBlocksProto) String() string            { return proto.CompactTextString(m) }
-func (*CorruptFileBlocksProto) ProtoMessage()               {}
-func (*CorruptFileBlocksProto) Descriptor() ([]byte, []int) { return fileDescriptor8, []int{11} }
+func (m *CorruptFileBlocksProto) Reset()         { *m = CorruptFileBlocksProto{} }
+func (m *CorruptFileBlocksProto) String() string { return proto.CompactTextString(m) }
+func (*CorruptFileBlocksProto) ProtoMessage()    {}
+func (*CorruptFileBlocksProto) Descriptor() ([]byte, []int) {
+	return fileDescriptor_hdfs_a39209040b2db4d3, []int{11}
+}
+func (m *CorruptFileBlocksProto) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_CorruptFileBlocksProto.Unmarshal(m, b)
+}
+func (m *CorruptFileBlocksProto) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_CorruptFileBlocksProto.Marshal(b, m, deterministic)
+}
+func (dst *CorruptFileBlocksProto) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_CorruptFileBlocksProto.Merge(dst, src)
+}
+func (m *CorruptFileBlocksProto) XXX_Size() int {
+	return xxx_messageInfo_CorruptFileBlocksProto.Size(m)
+}
+func (m *CorruptFileBlocksProto) XXX_DiscardUnknown() {
+	xxx_messageInfo_CorruptFileBlocksProto.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_CorruptFileBlocksProto proto.InternalMessageInfo
 
 func (m *CorruptFileBlocksProto) GetFiles() []string {
 	if m != nil {
@@ -890,14 +1193,35 @@ func (m *CorruptFileBlocksProto) GetCookie() string {
 // *
 // File or Directory permision - same spec as posix
 type FsPermissionProto struct {
-	Perm             *uint32 `protobuf:"varint,1,req,name=perm" json:"perm,omitempty"`
-	XXX_unrecognized []byte  `json:"-"`
+	Perm                 *uint32  `protobuf:"varint,1,req,name=perm" json:"perm,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
 }
 
-func (m *FsPermissionProto) Reset()                    { *m = FsPermissionProto{} }
-func (m *FsPermissionProto) String() string            { return proto.CompactTextString(m) }
-func (*FsPermissionProto) ProtoMessage()               {}
-func (*FsPermissionProto) Descriptor() ([]byte, []int) { return fileDescriptor8, []int{12} }
+func (m *FsPermissionProto) Reset()         { *m = FsPermissionProto{} }
+func (m *FsPermissionProto) String() string { return proto.CompactTextString(m) }
+func (*FsPermissionProto) ProtoMessage()    {}
+func (*FsPermissionProto) Descriptor() ([]byte, []int) {
+	return fileDescriptor_hdfs_a39209040b2db4d3, []int{12}
+}
+func (m *FsPermissionProto) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_FsPermissionProto.Unmarshal(m, b)
+}
+func (m *FsPermissionProto) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_FsPermissionProto.Marshal(b, m, deterministic)
+}
+func (dst *FsPermissionProto) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_FsPermissionProto.Merge(dst, src)
+}
+func (m *FsPermissionProto) XXX_Size() int {
+	return xxx_messageInfo_FsPermissionProto.Size(m)
+}
+func (m *FsPermissionProto) XXX_DiscardUnknown() {
+	xxx_messageInfo_FsPermissionProto.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_FsPermissionProto proto.InternalMessageInfo
 
 func (m *FsPermissionProto) GetPerm() uint32 {
 	if m != nil && m.Perm != nil {
@@ -909,14 +1233,35 @@ func (m *FsPermissionProto) GetPerm() uint32 {
 // *
 // A list of storage types.
 type StorageTypesProto struct {
-	StorageTypes     []StorageTypeProto `protobuf:"varint,1,rep,name=storageTypes,enum=hadoop.hdfs.StorageTypeProto" json:"storageTypes,omitempty"`
-	XXX_unrecognized []byte             `json:"-"`
+	StorageTypes         []StorageTypeProto `protobuf:"varint,1,rep,name=storageTypes,enum=hadoop.hdfs.StorageTypeProto" json:"storageTypes,omitempty"`
+	XXX_NoUnkeyedLiteral struct{}           `json:"-"`
+	XXX_unrecognized     []byte             `json:"-"`
+	XXX_sizecache        int32              `json:"-"`
 }
 
-func (m *StorageTypesProto) Reset()                    { *m = StorageTypesProto{} }
-func (m *StorageTypesProto) String() string            { return proto.CompactTextString(m) }
-func (*StorageTypesProto) ProtoMessage()               {}
-func (*StorageTypesProto) Descriptor() ([]byte, []int) { return fileDescriptor8, []int{13} }
+func (m *StorageTypesProto) Reset()         { *m = StorageTypesProto{} }
+func (m *StorageTypesProto) String() string { return proto.CompactTextString(m) }
+func (*StorageTypesProto) ProtoMessage()    {}
+func (*StorageTypesProto) Descriptor() ([]byte, []int) {
+	return fileDescriptor_hdfs_a39209040b2db4d3, []int{13}
+}
+func (m *StorageTypesProto) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_StorageTypesProto.Unmarshal(m, b)
+}
+func (m *StorageTypesProto) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_StorageTypesProto.Marshal(b, m, deterministic)
+}
+func (dst *StorageTypesProto) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_StorageTypesProto.Merge(dst, src)
+}
+func (m *StorageTypesProto) XXX_Size() int {
+	return xxx_messageInfo_StorageTypesProto.Size(m)
+}
+func (m *StorageTypesProto) XXX_DiscardUnknown() {
+	xxx_messageInfo_StorageTypesProto.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_StorageTypesProto proto.InternalMessageInfo
 
 func (m *StorageTypesProto) GetStorageTypes() []StorageTypeProto {
 	if m != nil {
@@ -936,13 +1281,34 @@ type BlockStoragePolicyProto struct {
 	// A list of storage types for creation fallback storage.
 	CreationFallbackPolicy    *StorageTypesProto `protobuf:"bytes,4,opt,name=creationFallbackPolicy" json:"creationFallbackPolicy,omitempty"`
 	ReplicationFallbackPolicy *StorageTypesProto `protobuf:"bytes,5,opt,name=replicationFallbackPolicy" json:"replicationFallbackPolicy,omitempty"`
+	XXX_NoUnkeyedLiteral      struct{}           `json:"-"`
 	XXX_unrecognized          []byte             `json:"-"`
+	XXX_sizecache             int32              `json:"-"`
 }
 
-func (m *BlockStoragePolicyProto) Reset()                    { *m = BlockStoragePolicyProto{} }
-func (m *BlockStoragePolicyProto) String() string            { return proto.CompactTextString(m) }
-func (*BlockStoragePolicyProto) ProtoMessage()               {}
-func (*BlockStoragePolicyProto) Descriptor() ([]byte, []int) { return fileDescriptor8, []int{14} }
+func (m *BlockStoragePolicyProto) Reset()         { *m = BlockStoragePolicyProto{} }
+func (m *BlockStoragePolicyProto) String() string { return proto.CompactTextString(m) }
+func (*BlockStoragePolicyProto) ProtoMessage()    {}
+func (*BlockStoragePolicyProto) Descriptor() ([]byte, []int) {
+	return fileDescriptor_hdfs_a39209040b2db4d3, []int{14}
+}
+func (m *BlockStoragePolicyProto) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_BlockStoragePolicyProto.Unmarshal(m, b)
+}
+func (m *BlockStoragePolicyProto) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_BlockStoragePolicyProto.Marshal(b, m, deterministic)
+}
+func (dst *BlockStoragePolicyProto) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_BlockStoragePolicyProto.Merge(dst, src)
+}
+func (m *BlockStoragePolicyProto) XXX_Size() int {
+	return xxx_messageInfo_BlockStoragePolicyProto.Size(m)
+}
+func (m *BlockStoragePolicyProto) XXX_DiscardUnknown() {
+	xxx_messageInfo_BlockStoragePolicyProto.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_BlockStoragePolicyProto proto.InternalMessageInfo
 
 func (m *BlockStoragePolicyProto) GetPolicyId() uint32 {
 	if m != nil && m.PolicyId != nil {
@@ -991,15 +1357,36 @@ type LocatedBlockProto struct {
 	StorageTypes []StorageTypeProto        `protobuf:"varint,7,rep,name=storageTypes,enum=hadoop.hdfs.StorageTypeProto" json:"storageTypes,omitempty"`
 	StorageIDs   []string                  `protobuf:"bytes,8,rep,name=storageIDs" json:"storageIDs,omitempty"`
 	// striped block related fields
-	BlockIndices     []byte                      `protobuf:"bytes,9,opt,name=blockIndices" json:"blockIndices,omitempty"`
-	BlockTokens      []*hadoop_common.TokenProto `protobuf:"bytes,10,rep,name=blockTokens" json:"blockTokens,omitempty"`
-	XXX_unrecognized []byte                      `json:"-"`
+	BlockIndices         []byte                      `protobuf:"bytes,9,opt,name=blockIndices" json:"blockIndices,omitempty"`
+	BlockTokens          []*hadoop_common.TokenProto `protobuf:"bytes,10,rep,name=blockTokens" json:"blockTokens,omitempty"`
+	XXX_NoUnkeyedLiteral struct{}                    `json:"-"`
+	XXX_unrecognized     []byte                      `json:"-"`
+	XXX_sizecache        int32                       `json:"-"`
 }
 
-func (m *LocatedBlockProto) Reset()                    { *m = LocatedBlockProto{} }
-func (m *LocatedBlockProto) String() string            { return proto.CompactTextString(m) }
-func (*LocatedBlockProto) ProtoMessage()               {}
-func (*LocatedBlockProto) Descriptor() ([]byte, []int) { return fileDescriptor8, []int{15} }
+func (m *LocatedBlockProto) Reset()         { *m = LocatedBlockProto{} }
+func (m *LocatedBlockProto) String() string { return proto.CompactTextString(m) }
+func (*LocatedBlockProto) ProtoMessage()    {}
+func (*LocatedBlockProto) Descriptor() ([]byte, []int) {
+	return fileDescriptor_hdfs_a39209040b2db4d3, []int{15}
+}
+func (m *LocatedBlockProto) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_LocatedBlockProto.Unmarshal(m, b)
+}
+func (m *LocatedBlockProto) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_LocatedBlockProto.Marshal(b, m, deterministic)
+}
+func (dst *LocatedBlockProto) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_LocatedBlockProto.Merge(dst, src)
+}
+func (m *LocatedBlockProto) XXX_Size() int {
+	return xxx_messageInfo_LocatedBlockProto.Size(m)
+}
+func (m *LocatedBlockProto) XXX_DiscardUnknown() {
+	xxx_messageInfo_LocatedBlockProto.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_LocatedBlockProto proto.InternalMessageInfo
 
 func (m *LocatedBlockProto) GetB() *ExtendedBlockProto {
 	if m != nil {
@@ -1072,19 +1459,40 @@ func (m *LocatedBlockProto) GetBlockTokens() []*hadoop_common.TokenProto {
 }
 
 type DataEncryptionKeyProto struct {
-	KeyId               *uint32 `protobuf:"varint,1,req,name=keyId" json:"keyId,omitempty"`
-	BlockPoolId         *string `protobuf:"bytes,2,req,name=blockPoolId" json:"blockPoolId,omitempty"`
-	Nonce               []byte  `protobuf:"bytes,3,req,name=nonce" json:"nonce,omitempty"`
-	EncryptionKey       []byte  `protobuf:"bytes,4,req,name=encryptionKey" json:"encryptionKey,omitempty"`
-	ExpiryDate          *uint64 `protobuf:"varint,5,req,name=expiryDate" json:"expiryDate,omitempty"`
-	EncryptionAlgorithm *string `protobuf:"bytes,6,opt,name=encryptionAlgorithm" json:"encryptionAlgorithm,omitempty"`
-	XXX_unrecognized    []byte  `json:"-"`
+	KeyId                *uint32  `protobuf:"varint,1,req,name=keyId" json:"keyId,omitempty"`
+	BlockPoolId          *string  `protobuf:"bytes,2,req,name=blockPoolId" json:"blockPoolId,omitempty"`
+	Nonce                []byte   `protobuf:"bytes,3,req,name=nonce" json:"nonce,omitempty"`
+	EncryptionKey        []byte   `protobuf:"bytes,4,req,name=encryptionKey" json:"encryptionKey,omitempty"`
+	ExpiryDate           *uint64  `protobuf:"varint,5,req,name=expiryDate" json:"expiryDate,omitempty"`
+	EncryptionAlgorithm  *string  `protobuf:"bytes,6,opt,name=encryptionAlgorithm" json:"encryptionAlgorithm,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
 }
 
-func (m *DataEncryptionKeyProto) Reset()                    { *m = DataEncryptionKeyProto{} }
-func (m *DataEncryptionKeyProto) String() string            { return proto.CompactTextString(m) }
-func (*DataEncryptionKeyProto) ProtoMessage()               {}
-func (*DataEncryptionKeyProto) Descriptor() ([]byte, []int) { return fileDescriptor8, []int{16} }
+func (m *DataEncryptionKeyProto) Reset()         { *m = DataEncryptionKeyProto{} }
+func (m *DataEncryptionKeyProto) String() string { return proto.CompactTextString(m) }
+func (*DataEncryptionKeyProto) ProtoMessage()    {}
+func (*DataEncryptionKeyProto) Descriptor() ([]byte, []int) {
+	return fileDescriptor_hdfs_a39209040b2db4d3, []int{16}
+}
+func (m *DataEncryptionKeyProto) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_DataEncryptionKeyProto.Unmarshal(m, b)
+}
+func (m *DataEncryptionKeyProto) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_DataEncryptionKeyProto.Marshal(b, m, deterministic)
+}
+func (dst *DataEncryptionKeyProto) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_DataEncryptionKeyProto.Merge(dst, src)
+}
+func (m *DataEncryptionKeyProto) XXX_Size() int {
+	return xxx_messageInfo_DataEncryptionKeyProto.Size(m)
+}
+func (m *DataEncryptionKeyProto) XXX_DiscardUnknown() {
+	xxx_messageInfo_DataEncryptionKeyProto.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_DataEncryptionKeyProto proto.InternalMessageInfo
 
 func (m *DataEncryptionKeyProto) GetKeyId() uint32 {
 	if m != nil && m.KeyId != nil {
@@ -1137,13 +1545,34 @@ type FileEncryptionInfoProto struct {
 	Iv                    []byte                      `protobuf:"bytes,4,req,name=iv" json:"iv,omitempty"`
 	KeyName               *string                     `protobuf:"bytes,5,req,name=keyName" json:"keyName,omitempty"`
 	EzKeyVersionName      *string                     `protobuf:"bytes,6,req,name=ezKeyVersionName" json:"ezKeyVersionName,omitempty"`
+	XXX_NoUnkeyedLiteral  struct{}                    `json:"-"`
 	XXX_unrecognized      []byte                      `json:"-"`
+	XXX_sizecache         int32                       `json:"-"`
 }
 
-func (m *FileEncryptionInfoProto) Reset()                    { *m = FileEncryptionInfoProto{} }
-func (m *FileEncryptionInfoProto) String() string            { return proto.CompactTextString(m) }
-func (*FileEncryptionInfoProto) ProtoMessage()               {}
-func (*FileEncryptionInfoProto) Descriptor() ([]byte, []int) { return fileDescriptor8, []int{17} }
+func (m *FileEncryptionInfoProto) Reset()         { *m = FileEncryptionInfoProto{} }
+func (m *FileEncryptionInfoProto) String() string { return proto.CompactTextString(m) }
+func (*FileEncryptionInfoProto) ProtoMessage()    {}
+func (*FileEncryptionInfoProto) Descriptor() ([]byte, []int) {
+	return fileDescriptor_hdfs_a39209040b2db4d3, []int{17}
+}
+func (m *FileEncryptionInfoProto) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_FileEncryptionInfoProto.Unmarshal(m, b)
+}
+func (m *FileEncryptionInfoProto) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_FileEncryptionInfoProto.Marshal(b, m, deterministic)
+}
+func (dst *FileEncryptionInfoProto) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_FileEncryptionInfoProto.Merge(dst, src)
+}
+func (m *FileEncryptionInfoProto) XXX_Size() int {
+	return xxx_messageInfo_FileEncryptionInfoProto.Size(m)
+}
+func (m *FileEncryptionInfoProto) XXX_DiscardUnknown() {
+	xxx_messageInfo_FileEncryptionInfoProto.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_FileEncryptionInfoProto proto.InternalMessageInfo
 
 func (m *FileEncryptionInfoProto) GetSuite() CipherSuiteProto {
 	if m != nil && m.Suite != nil {
@@ -1191,16 +1620,37 @@ func (m *FileEncryptionInfoProto) GetEzKeyVersionName() string {
 // Encryption information for an individual
 // file within an encryption zone
 type PerFileEncryptionInfoProto struct {
-	Key              []byte  `protobuf:"bytes,1,req,name=key" json:"key,omitempty"`
-	Iv               []byte  `protobuf:"bytes,2,req,name=iv" json:"iv,omitempty"`
-	EzKeyVersionName *string `protobuf:"bytes,3,req,name=ezKeyVersionName" json:"ezKeyVersionName,omitempty"`
-	XXX_unrecognized []byte  `json:"-"`
+	Key                  []byte   `protobuf:"bytes,1,req,name=key" json:"key,omitempty"`
+	Iv                   []byte   `protobuf:"bytes,2,req,name=iv" json:"iv,omitempty"`
+	EzKeyVersionName     *string  `protobuf:"bytes,3,req,name=ezKeyVersionName" json:"ezKeyVersionName,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
 }
 
-func (m *PerFileEncryptionInfoProto) Reset()                    { *m = PerFileEncryptionInfoProto{} }
-func (m *PerFileEncryptionInfoProto) String() string            { return proto.CompactTextString(m) }
-func (*PerFileEncryptionInfoProto) ProtoMessage()               {}
-func (*PerFileEncryptionInfoProto) Descriptor() ([]byte, []int) { return fileDescriptor8, []int{18} }
+func (m *PerFileEncryptionInfoProto) Reset()         { *m = PerFileEncryptionInfoProto{} }
+func (m *PerFileEncryptionInfoProto) String() string { return proto.CompactTextString(m) }
+func (*PerFileEncryptionInfoProto) ProtoMessage()    {}
+func (*PerFileEncryptionInfoProto) Descriptor() ([]byte, []int) {
+	return fileDescriptor_hdfs_a39209040b2db4d3, []int{18}
+}
+func (m *PerFileEncryptionInfoProto) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_PerFileEncryptionInfoProto.Unmarshal(m, b)
+}
+func (m *PerFileEncryptionInfoProto) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_PerFileEncryptionInfoProto.Marshal(b, m, deterministic)
+}
+func (dst *PerFileEncryptionInfoProto) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_PerFileEncryptionInfoProto.Merge(dst, src)
+}
+func (m *PerFileEncryptionInfoProto) XXX_Size() int {
+	return xxx_messageInfo_PerFileEncryptionInfoProto.Size(m)
+}
+func (m *PerFileEncryptionInfoProto) XXX_DiscardUnknown() {
+	xxx_messageInfo_PerFileEncryptionInfoProto.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_PerFileEncryptionInfoProto proto.InternalMessageInfo
 
 func (m *PerFileEncryptionInfoProto) GetKey() []byte {
 	if m != nil {
@@ -1230,13 +1680,34 @@ type ZoneEncryptionInfoProto struct {
 	Suite                 *CipherSuiteProto           `protobuf:"varint,1,req,name=suite,enum=hadoop.hdfs.CipherSuiteProto" json:"suite,omitempty"`
 	CryptoProtocolVersion *CryptoProtocolVersionProto `protobuf:"varint,2,req,name=cryptoProtocolVersion,enum=hadoop.hdfs.CryptoProtocolVersionProto" json:"cryptoProtocolVersion,omitempty"`
 	KeyName               *string                     `protobuf:"bytes,3,req,name=keyName" json:"keyName,omitempty"`
+	XXX_NoUnkeyedLiteral  struct{}                    `json:"-"`
 	XXX_unrecognized      []byte                      `json:"-"`
+	XXX_sizecache         int32                       `json:"-"`
 }
 
-func (m *ZoneEncryptionInfoProto) Reset()                    { *m = ZoneEncryptionInfoProto{} }
-func (m *ZoneEncryptionInfoProto) String() string            { return proto.CompactTextString(m) }
-func (*ZoneEncryptionInfoProto) ProtoMessage()               {}
-func (*ZoneEncryptionInfoProto) Descriptor() ([]byte, []int) { return fileDescriptor8, []int{19} }
+func (m *ZoneEncryptionInfoProto) Reset()         { *m = ZoneEncryptionInfoProto{} }
+func (m *ZoneEncryptionInfoProto) String() string { return proto.CompactTextString(m) }
+func (*ZoneEncryptionInfoProto) ProtoMessage()    {}
+func (*ZoneEncryptionInfoProto) Descriptor() ([]byte, []int) {
+	return fileDescriptor_hdfs_a39209040b2db4d3, []int{19}
+}
+func (m *ZoneEncryptionInfoProto) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_ZoneEncryptionInfoProto.Unmarshal(m, b)
+}
+func (m *ZoneEncryptionInfoProto) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_ZoneEncryptionInfoProto.Marshal(b, m, deterministic)
+}
+func (dst *ZoneEncryptionInfoProto) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_ZoneEncryptionInfoProto.Merge(dst, src)
+}
+func (m *ZoneEncryptionInfoProto) XXX_Size() int {
+	return xxx_messageInfo_ZoneEncryptionInfoProto.Size(m)
+}
+func (m *ZoneEncryptionInfoProto) XXX_DiscardUnknown() {
+	xxx_messageInfo_ZoneEncryptionInfoProto.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_ZoneEncryptionInfoProto proto.InternalMessageInfo
 
 func (m *ZoneEncryptionInfoProto) GetSuite() CipherSuiteProto {
 	if m != nil && m.Suite != nil {
@@ -1262,18 +1733,39 @@ func (m *ZoneEncryptionInfoProto) GetKeyName() string {
 // *
 // Cipher option
 type CipherOptionProto struct {
-	Suite            *CipherSuiteProto `protobuf:"varint,1,req,name=suite,enum=hadoop.hdfs.CipherSuiteProto" json:"suite,omitempty"`
-	InKey            []byte            `protobuf:"bytes,2,opt,name=inKey" json:"inKey,omitempty"`
-	InIv             []byte            `protobuf:"bytes,3,opt,name=inIv" json:"inIv,omitempty"`
-	OutKey           []byte            `protobuf:"bytes,4,opt,name=outKey" json:"outKey,omitempty"`
-	OutIv            []byte            `protobuf:"bytes,5,opt,name=outIv" json:"outIv,omitempty"`
-	XXX_unrecognized []byte            `json:"-"`
+	Suite                *CipherSuiteProto `protobuf:"varint,1,req,name=suite,enum=hadoop.hdfs.CipherSuiteProto" json:"suite,omitempty"`
+	InKey                []byte            `protobuf:"bytes,2,opt,name=inKey" json:"inKey,omitempty"`
+	InIv                 []byte            `protobuf:"bytes,3,opt,name=inIv" json:"inIv,omitempty"`
+	OutKey               []byte            `protobuf:"bytes,4,opt,name=outKey" json:"outKey,omitempty"`
+	OutIv                []byte            `protobuf:"bytes,5,opt,name=outIv" json:"outIv,omitempty"`
+	XXX_NoUnkeyedLiteral struct{}          `json:"-"`
+	XXX_unrecognized     []byte            `json:"-"`
+	XXX_sizecache        int32             `json:"-"`
 }
 
-func (m *CipherOptionProto) Reset()                    { *m = CipherOptionProto{} }
-func (m *CipherOptionProto) String() string            { return proto.CompactTextString(m) }
-func (*CipherOptionProto) ProtoMessage()               {}
-func (*CipherOptionProto) Descriptor() ([]byte, []int) { return fileDescriptor8, []int{20} }
+func (m *CipherOptionProto) Reset()         { *m = CipherOptionProto{} }
+func (m *CipherOptionProto) String() string { return proto.CompactTextString(m) }
+func (*CipherOptionProto) ProtoMessage()    {}
+func (*CipherOptionProto) Descriptor() ([]byte, []int) {
+	return fileDescriptor_hdfs_a39209040b2db4d3, []int{20}
+}
+func (m *CipherOptionProto) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_CipherOptionProto.Unmarshal(m, b)
+}
+func (m *CipherOptionProto) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_CipherOptionProto.Marshal(b, m, deterministic)
+}
+func (dst *CipherOptionProto) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_CipherOptionProto.Merge(dst, src)
+}
+func (m *CipherOptionProto) XXX_Size() int {
+	return xxx_messageInfo_CipherOptionProto.Size(m)
+}
+func (m *CipherOptionProto) XXX_DiscardUnknown() {
+	xxx_messageInfo_CipherOptionProto.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_CipherOptionProto proto.InternalMessageInfo
 
 func (m *CipherOptionProto) GetSuite() CipherSuiteProto {
 	if m != nil && m.Suite != nil {
@@ -1320,14 +1812,35 @@ type LocatedBlocksProto struct {
 	IsLastBlockComplete *bool                    `protobuf:"varint,5,req,name=isLastBlockComplete" json:"isLastBlockComplete,omitempty"`
 	FileEncryptionInfo  *FileEncryptionInfoProto `protobuf:"bytes,6,opt,name=fileEncryptionInfo" json:"fileEncryptionInfo,omitempty"`
 	// Optional field for erasure coding
-	EcPolicy         *ErasureCodingPolicyProto `protobuf:"bytes,7,opt,name=ecPolicy" json:"ecPolicy,omitempty"`
-	XXX_unrecognized []byte                    `json:"-"`
+	EcPolicy             *ErasureCodingPolicyProto `protobuf:"bytes,7,opt,name=ecPolicy" json:"ecPolicy,omitempty"`
+	XXX_NoUnkeyedLiteral struct{}                  `json:"-"`
+	XXX_unrecognized     []byte                    `json:"-"`
+	XXX_sizecache        int32                     `json:"-"`
 }
 
-func (m *LocatedBlocksProto) Reset()                    { *m = LocatedBlocksProto{} }
-func (m *LocatedBlocksProto) String() string            { return proto.CompactTextString(m) }
-func (*LocatedBlocksProto) ProtoMessage()               {}
-func (*LocatedBlocksProto) Descriptor() ([]byte, []int) { return fileDescriptor8, []int{21} }
+func (m *LocatedBlocksProto) Reset()         { *m = LocatedBlocksProto{} }
+func (m *LocatedBlocksProto) String() string { return proto.CompactTextString(m) }
+func (*LocatedBlocksProto) ProtoMessage()    {}
+func (*LocatedBlocksProto) Descriptor() ([]byte, []int) {
+	return fileDescriptor_hdfs_a39209040b2db4d3, []int{21}
+}
+func (m *LocatedBlocksProto) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_LocatedBlocksProto.Unmarshal(m, b)
+}
+func (m *LocatedBlocksProto) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_LocatedBlocksProto.Marshal(b, m, deterministic)
+}
+func (dst *LocatedBlocksProto) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_LocatedBlocksProto.Merge(dst, src)
+}
+func (m *LocatedBlocksProto) XXX_Size() int {
+	return xxx_messageInfo_LocatedBlocksProto.Size(m)
+}
+func (m *LocatedBlocksProto) XXX_DiscardUnknown() {
+	xxx_messageInfo_LocatedBlocksProto.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_LocatedBlocksProto proto.InternalMessageInfo
 
 func (m *LocatedBlocksProto) GetFileLength() uint64 {
 	if m != nil && m.FileLength != nil {
@@ -1381,15 +1894,36 @@ func (m *LocatedBlocksProto) GetEcPolicy() *ErasureCodingPolicyProto {
 // *
 // ECSchema options entry
 type ECSchemaOptionEntryProto struct {
-	Key              *string `protobuf:"bytes,1,req,name=key" json:"key,omitempty"`
-	Value            *string `protobuf:"bytes,2,req,name=value" json:"value,omitempty"`
-	XXX_unrecognized []byte  `json:"-"`
+	Key                  *string  `protobuf:"bytes,1,req,name=key" json:"key,omitempty"`
+	Value                *string  `protobuf:"bytes,2,req,name=value" json:"value,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
 }
 
-func (m *ECSchemaOptionEntryProto) Reset()                    { *m = ECSchemaOptionEntryProto{} }
-func (m *ECSchemaOptionEntryProto) String() string            { return proto.CompactTextString(m) }
-func (*ECSchemaOptionEntryProto) ProtoMessage()               {}
-func (*ECSchemaOptionEntryProto) Descriptor() ([]byte, []int) { return fileDescriptor8, []int{22} }
+func (m *ECSchemaOptionEntryProto) Reset()         { *m = ECSchemaOptionEntryProto{} }
+func (m *ECSchemaOptionEntryProto) String() string { return proto.CompactTextString(m) }
+func (*ECSchemaOptionEntryProto) ProtoMessage()    {}
+func (*ECSchemaOptionEntryProto) Descriptor() ([]byte, []int) {
+	return fileDescriptor_hdfs_a39209040b2db4d3, []int{22}
+}
+func (m *ECSchemaOptionEntryProto) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_ECSchemaOptionEntryProto.Unmarshal(m, b)
+}
+func (m *ECSchemaOptionEntryProto) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_ECSchemaOptionEntryProto.Marshal(b, m, deterministic)
+}
+func (dst *ECSchemaOptionEntryProto) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_ECSchemaOptionEntryProto.Merge(dst, src)
+}
+func (m *ECSchemaOptionEntryProto) XXX_Size() int {
+	return xxx_messageInfo_ECSchemaOptionEntryProto.Size(m)
+}
+func (m *ECSchemaOptionEntryProto) XXX_DiscardUnknown() {
+	xxx_messageInfo_ECSchemaOptionEntryProto.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_ECSchemaOptionEntryProto proto.InternalMessageInfo
 
 func (m *ECSchemaOptionEntryProto) GetKey() string {
 	if m != nil && m.Key != nil {
@@ -1408,17 +1942,38 @@ func (m *ECSchemaOptionEntryProto) GetValue() string {
 // *
 // ECSchema for erasurecoding
 type ECSchemaProto struct {
-	CodecName        *string                     `protobuf:"bytes,1,req,name=codecName" json:"codecName,omitempty"`
-	DataUnits        *uint32                     `protobuf:"varint,2,req,name=dataUnits" json:"dataUnits,omitempty"`
-	ParityUnits      *uint32                     `protobuf:"varint,3,req,name=parityUnits" json:"parityUnits,omitempty"`
-	Options          []*ECSchemaOptionEntryProto `protobuf:"bytes,4,rep,name=options" json:"options,omitempty"`
-	XXX_unrecognized []byte                      `json:"-"`
+	CodecName            *string                     `protobuf:"bytes,1,req,name=codecName" json:"codecName,omitempty"`
+	DataUnits            *uint32                     `protobuf:"varint,2,req,name=dataUnits" json:"dataUnits,omitempty"`
+	ParityUnits          *uint32                     `protobuf:"varint,3,req,name=parityUnits" json:"parityUnits,omitempty"`
+	Options              []*ECSchemaOptionEntryProto `protobuf:"bytes,4,rep,name=options" json:"options,omitempty"`
+	XXX_NoUnkeyedLiteral struct{}                    `json:"-"`
+	XXX_unrecognized     []byte                      `json:"-"`
+	XXX_sizecache        int32                       `json:"-"`
 }
 
-func (m *ECSchemaProto) Reset()                    { *m = ECSchemaProto{} }
-func (m *ECSchemaProto) String() string            { return proto.CompactTextString(m) }
-func (*ECSchemaProto) ProtoMessage()               {}
-func (*ECSchemaProto) Descriptor() ([]byte, []int) { return fileDescriptor8, []int{23} }
+func (m *ECSchemaProto) Reset()         { *m = ECSchemaProto{} }
+func (m *ECSchemaProto) String() string { return proto.CompactTextString(m) }
+func (*ECSchemaProto) ProtoMessage()    {}
+func (*ECSchemaProto) Descriptor() ([]byte, []int) {
+	return fileDescriptor_hdfs_a39209040b2db4d3, []int{23}
+}
+func (m *ECSchemaProto) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_ECSchemaProto.Unmarshal(m, b)
+}
+func (m *ECSchemaProto) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_ECSchemaProto.Marshal(b, m, deterministic)
+}
+func (dst *ECSchemaProto) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_ECSchemaProto.Merge(dst, src)
+}
+func (m *ECSchemaProto) XXX_Size() int {
+	return xxx_messageInfo_ECSchemaProto.Size(m)
+}
+func (m *ECSchemaProto) XXX_DiscardUnknown() {
+	xxx_messageInfo_ECSchemaProto.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_ECSchemaProto proto.InternalMessageInfo
 
 func (m *ECSchemaProto) GetCodecName() string {
 	if m != nil && m.CodecName != nil {
@@ -1449,17 +2004,38 @@ func (m *ECSchemaProto) GetOptions() []*ECSchemaOptionEntryProto {
 }
 
 type ErasureCodingPolicyProto struct {
-	Name             *string        `protobuf:"bytes,1,req,name=name" json:"name,omitempty"`
-	Schema           *ECSchemaProto `protobuf:"bytes,2,req,name=schema" json:"schema,omitempty"`
-	CellSize         *uint32        `protobuf:"varint,3,req,name=cellSize" json:"cellSize,omitempty"`
-	Id               *uint32        `protobuf:"varint,4,req,name=id" json:"id,omitempty"`
-	XXX_unrecognized []byte         `json:"-"`
+	Name                 *string        `protobuf:"bytes,1,req,name=name" json:"name,omitempty"`
+	Schema               *ECSchemaProto `protobuf:"bytes,2,req,name=schema" json:"schema,omitempty"`
+	CellSize             *uint32        `protobuf:"varint,3,req,name=cellSize" json:"cellSize,omitempty"`
+	Id                   *uint32        `protobuf:"varint,4,req,name=id" json:"id,omitempty"`
+	XXX_NoUnkeyedLiteral struct{}       `json:"-"`
+	XXX_unrecognized     []byte         `json:"-"`
+	XXX_sizecache        int32          `json:"-"`
 }
 
-func (m *ErasureCodingPolicyProto) Reset()                    { *m = ErasureCodingPolicyProto{} }
-func (m *ErasureCodingPolicyProto) String() string            { return proto.CompactTextString(m) }
-func (*ErasureCodingPolicyProto) ProtoMessage()               {}
-func (*ErasureCodingPolicyProto) Descriptor() ([]byte, []int) { return fileDescriptor8, []int{24} }
+func (m *ErasureCodingPolicyProto) Reset()         { *m = ErasureCodingPolicyProto{} }
+func (m *ErasureCodingPolicyProto) String() string { return proto.CompactTextString(m) }
+func (*ErasureCodingPolicyProto) ProtoMessage()    {}
+func (*ErasureCodingPolicyProto) Descriptor() ([]byte, []int) {
+	return fileDescriptor_hdfs_a39209040b2db4d3, []int{24}
+}
+func (m *ErasureCodingPolicyProto) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_ErasureCodingPolicyProto.Unmarshal(m, b)
+}
+func (m *ErasureCodingPolicyProto) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_ErasureCodingPolicyProto.Marshal(b, m, deterministic)
+}
+func (dst *ErasureCodingPolicyProto) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_ErasureCodingPolicyProto.Merge(dst, src)
+}
+func (m *ErasureCodingPolicyProto) XXX_Size() int {
+	return xxx_messageInfo_ErasureCodingPolicyProto.Size(m)
+}
+func (m *ErasureCodingPolicyProto) XXX_DiscardUnknown() {
+	xxx_messageInfo_ErasureCodingPolicyProto.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_ErasureCodingPolicyProto proto.InternalMessageInfo
 
 func (m *ErasureCodingPolicyProto) GetName() string {
 	if m != nil && m.Name != nil {
@@ -1514,14 +2090,35 @@ type HdfsFileStatusProto struct {
 	FileEncryptionInfo *FileEncryptionInfoProto `protobuf:"bytes,15,opt,name=fileEncryptionInfo" json:"fileEncryptionInfo,omitempty"`
 	StoragePolicy      *uint32                  `protobuf:"varint,16,opt,name=storagePolicy,def=0" json:"storagePolicy,omitempty"`
 	// Optional field for erasure coding
-	EcPolicy         *ErasureCodingPolicyProto `protobuf:"bytes,17,opt,name=ecPolicy" json:"ecPolicy,omitempty"`
-	XXX_unrecognized []byte                    `json:"-"`
+	EcPolicy             *ErasureCodingPolicyProto `protobuf:"bytes,17,opt,name=ecPolicy" json:"ecPolicy,omitempty"`
+	XXX_NoUnkeyedLiteral struct{}                  `json:"-"`
+	XXX_unrecognized     []byte                    `json:"-"`
+	XXX_sizecache        int32                     `json:"-"`
 }
 
-func (m *HdfsFileStatusProto) Reset()                    { *m = HdfsFileStatusProto{} }
-func (m *HdfsFileStatusProto) String() string            { return proto.CompactTextString(m) }
-func (*HdfsFileStatusProto) ProtoMessage()               {}
-func (*HdfsFileStatusProto) Descriptor() ([]byte, []int) { return fileDescriptor8, []int{25} }
+func (m *HdfsFileStatusProto) Reset()         { *m = HdfsFileStatusProto{} }
+func (m *HdfsFileStatusProto) String() string { return proto.CompactTextString(m) }
+func (*HdfsFileStatusProto) ProtoMessage()    {}
+func (*HdfsFileStatusProto) Descriptor() ([]byte, []int) {
+	return fileDescriptor_hdfs_a39209040b2db4d3, []int{25}
+}
+func (m *HdfsFileStatusProto) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_HdfsFileStatusProto.Unmarshal(m, b)
+}
+func (m *HdfsFileStatusProto) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_HdfsFileStatusProto.Marshal(b, m, deterministic)
+}
+func (dst *HdfsFileStatusProto) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_HdfsFileStatusProto.Merge(dst, src)
+}
+func (m *HdfsFileStatusProto) XXX_Size() int {
+	return xxx_messageInfo_HdfsFileStatusProto.Size(m)
+}
+func (m *HdfsFileStatusProto) XXX_DiscardUnknown() {
+	xxx_messageInfo_HdfsFileStatusProto.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_HdfsFileStatusProto proto.InternalMessageInfo
 
 const Default_HdfsFileStatusProto_BlockReplication uint32 = 0
 const Default_HdfsFileStatusProto_Blocksize uint64 = 0
@@ -1649,23 +2246,101 @@ func (m *HdfsFileStatusProto) GetEcPolicy() *ErasureCodingPolicyProto {
 }
 
 // *
-// HDFS Server Defaults
-type FsServerDefaultsProto struct {
-	BlockSize           *uint64            `protobuf:"varint,1,req,name=blockSize" json:"blockSize,omitempty"`
-	BytesPerChecksum    *uint32            `protobuf:"varint,2,req,name=bytesPerChecksum" json:"bytesPerChecksum,omitempty"`
-	WritePacketSize     *uint32            `protobuf:"varint,3,req,name=writePacketSize" json:"writePacketSize,omitempty"`
-	Replication         *uint32            `protobuf:"varint,4,req,name=replication" json:"replication,omitempty"`
-	FileBufferSize      *uint32            `protobuf:"varint,5,req,name=fileBufferSize" json:"fileBufferSize,omitempty"`
-	EncryptDataTransfer *bool              `protobuf:"varint,6,opt,name=encryptDataTransfer,def=0" json:"encryptDataTransfer,omitempty"`
-	TrashInterval       *uint64            `protobuf:"varint,7,opt,name=trashInterval,def=0" json:"trashInterval,omitempty"`
-	ChecksumType        *ChecksumTypeProto `protobuf:"varint,8,opt,name=checksumType,enum=hadoop.hdfs.ChecksumTypeProto,def=1" json:"checksumType,omitempty"`
-	XXX_unrecognized    []byte             `json:"-"`
+// Algorithms/types denoting how block-level checksums are computed using
+// lower-level chunk checksums/CRCs.
+// These options should be kept in sync with
+// org.apache.hadoop.hdfs.protocol.BlockChecksumOptions.
+type BlockChecksumOptionsProto struct {
+	BlockChecksumType *BlockChecksumTypeProto `protobuf:"varint,1,opt,name=blockChecksumType,enum=hadoop.hdfs.BlockChecksumTypeProto,def=1" json:"blockChecksumType,omitempty"`
+	// Only used if blockChecksumType specifies a striped format, such as
+	// COMPOSITE_CRC. If so, then the blockChecksum in the response is expected
+	// to be the concatenation of N crcs, where
+	// N == ((requestedLength - 1) / stripedLength) + 1
+	StripeLength         *uint64  `protobuf:"varint,2,opt,name=stripeLength" json:"stripeLength,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
 }
 
-func (m *FsServerDefaultsProto) Reset()                    { *m = FsServerDefaultsProto{} }
-func (m *FsServerDefaultsProto) String() string            { return proto.CompactTextString(m) }
-func (*FsServerDefaultsProto) ProtoMessage()               {}
-func (*FsServerDefaultsProto) Descriptor() ([]byte, []int) { return fileDescriptor8, []int{26} }
+func (m *BlockChecksumOptionsProto) Reset()         { *m = BlockChecksumOptionsProto{} }
+func (m *BlockChecksumOptionsProto) String() string { return proto.CompactTextString(m) }
+func (*BlockChecksumOptionsProto) ProtoMessage()    {}
+func (*BlockChecksumOptionsProto) Descriptor() ([]byte, []int) {
+	return fileDescriptor_hdfs_a39209040b2db4d3, []int{26}
+}
+func (m *BlockChecksumOptionsProto) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_BlockChecksumOptionsProto.Unmarshal(m, b)
+}
+func (m *BlockChecksumOptionsProto) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_BlockChecksumOptionsProto.Marshal(b, m, deterministic)
+}
+func (dst *BlockChecksumOptionsProto) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_BlockChecksumOptionsProto.Merge(dst, src)
+}
+func (m *BlockChecksumOptionsProto) XXX_Size() int {
+	return xxx_messageInfo_BlockChecksumOptionsProto.Size(m)
+}
+func (m *BlockChecksumOptionsProto) XXX_DiscardUnknown() {
+	xxx_messageInfo_BlockChecksumOptionsProto.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_BlockChecksumOptionsProto proto.InternalMessageInfo
+
+const Default_BlockChecksumOptionsProto_BlockChecksumType BlockChecksumTypeProto = BlockChecksumTypeProto_MD5CRC
+
+func (m *BlockChecksumOptionsProto) GetBlockChecksumType() BlockChecksumTypeProto {
+	if m != nil && m.BlockChecksumType != nil {
+		return *m.BlockChecksumType
+	}
+	return Default_BlockChecksumOptionsProto_BlockChecksumType
+}
+
+func (m *BlockChecksumOptionsProto) GetStripeLength() uint64 {
+	if m != nil && m.StripeLength != nil {
+		return *m.StripeLength
+	}
+	return 0
+}
+
+// *
+// HDFS Server Defaults
+type FsServerDefaultsProto struct {
+	BlockSize            *uint64            `protobuf:"varint,1,req,name=blockSize" json:"blockSize,omitempty"`
+	BytesPerChecksum     *uint32            `protobuf:"varint,2,req,name=bytesPerChecksum" json:"bytesPerChecksum,omitempty"`
+	WritePacketSize      *uint32            `protobuf:"varint,3,req,name=writePacketSize" json:"writePacketSize,omitempty"`
+	Replication          *uint32            `protobuf:"varint,4,req,name=replication" json:"replication,omitempty"`
+	FileBufferSize       *uint32            `protobuf:"varint,5,req,name=fileBufferSize" json:"fileBufferSize,omitempty"`
+	EncryptDataTransfer  *bool              `protobuf:"varint,6,opt,name=encryptDataTransfer,def=0" json:"encryptDataTransfer,omitempty"`
+	TrashInterval        *uint64            `protobuf:"varint,7,opt,name=trashInterval,def=0" json:"trashInterval,omitempty"`
+	ChecksumType         *ChecksumTypeProto `protobuf:"varint,8,opt,name=checksumType,enum=hadoop.hdfs.ChecksumTypeProto,def=1" json:"checksumType,omitempty"`
+	XXX_NoUnkeyedLiteral struct{}           `json:"-"`
+	XXX_unrecognized     []byte             `json:"-"`
+	XXX_sizecache        int32              `json:"-"`
+}
+
+func (m *FsServerDefaultsProto) Reset()         { *m = FsServerDefaultsProto{} }
+func (m *FsServerDefaultsProto) String() string { return proto.CompactTextString(m) }
+func (*FsServerDefaultsProto) ProtoMessage()    {}
+func (*FsServerDefaultsProto) Descriptor() ([]byte, []int) {
+	return fileDescriptor_hdfs_a39209040b2db4d3, []int{27}
+}
+func (m *FsServerDefaultsProto) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_FsServerDefaultsProto.Unmarshal(m, b)
+}
+func (m *FsServerDefaultsProto) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_FsServerDefaultsProto.Marshal(b, m, deterministic)
+}
+func (dst *FsServerDefaultsProto) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_FsServerDefaultsProto.Merge(dst, src)
+}
+func (m *FsServerDefaultsProto) XXX_Size() int {
+	return xxx_messageInfo_FsServerDefaultsProto.Size(m)
+}
+func (m *FsServerDefaultsProto) XXX_DiscardUnknown() {
+	xxx_messageInfo_FsServerDefaultsProto.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_FsServerDefaultsProto proto.InternalMessageInfo
 
 const Default_FsServerDefaultsProto_EncryptDataTransfer bool = false
 const Default_FsServerDefaultsProto_TrashInterval uint64 = 0
@@ -1730,15 +2405,36 @@ func (m *FsServerDefaultsProto) GetChecksumType() ChecksumTypeProto {
 // *
 // Directory listing
 type DirectoryListingProto struct {
-	PartialListing   []*HdfsFileStatusProto `protobuf:"bytes,1,rep,name=partialListing" json:"partialListing,omitempty"`
-	RemainingEntries *uint32                `protobuf:"varint,2,req,name=remainingEntries" json:"remainingEntries,omitempty"`
-	XXX_unrecognized []byte                 `json:"-"`
+	PartialListing       []*HdfsFileStatusProto `protobuf:"bytes,1,rep,name=partialListing" json:"partialListing,omitempty"`
+	RemainingEntries     *uint32                `protobuf:"varint,2,req,name=remainingEntries" json:"remainingEntries,omitempty"`
+	XXX_NoUnkeyedLiteral struct{}               `json:"-"`
+	XXX_unrecognized     []byte                 `json:"-"`
+	XXX_sizecache        int32                  `json:"-"`
 }
 
-func (m *DirectoryListingProto) Reset()                    { *m = DirectoryListingProto{} }
-func (m *DirectoryListingProto) String() string            { return proto.CompactTextString(m) }
-func (*DirectoryListingProto) ProtoMessage()               {}
-func (*DirectoryListingProto) Descriptor() ([]byte, []int) { return fileDescriptor8, []int{27} }
+func (m *DirectoryListingProto) Reset()         { *m = DirectoryListingProto{} }
+func (m *DirectoryListingProto) String() string { return proto.CompactTextString(m) }
+func (*DirectoryListingProto) ProtoMessage()    {}
+func (*DirectoryListingProto) Descriptor() ([]byte, []int) {
+	return fileDescriptor_hdfs_a39209040b2db4d3, []int{28}
+}
+func (m *DirectoryListingProto) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_DirectoryListingProto.Unmarshal(m, b)
+}
+func (m *DirectoryListingProto) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_DirectoryListingProto.Marshal(b, m, deterministic)
+}
+func (dst *DirectoryListingProto) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_DirectoryListingProto.Merge(dst, src)
+}
+func (m *DirectoryListingProto) XXX_Size() int {
+	return xxx_messageInfo_DirectoryListingProto.Size(m)
+}
+func (m *DirectoryListingProto) XXX_DiscardUnknown() {
+	xxx_messageInfo_DirectoryListingProto.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_DirectoryListingProto proto.InternalMessageInfo
 
 func (m *DirectoryListingProto) GetPartialListing() []*HdfsFileStatusProto {
 	if m != nil {
@@ -1761,18 +2457,37 @@ func (m *DirectoryListingProto) GetRemainingEntries() uint32 {
 type SnapshottableDirectoryStatusProto struct {
 	DirStatus *HdfsFileStatusProto `protobuf:"bytes,1,req,name=dirStatus" json:"dirStatus,omitempty"`
 	// Fields specific for snapshottable directory
-	SnapshotQuota    *uint32 `protobuf:"varint,2,req,name=snapshot_quota,json=snapshotQuota" json:"snapshot_quota,omitempty"`
-	SnapshotNumber   *uint32 `protobuf:"varint,3,req,name=snapshot_number,json=snapshotNumber" json:"snapshot_number,omitempty"`
-	ParentFullpath   []byte  `protobuf:"bytes,4,req,name=parent_fullpath,json=parentFullpath" json:"parent_fullpath,omitempty"`
-	XXX_unrecognized []byte  `json:"-"`
+	SnapshotQuota        *uint32  `protobuf:"varint,2,req,name=snapshot_quota,json=snapshotQuota" json:"snapshot_quota,omitempty"`
+	SnapshotNumber       *uint32  `protobuf:"varint,3,req,name=snapshot_number,json=snapshotNumber" json:"snapshot_number,omitempty"`
+	ParentFullpath       []byte   `protobuf:"bytes,4,req,name=parent_fullpath,json=parentFullpath" json:"parent_fullpath,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
 }
 
 func (m *SnapshottableDirectoryStatusProto) Reset()         { *m = SnapshottableDirectoryStatusProto{} }
 func (m *SnapshottableDirectoryStatusProto) String() string { return proto.CompactTextString(m) }
 func (*SnapshottableDirectoryStatusProto) ProtoMessage()    {}
 func (*SnapshottableDirectoryStatusProto) Descriptor() ([]byte, []int) {
-	return fileDescriptor8, []int{28}
+	return fileDescriptor_hdfs_a39209040b2db4d3, []int{29}
 }
+func (m *SnapshottableDirectoryStatusProto) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_SnapshottableDirectoryStatusProto.Unmarshal(m, b)
+}
+func (m *SnapshottableDirectoryStatusProto) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_SnapshottableDirectoryStatusProto.Marshal(b, m, deterministic)
+}
+func (dst *SnapshottableDirectoryStatusProto) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_SnapshottableDirectoryStatusProto.Merge(dst, src)
+}
+func (m *SnapshottableDirectoryStatusProto) XXX_Size() int {
+	return xxx_messageInfo_SnapshottableDirectoryStatusProto.Size(m)
+}
+func (m *SnapshottableDirectoryStatusProto) XXX_DiscardUnknown() {
+	xxx_messageInfo_SnapshottableDirectoryStatusProto.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_SnapshottableDirectoryStatusProto proto.InternalMessageInfo
 
 func (m *SnapshottableDirectoryStatusProto) GetDirStatus() *HdfsFileStatusProto {
 	if m != nil {
@@ -1806,15 +2521,34 @@ func (m *SnapshottableDirectoryStatusProto) GetParentFullpath() []byte {
 // Snapshottable directory listing
 type SnapshottableDirectoryListingProto struct {
 	SnapshottableDirListing []*SnapshottableDirectoryStatusProto `protobuf:"bytes,1,rep,name=snapshottableDirListing" json:"snapshottableDirListing,omitempty"`
+	XXX_NoUnkeyedLiteral    struct{}                             `json:"-"`
 	XXX_unrecognized        []byte                               `json:"-"`
+	XXX_sizecache           int32                                `json:"-"`
 }
 
 func (m *SnapshottableDirectoryListingProto) Reset()         { *m = SnapshottableDirectoryListingProto{} }
 func (m *SnapshottableDirectoryListingProto) String() string { return proto.CompactTextString(m) }
 func (*SnapshottableDirectoryListingProto) ProtoMessage()    {}
 func (*SnapshottableDirectoryListingProto) Descriptor() ([]byte, []int) {
-	return fileDescriptor8, []int{29}
+	return fileDescriptor_hdfs_a39209040b2db4d3, []int{30}
 }
+func (m *SnapshottableDirectoryListingProto) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_SnapshottableDirectoryListingProto.Unmarshal(m, b)
+}
+func (m *SnapshottableDirectoryListingProto) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_SnapshottableDirectoryListingProto.Marshal(b, m, deterministic)
+}
+func (dst *SnapshottableDirectoryListingProto) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_SnapshottableDirectoryListingProto.Merge(dst, src)
+}
+func (m *SnapshottableDirectoryListingProto) XXX_Size() int {
+	return xxx_messageInfo_SnapshottableDirectoryListingProto.Size(m)
+}
+func (m *SnapshottableDirectoryListingProto) XXX_DiscardUnknown() {
+	xxx_messageInfo_SnapshottableDirectoryListingProto.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_SnapshottableDirectoryListingProto proto.InternalMessageInfo
 
 func (m *SnapshottableDirectoryListingProto) GetSnapshottableDirListing() []*SnapshottableDirectoryStatusProto {
 	if m != nil {
@@ -1826,16 +2560,37 @@ func (m *SnapshottableDirectoryListingProto) GetSnapshottableDirListing() []*Sna
 // *
 // Snapshot diff report entry
 type SnapshotDiffReportEntryProto struct {
-	Fullpath          []byte  `protobuf:"bytes,1,req,name=fullpath" json:"fullpath,omitempty"`
-	ModificationLabel *string `protobuf:"bytes,2,req,name=modificationLabel" json:"modificationLabel,omitempty"`
-	TargetPath        []byte  `protobuf:"bytes,3,opt,name=targetPath" json:"targetPath,omitempty"`
-	XXX_unrecognized  []byte  `json:"-"`
+	Fullpath             []byte   `protobuf:"bytes,1,req,name=fullpath" json:"fullpath,omitempty"`
+	ModificationLabel    *string  `protobuf:"bytes,2,req,name=modificationLabel" json:"modificationLabel,omitempty"`
+	TargetPath           []byte   `protobuf:"bytes,3,opt,name=targetPath" json:"targetPath,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
 }
 
-func (m *SnapshotDiffReportEntryProto) Reset()                    { *m = SnapshotDiffReportEntryProto{} }
-func (m *SnapshotDiffReportEntryProto) String() string            { return proto.CompactTextString(m) }
-func (*SnapshotDiffReportEntryProto) ProtoMessage()               {}
-func (*SnapshotDiffReportEntryProto) Descriptor() ([]byte, []int) { return fileDescriptor8, []int{30} }
+func (m *SnapshotDiffReportEntryProto) Reset()         { *m = SnapshotDiffReportEntryProto{} }
+func (m *SnapshotDiffReportEntryProto) String() string { return proto.CompactTextString(m) }
+func (*SnapshotDiffReportEntryProto) ProtoMessage()    {}
+func (*SnapshotDiffReportEntryProto) Descriptor() ([]byte, []int) {
+	return fileDescriptor_hdfs_a39209040b2db4d3, []int{31}
+}
+func (m *SnapshotDiffReportEntryProto) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_SnapshotDiffReportEntryProto.Unmarshal(m, b)
+}
+func (m *SnapshotDiffReportEntryProto) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_SnapshotDiffReportEntryProto.Marshal(b, m, deterministic)
+}
+func (dst *SnapshotDiffReportEntryProto) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_SnapshotDiffReportEntryProto.Merge(dst, src)
+}
+func (m *SnapshotDiffReportEntryProto) XXX_Size() int {
+	return xxx_messageInfo_SnapshotDiffReportEntryProto.Size(m)
+}
+func (m *SnapshotDiffReportEntryProto) XXX_DiscardUnknown() {
+	xxx_messageInfo_SnapshotDiffReportEntryProto.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_SnapshotDiffReportEntryProto proto.InternalMessageInfo
 
 func (m *SnapshotDiffReportEntryProto) GetFullpath() []byte {
 	if m != nil {
@@ -1862,17 +2617,38 @@ func (m *SnapshotDiffReportEntryProto) GetTargetPath() []byte {
 // Snapshot diff report
 type SnapshotDiffReportProto struct {
 	// full path of the directory where snapshots were taken
-	SnapshotRoot      *string                         `protobuf:"bytes,1,req,name=snapshotRoot" json:"snapshotRoot,omitempty"`
-	FromSnapshot      *string                         `protobuf:"bytes,2,req,name=fromSnapshot" json:"fromSnapshot,omitempty"`
-	ToSnapshot        *string                         `protobuf:"bytes,3,req,name=toSnapshot" json:"toSnapshot,omitempty"`
-	DiffReportEntries []*SnapshotDiffReportEntryProto `protobuf:"bytes,4,rep,name=diffReportEntries" json:"diffReportEntries,omitempty"`
-	XXX_unrecognized  []byte                          `json:"-"`
+	SnapshotRoot         *string                         `protobuf:"bytes,1,req,name=snapshotRoot" json:"snapshotRoot,omitempty"`
+	FromSnapshot         *string                         `protobuf:"bytes,2,req,name=fromSnapshot" json:"fromSnapshot,omitempty"`
+	ToSnapshot           *string                         `protobuf:"bytes,3,req,name=toSnapshot" json:"toSnapshot,omitempty"`
+	DiffReportEntries    []*SnapshotDiffReportEntryProto `protobuf:"bytes,4,rep,name=diffReportEntries" json:"diffReportEntries,omitempty"`
+	XXX_NoUnkeyedLiteral struct{}                        `json:"-"`
+	XXX_unrecognized     []byte                          `json:"-"`
+	XXX_sizecache        int32                           `json:"-"`
 }
 
-func (m *SnapshotDiffReportProto) Reset()                    { *m = SnapshotDiffReportProto{} }
-func (m *SnapshotDiffReportProto) String() string            { return proto.CompactTextString(m) }
-func (*SnapshotDiffReportProto) ProtoMessage()               {}
-func (*SnapshotDiffReportProto) Descriptor() ([]byte, []int) { return fileDescriptor8, []int{31} }
+func (m *SnapshotDiffReportProto) Reset()         { *m = SnapshotDiffReportProto{} }
+func (m *SnapshotDiffReportProto) String() string { return proto.CompactTextString(m) }
+func (*SnapshotDiffReportProto) ProtoMessage()    {}
+func (*SnapshotDiffReportProto) Descriptor() ([]byte, []int) {
+	return fileDescriptor_hdfs_a39209040b2db4d3, []int{32}
+}
+func (m *SnapshotDiffReportProto) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_SnapshotDiffReportProto.Unmarshal(m, b)
+}
+func (m *SnapshotDiffReportProto) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_SnapshotDiffReportProto.Marshal(b, m, deterministic)
+}
+func (dst *SnapshotDiffReportProto) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_SnapshotDiffReportProto.Merge(dst, src)
+}
+func (m *SnapshotDiffReportProto) XXX_Size() int {
+	return xxx_messageInfo_SnapshotDiffReportProto.Size(m)
+}
+func (m *SnapshotDiffReportProto) XXX_DiscardUnknown() {
+	xxx_messageInfo_SnapshotDiffReportProto.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_SnapshotDiffReportProto proto.InternalMessageInfo
 
 func (m *SnapshotDiffReportProto) GetSnapshotRoot() string {
 	if m != nil && m.SnapshotRoot != nil {
@@ -1911,16 +2687,37 @@ func (m *SnapshotDiffReportProto) GetDiffReportEntries() []*SnapshotDiffReportEn
 // (dfs.namenode.fs-limits.max-blocks-per-file), but it's better
 // to avoid changing this.
 type BlockProto struct {
-	BlockId          *uint64 `protobuf:"varint,1,req,name=blockId" json:"blockId,omitempty"`
-	GenStamp         *uint64 `protobuf:"varint,2,req,name=genStamp" json:"genStamp,omitempty"`
-	NumBytes         *uint64 `protobuf:"varint,3,opt,name=numBytes,def=0" json:"numBytes,omitempty"`
-	XXX_unrecognized []byte  `json:"-"`
+	BlockId              *uint64  `protobuf:"varint,1,req,name=blockId" json:"blockId,omitempty"`
+	GenStamp             *uint64  `protobuf:"varint,2,req,name=genStamp" json:"genStamp,omitempty"`
+	NumBytes             *uint64  `protobuf:"varint,3,opt,name=numBytes,def=0" json:"numBytes,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
 }
 
-func (m *BlockProto) Reset()                    { *m = BlockProto{} }
-func (m *BlockProto) String() string            { return proto.CompactTextString(m) }
-func (*BlockProto) ProtoMessage()               {}
-func (*BlockProto) Descriptor() ([]byte, []int) { return fileDescriptor8, []int{32} }
+func (m *BlockProto) Reset()         { *m = BlockProto{} }
+func (m *BlockProto) String() string { return proto.CompactTextString(m) }
+func (*BlockProto) ProtoMessage()    {}
+func (*BlockProto) Descriptor() ([]byte, []int) {
+	return fileDescriptor_hdfs_a39209040b2db4d3, []int{33}
+}
+func (m *BlockProto) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_BlockProto.Unmarshal(m, b)
+}
+func (m *BlockProto) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_BlockProto.Marshal(b, m, deterministic)
+}
+func (dst *BlockProto) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_BlockProto.Merge(dst, src)
+}
+func (m *BlockProto) XXX_Size() int {
+	return xxx_messageInfo_BlockProto.Size(m)
+}
+func (m *BlockProto) XXX_DiscardUnknown() {
+	xxx_messageInfo_BlockProto.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_BlockProto proto.InternalMessageInfo
 
 const Default_BlockProto_NumBytes uint64 = 0
 
@@ -1949,19 +2746,40 @@ func (m *BlockProto) GetNumBytes() uint64 {
 // Information related to a snapshot
 // TODO: add more information
 type SnapshotInfoProto struct {
-	SnapshotName     *string            `protobuf:"bytes,1,req,name=snapshotName" json:"snapshotName,omitempty"`
-	SnapshotRoot     *string            `protobuf:"bytes,2,req,name=snapshotRoot" json:"snapshotRoot,omitempty"`
-	Permission       *FsPermissionProto `protobuf:"bytes,3,req,name=permission" json:"permission,omitempty"`
-	Owner            *string            `protobuf:"bytes,4,req,name=owner" json:"owner,omitempty"`
-	Group            *string            `protobuf:"bytes,5,req,name=group" json:"group,omitempty"`
-	CreateTime       *string            `protobuf:"bytes,6,req,name=createTime" json:"createTime,omitempty"`
-	XXX_unrecognized []byte             `json:"-"`
+	SnapshotName         *string            `protobuf:"bytes,1,req,name=snapshotName" json:"snapshotName,omitempty"`
+	SnapshotRoot         *string            `protobuf:"bytes,2,req,name=snapshotRoot" json:"snapshotRoot,omitempty"`
+	Permission           *FsPermissionProto `protobuf:"bytes,3,req,name=permission" json:"permission,omitempty"`
+	Owner                *string            `protobuf:"bytes,4,req,name=owner" json:"owner,omitempty"`
+	Group                *string            `protobuf:"bytes,5,req,name=group" json:"group,omitempty"`
+	CreateTime           *string            `protobuf:"bytes,6,req,name=createTime" json:"createTime,omitempty"`
+	XXX_NoUnkeyedLiteral struct{}           `json:"-"`
+	XXX_unrecognized     []byte             `json:"-"`
+	XXX_sizecache        int32              `json:"-"`
 }
 
-func (m *SnapshotInfoProto) Reset()                    { *m = SnapshotInfoProto{} }
-func (m *SnapshotInfoProto) String() string            { return proto.CompactTextString(m) }
-func (*SnapshotInfoProto) ProtoMessage()               {}
-func (*SnapshotInfoProto) Descriptor() ([]byte, []int) { return fileDescriptor8, []int{33} }
+func (m *SnapshotInfoProto) Reset()         { *m = SnapshotInfoProto{} }
+func (m *SnapshotInfoProto) String() string { return proto.CompactTextString(m) }
+func (*SnapshotInfoProto) ProtoMessage()    {}
+func (*SnapshotInfoProto) Descriptor() ([]byte, []int) {
+	return fileDescriptor_hdfs_a39209040b2db4d3, []int{34}
+}
+func (m *SnapshotInfoProto) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_SnapshotInfoProto.Unmarshal(m, b)
+}
+func (m *SnapshotInfoProto) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_SnapshotInfoProto.Marshal(b, m, deterministic)
+}
+func (dst *SnapshotInfoProto) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_SnapshotInfoProto.Merge(dst, src)
+}
+func (m *SnapshotInfoProto) XXX_Size() int {
+	return xxx_messageInfo_SnapshotInfoProto.Size(m)
+}
+func (m *SnapshotInfoProto) XXX_DiscardUnknown() {
+	xxx_messageInfo_SnapshotInfoProto.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_SnapshotInfoProto proto.InternalMessageInfo
 
 func (m *SnapshotInfoProto) GetSnapshotName() string {
 	if m != nil && m.SnapshotName != nil {
@@ -2008,15 +2826,36 @@ func (m *SnapshotInfoProto) GetCreateTime() string {
 // *
 // Rolling upgrade status
 type RollingUpgradeStatusProto struct {
-	BlockPoolId      *string `protobuf:"bytes,1,req,name=blockPoolId" json:"blockPoolId,omitempty"`
-	Finalized        *bool   `protobuf:"varint,2,opt,name=finalized,def=0" json:"finalized,omitempty"`
-	XXX_unrecognized []byte  `json:"-"`
+	BlockPoolId          *string  `protobuf:"bytes,1,req,name=blockPoolId" json:"blockPoolId,omitempty"`
+	Finalized            *bool    `protobuf:"varint,2,opt,name=finalized,def=0" json:"finalized,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
 }
 
-func (m *RollingUpgradeStatusProto) Reset()                    { *m = RollingUpgradeStatusProto{} }
-func (m *RollingUpgradeStatusProto) String() string            { return proto.CompactTextString(m) }
-func (*RollingUpgradeStatusProto) ProtoMessage()               {}
-func (*RollingUpgradeStatusProto) Descriptor() ([]byte, []int) { return fileDescriptor8, []int{34} }
+func (m *RollingUpgradeStatusProto) Reset()         { *m = RollingUpgradeStatusProto{} }
+func (m *RollingUpgradeStatusProto) String() string { return proto.CompactTextString(m) }
+func (*RollingUpgradeStatusProto) ProtoMessage()    {}
+func (*RollingUpgradeStatusProto) Descriptor() ([]byte, []int) {
+	return fileDescriptor_hdfs_a39209040b2db4d3, []int{35}
+}
+func (m *RollingUpgradeStatusProto) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_RollingUpgradeStatusProto.Unmarshal(m, b)
+}
+func (m *RollingUpgradeStatusProto) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_RollingUpgradeStatusProto.Marshal(b, m, deterministic)
+}
+func (dst *RollingUpgradeStatusProto) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_RollingUpgradeStatusProto.Merge(dst, src)
+}
+func (m *RollingUpgradeStatusProto) XXX_Size() int {
+	return xxx_messageInfo_RollingUpgradeStatusProto.Size(m)
+}
+func (m *RollingUpgradeStatusProto) XXX_DiscardUnknown() {
+	xxx_messageInfo_RollingUpgradeStatusProto.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_RollingUpgradeStatusProto proto.InternalMessageInfo
 
 const Default_RollingUpgradeStatusProto_Finalized bool = false
 
@@ -2037,14 +2876,35 @@ func (m *RollingUpgradeStatusProto) GetFinalized() bool {
 // *
 // A list of storage IDs.
 type StorageUuidsProto struct {
-	StorageUuids     []string `protobuf:"bytes,1,rep,name=storageUuids" json:"storageUuids,omitempty"`
-	XXX_unrecognized []byte   `json:"-"`
+	StorageUuids         []string `protobuf:"bytes,1,rep,name=storageUuids" json:"storageUuids,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
 }
 
-func (m *StorageUuidsProto) Reset()                    { *m = StorageUuidsProto{} }
-func (m *StorageUuidsProto) String() string            { return proto.CompactTextString(m) }
-func (*StorageUuidsProto) ProtoMessage()               {}
-func (*StorageUuidsProto) Descriptor() ([]byte, []int) { return fileDescriptor8, []int{35} }
+func (m *StorageUuidsProto) Reset()         { *m = StorageUuidsProto{} }
+func (m *StorageUuidsProto) String() string { return proto.CompactTextString(m) }
+func (*StorageUuidsProto) ProtoMessage()    {}
+func (*StorageUuidsProto) Descriptor() ([]byte, []int) {
+	return fileDescriptor_hdfs_a39209040b2db4d3, []int{36}
+}
+func (m *StorageUuidsProto) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_StorageUuidsProto.Unmarshal(m, b)
+}
+func (m *StorageUuidsProto) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_StorageUuidsProto.Marshal(b, m, deterministic)
+}
+func (dst *StorageUuidsProto) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_StorageUuidsProto.Merge(dst, src)
+}
+func (m *StorageUuidsProto) XXX_Size() int {
+	return xxx_messageInfo_StorageUuidsProto.Size(m)
+}
+func (m *StorageUuidsProto) XXX_DiscardUnknown() {
+	xxx_messageInfo_StorageUuidsProto.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_StorageUuidsProto proto.InternalMessageInfo
 
 func (m *StorageUuidsProto) GetStorageUuids() []string {
 	if m != nil {
@@ -2080,6 +2940,7 @@ func init() {
 	proto.RegisterType((*ECSchemaProto)(nil), "hadoop.hdfs.ECSchemaProto")
 	proto.RegisterType((*ErasureCodingPolicyProto)(nil), "hadoop.hdfs.ErasureCodingPolicyProto")
 	proto.RegisterType((*HdfsFileStatusProto)(nil), "hadoop.hdfs.HdfsFileStatusProto")
+	proto.RegisterType((*BlockChecksumOptionsProto)(nil), "hadoop.hdfs.BlockChecksumOptionsProto")
 	proto.RegisterType((*FsServerDefaultsProto)(nil), "hadoop.hdfs.FsServerDefaultsProto")
 	proto.RegisterType((*DirectoryListingProto)(nil), "hadoop.hdfs.DirectoryListingProto")
 	proto.RegisterType((*SnapshottableDirectoryStatusProto)(nil), "hadoop.hdfs.SnapshottableDirectoryStatusProto")
@@ -2094,196 +2955,202 @@ func init() {
 	proto.RegisterEnum("hadoop.hdfs.CipherSuiteProto", CipherSuiteProto_name, CipherSuiteProto_value)
 	proto.RegisterEnum("hadoop.hdfs.CryptoProtocolVersionProto", CryptoProtocolVersionProto_name, CryptoProtocolVersionProto_value)
 	proto.RegisterEnum("hadoop.hdfs.ChecksumTypeProto", ChecksumTypeProto_name, ChecksumTypeProto_value)
+	proto.RegisterEnum("hadoop.hdfs.BlockChecksumTypeProto", BlockChecksumTypeProto_name, BlockChecksumTypeProto_value)
 	proto.RegisterEnum("hadoop.hdfs.DatanodeInfoProto_AdminState", DatanodeInfoProto_AdminState_name, DatanodeInfoProto_AdminState_value)
 	proto.RegisterEnum("hadoop.hdfs.DatanodeStorageProto_StorageState", DatanodeStorageProto_StorageState_name, DatanodeStorageProto_StorageState_value)
 	proto.RegisterEnum("hadoop.hdfs.HdfsFileStatusProto_FileType", HdfsFileStatusProto_FileType_name, HdfsFileStatusProto_FileType_value)
 }
 
-func init() { proto.RegisterFile("hdfs.proto", fileDescriptor8) }
+func init() { proto.RegisterFile("hdfs.proto", fileDescriptor_hdfs_a39209040b2db4d3) }
 
-var fileDescriptor8 = []byte{
-	// 2923 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xd4, 0x59, 0xcd, 0x73, 0x1b, 0xc7,
-	0xb1, 0xf7, 0x2e, 0x00, 0x12, 0x68, 0x92, 0x20, 0x38, 0xfa, 0x82, 0x68, 0x59, 0xa6, 0xf7, 0x49,
-	0x16, 0xad, 0x67, 0xb3, 0x6c, 0xea, 0x95, 0x5d, 0x4f, 0xf6, 0xf3, 0x0b, 0x09, 0x80, 0x16, 0x4a,
-	0x10, 0x40, 0x0f, 0x48, 0xb9, 0xec, 0x4a, 0x0a, 0xb5, 0xdc, 0x1d, 0x10, 0x1b, 0x2e, 0x76, 0x36,
-	0xbb, 0x0b, 0x5a, 0xf0, 0x29, 0xc7, 0x54, 0xa5, 0x92, 0x9c, 0x72, 0xcb, 0xc1, 0x55, 0xc9, 0x39,
-	0xff, 0x86, 0xff, 0x87, 0x54, 0x2a, 0xc7, 0xe4, 0x9a, 0x43, 0xee, 0x49, 0x4d, 0xcf, 0xec, 0x17,
-	0x3e, 0x44, 0xc5, 0x3e, 0xe5, 0x86, 0xfe, 0x4d, 0x77, 0xef, 0x74, 0xcf, 0xf4, 0xc7, 0x34, 0x00,
-	0x46, 0xf6, 0x30, 0xdc, 0xf3, 0x03, 0x1e, 0x71, 0xb2, 0x36, 0x32, 0x6d, 0xce, 0xfd, 0x3d, 0x01,
-	0x6d, 0x57, 0xfb, 0xcc, 0x9a, 0x04, 0x4e, 0x34, 0x95, 0x8b, 0xc6, 0x6f, 0x34, 0x20, 0xad, 0x17,
-	0x11, 0xf3, 0x6c, 0x66, 0x1f, 0xba, 0xdc, 0xba, 0x38, 0x46, 0x99, 0x9b, 0xb0, 0xe2, 0x73, 0xee,
-	0xb6, 0xed, 0xba, 0xb6, 0xa3, 0xef, 0x56, 0xa8, 0xa2, 0x48, 0x1d, 0x56, 0xcf, 0x04, 0x57, 0xdb,
-	0xae, 0xeb, 0x3b, 0xfa, 0x6e, 0x91, 0xc6, 0x24, 0xd9, 0x85, 0xcd, 0x73, 0xe6, 0xb1, 0xc0, 0x8c,
-	0x1c, 0xee, 0xf5, 0x23, 0x73, 0xec, 0xd7, 0x0b, 0xc8, 0x31, 0x0b, 0x93, 0x37, 0xa0, 0xec, 0x4d,
-	0xc6, 0x87, 0xd3, 0x88, 0x85, 0xf5, 0xe2, 0x8e, 0xb6, 0x5b, 0x7c, 0xac, 0xbd, 0x4f, 0x13, 0xc8,
-	0xf8, 0xab, 0x06, 0x9b, 0x4d, 0x33, 0x32, 0x3d, 0x6e, 0xb3, 0x76, 0x33, 0xd9, 0x8e, 0xe3, 0x1f,
-	0xd8, 0x76, 0x10, 0x6f, 0x47, 0x52, 0x64, 0x1b, 0xca, 0x23, 0x1e, 0x46, 0x5d, 0x73, 0xcc, 0x70,
-	0x3f, 0x15, 0x9a, 0xd0, 0xc4, 0x80, 0x75, 0x5b, 0xa9, 0x39, 0x9d, 0x38, 0x36, 0xee, 0xa6, 0x42,
-	0x73, 0x98, 0x90, 0x7f, 0x31, 0x64, 0xc1, 0x31, 0x0f, 0xa2, 0x7a, 0x71, 0x47, 0xdf, 0xdd, 0xa0,
-	0x09, 0x2d, 0xd6, 0x1c, 0x6f, 0xc8, 0x71, 0xad, 0x24, 0xd7, 0x62, 0x5a, 0xb8, 0xc1, 0xf1, 0x2d,
-	0x5c, 0x5a, 0xc1, 0xa5, 0x98, 0x24, 0xef, 0x40, 0x55, 0x70, 0xa1, 0x97, 0x19, 0x32, 0xac, 0xee,
-	0x68, 0xbb, 0x1b, 0xc2, 0xc4, 0x99, 0x05, 0xe3, 0xe7, 0x1a, 0xdc, 0x8c, 0x0d, 0xed, 0x70, 0xcb,
-	0x74, 0xdb, 0x42, 0x3d, 0xda, 0xbb, 0x0b, 0x9b, 0x21, 0x1f, 0x46, 0x5f, 0x9b, 0x01, 0x7b, 0xce,
-	0x82, 0xd0, 0xe1, 0x9e, 0x32, 0x7c, 0x16, 0x26, 0xf7, 0x60, 0xc3, 0xe2, 0xde, 0xd0, 0x39, 0x8f,
-	0xf9, 0xa4, 0x1b, 0xf2, 0xa0, 0xf0, 0xdf, 0xc4, 0x8f, 0x9c, 0x31, 0x53, 0x67, 0xa2, 0x28, 0x83,
-	0x02, 0x49, 0x5c, 0xed, 0x0d, 0x79, 0x28, 0xbf, 0xfe, 0x09, 0x54, 0x62, 0x2f, 0x85, 0x75, 0x6d,
-	0xa7, 0xb0, 0xbb, 0xb6, 0x7f, 0x77, 0x2f, 0x73, 0x89, 0xf6, 0xb2, 0x32, 0x28, 0x42, 0x53, 0x01,
-	0xe3, 0xef, 0x45, 0xd8, 0x9a, 0x63, 0x20, 0xef, 0x82, 0xee, 0xc8, 0xcb, 0xb4, 0xb6, 0x7f, 0x67,
-	0xb1, 0x32, 0x79, 0xd6, 0x54, 0x77, 0x6c, 0x71, 0x45, 0x2c, 0xd3, 0x37, 0x2d, 0x27, 0x9a, 0xd6,
-	0xf5, 0xe4, 0x8a, 0xc4, 0x10, 0x79, 0x1d, 0x56, 0xed, 0x61, 0x78, 0x1a, 0x32, 0x71, 0xaa, 0x6a,
-	0x35, 0x46, 0xc8, 0x9b, 0x50, 0x09, 0xd8, 0xd8, 0x74, 0x3c, 0xc7, 0x3b, 0x4f, 0xef, 0x57, 0x8a,
-	0x91, 0x07, 0xb0, 0x81, 0x97, 0xf6, 0x98, 0x73, 0x17, 0x75, 0x94, 0x62, 0xa6, 0x3c, 0x4e, 0xde,
-	0x02, 0x70, 0xcd, 0x30, 0x3a, 0xf5, 0x6d, 0x33, 0x62, 0xf5, 0x95, 0x98, 0x2b, 0x03, 0x92, 0xfb,
-	0xb0, 0xfe, 0xc2, 0x62, 0xce, 0x25, 0x0b, 0x1a, 0x7c, 0xe2, 0x65, 0x0e, 0x3b, 0x07, 0x8b, 0xbb,
-	0xe4, 0x72, 0x0b, 0x63, 0xa0, 0x5e, 0xde, 0xd1, 0xc4, 0x3d, 0x8d, 0x69, 0xf2, 0x39, 0x80, 0x69,
-	0x8f, 0x1d, 0x11, 0x1c, 0x11, 0xab, 0xc3, 0x8e, 0xb6, 0x5b, 0xdd, 0x7f, 0xe7, 0xe5, 0xee, 0xde,
-	0x3b, 0x48, 0x04, 0x1e, 0xaf, 0x74, 0x7b, 0xf4, 0xd9, 0x41, 0x87, 0x66, 0x94, 0x08, 0x0b, 0x2d,
-	0xd3, 0x1a, 0xb1, 0x46, 0xec, 0xc3, 0xb5, 0xc4, 0xc2, 0x1c, 0x2e, 0x7c, 0x85, 0x00, 0xba, 0x61,
-	0x3d, 0xf1, 0x55, 0x82, 0x91, 0x47, 0x70, 0x2d, 0xb5, 0xf6, 0x19, 0xf7, 0x78, 0xc4, 0x3d, 0xc7,
-	0xaa, 0x6f, 0xc4, 0xac, 0x8b, 0x56, 0xc5, 0x9d, 0x9c, 0xf8, 0xe7, 0x81, 0x69, 0xb3, 0x26, 0x17,
-	0x4e, 0xaf, 0x57, 0xd1, 0xe4, 0x3c, 0x68, 0xb4, 0x01, 0x52, 0x33, 0x08, 0x80, 0x32, 0xa4, 0xf6,
-	0x1a, 0x79, 0x1d, 0x6e, 0x35, 0x5b, 0x8d, 0xde, 0xb3, 0x67, 0xed, 0x7e, 0xbf, 0xdd, 0xeb, 0x0e,
-	0xda, 0xdd, 0x63, 0xda, 0xfb, 0x8c, 0xb6, 0xfa, 0xfd, 0x9a, 0x46, 0x08, 0x54, 0xb3, 0x8b, 0xad,
-	0x66, 0x4d, 0x37, 0xfe, 0xa9, 0xc1, 0xf5, 0xd8, 0x49, 0xfd, 0x88, 0x07, 0xe6, 0x39, 0x93, 0xb7,
-	0x6e, 0x07, 0xd6, 0x42, 0x49, 0x63, 0x0a, 0x90, 0x31, 0x94, 0x85, 0x48, 0x07, 0x4a, 0x21, 0x3a,
-	0x5e, 0x47, 0xc7, 0xef, 0x2d, 0x74, 0x7c, 0x56, 0xe7, 0x9e, 0x22, 0xf2, 0xde, 0x97, 0x4a, 0x48,
-	0x2b, 0xf9, 0xde, 0xc9, 0xd4, 0x67, 0x78, 0x39, 0xab, 0xfb, 0x6f, 0xe4, 0x74, 0xf6, 0xd3, 0x75,
-	0xd4, 0xf7, 0xb8, 0xd8, 0x6c, 0xf7, 0x9f, 0xd2, 0xac, 0x9c, 0xf1, 0x3e, 0xac, 0x67, 0xbf, 0x92,
-	0x73, 0xce, 0x75, 0xa8, 0xd1, 0xd6, 0x41, 0x73, 0xd0, 0xeb, 0x76, 0xbe, 0x1c, 0xf4, 0x9f, 0x1c,
-	0xd0, 0x56, 0xb3, 0xa6, 0x19, 0xbf, 0xd3, 0x81, 0x28, 0x11, 0xca, 0x7c, 0x1e, 0x44, 0xd2, 0xfe,
-	0x7b, 0x0b, 0xec, 0x3f, 0xd4, 0xeb, 0x5a, 0xde, 0x07, 0x6f, 0xc0, 0xca, 0xd0, 0x74, 0x5c, 0x66,
-	0xa3, 0x13, 0xca, 0x8f, 0x4b, 0x43, 0xd3, 0x0d, 0x19, 0x55, 0x60, 0x2e, 0x18, 0x0b, 0x2f, 0x0d,
-	0xc6, 0xe2, 0xcb, 0x83, 0xb1, 0xf4, 0x2a, 0xc1, 0xb8, 0xb2, 0x24, 0x18, 0x3f, 0x86, 0x55, 0xb5,
-	0x67, 0x0c, 0xb2, 0xb5, 0xfd, 0xb7, 0xae, 0x3c, 0x2a, 0x1a, 0x4b, 0x18, 0xdf, 0xea, 0x70, 0xad,
-	0xc1, 0xbd, 0x88, 0x79, 0x51, 0x7f, 0x32, 0x1e, 0x9b, 0xc1, 0x34, 0xa9, 0x2b, 0x2e, 0xf3, 0xce,
-	0xa3, 0x11, 0xba, 0xa6, 0x48, 0x15, 0x45, 0xee, 0x40, 0x65, 0xe8, 0xb8, 0x4c, 0xc6, 0xb4, 0x2c,
-	0x74, 0x29, 0x40, 0xde, 0x86, 0xaa, 0xed, 0x04, 0xcc, 0x8a, 0x78, 0x30, 0x95, 0x2c, 0x32, 0xab,
-	0xce, 0xa0, 0xe4, 0x3a, 0x94, 0x7e, 0x36, 0xe1, 0x91, 0x89, 0xa5, 0xa5, 0x48, 0x25, 0x21, 0xa2,
-	0x23, 0xf4, 0x4d, 0x8b, 0x35, 0xb8, 0x17, 0x4e, 0xc6, 0x98, 0x7e, 0xc4, 0x6a, 0x1e, 0x24, 0x77,
-	0x01, 0x10, 0xf8, 0x1c, 0x15, 0xac, 0x20, 0x4b, 0x06, 0x21, 0x3d, 0xa8, 0x46, 0x53, 0x5f, 0x12,
-	0x98, 0xba, 0x95, 0x57, 0x1e, 0x2c, 0xbb, 0x6c, 0x29, 0xa7, 0xf4, 0xcd, 0x8c, 0xb8, 0xf1, 0x0f,
-	0x0d, 0x36, 0x91, 0x3c, 0x0d, 0x93, 0xf0, 0xf9, 0x1f, 0xb8, 0x21, 0xac, 0x3e, 0xf0, 0xec, 0x66,
-	0xde, 0x5e, 0xe9, 0xad, 0xc5, 0x8b, 0xa9, 0xd9, 0xfa, 0x4b, 0xcd, 0x2e, 0x5c, 0x6d, 0x76, 0xf1,
-	0x15, 0xcc, 0x2e, 0xfd, 0x30, 0xb3, 0x7f, 0x0a, 0xdb, 0xcb, 0xb9, 0x49, 0x07, 0x36, 0x72, 0xfc,
-	0xaa, 0x1a, 0xbe, 0x7d, 0xe5, 0xd7, 0xe4, 0xc7, 0xf2, 0xc2, 0xa2, 0xe0, 0xdf, 0x5e, 0xca, 0x4c,
-	0x3e, 0x80, 0xa2, 0x60, 0x47, 0xdf, 0x5e, 0x95, 0x34, 0x28, 0xb2, 0x2e, 0xf1, 0xf4, 0x36, 0x94,
-	0xad, 0xbc, 0x93, 0x13, 0xda, 0x38, 0x82, 0x9b, 0x0d, 0x1e, 0x04, 0x13, 0x3f, 0x3a, 0x72, 0x5c,
-	0x86, 0x0d, 0x9f, 0x32, 0xf5, 0x3a, 0x94, 0xc4, 0x71, 0xca, 0x82, 0x5f, 0xa1, 0x92, 0x10, 0x01,
-	0x62, 0x71, 0x7e, 0xe1, 0xc4, 0xed, 0x95, 0xa2, 0x8c, 0x07, 0xb0, 0x75, 0x14, 0x1e, 0xb3, 0x60,
-	0xec, 0x84, 0xa2, 0xc1, 0x90, 0x2a, 0x08, 0x14, 0x7d, 0x16, 0x8c, 0xd1, 0x82, 0x0d, 0x8a, 0xbf,
-	0x8d, 0xe7, 0xb0, 0x95, 0xd9, 0xbc, 0xfa, 0xd6, 0x01, 0xac, 0x67, 0xd2, 0x9d, 0xfc, 0xe4, 0x95,
-	0x26, 0xe7, 0x44, 0x8c, 0xef, 0x74, 0xb8, 0x85, 0xdb, 0x8f, 0x03, 0x9e, 0xbb, 0x8e, 0xa5, 0xa2,
-	0x7a, 0x1b, 0xca, 0x3e, 0x92, 0xaa, 0x7d, 0xdd, 0xa0, 0x09, 0x2d, 0xf6, 0xe8, 0xa5, 0xdd, 0x22,
-	0xfe, 0x26, 0x47, 0x50, 0xb5, 0x02, 0x86, 0xd5, 0x58, 0xaa, 0x41, 0xb7, 0xcd, 0x36, 0x3d, 0x73,
-	0x66, 0xd0, 0x19, 0x29, 0xf2, 0x1c, 0x6e, 0xc6, 0xc8, 0x91, 0xe9, 0xba, 0x67, 0xa6, 0x48, 0x5f,
-	0xa8, 0xaf, 0x88, 0x97, 0xf4, 0x2a, 0x7d, 0x4b, 0xa4, 0xc9, 0x8f, 0xe1, 0x76, 0xc0, 0x7c, 0xd7,
-	0xb1, 0x16, 0xa9, 0x2e, 0xbd, 0x92, 0xea, 0xe5, 0x0a, 0x8c, 0xef, 0x0a, 0xb0, 0x25, 0xda, 0xcf,
-	0x28, 0xf7, 0x00, 0x78, 0x0f, 0xb4, 0x33, 0xd5, 0xae, 0xbd, 0x99, 0xd3, 0x3d, 0xff, 0x58, 0xa0,
-	0xda, 0x99, 0xb8, 0x27, 0x7c, 0x38, 0x0c, 0x59, 0x9c, 0x2d, 0x15, 0x45, 0xf6, 0xa1, 0xe8, 0x72,
-	0x2b, 0xac, 0x17, 0x5e, 0xa9, 0x8b, 0x44, 0x5e, 0xd1, 0x5c, 0x5b, 0xf2, 0x8e, 0x62, 0x02, 0x28,
-	0xd3, 0x98, 0x24, 0xff, 0x0b, 0x80, 0x45, 0xe1, 0x84, 0x5f, 0x30, 0x0f, 0xf3, 0xe6, 0xda, 0xfe,
-	0xed, 0x58, 0xa7, 0xc5, 0xc7, 0x63, 0xee, 0xed, 0xe1, 0x9a, 0x54, 0x97, 0x61, 0x26, 0x77, 0xa1,
-	0xec, 0x84, 0x0d, 0xd1, 0xd7, 0x88, 0x12, 0x53, 0xd8, 0x2d, 0x1f, 0xea, 0x35, 0x8d, 0x26, 0xd8,
-	0xdc, 0x95, 0x5c, 0xfd, 0xb7, 0xaf, 0x24, 0xe6, 0x2e, 0x49, 0xb7, 0x9b, 0x61, 0xbd, 0x8c, 0x61,
-	0x94, 0x41, 0xc4, 0x83, 0x44, 0x3e, 0x96, 0x3c, 0xdb, 0xb1, 0x58, 0x58, 0xaf, 0xec, 0x68, 0xbb,
-	0xeb, 0x34, 0x87, 0x91, 0x8f, 0x61, 0x2d, 0xdd, 0x74, 0x58, 0x07, 0x74, 0xdb, 0x4b, 0x4c, 0xcc,
-	0x72, 0x1b, 0x7f, 0x51, 0x0f, 0x8a, 0x96, 0x67, 0x05, 0x53, 0x5f, 0x1c, 0xf5, 0x53, 0x36, 0x4d,
-	0xa2, 0xfb, 0x82, 0xa5, 0xf1, 0x20, 0x09, 0xd1, 0x1e, 0x25, 0x45, 0x56, 0xbd, 0xe8, 0x2a, 0x34,
-	0x0b, 0x09, 0x39, 0x8f, 0x7b, 0x96, 0x7c, 0x37, 0xac, 0x53, 0x49, 0x88, 0x5c, 0xce, 0xb2, 0xdf,
-	0xc0, 0x73, 0x5a, 0xa7, 0x79, 0x50, 0xf8, 0x83, 0xbd, 0xf0, 0x9d, 0x60, 0xda, 0x14, 0xfd, 0x95,
-	0xac, 0x72, 0x19, 0x84, 0xbc, 0x0f, 0xd7, 0x52, 0x81, 0x03, 0xf7, 0x9c, 0x07, 0x4e, 0x34, 0x1a,
-	0x63, 0x03, 0x50, 0xa1, 0x8b, 0x96, 0x8c, 0xdf, 0xea, 0x70, 0x4b, 0xe4, 0xad, 0xd4, 0xc0, 0x34,
-	0x7d, 0x3e, 0x82, 0x52, 0x38, 0x71, 0xa2, 0xc5, 0xf9, 0xb3, 0xe1, 0xf8, 0x23, 0x16, 0xf4, 0xc5,
-	0xba, 0xf4, 0x9b, 0xe4, 0x25, 0x3f, 0x81, 0x1b, 0xa8, 0x49, 0xea, 0xb0, 0xb8, 0x9b, 0x7d, 0x45,
-	0x55, 0x67, 0xaa, 0x4a, 0x63, 0x11, 0xa7, 0x54, 0xb7, 0x58, 0x0b, 0xa9, 0x41, 0xe1, 0x82, 0x4d,
-	0x95, 0xef, 0xc4, 0x4f, 0x52, 0x05, 0xdd, 0xb9, 0x54, 0xee, 0xd2, 0x9d, 0x4b, 0x71, 0xd7, 0x2f,
-	0xd8, 0x14, 0xdf, 0xaf, 0x25, 0xf4, 0x7e, 0x4c, 0x92, 0x87, 0x50, 0x63, 0xdf, 0x3c, 0x65, 0x53,
-	0xa5, 0x0b, 0x59, 0x56, 0x90, 0x65, 0x0e, 0x17, 0x45, 0xec, 0x98, 0x05, 0xcb, 0x3c, 0xa3, 0x76,
-	0xa1, 0xcd, 0xee, 0x42, 0x4f, 0x76, 0xb1, 0xe8, 0x5b, 0x85, 0x25, 0xdf, 0xfa, 0x4e, 0x83, 0x5b,
-	0x5f, 0x71, 0xef, 0x3f, 0xe6, 0x0c, 0x32, 0x1e, 0x2e, 0xe4, 0x3c, 0x6c, 0x7c, 0xab, 0xc1, 0x96,
-	0xdc, 0x54, 0x0f, 0xed, 0xf8, 0x01, 0x36, 0x5c, 0x87, 0x92, 0x83, 0x81, 0xa0, 0x63, 0x4c, 0x4b,
-	0x42, 0xd4, 0x1a, 0xc7, 0x6b, 0x5f, 0x62, 0xd3, 0xbc, 0x4e, 0xf1, 0x37, 0x26, 0xca, 0x49, 0x24,
-	0x63, 0x46, 0xa0, 0x8a, 0x12, 0x1a, 0xf8, 0x24, 0x6a, 0x5f, 0x62, 0x3e, 0x5f, 0xa7, 0x92, 0x30,
-	0x7e, 0x5f, 0x00, 0x92, 0xcd, 0xcd, 0xaa, 0x7e, 0xde, 0x05, 0x10, 0xe5, 0xb9, 0x93, 0x6d, 0x5d,
-	0x33, 0x08, 0xf9, 0x10, 0x56, 0x30, 0x88, 0xc3, 0xba, 0xbe, 0x20, 0xef, 0xce, 0x25, 0x7b, 0xaa,
-	0xb8, 0xc9, 0xbb, 0xb0, 0x35, 0xf1, 0x6c, 0xf1, 0x68, 0xf5, 0xc2, 0x28, 0x98, 0x58, 0xf8, 0x5e,
-	0x2d, 0x60, 0x0e, 0x9e, 0x5f, 0x20, 0x9f, 0x40, 0x45, 0xbc, 0xfe, 0x50, 0xcf, 0xc2, 0x0a, 0x37,
-	0xff, 0xa1, 0x54, 0x40, 0x44, 0xbf, 0x13, 0x76, 0x62, 0xb2, 0xc1, 0xc7, 0xbe, 0xcb, 0x54, 0x9a,
-	0x28, 0xd3, 0x45, 0x4b, 0xe4, 0x04, 0xc8, 0x70, 0xee, 0x8a, 0x63, 0xba, 0x58, 0xdb, 0xbf, 0x97,
-	0xfb, 0xf0, 0x92, 0x48, 0xa0, 0x0b, 0xe4, 0xc9, 0x01, 0x94, 0x99, 0xa5, 0x6a, 0xa9, 0x6c, 0xa1,
-	0xef, 0xe7, 0xeb, 0x5d, 0x60, 0x86, 0x93, 0x80, 0x35, 0xb8, 0xed, 0x78, 0xe7, 0x99, 0x2e, 0x83,
-	0x26, 0x62, 0xc6, 0x21, 0xd4, 0x5b, 0x8d, 0xbe, 0x35, 0x62, 0x63, 0x53, 0xde, 0xa4, 0x96, 0x17,
-	0xc5, 0x2f, 0x8c, 0x4c, 0xf0, 0x55, 0x64, 0xf0, 0x5d, 0x87, 0xd2, 0xa5, 0xe9, 0x4e, 0xe2, 0x16,
-	0x44, 0x12, 0xc6, 0x1f, 0x35, 0xd8, 0x88, 0x95, 0x48, 0xc9, 0x3b, 0x50, 0xb1, 0xb8, 0xcd, 0x2c,
-	0xbc, 0xba, 0x52, 0x3e, 0x05, 0xc4, 0xaa, 0x6d, 0x46, 0xe6, 0xa9, 0xe7, 0x44, 0x21, 0x6a, 0xda,
-	0xa0, 0x29, 0x20, 0x12, 0xbb, 0x6f, 0x06, 0x4e, 0x34, 0x95, 0xeb, 0x05, 0x5c, 0xcf, 0x42, 0xe4,
-	0xff, 0x61, 0x95, 0xe3, 0x5e, 0xc3, 0x7a, 0x11, 0xef, 0xc8, 0x8c, 0xd5, 0x4b, 0xec, 0xa1, 0xb1,
-	0x94, 0xf1, 0x6b, 0x0d, 0xea, 0xcb, 0x7c, 0x93, 0x74, 0x59, 0x5a, 0xa6, 0xcb, 0xda, 0x87, 0x95,
-	0x10, 0x75, 0xe2, 0x76, 0xd7, 0xf6, 0xb7, 0x17, 0x7e, 0x50, 0x5d, 0x48, 0xc9, 0x89, 0xad, 0x2c,
-	0x73, 0xdd, 0xbe, 0xf3, 0x0d, 0x53, 0x46, 0x24, 0x34, 0x26, 0x31, 0x5b, 0x4d, 0xed, 0x74, 0xc7,
-	0x36, 0xfe, 0xb0, 0x02, 0xd7, 0x9e, 0xd8, 0xc3, 0x50, 0x1c, 0xbe, 0x78, 0x36, 0x4f, 0x54, 0xb0,
-	0xb4, 0xa0, 0x2c, 0x8e, 0xfd, 0x24, 0xed, 0xad, 0xf3, 0xd3, 0x95, 0x05, 0x32, 0x78, 0x81, 0x84,
-	0x00, 0x4d, 0x44, 0xb1, 0xb9, 0x35, 0xa3, 0x91, 0xca, 0x9a, 0xf8, 0x3b, 0xf3, 0x7c, 0x2c, 0xe4,
-	0x9e, 0x8f, 0x9f, 0x02, 0xf8, 0x49, 0x6f, 0x8c, 0x5b, 0x9c, 0x0d, 0x8d, 0xb9, 0xe6, 0x99, 0x66,
-	0x24, 0x30, 0x19, 0x7c, 0xed, 0xb1, 0x40, 0xd5, 0x04, 0x49, 0x08, 0xf4, 0x3c, 0xe0, 0x13, 0x5f,
-	0x95, 0x01, 0x49, 0x90, 0xff, 0x86, 0xad, 0x31, 0xb7, 0x9d, 0xa1, 0x6a, 0xee, 0x06, 0x38, 0xe5,
-	0x5b, 0xc5, 0xed, 0xd4, 0xb2, 0x0b, 0x27, 0xce, 0x98, 0x91, 0x37, 0x61, 0xcd, 0xb4, 0x2c, 0x16,
-	0x86, 0x92, 0xad, 0x2c, 0x33, 0x87, 0x84, 0x90, 0xa1, 0x0e, 0xab, 0xe1, 0x74, 0xec, 0x3a, 0xde,
-	0x85, 0x6a, 0x4f, 0x62, 0x92, 0xec, 0xc1, 0x16, 0x66, 0x89, 0x41, 0xa6, 0x93, 0xc4, 0x69, 0x15,
-	0x8e, 0xbb, 0x6a, 0xb8, 0x46, 0xd3, 0x25, 0xf1, 0xf2, 0x97, 0x59, 0x45, 0x9c, 0x5d, 0x32, 0x7f,
-	0x4a, 0x31, 0xf2, 0x7f, 0x50, 0x89, 0x67, 0x60, 0x21, 0xce, 0x9e, 0x66, 0x3b, 0xcd, 0xf9, 0xc4,
-	0x47, 0x53, 0x09, 0x72, 0x1b, 0x56, 0xc4, 0xd9, 0xb4, 0xed, 0x74, 0x18, 0xa5, 0x00, 0x72, 0x0f,
-	0xd6, 0xac, 0x91, 0xe3, 0xda, 0x01, 0xf3, 0xba, 0x93, 0x31, 0x4e, 0x9f, 0x4a, 0x8f, 0xf5, 0xf7,
-	0x3e, 0xa0, 0x59, 0x78, 0x49, 0x3a, 0xd9, 0xfc, 0x81, 0xe9, 0xe4, 0x01, 0x6c, 0x84, 0xd9, 0x17,
-	0x49, 0xbd, 0x16, 0xbb, 0x28, 0x8f, 0xe7, 0xf2, 0xce, 0xd6, 0xf7, 0xcb, 0x3b, 0x8f, 0xa0, 0x1c,
-	0x5f, 0x54, 0x02, 0xb0, 0xd2, 0xee, 0x0f, 0x9a, 0x6d, 0x5a, 0xd3, 0xc8, 0x1a, 0xac, 0xb6, 0xfb,
-	0x83, 0xa3, 0x76, 0xa7, 0x55, 0xd3, 0x49, 0x15, 0xa0, 0xdd, 0x1f, 0xf4, 0xbf, 0x7c, 0xd6, 0x69,
-	0x77, 0x9f, 0xd6, 0x0a, 0xc6, 0x2f, 0x0b, 0x70, 0xe3, 0x28, 0xec, 0xb3, 0xe0, 0x92, 0x05, 0x4d,
-	0x36, 0x34, 0x27, 0x6e, 0x14, 0x26, 0x09, 0x07, 0x4f, 0x07, 0xa3, 0x4d, 0x16, 0x95, 0x14, 0x10,
-	0x3d, 0xc2, 0xd9, 0x34, 0x62, 0xe2, 0xde, 0x36, 0x46, 0xcc, 0xba, 0x08, 0x27, 0x63, 0x95, 0x77,
-	0xe6, 0x70, 0xb2, 0x0b, 0x9b, 0x5f, 0x07, 0xa2, 0x46, 0x9a, 0xd6, 0x05, 0x8b, 0x32, 0xd1, 0x3b,
-	0x0b, 0x8b, 0x44, 0x95, 0xbd, 0x4f, 0x32, 0x9a, 0xb3, 0x10, 0x79, 0x1b, 0xaa, 0xc2, 0xcd, 0x87,
-	0x93, 0xe1, 0x90, 0x05, 0xa8, 0x4a, 0x0e, 0xe3, 0x67, 0x50, 0xf2, 0x51, 0xd2, 0x4d, 0x8a, 0x16,
-	0xf8, 0x24, 0x30, 0xbd, 0x70, 0xc8, 0x02, 0x2c, 0x0f, 0xc9, 0x44, 0x6b, 0x11, 0x87, 0x38, 0xb1,
-	0x28, 0x30, 0xc3, 0x51, 0xdb, 0x8b, 0x58, 0x70, 0x69, 0xba, 0x58, 0x05, 0xe4, 0x04, 0x2a, 0x87,
-	0x13, 0x0a, 0xeb, 0x96, 0xb2, 0x10, 0x93, 0x49, 0x19, 0xa7, 0x7b, 0xf9, 0xb8, 0x6e, 0x64, 0x18,
-	0xe4, 0x78, 0xaf, 0xda, 0x78, 0xd2, 0x6a, 0x3c, 0xed, 0x9f, 0x3e, 0x1b, 0x34, 0x68, 0xe3, 0xd1,
-	0x3e, 0xcd, 0xe9, 0x30, 0x7e, 0xa5, 0xc1, 0x8d, 0x64, 0x7c, 0xd2, 0x71, 0xc2, 0x48, 0x1c, 0x36,
-	0x9e, 0xc6, 0x13, 0xa8, 0xfa, 0x66, 0x10, 0x39, 0xa6, 0xab, 0x60, 0x35, 0x7b, 0xd8, 0xb9, 0x2a,
-	0x79, 0xd1, 0x19, 0x39, 0x71, 0x72, 0xc9, 0xbc, 0x4d, 0x64, 0x72, 0x87, 0xc5, 0x15, 0x63, 0x0e,
-	0x37, 0xfe, 0xac, 0xc1, 0x5b, 0x7d, 0xcf, 0xf4, 0xc3, 0x11, 0x8f, 0x22, 0xf3, 0xcc, 0x65, 0xc9,
-	0xe6, 0xb2, 0x29, 0xf5, 0x53, 0xa8, 0xd8, 0x4e, 0x20, 0x11, 0xf5, 0x48, 0xbc, 0x7a, 0x5b, 0xa9,
-	0x08, 0xb9, 0x0f, 0xd5, 0x50, 0x7d, 0x64, 0x90, 0x0e, 0x30, 0x36, 0xe8, 0x46, 0x8c, 0xca, 0x61,
-	0xcf, 0x03, 0xd8, 0x4c, 0xd8, 0xbc, 0xc9, 0xf8, 0x8c, 0x05, 0xea, 0x1a, 0x25, 0xd2, 0x5d, 0x44,
-	0x05, 0xa3, 0x6f, 0x06, 0xcc, 0x8b, 0x06, 0xc3, 0x89, 0xeb, 0x62, 0x9a, 0x96, 0x2d, 0x76, 0x55,
-	0xc2, 0x47, 0x0a, 0x15, 0x45, 0xcb, 0x58, 0x6c, 0x5e, 0xce, 0xf7, 0x23, 0xb8, 0x15, 0xce, 0x70,
-	0xe5, 0x0f, 0x21, 0x3f, 0x26, 0xbe, 0xd2, 0x61, 0x74, 0x99, 0x3a, 0xe3, 0x17, 0x1a, 0xdc, 0x89,
-	0xc5, 0x9b, 0xce, 0x70, 0x28, 0x87, 0xb7, 0x99, 0xfe, 0x61, 0x1b, 0xca, 0x89, 0x4d, 0xb2, 0x83,
-	0x4f, 0x68, 0xd1, 0xae, 0x65, 0x33, 0x7c, 0xc7, 0x3c, 0x63, 0xae, 0xea, 0x2a, 0xe6, 0x17, 0x44,
-	0xd3, 0x18, 0x99, 0xc1, 0x39, 0x8b, 0x8e, 0x4d, 0x2c, 0x58, 0x22, 0xbb, 0x67, 0x10, 0xe3, 0x4f,
-	0x1a, 0xdc, 0x9a, 0xdf, 0x8a, 0xdc, 0x85, 0x01, 0xeb, 0xb1, 0x05, 0x94, 0xf3, 0x48, 0xd5, 0xf5,
-	0x1c, 0x26, 0x78, 0x86, 0x01, 0x1f, 0xc7, 0x2a, 0xd4, 0x46, 0x72, 0x18, 0xee, 0x81, 0x27, 0x1c,
-	0xb2, 0x1f, 0xcf, 0x20, 0xe4, 0x0b, 0xd8, 0xb2, 0x73, 0x5e, 0x70, 0x58, 0xdc, 0x9f, 0xbc, 0xb3,
-	0xd0, 0xe5, 0x8b, 0x7c, 0x46, 0xe7, 0x75, 0x18, 0x26, 0x40, 0x66, 0xb8, 0x91, 0xf9, 0x17, 0x53,
-	0xcb, 0xff, 0x8b, 0xb9, 0x0d, 0xe5, 0x73, 0xa6, 0xfe, 0xbe, 0x94, 0x93, 0x8c, 0x84, 0xce, 0xfd,
-	0x6f, 0x59, 0x98, 0xff, 0xdf, 0xf2, 0x6f, 0x1a, 0x6c, 0xc5, 0xdb, 0x4a, 0x9f, 0x44, 0x19, 0xcf,
-	0x65, 0x1a, 0xb9, 0x1c, 0x36, 0xe7, 0x5d, 0x7d, 0x81, 0x77, 0xf3, 0x2d, 0x45, 0xe1, 0xfb, 0xb7,
-	0x14, 0xc5, 0x85, 0x2d, 0x45, 0x29, 0xdb, 0x52, 0xdc, 0x05, 0xc0, 0x49, 0x14, 0x13, 0x2d, 0x81,
-	0xea, 0x36, 0x32, 0x88, 0x71, 0x06, 0xb7, 0x29, 0x77, 0x5d, 0xc7, 0x3b, 0x3f, 0x95, 0xff, 0xe8,
-	0x64, 0x73, 0xc3, 0xcc, 0x4c, 0x41, 0x9b, 0x9f, 0x29, 0xfc, 0x17, 0x54, 0x86, 0x8e, 0x67, 0xba,
-	0xce, 0x37, 0xb3, 0xff, 0x38, 0xa4, 0xb8, 0xf1, 0x51, 0x32, 0x37, 0x3c, 0x9d, 0x38, 0x76, 0x98,
-	0x3a, 0x33, 0x03, 0xaa, 0x51, 0x65, 0x0e, 0x7b, 0xf8, 0x23, 0xa8, 0xcd, 0xce, 0x69, 0x48, 0x19,
-	0xf0, 0x4f, 0x96, 0x9a, 0x46, 0x56, 0xa1, 0xd0, 0xef, 0x37, 0x6b, 0xba, 0xa8, 0x91, 0x07, 0xb4,
-	0xf1, 0xa4, 0xfd, 0xbc, 0x55, 0x2b, 0x90, 0x75, 0x28, 0xd3, 0x83, 0x67, 0x03, 0xe4, 0x29, 0x3e,
-	0xfc, 0x10, 0x6a, 0xb3, 0xef, 0x3c, 0xc1, 0x7e, 0xda, 0x7d, 0xda, 0xed, 0x7d, 0xd1, 0xad, 0x69,
-	0xe4, 0x06, 0x6c, 0x1d, 0xb4, 0xfa, 0x83, 0xc6, 0x09, 0x1d, 0x74, 0x7b, 0xc7, 0x07, 0xcd, 0x66,
-	0xbb, 0xfb, 0x59, 0x4d, 0x7f, 0x78, 0x0c, 0xdb, 0xcb, 0x9f, 0xa7, 0xe4, 0x0e, 0xd4, 0x95, 0x86,
-	0xc1, 0x31, 0xed, 0x9d, 0xf4, 0x1a, 0xbd, 0xce, 0xe0, 0x79, 0x8b, 0xf6, 0xdb, 0x3d, 0xa1, 0xf2,
-	0x3a, 0xd4, 0x5a, 0xdd, 0x06, 0xfd, 0xf2, 0xf8, 0xa4, 0xdd, 0xeb, 0x0e, 0xbe, 0xea, 0x75, 0x5b,
-	0xfd, 0x9a, 0xfe, 0xb0, 0x07, 0x5b, 0x73, 0x05, 0x85, 0x6c, 0xc1, 0x46, 0x52, 0x52, 0xba, 0xa7,
-	0x9d, 0x4e, 0xed, 0x35, 0x42, 0x60, 0xa6, 0xca, 0xd4, 0x34, 0x72, 0x0d, 0x36, 0xf3, 0x58, 0xa3,
-	0xa6, 0x1f, 0x7e, 0x08, 0xf7, 0x79, 0x70, 0xbe, 0x67, 0xfa, 0xa6, 0x35, 0x62, 0xb9, 0xdb, 0xe3,
-	0xab, 0x3d, 0xcb, 0x1f, 0x87, 0x20, 0x32, 0x38, 0x7e, 0x2f, 0xfc, 0x56, 0xd3, 0xfe, 0x15, 0x00,
-	0x00, 0xff, 0xff, 0xd4, 0x8c, 0x02, 0x21, 0x4f, 0x20, 0x00, 0x00,
+var fileDescriptor_hdfs_a39209040b2db4d3 = []byte{
+	// 2997 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xd4, 0x59, 0xcd, 0x6f, 0x1b, 0xc7,
+	0x15, 0xcf, 0x2e, 0x49, 0x89, 0x7c, 0x92, 0xa8, 0xd5, 0x58, 0xb6, 0x69, 0xc5, 0x71, 0x94, 0x8d,
+	0x1d, 0x2b, 0x6e, 0x22, 0x24, 0x72, 0x9b, 0xa0, 0x4e, 0x9a, 0x56, 0x22, 0xa9, 0x98, 0x30, 0x45,
+	0x2a, 0x43, 0xc9, 0x81, 0x83, 0x16, 0xc4, 0x6a, 0x77, 0x28, 0x4e, 0xb5, 0xdc, 0xd9, 0xee, 0x2e,
+	0x15, 0x33, 0xa7, 0x1e, 0x0b, 0x14, 0x6d, 0x4f, 0xbd, 0x14, 0x3d, 0x04, 0x68, 0xcf, 0xfd, 0x37,
+	0xf2, 0x3f, 0x14, 0x45, 0x8f, 0xed, 0xb5, 0x87, 0xde, 0x5b, 0xcc, 0xc7, 0x7e, 0xf1, 0xc3, 0x72,
+	0x93, 0x53, 0x6f, 0x7c, 0xbf, 0x79, 0xef, 0xed, 0xbc, 0x37, 0xef, 0x6b, 0x86, 0x00, 0x43, 0x67,
+	0x10, 0xee, 0xfa, 0x01, 0x8b, 0x18, 0x5a, 0x19, 0x5a, 0x0e, 0x63, 0xfe, 0x2e, 0x87, 0xb6, 0xaa,
+	0x3d, 0x62, 0x8f, 0x03, 0x1a, 0x4d, 0xe4, 0xa2, 0xf9, 0x3b, 0x0d, 0x50, 0xf3, 0x79, 0x44, 0x3c,
+	0x87, 0x38, 0x07, 0x2e, 0xb3, 0x2f, 0x8e, 0x85, 0xcc, 0x0d, 0x58, 0xf2, 0x19, 0x73, 0x5b, 0x4e,
+	0x4d, 0xdb, 0xd6, 0x77, 0x2a, 0x58, 0x51, 0xa8, 0x06, 0xcb, 0x67, 0x9c, 0xab, 0xe5, 0xd4, 0xf4,
+	0x6d, 0x7d, 0xa7, 0x88, 0x63, 0x12, 0xed, 0xc0, 0xfa, 0x39, 0xf1, 0x48, 0x60, 0x45, 0x94, 0x79,
+	0xbd, 0xc8, 0x1a, 0xf9, 0xb5, 0x82, 0xe0, 0x98, 0x86, 0xd1, 0x6b, 0x50, 0xf6, 0xc6, 0xa3, 0x83,
+	0x49, 0x44, 0xc2, 0x5a, 0x71, 0x5b, 0xdb, 0x29, 0x3e, 0xd2, 0xde, 0xc3, 0x09, 0x64, 0xfe, 0x43,
+	0x83, 0xf5, 0x86, 0x15, 0x59, 0x1e, 0x73, 0x48, 0xab, 0x91, 0x6c, 0x87, 0xfa, 0xfb, 0x8e, 0x13,
+	0xc4, 0xdb, 0x91, 0x14, 0xda, 0x82, 0xf2, 0x90, 0x85, 0x51, 0xc7, 0x1a, 0x11, 0xb1, 0x9f, 0x0a,
+	0x4e, 0x68, 0x64, 0xc2, 0xaa, 0xa3, 0xd4, 0x9c, 0x8e, 0xa9, 0x23, 0x76, 0x53, 0xc1, 0x39, 0x8c,
+	0xcb, 0x3f, 0x1f, 0x90, 0xe0, 0x98, 0x05, 0x51, 0xad, 0xb8, 0xad, 0xef, 0xac, 0xe1, 0x84, 0xe6,
+	0x6b, 0xd4, 0x1b, 0x30, 0xb1, 0x56, 0x92, 0x6b, 0x31, 0xcd, 0xdd, 0x40, 0x7d, 0x5b, 0x2c, 0x2d,
+	0x89, 0xa5, 0x98, 0x44, 0x6f, 0x43, 0x95, 0x73, 0x09, 0x2f, 0x13, 0xc1, 0xb0, 0xbc, 0xad, 0xed,
+	0xac, 0x71, 0x13, 0xa7, 0x16, 0xcc, 0x5f, 0x6a, 0x70, 0x23, 0x36, 0xb4, 0xcd, 0x6c, 0xcb, 0x6d,
+	0x71, 0xf5, 0xc2, 0xde, 0x1d, 0x58, 0x0f, 0xd9, 0x20, 0xfa, 0xd2, 0x0a, 0xc8, 0x53, 0x12, 0x84,
+	0x94, 0x79, 0xca, 0xf0, 0x69, 0x18, 0xdd, 0x85, 0x35, 0x9b, 0x79, 0x03, 0x7a, 0x1e, 0xf3, 0x49,
+	0x37, 0xe4, 0x41, 0xee, 0xbf, 0xb1, 0x1f, 0xd1, 0x11, 0x51, 0x67, 0xa2, 0x28, 0x13, 0x03, 0x4a,
+	0x5c, 0xed, 0x0d, 0x58, 0x28, 0xbf, 0xfe, 0x31, 0x54, 0x62, 0x2f, 0x85, 0x35, 0x6d, 0xbb, 0xb0,
+	0xb3, 0xb2, 0x77, 0x67, 0x37, 0x13, 0x44, 0xbb, 0x59, 0x19, 0x21, 0x82, 0x53, 0x01, 0xf3, 0x5f,
+	0x45, 0xd8, 0x98, 0x61, 0x40, 0xef, 0x80, 0x4e, 0x65, 0x30, 0xad, 0xec, 0xdd, 0x9e, 0xaf, 0x4c,
+	0x9e, 0x35, 0xd6, 0xa9, 0xc3, 0x43, 0xc4, 0xb6, 0x7c, 0xcb, 0xa6, 0xd1, 0xa4, 0xa6, 0x27, 0x21,
+	0x12, 0x43, 0xe8, 0x55, 0x58, 0x76, 0x06, 0xe1, 0x69, 0x48, 0xf8, 0xa9, 0xaa, 0xd5, 0x18, 0x41,
+	0xaf, 0x43, 0x25, 0x20, 0x23, 0x8b, 0x7a, 0xd4, 0x3b, 0x4f, 0xe3, 0x2b, 0xc5, 0xd0, 0x7d, 0x58,
+	0x13, 0x41, 0x7b, 0xcc, 0x98, 0x2b, 0x74, 0x94, 0x62, 0xa6, 0x3c, 0x8e, 0xde, 0x00, 0x70, 0xad,
+	0x30, 0x3a, 0xf5, 0x1d, 0x2b, 0x22, 0xb5, 0xa5, 0x98, 0x2b, 0x03, 0xa2, 0x7b, 0xb0, 0xfa, 0xdc,
+	0x26, 0xf4, 0x92, 0x04, 0x75, 0x36, 0xf6, 0x32, 0x87, 0x9d, 0x83, 0x79, 0x2c, 0xb9, 0xcc, 0x16,
+	0x39, 0x50, 0x2b, 0x6f, 0x6b, 0x3c, 0x4e, 0x63, 0x1a, 0x7d, 0x06, 0x60, 0x39, 0x23, 0xca, 0x93,
+	0x23, 0x22, 0x35, 0xd8, 0xd6, 0x76, 0xaa, 0x7b, 0x6f, 0xbf, 0xd8, 0xdd, 0xbb, 0xfb, 0x89, 0xc0,
+	0xa3, 0xa5, 0x4e, 0x17, 0x1f, 0xed, 0xb7, 0x71, 0x46, 0x09, 0xb7, 0xd0, 0xb6, 0xec, 0x21, 0xa9,
+	0xc7, 0x3e, 0x5c, 0x49, 0x2c, 0xcc, 0xe1, 0xdc, 0x57, 0x02, 0x10, 0x6e, 0x58, 0x4d, 0x7c, 0x95,
+	0x60, 0xe8, 0x21, 0x5c, 0x4b, 0xad, 0x3d, 0x62, 0x1e, 0x8b, 0x98, 0x47, 0xed, 0xda, 0x5a, 0xcc,
+	0x3a, 0x6f, 0x95, 0xc7, 0xe4, 0xd8, 0x3f, 0x0f, 0x2c, 0x87, 0x34, 0x18, 0x77, 0x7a, 0xad, 0x2a,
+	0x4c, 0xce, 0x83, 0x66, 0x0b, 0x20, 0x35, 0x03, 0x01, 0x28, 0x43, 0x8c, 0x57, 0xd0, 0xab, 0x70,
+	0xb3, 0xd1, 0xac, 0x77, 0x8f, 0x8e, 0x5a, 0xbd, 0x5e, 0xab, 0xdb, 0xe9, 0xb7, 0x3a, 0xc7, 0xb8,
+	0xfb, 0x29, 0x6e, 0xf6, 0x7a, 0x86, 0x86, 0x10, 0x54, 0xb3, 0x8b, 0xcd, 0x86, 0xa1, 0x9b, 0xff,
+	0xd1, 0x60, 0x33, 0x76, 0x52, 0x2f, 0x62, 0x81, 0x75, 0x4e, 0x64, 0xd4, 0x6d, 0xc3, 0x4a, 0x28,
+	0x69, 0x51, 0x02, 0x64, 0x0e, 0x65, 0x21, 0xd4, 0x86, 0x52, 0x28, 0x1c, 0xaf, 0x0b, 0xc7, 0xef,
+	0xce, 0x75, 0x7c, 0x56, 0xe7, 0xae, 0x22, 0xf2, 0xde, 0x97, 0x4a, 0x50, 0x33, 0xf9, 0xde, 0xc9,
+	0xc4, 0x27, 0x22, 0x38, 0xab, 0x7b, 0xaf, 0xe5, 0x74, 0xf6, 0xd2, 0x75, 0xa1, 0xef, 0x51, 0xb1,
+	0xd1, 0xea, 0x3d, 0xc1, 0x59, 0x39, 0xf3, 0x3d, 0x58, 0xcd, 0x7e, 0x25, 0xe7, 0x9c, 0x4d, 0x30,
+	0x70, 0x73, 0xbf, 0xd1, 0xef, 0x76, 0xda, 0xcf, 0xfa, 0xbd, 0xc7, 0xfb, 0xb8, 0xd9, 0x30, 0x34,
+	0xf3, 0x8f, 0x3a, 0x20, 0x25, 0x82, 0x89, 0xcf, 0x82, 0x48, 0xda, 0x7f, 0x77, 0x8e, 0xfd, 0x07,
+	0x7a, 0x4d, 0xcb, 0xfb, 0xe0, 0x35, 0x58, 0x1a, 0x58, 0xd4, 0x25, 0x8e, 0x70, 0x42, 0xf9, 0x51,
+	0x69, 0x60, 0xb9, 0x21, 0xc1, 0x0a, 0xcc, 0x25, 0x63, 0xe1, 0x85, 0xc9, 0x58, 0x7c, 0x71, 0x32,
+	0x96, 0x5e, 0x26, 0x19, 0x97, 0x16, 0x24, 0xe3, 0x47, 0xb0, 0xac, 0xf6, 0x2c, 0x92, 0x6c, 0x65,
+	0xef, 0x8d, 0x2b, 0x8f, 0x0a, 0xc7, 0x12, 0xe6, 0xd7, 0x3a, 0x5c, 0xab, 0x33, 0x2f, 0x22, 0x5e,
+	0xd4, 0x1b, 0x8f, 0x46, 0x56, 0x30, 0x49, 0xfa, 0x8a, 0x4b, 0xbc, 0xf3, 0x68, 0x28, 0x5c, 0x53,
+	0xc4, 0x8a, 0x42, 0xb7, 0xa1, 0x32, 0xa0, 0x2e, 0x91, 0x39, 0x2d, 0x1b, 0x5d, 0x0a, 0xa0, 0xb7,
+	0xa0, 0xea, 0xd0, 0x80, 0xd8, 0x11, 0x0b, 0x26, 0x92, 0x45, 0x56, 0xd5, 0x29, 0x14, 0x6d, 0x42,
+	0xe9, 0x17, 0x63, 0x16, 0x59, 0xa2, 0xb5, 0x14, 0xb1, 0x24, 0x78, 0x76, 0x84, 0xbe, 0x65, 0x93,
+	0x3a, 0xf3, 0xc2, 0xf1, 0x48, 0x94, 0x1f, 0xbe, 0x9a, 0x07, 0xd1, 0x1d, 0x00, 0x01, 0x7c, 0x26,
+	0x14, 0x2c, 0x09, 0x96, 0x0c, 0x82, 0xba, 0x50, 0x8d, 0x26, 0xbe, 0x24, 0x44, 0xe9, 0x56, 0x5e,
+	0xb9, 0xbf, 0x28, 0xd8, 0x52, 0x4e, 0xe9, 0x9b, 0x29, 0x71, 0xf3, 0xdf, 0x1a, 0xac, 0x0b, 0xf2,
+	0x34, 0x4c, 0xd2, 0xe7, 0xfb, 0x70, 0x9d, 0x5b, 0xbd, 0xef, 0x39, 0x8d, 0xbc, 0xbd, 0xd2, 0x5b,
+	0xf3, 0x17, 0x53, 0xb3, 0xf5, 0x17, 0x9a, 0x5d, 0xb8, 0xda, 0xec, 0xe2, 0x4b, 0x98, 0x5d, 0xfa,
+	0x6e, 0x66, 0xff, 0x1c, 0xb6, 0x16, 0x73, 0xa3, 0x36, 0xac, 0xe5, 0xf8, 0x55, 0x37, 0x7c, 0xeb,
+	0xca, 0xaf, 0xc9, 0x8f, 0xe5, 0x85, 0x79, 0xc3, 0xbf, 0xb5, 0x90, 0x19, 0xbd, 0x0f, 0x45, 0xce,
+	0x2e, 0x7c, 0x7b, 0x55, 0xd1, 0xc0, 0x82, 0x75, 0x81, 0xa7, 0xb7, 0xa0, 0x6c, 0xe7, 0x9d, 0x9c,
+	0xd0, 0xe6, 0x21, 0xdc, 0xa8, 0xb3, 0x20, 0x18, 0xfb, 0xd1, 0x21, 0x75, 0x89, 0x18, 0xf8, 0x94,
+	0xa9, 0x9b, 0x50, 0xe2, 0xc7, 0x29, 0x1b, 0x7e, 0x05, 0x4b, 0x82, 0x27, 0x88, 0xcd, 0xd8, 0x05,
+	0x8d, 0xc7, 0x2b, 0x45, 0x99, 0xf7, 0x61, 0xe3, 0x30, 0x3c, 0x26, 0xc1, 0x88, 0x86, 0x7c, 0xc0,
+	0x90, 0x2a, 0x10, 0x14, 0x7d, 0x12, 0x8c, 0x84, 0x05, 0x6b, 0x58, 0xfc, 0x36, 0x9f, 0xc2, 0x46,
+	0x66, 0xf3, 0xea, 0x5b, 0xfb, 0xb0, 0x9a, 0x29, 0x77, 0xf2, 0x93, 0x57, 0x9a, 0x9c, 0x13, 0x31,
+	0xbf, 0xd1, 0xe1, 0xa6, 0xd8, 0x7e, 0x9c, 0xf0, 0xcc, 0xa5, 0xb6, 0xca, 0xea, 0x2d, 0x28, 0xfb,
+	0x82, 0x54, 0xe3, 0xeb, 0x1a, 0x4e, 0x68, 0xbe, 0x47, 0x2f, 0x9d, 0x16, 0xc5, 0x6f, 0x74, 0x08,
+	0x55, 0x3b, 0x20, 0xa2, 0x1b, 0x4b, 0x35, 0xc2, 0x6d, 0xd3, 0x43, 0xcf, 0x8c, 0x19, 0x78, 0x4a,
+	0x0a, 0x3d, 0x85, 0x1b, 0x31, 0x72, 0x68, 0xb9, 0xee, 0x99, 0xc5, 0xcb, 0x97, 0xd0, 0x57, 0x14,
+	0x41, 0x7a, 0x95, 0xbe, 0x05, 0xd2, 0xe8, 0xa7, 0x70, 0x2b, 0x20, 0xbe, 0x4b, 0xed, 0x79, 0xaa,
+	0x4b, 0x2f, 0xa5, 0x7a, 0xb1, 0x02, 0xf3, 0x9b, 0x02, 0x6c, 0xf0, 0xf1, 0x33, 0xca, 0x5d, 0x00,
+	0xde, 0x05, 0xed, 0x4c, 0x8d, 0x6b, 0xaf, 0xe7, 0x74, 0xcf, 0x5e, 0x16, 0xb0, 0x76, 0xc6, 0xe3,
+	0x84, 0x0d, 0x06, 0x21, 0x89, 0xab, 0xa5, 0xa2, 0xd0, 0x1e, 0x14, 0x5d, 0x66, 0x87, 0xb5, 0xc2,
+	0x4b, 0x4d, 0x91, 0x82, 0x97, 0x0f, 0xd7, 0xb6, 0x8c, 0x51, 0x51, 0x00, 0xca, 0x38, 0x26, 0xd1,
+	0x0f, 0x01, 0x44, 0x53, 0x38, 0x61, 0x17, 0xc4, 0x13, 0x75, 0x73, 0x65, 0xef, 0x56, 0xac, 0xd3,
+	0x66, 0xa3, 0x11, 0xf3, 0x76, 0xc5, 0x9a, 0x54, 0x97, 0x61, 0x46, 0x77, 0xa0, 0x4c, 0xc3, 0x3a,
+	0x9f, 0x6b, 0x78, 0x8b, 0x29, 0xec, 0x94, 0x0f, 0x74, 0x43, 0xc3, 0x09, 0x36, 0x13, 0x92, 0xcb,
+	0xff, 0x73, 0x48, 0x8a, 0xda, 0x25, 0xe9, 0x56, 0x23, 0xac, 0x95, 0x45, 0x1a, 0x65, 0x10, 0x7e,
+	0x21, 0x91, 0x97, 0x25, 0xcf, 0xa1, 0x36, 0x09, 0x6b, 0x95, 0x6d, 0x6d, 0x67, 0x15, 0xe7, 0x30,
+	0xf4, 0x11, 0xac, 0xa4, 0x9b, 0x0e, 0x6b, 0x20, 0xdc, 0xf6, 0x02, 0x13, 0xb3, 0xdc, 0xe6, 0xdf,
+	0xd5, 0x85, 0xa2, 0xe9, 0xd9, 0xc1, 0xc4, 0xe7, 0x47, 0xfd, 0x84, 0x4c, 0x92, 0xec, 0xbe, 0x20,
+	0x69, 0x3e, 0x48, 0x82, 0x8f, 0x47, 0x49, 0x93, 0x55, 0x37, 0xba, 0x0a, 0xce, 0x42, 0x5c, 0xce,
+	0x63, 0x9e, 0x2d, 0xef, 0x0d, 0xab, 0x58, 0x12, 0xbc, 0x96, 0x93, 0xec, 0x37, 0xc4, 0x39, 0xad,
+	0xe2, 0x3c, 0xc8, 0xfd, 0x41, 0x9e, 0xfb, 0x34, 0x98, 0x34, 0xf8, 0x7c, 0x25, 0xbb, 0x5c, 0x06,
+	0x41, 0xef, 0xc1, 0xb5, 0x54, 0x60, 0xdf, 0x3d, 0x67, 0x01, 0x8d, 0x86, 0x23, 0x31, 0x00, 0x54,
+	0xf0, 0xbc, 0x25, 0xf3, 0xf7, 0x3a, 0xdc, 0xe4, 0x75, 0x2b, 0x35, 0x30, 0x2d, 0x9f, 0x0f, 0xa1,
+	0x14, 0x8e, 0x69, 0x34, 0xbf, 0x7e, 0xd6, 0xa9, 0x3f, 0x24, 0x41, 0x8f, 0xaf, 0x4b, 0xbf, 0x49,
+	0x5e, 0xf4, 0x33, 0xb8, 0x2e, 0x34, 0x49, 0x1d, 0x36, 0x73, 0xb3, 0xb7, 0xa8, 0xea, 0x54, 0x57,
+	0xa9, 0xcf, 0xe3, 0x94, 0xea, 0xe6, 0x6b, 0x41, 0x06, 0x14, 0x2e, 0xc8, 0x44, 0xf9, 0x8e, 0xff,
+	0x44, 0x55, 0xd0, 0xe9, 0xa5, 0x72, 0x97, 0x4e, 0x2f, 0x79, 0xac, 0x5f, 0x90, 0x89, 0xb8, 0xbf,
+	0x96, 0x84, 0xf7, 0x63, 0x12, 0x3d, 0x00, 0x83, 0x7c, 0xf5, 0x84, 0x4c, 0x94, 0x2e, 0xc1, 0xb2,
+	0x24, 0x58, 0x66, 0x70, 0xde, 0xc4, 0x8e, 0x49, 0xb0, 0xc8, 0x33, 0x6a, 0x17, 0xda, 0xf4, 0x2e,
+	0xf4, 0x64, 0x17, 0xf3, 0xbe, 0x55, 0x58, 0xf0, 0xad, 0x6f, 0x34, 0xb8, 0xf9, 0x05, 0xf3, 0xfe,
+	0x6f, 0xce, 0x20, 0xe3, 0xe1, 0x42, 0xce, 0xc3, 0xe6, 0xd7, 0x1a, 0x6c, 0xc8, 0x4d, 0x75, 0x85,
+	0x1d, 0xdf, 0xc1, 0x86, 0x4d, 0x28, 0x51, 0x91, 0x08, 0xba, 0xc8, 0x69, 0x49, 0xf0, 0x5e, 0x43,
+	0xbd, 0xd6, 0xa5, 0x18, 0x9a, 0x57, 0xb1, 0xf8, 0x2d, 0x0a, 0xe5, 0x38, 0x92, 0x39, 0xc3, 0x51,
+	0x45, 0x71, 0x0d, 0x6c, 0x1c, 0xb5, 0x2e, 0x45, 0x3d, 0x5f, 0xc5, 0x92, 0x30, 0xff, 0x54, 0x00,
+	0x94, 0xad, 0xcd, 0xaa, 0x7f, 0xde, 0x01, 0xe0, 0xed, 0xb9, 0x9d, 0x1d, 0x5d, 0x33, 0x08, 0xfa,
+	0x00, 0x96, 0x44, 0x12, 0x87, 0x35, 0x7d, 0x4e, 0xdd, 0x9d, 0x29, 0xf6, 0x58, 0x71, 0xa3, 0x77,
+	0x60, 0x63, 0xec, 0x39, 0xfc, 0xd2, 0xea, 0x85, 0x51, 0x30, 0xb6, 0xc5, 0x7d, 0xb5, 0x20, 0x6a,
+	0xf0, 0xec, 0x02, 0xfa, 0x18, 0x2a, 0xfc, 0xf6, 0x27, 0xf4, 0xcc, 0xed, 0x70, 0xb3, 0x1f, 0x4a,
+	0x05, 0x78, 0xf6, 0xd3, 0xb0, 0x1d, 0x93, 0x75, 0x36, 0xf2, 0x5d, 0xa2, 0xca, 0x44, 0x19, 0xcf,
+	0x5b, 0x42, 0x27, 0x80, 0x06, 0x33, 0x21, 0x2e, 0xca, 0xc5, 0xca, 0xde, 0xdd, 0xdc, 0x87, 0x17,
+	0x64, 0x02, 0x9e, 0x23, 0x8f, 0xf6, 0xa1, 0x4c, 0x6c, 0xd5, 0x4b, 0xe5, 0x08, 0x7d, 0x2f, 0xdf,
+	0xef, 0x02, 0x2b, 0x1c, 0x07, 0xa4, 0xce, 0x1c, 0xea, 0x9d, 0x67, 0xa6, 0x0c, 0x9c, 0x88, 0x99,
+	0x07, 0x50, 0x6b, 0xd6, 0x7b, 0xf6, 0x90, 0x8c, 0x2c, 0x19, 0x49, 0x4d, 0x2f, 0x8a, 0x6f, 0x18,
+	0x99, 0xe4, 0xab, 0xc8, 0xe4, 0xdb, 0x84, 0xd2, 0xa5, 0xe5, 0x8e, 0xe3, 0x11, 0x44, 0x12, 0xe6,
+	0x5f, 0x34, 0x58, 0x8b, 0x95, 0x48, 0xc9, 0xdb, 0x50, 0xb1, 0x99, 0x43, 0x6c, 0x11, 0xba, 0x52,
+	0x3e, 0x05, 0xf8, 0xaa, 0x63, 0x45, 0xd6, 0xa9, 0x47, 0xa3, 0x50, 0x68, 0x5a, 0xc3, 0x29, 0xc0,
+	0x0b, 0xbb, 0x6f, 0x05, 0x34, 0x9a, 0xc8, 0xf5, 0x82, 0x58, 0xcf, 0x42, 0xe8, 0xc7, 0xb0, 0xcc,
+	0xc4, 0x5e, 0xc3, 0x5a, 0x51, 0xc4, 0xc8, 0x94, 0xd5, 0x0b, 0xec, 0xc1, 0xb1, 0x94, 0xf9, 0x5b,
+	0x0d, 0x6a, 0x8b, 0x7c, 0x93, 0x4c, 0x59, 0x5a, 0x66, 0xca, 0xda, 0x83, 0xa5, 0x50, 0xe8, 0x14,
+	0xdb, 0x5d, 0xd9, 0xdb, 0x9a, 0xfb, 0x41, 0x15, 0x90, 0x92, 0x53, 0x8c, 0xb2, 0xc4, 0x75, 0x7b,
+	0xf4, 0x2b, 0xa2, 0x8c, 0x48, 0x68, 0x51, 0xc4, 0x1c, 0xf5, 0x6a, 0xa7, 0x53, 0xc7, 0xfc, 0xf3,
+	0x12, 0x5c, 0x7b, 0xec, 0x0c, 0x42, 0x7e, 0xf8, 0xfc, 0xda, 0x3c, 0x56, 0xc9, 0xd2, 0x84, 0x32,
+	0x3f, 0xf6, 0x93, 0x74, 0xb6, 0xce, 0xbf, 0xae, 0xcc, 0x91, 0x11, 0x01, 0xc4, 0x05, 0x70, 0x22,
+	0x2a, 0x86, 0x5b, 0x2b, 0x1a, 0xaa, 0xaa, 0x29, 0x7e, 0x67, 0xae, 0x8f, 0x85, 0xdc, 0xf5, 0xf1,
+	0x13, 0x00, 0x3f, 0x99, 0x8d, 0xc5, 0x16, 0xa7, 0x53, 0x63, 0x66, 0x78, 0xc6, 0x19, 0x09, 0x51,
+	0x0c, 0xbe, 0xf4, 0x48, 0xa0, 0x7a, 0x82, 0x24, 0x38, 0x7a, 0x1e, 0xb0, 0xb1, 0xaf, 0xda, 0x80,
+	0x24, 0xd0, 0xf7, 0x60, 0x63, 0xc4, 0x1c, 0x3a, 0x50, 0xc3, 0x5d, 0x5f, 0xbc, 0xf2, 0x2d, 0x8b,
+	0xed, 0x18, 0xd9, 0x85, 0x13, 0x3a, 0x22, 0xe8, 0x75, 0x58, 0xb1, 0x6c, 0x9b, 0x84, 0xa1, 0x64,
+	0x2b, 0xcb, 0xca, 0x21, 0x21, 0xc1, 0x50, 0x83, 0xe5, 0x70, 0x32, 0x72, 0xa9, 0x77, 0xa1, 0xc6,
+	0x93, 0x98, 0x44, 0xbb, 0xb0, 0x21, 0xaa, 0x44, 0x3f, 0x33, 0x49, 0x8a, 0xd7, 0x2a, 0xf1, 0xdc,
+	0x65, 0x88, 0x35, 0x9c, 0x2e, 0xf1, 0x9b, 0xbf, 0xac, 0x2a, 0xfc, 0xec, 0x92, 0xf7, 0xa7, 0x14,
+	0x43, 0x3f, 0x82, 0x4a, 0xfc, 0x06, 0x16, 0x8a, 0xb7, 0xa7, 0xe9, 0x49, 0x73, 0xb6, 0xf0, 0xe1,
+	0x54, 0x02, 0xdd, 0x82, 0x25, 0x7e, 0x36, 0x2d, 0x27, 0x7d, 0x8c, 0x52, 0x00, 0xba, 0x0b, 0x2b,
+	0xf6, 0x90, 0xba, 0x4e, 0x40, 0xbc, 0xce, 0x78, 0x24, 0x5e, 0x9f, 0x4a, 0x8f, 0xf4, 0x77, 0xdf,
+	0xc7, 0x59, 0x78, 0x41, 0x39, 0x59, 0xff, 0x8e, 0xe5, 0xe4, 0x3e, 0xac, 0x85, 0xd9, 0x1b, 0x49,
+	0xcd, 0x88, 0x5d, 0x94, 0xc7, 0x73, 0x75, 0x67, 0xe3, 0xdb, 0xd5, 0x9d, 0x87, 0x50, 0x8e, 0x03,
+	0x15, 0x01, 0x2c, 0xb5, 0x7a, 0xfd, 0x46, 0x0b, 0x1b, 0x1a, 0x5a, 0x81, 0xe5, 0x56, 0xaf, 0x7f,
+	0xd8, 0x6a, 0x37, 0x0d, 0x1d, 0x55, 0x01, 0x5a, 0xbd, 0x7e, 0xef, 0xd9, 0x51, 0xbb, 0xd5, 0x79,
+	0x62, 0x14, 0xcc, 0x3f, 0x68, 0x70, 0x4b, 0xd6, 0xd5, 0x21, 0xb1, 0x2f, 0xc2, 0xf1, 0x48, 0xa6,
+	0xb8, 0x4a, 0x96, 0x67, 0xea, 0x94, 0xe3, 0x45, 0x95, 0x35, 0xda, 0x4e, 0x75, 0xef, 0xcd, 0xdc,
+	0xf6, 0x0e, 0xa6, 0xb9, 0xe4, 0x63, 0xd6, 0xd2, 0x51, 0xe3, 0x07, 0x75, 0x5c, 0xc7, 0xb3, 0x5a,
+	0xf8, 0xf8, 0x1b, 0x46, 0x01, 0xf5, 0xe3, 0xb6, 0x25, 0xde, 0x75, 0x71, 0x0e, 0x33, 0x7f, 0x5d,
+	0x80, 0xeb, 0x87, 0x61, 0x8f, 0x04, 0x97, 0x24, 0x68, 0x90, 0x81, 0x35, 0x76, 0xa3, 0x30, 0xa9,
+	0x86, 0x42, 0xa5, 0x28, 0x05, 0xb2, 0xe3, 0xa5, 0x00, 0x1f, 0x60, 0xce, 0x26, 0x11, 0xe1, 0x49,
+	0x15, 0x7f, 0x53, 0x15, 0xc5, 0x19, 0x1c, 0xed, 0xc0, 0xfa, 0x97, 0x01, 0x6f, 0xe0, 0x96, 0x7d,
+	0x41, 0xa2, 0x4c, 0x69, 0x99, 0x86, 0x79, 0x15, 0xcd, 0x06, 0xbb, 0x2c, 0x35, 0x59, 0x08, 0xbd,
+	0x05, 0x55, 0x1e, 0x03, 0x07, 0xe3, 0xc1, 0x80, 0x04, 0x42, 0x95, 0xfc, 0xa7, 0x60, 0x0a, 0x45,
+	0x1f, 0x26, 0xa3, 0x2e, 0x9f, 0xcf, 0x4f, 0x02, 0xcb, 0x0b, 0x07, 0x24, 0x10, 0xbd, 0x2b, 0x79,
+	0x6e, 0x9b, 0xc7, 0xc1, 0xc3, 0x29, 0x0a, 0xac, 0x70, 0xd8, 0xf2, 0x22, 0x12, 0x5c, 0x5a, 0xae,
+	0x68, 0x51, 0xf2, 0x79, 0x2c, 0x87, 0x23, 0x0c, 0xab, 0x76, 0xf6, 0xcc, 0xca, 0xe2, 0xcc, 0xf2,
+	0x45, 0x67, 0xf6, 0xb8, 0xaa, 0xf5, 0xc7, 0xcd, 0xfa, 0x93, 0xde, 0xe9, 0x51, 0xbf, 0x8e, 0xeb,
+	0x0f, 0xf7, 0x70, 0x4e, 0x87, 0xf9, 0x1b, 0x0d, 0xae, 0x27, 0x6f, 0x3b, 0x6d, 0x1a, 0x46, 0x3c,
+	0x12, 0xc5, 0x69, 0x3c, 0x86, 0xaa, 0x6f, 0x05, 0x11, 0xb5, 0x5c, 0x05, 0xab, 0x87, 0x91, 0xed,
+	0xab, 0x2a, 0x2b, 0x9e, 0x92, 0xe3, 0x27, 0x97, 0x3c, 0x06, 0xf2, 0x36, 0x43, 0x49, 0xdc, 0xce,
+	0x66, 0x70, 0xf3, 0x6f, 0x1a, 0xbc, 0xd1, 0xf3, 0x2c, 0x3f, 0x1c, 0xb2, 0x28, 0xb2, 0xce, 0x5c,
+	0x92, 0x6c, 0x2e, 0x5b, 0xef, 0x3f, 0x81, 0x8a, 0x43, 0x03, 0x89, 0xa8, 0x1b, 0xec, 0xd5, 0xdb,
+	0x4a, 0x45, 0xd0, 0x3d, 0xa8, 0x86, 0xea, 0x23, 0xfd, 0xf4, 0x75, 0x65, 0x0d, 0xaf, 0xc5, 0xa8,
+	0x7c, 0x89, 0xba, 0x0f, 0xeb, 0x09, 0x9b, 0x37, 0x1e, 0x9d, 0x91, 0x40, 0x85, 0x51, 0x22, 0xdd,
+	0x11, 0x28, 0x67, 0xf4, 0xad, 0x80, 0x78, 0x51, 0x7f, 0x30, 0x76, 0x5d, 0xd1, 0x43, 0xe4, 0xfc,
+	0x5f, 0x95, 0xf0, 0xa1, 0x42, 0x79, 0x47, 0x35, 0xe7, 0x9b, 0x97, 0xf3, 0xfd, 0x10, 0x6e, 0x86,
+	0x53, 0x5c, 0xf9, 0x43, 0xc8, 0xbf, 0x61, 0x5f, 0xe9, 0x30, 0xbc, 0x48, 0x9d, 0xf9, 0x2b, 0x0d,
+	0x6e, 0xc7, 0xe2, 0x0d, 0x3a, 0x18, 0xc8, 0x97, 0xe5, 0xcc, 0x70, 0xb3, 0x05, 0xe5, 0xc4, 0x26,
+	0x79, 0xbd, 0x48, 0x68, 0x3e, 0x4b, 0x66, 0xdb, 0x4f, 0xdb, 0x3a, 0x23, 0xae, 0x1a, 0x79, 0x66,
+	0x17, 0xf8, 0x44, 0x1b, 0x59, 0xc1, 0x39, 0x89, 0x8e, 0x2d, 0xd1, 0x4d, 0x79, 0xeb, 0xc9, 0x20,
+	0xe6, 0x5f, 0x35, 0xb8, 0x39, 0xbb, 0x15, 0xb9, 0x0b, 0x5e, 0x58, 0xd4, 0x12, 0x66, 0x2c, 0x52,
+	0x43, 0x47, 0x0e, 0xe3, 0x3c, 0x83, 0x80, 0x8d, 0x62, 0x15, 0x6a, 0x23, 0x39, 0x4c, 0xec, 0x81,
+	0x25, 0x1c, 0xf2, 0xb2, 0x90, 0x41, 0xd0, 0xe7, 0xb0, 0xe1, 0xe4, 0xbc, 0x40, 0x49, 0x3c, 0x3c,
+	0xbd, 0x3d, 0xd7, 0xe5, 0xf3, 0x7c, 0x86, 0x67, 0x75, 0x98, 0x16, 0x40, 0xe6, 0xe5, 0x25, 0xf3,
+	0x17, 0xab, 0x96, 0xff, 0x8b, 0x75, 0x0b, 0xca, 0xe7, 0x44, 0xfd, 0xb7, 0x2a, 0x9f, 0x59, 0x12,
+	0x3a, 0xf7, 0xa7, 0x6a, 0x61, 0xf6, 0x4f, 0xd5, 0x7f, 0x6a, 0xb0, 0x11, 0x6f, 0x2b, 0xbd, 0xaf,
+	0x65, 0x3c, 0x97, 0x99, 0x32, 0x73, 0xd8, 0x8c, 0x77, 0xf5, 0x39, 0xde, 0xcd, 0xcf, 0x3b, 0x85,
+	0x6f, 0x3f, 0xef, 0x14, 0xe7, 0xce, 0x3b, 0xa5, 0xec, 0xbc, 0x73, 0x07, 0x40, 0x3c, 0x93, 0x11,
+	0x3e, 0xaf, 0xa8, 0x51, 0x28, 0x83, 0x98, 0x67, 0x70, 0x0b, 0x33, 0xd7, 0xa5, 0xde, 0xf9, 0xa9,
+	0xfc, 0xbb, 0x29, 0x5b, 0x1b, 0xa6, 0x1e, 0x3c, 0xb4, 0xd9, 0x07, 0x8f, 0x37, 0xa1, 0x32, 0xa0,
+	0x9e, 0xe5, 0xd2, 0xaf, 0xa6, 0xff, 0x0e, 0x49, 0x71, 0xf3, 0xc3, 0xe4, 0x51, 0xf3, 0x74, 0x4c,
+	0x9d, 0x30, 0x75, 0x66, 0x06, 0x54, 0xef, 0xa8, 0x39, 0xec, 0xc1, 0x4f, 0xc0, 0x98, 0x7e, 0x44,
+	0x42, 0x65, 0x10, 0xff, 0x00, 0x19, 0x1a, 0x5a, 0x86, 0x42, 0xaf, 0xd7, 0x30, 0x74, 0xde, 0xc0,
+	0xf7, 0x71, 0xfd, 0x71, 0xeb, 0x69, 0xd3, 0x28, 0xa0, 0x55, 0x28, 0xe3, 0xfd, 0xa3, 0xbe, 0xe0,
+	0x29, 0x3e, 0xf8, 0x00, 0x8c, 0xe9, 0x4b, 0x28, 0x67, 0x3f, 0xed, 0x3c, 0xe9, 0x74, 0x3f, 0xef,
+	0x18, 0x1a, 0xba, 0x0e, 0x1b, 0xfb, 0xcd, 0x5e, 0xbf, 0x7e, 0x82, 0xfb, 0x9d, 0xee, 0xf1, 0x7e,
+	0xa3, 0xd1, 0xea, 0x7c, 0x6a, 0xe8, 0x0f, 0x8e, 0x61, 0x6b, 0xf1, 0xdd, 0x19, 0xdd, 0x86, 0x9a,
+	0xd2, 0xd0, 0x3f, 0xc6, 0xdd, 0x93, 0x6e, 0xbd, 0xdb, 0xee, 0x3f, 0x6d, 0xe2, 0x5e, 0xab, 0xcb,
+	0x55, 0x6e, 0x82, 0xd1, 0xec, 0xd4, 0xf1, 0xb3, 0xe3, 0x93, 0x56, 0xb7, 0xd3, 0xff, 0xa2, 0xdb,
+	0x69, 0xf6, 0x0c, 0xfd, 0x41, 0x17, 0x36, 0x66, 0x1a, 0x0a, 0xda, 0x80, 0xb5, 0xa4, 0xa5, 0x74,
+	0x4e, 0xdb, 0x6d, 0xe3, 0x15, 0x84, 0x60, 0xaa, 0xcb, 0x18, 0x1a, 0xba, 0x06, 0xeb, 0x79, 0xac,
+	0x6e, 0xe8, 0x0f, 0x3e, 0x84, 0x1b, 0xf3, 0xa7, 0x0a, 0x3e, 0xdc, 0xc8, 0xb9, 0xc2, 0xd0, 0xc4,
+	0x17, 0xba, 0x47, 0xc7, 0xdd, 0x5e, 0xeb, 0xa4, 0xc9, 0x65, 0x0d, 0xfd, 0xe0, 0x03, 0xb8, 0xc7,
+	0x82, 0xf3, 0x5d, 0xcb, 0xb7, 0xec, 0x21, 0xc9, 0x85, 0x9d, 0xaf, 0x8c, 0x95, 0x3f, 0x0e, 0x80,
+	0x97, 0x7e, 0xa1, 0x32, 0xfc, 0x5a, 0xd3, 0xfe, 0x1b, 0x00, 0x00, 0xff, 0xff, 0xf7, 0x72, 0xbc,
+	0xeb, 0x25, 0x21, 0x00, 0x00,
 }

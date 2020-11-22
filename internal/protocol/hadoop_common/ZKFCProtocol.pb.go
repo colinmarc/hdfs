@@ -12,15 +12,42 @@ var _ = proto.Marshal
 var _ = fmt.Errorf
 var _ = math.Inf
 
+// This is a compile-time assertion to ensure that this generated file
+// is compatible with the proto package it is being compiled against.
+// A compilation error at this line likely means your copy of the
+// proto package needs to be updated.
+const _ = proto.ProtoPackageIsVersion2 // please upgrade the proto package
+
 type CedeActiveRequestProto struct {
-	MillisToCede     *uint32 `protobuf:"varint,1,req,name=millisToCede" json:"millisToCede,omitempty"`
-	XXX_unrecognized []byte  `json:"-"`
+	MillisToCede         *uint32  `protobuf:"varint,1,req,name=millisToCede" json:"millisToCede,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
 }
 
-func (m *CedeActiveRequestProto) Reset()                    { *m = CedeActiveRequestProto{} }
-func (m *CedeActiveRequestProto) String() string            { return proto.CompactTextString(m) }
-func (*CedeActiveRequestProto) ProtoMessage()               {}
-func (*CedeActiveRequestProto) Descriptor() ([]byte, []int) { return fileDescriptor1, []int{0} }
+func (m *CedeActiveRequestProto) Reset()         { *m = CedeActiveRequestProto{} }
+func (m *CedeActiveRequestProto) String() string { return proto.CompactTextString(m) }
+func (*CedeActiveRequestProto) ProtoMessage()    {}
+func (*CedeActiveRequestProto) Descriptor() ([]byte, []int) {
+	return fileDescriptor_ZKFCProtocol_5ff2f32b47f34564, []int{0}
+}
+func (m *CedeActiveRequestProto) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_CedeActiveRequestProto.Unmarshal(m, b)
+}
+func (m *CedeActiveRequestProto) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_CedeActiveRequestProto.Marshal(b, m, deterministic)
+}
+func (dst *CedeActiveRequestProto) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_CedeActiveRequestProto.Merge(dst, src)
+}
+func (m *CedeActiveRequestProto) XXX_Size() int {
+	return xxx_messageInfo_CedeActiveRequestProto.Size(m)
+}
+func (m *CedeActiveRequestProto) XXX_DiscardUnknown() {
+	xxx_messageInfo_CedeActiveRequestProto.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_CedeActiveRequestProto proto.InternalMessageInfo
 
 func (m *CedeActiveRequestProto) GetMillisToCede() uint32 {
 	if m != nil && m.MillisToCede != nil {
@@ -30,31 +57,94 @@ func (m *CedeActiveRequestProto) GetMillisToCede() uint32 {
 }
 
 type CedeActiveResponseProto struct {
-	XXX_unrecognized []byte `json:"-"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
 }
 
-func (m *CedeActiveResponseProto) Reset()                    { *m = CedeActiveResponseProto{} }
-func (m *CedeActiveResponseProto) String() string            { return proto.CompactTextString(m) }
-func (*CedeActiveResponseProto) ProtoMessage()               {}
-func (*CedeActiveResponseProto) Descriptor() ([]byte, []int) { return fileDescriptor1, []int{1} }
+func (m *CedeActiveResponseProto) Reset()         { *m = CedeActiveResponseProto{} }
+func (m *CedeActiveResponseProto) String() string { return proto.CompactTextString(m) }
+func (*CedeActiveResponseProto) ProtoMessage()    {}
+func (*CedeActiveResponseProto) Descriptor() ([]byte, []int) {
+	return fileDescriptor_ZKFCProtocol_5ff2f32b47f34564, []int{1}
+}
+func (m *CedeActiveResponseProto) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_CedeActiveResponseProto.Unmarshal(m, b)
+}
+func (m *CedeActiveResponseProto) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_CedeActiveResponseProto.Marshal(b, m, deterministic)
+}
+func (dst *CedeActiveResponseProto) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_CedeActiveResponseProto.Merge(dst, src)
+}
+func (m *CedeActiveResponseProto) XXX_Size() int {
+	return xxx_messageInfo_CedeActiveResponseProto.Size(m)
+}
+func (m *CedeActiveResponseProto) XXX_DiscardUnknown() {
+	xxx_messageInfo_CedeActiveResponseProto.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_CedeActiveResponseProto proto.InternalMessageInfo
 
 type GracefulFailoverRequestProto struct {
-	XXX_unrecognized []byte `json:"-"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
 }
 
-func (m *GracefulFailoverRequestProto) Reset()                    { *m = GracefulFailoverRequestProto{} }
-func (m *GracefulFailoverRequestProto) String() string            { return proto.CompactTextString(m) }
-func (*GracefulFailoverRequestProto) ProtoMessage()               {}
-func (*GracefulFailoverRequestProto) Descriptor() ([]byte, []int) { return fileDescriptor1, []int{2} }
+func (m *GracefulFailoverRequestProto) Reset()         { *m = GracefulFailoverRequestProto{} }
+func (m *GracefulFailoverRequestProto) String() string { return proto.CompactTextString(m) }
+func (*GracefulFailoverRequestProto) ProtoMessage()    {}
+func (*GracefulFailoverRequestProto) Descriptor() ([]byte, []int) {
+	return fileDescriptor_ZKFCProtocol_5ff2f32b47f34564, []int{2}
+}
+func (m *GracefulFailoverRequestProto) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_GracefulFailoverRequestProto.Unmarshal(m, b)
+}
+func (m *GracefulFailoverRequestProto) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_GracefulFailoverRequestProto.Marshal(b, m, deterministic)
+}
+func (dst *GracefulFailoverRequestProto) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_GracefulFailoverRequestProto.Merge(dst, src)
+}
+func (m *GracefulFailoverRequestProto) XXX_Size() int {
+	return xxx_messageInfo_GracefulFailoverRequestProto.Size(m)
+}
+func (m *GracefulFailoverRequestProto) XXX_DiscardUnknown() {
+	xxx_messageInfo_GracefulFailoverRequestProto.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_GracefulFailoverRequestProto proto.InternalMessageInfo
 
 type GracefulFailoverResponseProto struct {
-	XXX_unrecognized []byte `json:"-"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
 }
 
-func (m *GracefulFailoverResponseProto) Reset()                    { *m = GracefulFailoverResponseProto{} }
-func (m *GracefulFailoverResponseProto) String() string            { return proto.CompactTextString(m) }
-func (*GracefulFailoverResponseProto) ProtoMessage()               {}
-func (*GracefulFailoverResponseProto) Descriptor() ([]byte, []int) { return fileDescriptor1, []int{3} }
+func (m *GracefulFailoverResponseProto) Reset()         { *m = GracefulFailoverResponseProto{} }
+func (m *GracefulFailoverResponseProto) String() string { return proto.CompactTextString(m) }
+func (*GracefulFailoverResponseProto) ProtoMessage()    {}
+func (*GracefulFailoverResponseProto) Descriptor() ([]byte, []int) {
+	return fileDescriptor_ZKFCProtocol_5ff2f32b47f34564, []int{3}
+}
+func (m *GracefulFailoverResponseProto) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_GracefulFailoverResponseProto.Unmarshal(m, b)
+}
+func (m *GracefulFailoverResponseProto) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_GracefulFailoverResponseProto.Marshal(b, m, deterministic)
+}
+func (dst *GracefulFailoverResponseProto) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_GracefulFailoverResponseProto.Merge(dst, src)
+}
+func (m *GracefulFailoverResponseProto) XXX_Size() int {
+	return xxx_messageInfo_GracefulFailoverResponseProto.Size(m)
+}
+func (m *GracefulFailoverResponseProto) XXX_DiscardUnknown() {
+	xxx_messageInfo_GracefulFailoverResponseProto.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_GracefulFailoverResponseProto proto.InternalMessageInfo
 
 func init() {
 	proto.RegisterType((*CedeActiveRequestProto)(nil), "hadoop.common.CedeActiveRequestProto")
@@ -63,9 +153,9 @@ func init() {
 	proto.RegisterType((*GracefulFailoverResponseProto)(nil), "hadoop.common.GracefulFailoverResponseProto")
 }
 
-func init() { proto.RegisterFile("ZKFCProtocol.proto", fileDescriptor1) }
+func init() { proto.RegisterFile("ZKFCProtocol.proto", fileDescriptor_ZKFCProtocol_5ff2f32b47f34564) }
 
-var fileDescriptor1 = []byte{
+var fileDescriptor_ZKFCProtocol_5ff2f32b47f34564 = []byte{
 	// 238 bytes of a gzipped FileDescriptorProto
 	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xe2, 0x12, 0x8a, 0xf2, 0x76, 0x73,
 	0x0e, 0x28, 0xca, 0x2f, 0xc9, 0x4f, 0xce, 0xcf, 0xd1, 0x2b, 0x00, 0x31, 0x84, 0x78, 0x33, 0x12,

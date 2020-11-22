@@ -12,6 +12,12 @@ var _ = proto.Marshal
 var _ = fmt.Errorf
 var _ = math.Inf
 
+// This is a compile-time assertion to ensure that this generated file
+// is compatible with the proto package it is being compiled against.
+// A compilation error at this line likely means your copy of the
+// proto package needs to be updated.
+const _ = proto.ProtoPackageIsVersion2 // please upgrade the proto package
+
 type EventType int32
 
 const (
@@ -59,7 +65,9 @@ func (x *EventType) UnmarshalJSON(data []byte) error {
 	*x = EventType(value)
 	return nil
 }
-func (EventType) EnumDescriptor() ([]byte, []int) { return fileDescriptor7, []int{0} }
+func (EventType) EnumDescriptor() ([]byte, []int) {
+	return fileDescriptor_inotify_b00289e93102762b, []int{0}
+}
 
 type INodeType int32
 
@@ -96,7 +104,9 @@ func (x *INodeType) UnmarshalJSON(data []byte) error {
 	*x = INodeType(value)
 	return nil
 }
-func (INodeType) EnumDescriptor() ([]byte, []int) { return fileDescriptor7, []int{1} }
+func (INodeType) EnumDescriptor() ([]byte, []int) {
+	return fileDescriptor_inotify_b00289e93102762b, []int{1}
+}
 
 type MetadataUpdateType int32
 
@@ -142,18 +152,41 @@ func (x *MetadataUpdateType) UnmarshalJSON(data []byte) error {
 	*x = MetadataUpdateType(value)
 	return nil
 }
-func (MetadataUpdateType) EnumDescriptor() ([]byte, []int) { return fileDescriptor7, []int{2} }
-
-type EventProto struct {
-	Type             *EventType `protobuf:"varint,1,req,name=type,enum=hadoop.hdfs.EventType" json:"type,omitempty"`
-	Contents         []byte     `protobuf:"bytes,2,req,name=contents" json:"contents,omitempty"`
-	XXX_unrecognized []byte     `json:"-"`
+func (MetadataUpdateType) EnumDescriptor() ([]byte, []int) {
+	return fileDescriptor_inotify_b00289e93102762b, []int{2}
 }
 
-func (m *EventProto) Reset()                    { *m = EventProto{} }
-func (m *EventProto) String() string            { return proto.CompactTextString(m) }
-func (*EventProto) ProtoMessage()               {}
-func (*EventProto) Descriptor() ([]byte, []int) { return fileDescriptor7, []int{0} }
+type EventProto struct {
+	Type                 *EventType `protobuf:"varint,1,req,name=type,enum=hadoop.hdfs.EventType" json:"type,omitempty"`
+	Contents             []byte     `protobuf:"bytes,2,req,name=contents" json:"contents,omitempty"`
+	XXX_NoUnkeyedLiteral struct{}   `json:"-"`
+	XXX_unrecognized     []byte     `json:"-"`
+	XXX_sizecache        int32      `json:"-"`
+}
+
+func (m *EventProto) Reset()         { *m = EventProto{} }
+func (m *EventProto) String() string { return proto.CompactTextString(m) }
+func (*EventProto) ProtoMessage()    {}
+func (*EventProto) Descriptor() ([]byte, []int) {
+	return fileDescriptor_inotify_b00289e93102762b, []int{0}
+}
+func (m *EventProto) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_EventProto.Unmarshal(m, b)
+}
+func (m *EventProto) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_EventProto.Marshal(b, m, deterministic)
+}
+func (dst *EventProto) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_EventProto.Merge(dst, src)
+}
+func (m *EventProto) XXX_Size() int {
+	return xxx_messageInfo_EventProto.Size(m)
+}
+func (m *EventProto) XXX_DiscardUnknown() {
+	xxx_messageInfo_EventProto.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_EventProto proto.InternalMessageInfo
 
 func (m *EventProto) GetType() EventType {
 	if m != nil && m.Type != nil {
@@ -170,15 +203,36 @@ func (m *EventProto) GetContents() []byte {
 }
 
 type EventBatchProto struct {
-	Txid             *int64        `protobuf:"varint,1,req,name=txid" json:"txid,omitempty"`
-	Events           []*EventProto `protobuf:"bytes,2,rep,name=events" json:"events,omitempty"`
-	XXX_unrecognized []byte        `json:"-"`
+	Txid                 *int64        `protobuf:"varint,1,req,name=txid" json:"txid,omitempty"`
+	Events               []*EventProto `protobuf:"bytes,2,rep,name=events" json:"events,omitempty"`
+	XXX_NoUnkeyedLiteral struct{}      `json:"-"`
+	XXX_unrecognized     []byte        `json:"-"`
+	XXX_sizecache        int32         `json:"-"`
 }
 
-func (m *EventBatchProto) Reset()                    { *m = EventBatchProto{} }
-func (m *EventBatchProto) String() string            { return proto.CompactTextString(m) }
-func (*EventBatchProto) ProtoMessage()               {}
-func (*EventBatchProto) Descriptor() ([]byte, []int) { return fileDescriptor7, []int{1} }
+func (m *EventBatchProto) Reset()         { *m = EventBatchProto{} }
+func (m *EventBatchProto) String() string { return proto.CompactTextString(m) }
+func (*EventBatchProto) ProtoMessage()    {}
+func (*EventBatchProto) Descriptor() ([]byte, []int) {
+	return fileDescriptor_inotify_b00289e93102762b, []int{1}
+}
+func (m *EventBatchProto) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_EventBatchProto.Unmarshal(m, b)
+}
+func (m *EventBatchProto) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_EventBatchProto.Marshal(b, m, deterministic)
+}
+func (dst *EventBatchProto) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_EventBatchProto.Merge(dst, src)
+}
+func (m *EventBatchProto) XXX_Size() int {
+	return xxx_messageInfo_EventBatchProto.Size(m)
+}
+func (m *EventBatchProto) XXX_DiscardUnknown() {
+	xxx_messageInfo_EventBatchProto.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_EventBatchProto proto.InternalMessageInfo
 
 func (m *EventBatchProto) GetTxid() int64 {
 	if m != nil && m.Txid != nil {
@@ -195,23 +249,44 @@ func (m *EventBatchProto) GetEvents() []*EventProto {
 }
 
 type CreateEventProto struct {
-	Type             *INodeType         `protobuf:"varint,1,req,name=type,enum=hadoop.hdfs.INodeType" json:"type,omitempty"`
-	Path             *string            `protobuf:"bytes,2,req,name=path" json:"path,omitempty"`
-	Ctime            *int64             `protobuf:"varint,3,req,name=ctime" json:"ctime,omitempty"`
-	OwnerName        *string            `protobuf:"bytes,4,req,name=ownerName" json:"ownerName,omitempty"`
-	GroupName        *string            `protobuf:"bytes,5,req,name=groupName" json:"groupName,omitempty"`
-	Perms            *FsPermissionProto `protobuf:"bytes,6,req,name=perms" json:"perms,omitempty"`
-	Replication      *int32             `protobuf:"varint,7,opt,name=replication" json:"replication,omitempty"`
-	SymlinkTarget    *string            `protobuf:"bytes,8,opt,name=symlinkTarget" json:"symlinkTarget,omitempty"`
-	Overwrite        *bool              `protobuf:"varint,9,opt,name=overwrite" json:"overwrite,omitempty"`
-	DefaultBlockSize *int64             `protobuf:"varint,10,opt,name=defaultBlockSize,def=0" json:"defaultBlockSize,omitempty"`
-	XXX_unrecognized []byte             `json:"-"`
+	Type                 *INodeType         `protobuf:"varint,1,req,name=type,enum=hadoop.hdfs.INodeType" json:"type,omitempty"`
+	Path                 *string            `protobuf:"bytes,2,req,name=path" json:"path,omitempty"`
+	Ctime                *int64             `protobuf:"varint,3,req,name=ctime" json:"ctime,omitempty"`
+	OwnerName            *string            `protobuf:"bytes,4,req,name=ownerName" json:"ownerName,omitempty"`
+	GroupName            *string            `protobuf:"bytes,5,req,name=groupName" json:"groupName,omitempty"`
+	Perms                *FsPermissionProto `protobuf:"bytes,6,req,name=perms" json:"perms,omitempty"`
+	Replication          *int32             `protobuf:"varint,7,opt,name=replication" json:"replication,omitempty"`
+	SymlinkTarget        *string            `protobuf:"bytes,8,opt,name=symlinkTarget" json:"symlinkTarget,omitempty"`
+	Overwrite            *bool              `protobuf:"varint,9,opt,name=overwrite" json:"overwrite,omitempty"`
+	DefaultBlockSize     *int64             `protobuf:"varint,10,opt,name=defaultBlockSize,def=0" json:"defaultBlockSize,omitempty"`
+	XXX_NoUnkeyedLiteral struct{}           `json:"-"`
+	XXX_unrecognized     []byte             `json:"-"`
+	XXX_sizecache        int32              `json:"-"`
 }
 
-func (m *CreateEventProto) Reset()                    { *m = CreateEventProto{} }
-func (m *CreateEventProto) String() string            { return proto.CompactTextString(m) }
-func (*CreateEventProto) ProtoMessage()               {}
-func (*CreateEventProto) Descriptor() ([]byte, []int) { return fileDescriptor7, []int{2} }
+func (m *CreateEventProto) Reset()         { *m = CreateEventProto{} }
+func (m *CreateEventProto) String() string { return proto.CompactTextString(m) }
+func (*CreateEventProto) ProtoMessage()    {}
+func (*CreateEventProto) Descriptor() ([]byte, []int) {
+	return fileDescriptor_inotify_b00289e93102762b, []int{2}
+}
+func (m *CreateEventProto) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_CreateEventProto.Unmarshal(m, b)
+}
+func (m *CreateEventProto) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_CreateEventProto.Marshal(b, m, deterministic)
+}
+func (dst *CreateEventProto) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_CreateEventProto.Merge(dst, src)
+}
+func (m *CreateEventProto) XXX_Size() int {
+	return xxx_messageInfo_CreateEventProto.Size(m)
+}
+func (m *CreateEventProto) XXX_DiscardUnknown() {
+	xxx_messageInfo_CreateEventProto.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_CreateEventProto proto.InternalMessageInfo
 
 const Default_CreateEventProto_DefaultBlockSize int64 = 0
 
@@ -286,16 +361,37 @@ func (m *CreateEventProto) GetDefaultBlockSize() int64 {
 }
 
 type CloseEventProto struct {
-	Path             *string `protobuf:"bytes,1,req,name=path" json:"path,omitempty"`
-	FileSize         *int64  `protobuf:"varint,2,req,name=fileSize" json:"fileSize,omitempty"`
-	Timestamp        *int64  `protobuf:"varint,3,req,name=timestamp" json:"timestamp,omitempty"`
-	XXX_unrecognized []byte  `json:"-"`
+	Path                 *string  `protobuf:"bytes,1,req,name=path" json:"path,omitempty"`
+	FileSize             *int64   `protobuf:"varint,2,req,name=fileSize" json:"fileSize,omitempty"`
+	Timestamp            *int64   `protobuf:"varint,3,req,name=timestamp" json:"timestamp,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
 }
 
-func (m *CloseEventProto) Reset()                    { *m = CloseEventProto{} }
-func (m *CloseEventProto) String() string            { return proto.CompactTextString(m) }
-func (*CloseEventProto) ProtoMessage()               {}
-func (*CloseEventProto) Descriptor() ([]byte, []int) { return fileDescriptor7, []int{3} }
+func (m *CloseEventProto) Reset()         { *m = CloseEventProto{} }
+func (m *CloseEventProto) String() string { return proto.CompactTextString(m) }
+func (*CloseEventProto) ProtoMessage()    {}
+func (*CloseEventProto) Descriptor() ([]byte, []int) {
+	return fileDescriptor_inotify_b00289e93102762b, []int{3}
+}
+func (m *CloseEventProto) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_CloseEventProto.Unmarshal(m, b)
+}
+func (m *CloseEventProto) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_CloseEventProto.Marshal(b, m, deterministic)
+}
+func (dst *CloseEventProto) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_CloseEventProto.Merge(dst, src)
+}
+func (m *CloseEventProto) XXX_Size() int {
+	return xxx_messageInfo_CloseEventProto.Size(m)
+}
+func (m *CloseEventProto) XXX_DiscardUnknown() {
+	xxx_messageInfo_CloseEventProto.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_CloseEventProto proto.InternalMessageInfo
 
 func (m *CloseEventProto) GetPath() string {
 	if m != nil && m.Path != nil {
@@ -319,16 +415,37 @@ func (m *CloseEventProto) GetTimestamp() int64 {
 }
 
 type TruncateEventProto struct {
-	Path             *string `protobuf:"bytes,1,req,name=path" json:"path,omitempty"`
-	FileSize         *int64  `protobuf:"varint,2,req,name=fileSize" json:"fileSize,omitempty"`
-	Timestamp        *int64  `protobuf:"varint,3,req,name=timestamp" json:"timestamp,omitempty"`
-	XXX_unrecognized []byte  `json:"-"`
+	Path                 *string  `protobuf:"bytes,1,req,name=path" json:"path,omitempty"`
+	FileSize             *int64   `protobuf:"varint,2,req,name=fileSize" json:"fileSize,omitempty"`
+	Timestamp            *int64   `protobuf:"varint,3,req,name=timestamp" json:"timestamp,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
 }
 
-func (m *TruncateEventProto) Reset()                    { *m = TruncateEventProto{} }
-func (m *TruncateEventProto) String() string            { return proto.CompactTextString(m) }
-func (*TruncateEventProto) ProtoMessage()               {}
-func (*TruncateEventProto) Descriptor() ([]byte, []int) { return fileDescriptor7, []int{4} }
+func (m *TruncateEventProto) Reset()         { *m = TruncateEventProto{} }
+func (m *TruncateEventProto) String() string { return proto.CompactTextString(m) }
+func (*TruncateEventProto) ProtoMessage()    {}
+func (*TruncateEventProto) Descriptor() ([]byte, []int) {
+	return fileDescriptor_inotify_b00289e93102762b, []int{4}
+}
+func (m *TruncateEventProto) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_TruncateEventProto.Unmarshal(m, b)
+}
+func (m *TruncateEventProto) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_TruncateEventProto.Marshal(b, m, deterministic)
+}
+func (dst *TruncateEventProto) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_TruncateEventProto.Merge(dst, src)
+}
+func (m *TruncateEventProto) XXX_Size() int {
+	return xxx_messageInfo_TruncateEventProto.Size(m)
+}
+func (m *TruncateEventProto) XXX_DiscardUnknown() {
+	xxx_messageInfo_TruncateEventProto.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_TruncateEventProto proto.InternalMessageInfo
 
 func (m *TruncateEventProto) GetPath() string {
 	if m != nil && m.Path != nil {
@@ -352,15 +469,36 @@ func (m *TruncateEventProto) GetTimestamp() int64 {
 }
 
 type AppendEventProto struct {
-	Path             *string `protobuf:"bytes,1,req,name=path" json:"path,omitempty"`
-	NewBlock         *bool   `protobuf:"varint,2,opt,name=newBlock,def=0" json:"newBlock,omitempty"`
-	XXX_unrecognized []byte  `json:"-"`
+	Path                 *string  `protobuf:"bytes,1,req,name=path" json:"path,omitempty"`
+	NewBlock             *bool    `protobuf:"varint,2,opt,name=newBlock,def=0" json:"newBlock,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
 }
 
-func (m *AppendEventProto) Reset()                    { *m = AppendEventProto{} }
-func (m *AppendEventProto) String() string            { return proto.CompactTextString(m) }
-func (*AppendEventProto) ProtoMessage()               {}
-func (*AppendEventProto) Descriptor() ([]byte, []int) { return fileDescriptor7, []int{5} }
+func (m *AppendEventProto) Reset()         { *m = AppendEventProto{} }
+func (m *AppendEventProto) String() string { return proto.CompactTextString(m) }
+func (*AppendEventProto) ProtoMessage()    {}
+func (*AppendEventProto) Descriptor() ([]byte, []int) {
+	return fileDescriptor_inotify_b00289e93102762b, []int{5}
+}
+func (m *AppendEventProto) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_AppendEventProto.Unmarshal(m, b)
+}
+func (m *AppendEventProto) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_AppendEventProto.Marshal(b, m, deterministic)
+}
+func (dst *AppendEventProto) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_AppendEventProto.Merge(dst, src)
+}
+func (m *AppendEventProto) XXX_Size() int {
+	return xxx_messageInfo_AppendEventProto.Size(m)
+}
+func (m *AppendEventProto) XXX_DiscardUnknown() {
+	xxx_messageInfo_AppendEventProto.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_AppendEventProto proto.InternalMessageInfo
 
 const Default_AppendEventProto_NewBlock bool = false
 
@@ -379,16 +517,37 @@ func (m *AppendEventProto) GetNewBlock() bool {
 }
 
 type RenameEventProto struct {
-	SrcPath          *string `protobuf:"bytes,1,req,name=srcPath" json:"srcPath,omitempty"`
-	DestPath         *string `protobuf:"bytes,2,req,name=destPath" json:"destPath,omitempty"`
-	Timestamp        *int64  `protobuf:"varint,3,req,name=timestamp" json:"timestamp,omitempty"`
-	XXX_unrecognized []byte  `json:"-"`
+	SrcPath              *string  `protobuf:"bytes,1,req,name=srcPath" json:"srcPath,omitempty"`
+	DestPath             *string  `protobuf:"bytes,2,req,name=destPath" json:"destPath,omitempty"`
+	Timestamp            *int64   `protobuf:"varint,3,req,name=timestamp" json:"timestamp,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
 }
 
-func (m *RenameEventProto) Reset()                    { *m = RenameEventProto{} }
-func (m *RenameEventProto) String() string            { return proto.CompactTextString(m) }
-func (*RenameEventProto) ProtoMessage()               {}
-func (*RenameEventProto) Descriptor() ([]byte, []int) { return fileDescriptor7, []int{6} }
+func (m *RenameEventProto) Reset()         { *m = RenameEventProto{} }
+func (m *RenameEventProto) String() string { return proto.CompactTextString(m) }
+func (*RenameEventProto) ProtoMessage()    {}
+func (*RenameEventProto) Descriptor() ([]byte, []int) {
+	return fileDescriptor_inotify_b00289e93102762b, []int{6}
+}
+func (m *RenameEventProto) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_RenameEventProto.Unmarshal(m, b)
+}
+func (m *RenameEventProto) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_RenameEventProto.Marshal(b, m, deterministic)
+}
+func (dst *RenameEventProto) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_RenameEventProto.Merge(dst, src)
+}
+func (m *RenameEventProto) XXX_Size() int {
+	return xxx_messageInfo_RenameEventProto.Size(m)
+}
+func (m *RenameEventProto) XXX_DiscardUnknown() {
+	xxx_messageInfo_RenameEventProto.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_RenameEventProto proto.InternalMessageInfo
 
 func (m *RenameEventProto) GetSrcPath() string {
 	if m != nil && m.SrcPath != nil {
@@ -412,24 +571,45 @@ func (m *RenameEventProto) GetTimestamp() int64 {
 }
 
 type MetadataUpdateEventProto struct {
-	Path             *string             `protobuf:"bytes,1,req,name=path" json:"path,omitempty"`
-	Type             *MetadataUpdateType `protobuf:"varint,2,req,name=type,enum=hadoop.hdfs.MetadataUpdateType" json:"type,omitempty"`
-	Mtime            *int64              `protobuf:"varint,3,opt,name=mtime" json:"mtime,omitempty"`
-	Atime            *int64              `protobuf:"varint,4,opt,name=atime" json:"atime,omitempty"`
-	Replication      *int32              `protobuf:"varint,5,opt,name=replication" json:"replication,omitempty"`
-	OwnerName        *string             `protobuf:"bytes,6,opt,name=ownerName" json:"ownerName,omitempty"`
-	GroupName        *string             `protobuf:"bytes,7,opt,name=groupName" json:"groupName,omitempty"`
-	Perms            *FsPermissionProto  `protobuf:"bytes,8,opt,name=perms" json:"perms,omitempty"`
-	Acls             []*AclEntryProto    `protobuf:"bytes,9,rep,name=acls" json:"acls,omitempty"`
-	XAttrs           []*XAttrProto       `protobuf:"bytes,10,rep,name=xAttrs" json:"xAttrs,omitempty"`
-	XAttrsRemoved    *bool               `protobuf:"varint,11,opt,name=xAttrsRemoved" json:"xAttrsRemoved,omitempty"`
-	XXX_unrecognized []byte              `json:"-"`
+	Path                 *string             `protobuf:"bytes,1,req,name=path" json:"path,omitempty"`
+	Type                 *MetadataUpdateType `protobuf:"varint,2,req,name=type,enum=hadoop.hdfs.MetadataUpdateType" json:"type,omitempty"`
+	Mtime                *int64              `protobuf:"varint,3,opt,name=mtime" json:"mtime,omitempty"`
+	Atime                *int64              `protobuf:"varint,4,opt,name=atime" json:"atime,omitempty"`
+	Replication          *int32              `protobuf:"varint,5,opt,name=replication" json:"replication,omitempty"`
+	OwnerName            *string             `protobuf:"bytes,6,opt,name=ownerName" json:"ownerName,omitempty"`
+	GroupName            *string             `protobuf:"bytes,7,opt,name=groupName" json:"groupName,omitempty"`
+	Perms                *FsPermissionProto  `protobuf:"bytes,8,opt,name=perms" json:"perms,omitempty"`
+	Acls                 []*AclEntryProto    `protobuf:"bytes,9,rep,name=acls" json:"acls,omitempty"`
+	XAttrs               []*XAttrProto       `protobuf:"bytes,10,rep,name=xAttrs" json:"xAttrs,omitempty"`
+	XAttrsRemoved        *bool               `protobuf:"varint,11,opt,name=xAttrsRemoved" json:"xAttrsRemoved,omitempty"`
+	XXX_NoUnkeyedLiteral struct{}            `json:"-"`
+	XXX_unrecognized     []byte              `json:"-"`
+	XXX_sizecache        int32               `json:"-"`
 }
 
-func (m *MetadataUpdateEventProto) Reset()                    { *m = MetadataUpdateEventProto{} }
-func (m *MetadataUpdateEventProto) String() string            { return proto.CompactTextString(m) }
-func (*MetadataUpdateEventProto) ProtoMessage()               {}
-func (*MetadataUpdateEventProto) Descriptor() ([]byte, []int) { return fileDescriptor7, []int{7} }
+func (m *MetadataUpdateEventProto) Reset()         { *m = MetadataUpdateEventProto{} }
+func (m *MetadataUpdateEventProto) String() string { return proto.CompactTextString(m) }
+func (*MetadataUpdateEventProto) ProtoMessage()    {}
+func (*MetadataUpdateEventProto) Descriptor() ([]byte, []int) {
+	return fileDescriptor_inotify_b00289e93102762b, []int{7}
+}
+func (m *MetadataUpdateEventProto) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_MetadataUpdateEventProto.Unmarshal(m, b)
+}
+func (m *MetadataUpdateEventProto) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_MetadataUpdateEventProto.Marshal(b, m, deterministic)
+}
+func (dst *MetadataUpdateEventProto) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_MetadataUpdateEventProto.Merge(dst, src)
+}
+func (m *MetadataUpdateEventProto) XXX_Size() int {
+	return xxx_messageInfo_MetadataUpdateEventProto.Size(m)
+}
+func (m *MetadataUpdateEventProto) XXX_DiscardUnknown() {
+	xxx_messageInfo_MetadataUpdateEventProto.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_MetadataUpdateEventProto proto.InternalMessageInfo
 
 func (m *MetadataUpdateEventProto) GetPath() string {
 	if m != nil && m.Path != nil {
@@ -509,15 +689,36 @@ func (m *MetadataUpdateEventProto) GetXAttrsRemoved() bool {
 }
 
 type UnlinkEventProto struct {
-	Path             *string `protobuf:"bytes,1,req,name=path" json:"path,omitempty"`
-	Timestamp        *int64  `protobuf:"varint,2,req,name=timestamp" json:"timestamp,omitempty"`
-	XXX_unrecognized []byte  `json:"-"`
+	Path                 *string  `protobuf:"bytes,1,req,name=path" json:"path,omitempty"`
+	Timestamp            *int64   `protobuf:"varint,2,req,name=timestamp" json:"timestamp,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
 }
 
-func (m *UnlinkEventProto) Reset()                    { *m = UnlinkEventProto{} }
-func (m *UnlinkEventProto) String() string            { return proto.CompactTextString(m) }
-func (*UnlinkEventProto) ProtoMessage()               {}
-func (*UnlinkEventProto) Descriptor() ([]byte, []int) { return fileDescriptor7, []int{8} }
+func (m *UnlinkEventProto) Reset()         { *m = UnlinkEventProto{} }
+func (m *UnlinkEventProto) String() string { return proto.CompactTextString(m) }
+func (*UnlinkEventProto) ProtoMessage()    {}
+func (*UnlinkEventProto) Descriptor() ([]byte, []int) {
+	return fileDescriptor_inotify_b00289e93102762b, []int{8}
+}
+func (m *UnlinkEventProto) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_UnlinkEventProto.Unmarshal(m, b)
+}
+func (m *UnlinkEventProto) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_UnlinkEventProto.Marshal(b, m, deterministic)
+}
+func (dst *UnlinkEventProto) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_UnlinkEventProto.Merge(dst, src)
+}
+func (m *UnlinkEventProto) XXX_Size() int {
+	return xxx_messageInfo_UnlinkEventProto.Size(m)
+}
+func (m *UnlinkEventProto) XXX_DiscardUnknown() {
+	xxx_messageInfo_UnlinkEventProto.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_UnlinkEventProto proto.InternalMessageInfo
 
 func (m *UnlinkEventProto) GetPath() string {
 	if m != nil && m.Path != nil {
@@ -534,18 +735,39 @@ func (m *UnlinkEventProto) GetTimestamp() int64 {
 }
 
 type EventsListProto struct {
-	Events           []*EventProto      `protobuf:"bytes,1,rep,name=events" json:"events,omitempty"`
-	FirstTxid        *int64             `protobuf:"varint,2,req,name=firstTxid" json:"firstTxid,omitempty"`
-	LastTxid         *int64             `protobuf:"varint,3,req,name=lastTxid" json:"lastTxid,omitempty"`
-	SyncTxid         *int64             `protobuf:"varint,4,req,name=syncTxid" json:"syncTxid,omitempty"`
-	Batch            []*EventBatchProto `protobuf:"bytes,5,rep,name=batch" json:"batch,omitempty"`
-	XXX_unrecognized []byte             `json:"-"`
+	Events               []*EventProto      `protobuf:"bytes,1,rep,name=events" json:"events,omitempty"`
+	FirstTxid            *int64             `protobuf:"varint,2,req,name=firstTxid" json:"firstTxid,omitempty"`
+	LastTxid             *int64             `protobuf:"varint,3,req,name=lastTxid" json:"lastTxid,omitempty"`
+	SyncTxid             *int64             `protobuf:"varint,4,req,name=syncTxid" json:"syncTxid,omitempty"`
+	Batch                []*EventBatchProto `protobuf:"bytes,5,rep,name=batch" json:"batch,omitempty"`
+	XXX_NoUnkeyedLiteral struct{}           `json:"-"`
+	XXX_unrecognized     []byte             `json:"-"`
+	XXX_sizecache        int32              `json:"-"`
 }
 
-func (m *EventsListProto) Reset()                    { *m = EventsListProto{} }
-func (m *EventsListProto) String() string            { return proto.CompactTextString(m) }
-func (*EventsListProto) ProtoMessage()               {}
-func (*EventsListProto) Descriptor() ([]byte, []int) { return fileDescriptor7, []int{9} }
+func (m *EventsListProto) Reset()         { *m = EventsListProto{} }
+func (m *EventsListProto) String() string { return proto.CompactTextString(m) }
+func (*EventsListProto) ProtoMessage()    {}
+func (*EventsListProto) Descriptor() ([]byte, []int) {
+	return fileDescriptor_inotify_b00289e93102762b, []int{9}
+}
+func (m *EventsListProto) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_EventsListProto.Unmarshal(m, b)
+}
+func (m *EventsListProto) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_EventsListProto.Marshal(b, m, deterministic)
+}
+func (dst *EventsListProto) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_EventsListProto.Merge(dst, src)
+}
+func (m *EventsListProto) XXX_Size() int {
+	return xxx_messageInfo_EventsListProto.Size(m)
+}
+func (m *EventsListProto) XXX_DiscardUnknown() {
+	xxx_messageInfo_EventsListProto.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_EventsListProto proto.InternalMessageInfo
 
 func (m *EventsListProto) GetEvents() []*EventProto {
 	if m != nil {
@@ -598,9 +820,9 @@ func init() {
 	proto.RegisterEnum("hadoop.hdfs.MetadataUpdateType", MetadataUpdateType_name, MetadataUpdateType_value)
 }
 
-func init() { proto.RegisterFile("inotify.proto", fileDescriptor7) }
+func init() { proto.RegisterFile("inotify.proto", fileDescriptor_inotify_b00289e93102762b) }
 
-var fileDescriptor7 = []byte{
+var fileDescriptor_inotify_b00289e93102762b = []byte{
 	// 917 bytes of a gzipped FileDescriptorProto
 	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xac, 0x56, 0x5f, 0x6f, 0xe3, 0x44,
 	0x10, 0x3f, 0x3b, 0x71, 0x2f, 0x99, 0x5c, 0xaf, 0xab, 0xa5, 0x80, 0x89, 0x4e, 0x10, 0x22, 0x90,

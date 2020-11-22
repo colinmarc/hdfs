@@ -13,19 +13,44 @@ var _ = proto.Marshal
 var _ = fmt.Errorf
 var _ = math.Inf
 
+// This is a compile-time assertion to ensure that this generated file
+// is compatible with the proto package it is being compiled against.
+// A compilation error at this line likely means your copy of the
+// proto package needs to be updated.
+const _ = proto.ProtoPackageIsVersion2 // please upgrade the proto package
+
 // *
 // block - block for which visible length is requested
 type GetReplicaVisibleLengthRequestProto struct {
-	Block            *ExtendedBlockProto `protobuf:"bytes,1,req,name=block" json:"block,omitempty"`
-	XXX_unrecognized []byte              `json:"-"`
+	Block                *ExtendedBlockProto `protobuf:"bytes,1,req,name=block" json:"block,omitempty"`
+	XXX_NoUnkeyedLiteral struct{}            `json:"-"`
+	XXX_unrecognized     []byte              `json:"-"`
+	XXX_sizecache        int32               `json:"-"`
 }
 
 func (m *GetReplicaVisibleLengthRequestProto) Reset()         { *m = GetReplicaVisibleLengthRequestProto{} }
 func (m *GetReplicaVisibleLengthRequestProto) String() string { return proto.CompactTextString(m) }
 func (*GetReplicaVisibleLengthRequestProto) ProtoMessage()    {}
 func (*GetReplicaVisibleLengthRequestProto) Descriptor() ([]byte, []int) {
-	return fileDescriptor6, []int{0}
+	return fileDescriptor_ClientDatanodeProtocol_48252578e1767fd2, []int{0}
 }
+func (m *GetReplicaVisibleLengthRequestProto) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_GetReplicaVisibleLengthRequestProto.Unmarshal(m, b)
+}
+func (m *GetReplicaVisibleLengthRequestProto) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_GetReplicaVisibleLengthRequestProto.Marshal(b, m, deterministic)
+}
+func (dst *GetReplicaVisibleLengthRequestProto) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_GetReplicaVisibleLengthRequestProto.Merge(dst, src)
+}
+func (m *GetReplicaVisibleLengthRequestProto) XXX_Size() int {
+	return xxx_messageInfo_GetReplicaVisibleLengthRequestProto.Size(m)
+}
+func (m *GetReplicaVisibleLengthRequestProto) XXX_DiscardUnknown() {
+	xxx_messageInfo_GetReplicaVisibleLengthRequestProto.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_GetReplicaVisibleLengthRequestProto proto.InternalMessageInfo
 
 func (m *GetReplicaVisibleLengthRequestProto) GetBlock() *ExtendedBlockProto {
 	if m != nil {
@@ -37,16 +62,35 @@ func (m *GetReplicaVisibleLengthRequestProto) GetBlock() *ExtendedBlockProto {
 // *
 // length - visible length of the block
 type GetReplicaVisibleLengthResponseProto struct {
-	Length           *uint64 `protobuf:"varint,1,req,name=length" json:"length,omitempty"`
-	XXX_unrecognized []byte  `json:"-"`
+	Length               *uint64  `protobuf:"varint,1,req,name=length" json:"length,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
 }
 
 func (m *GetReplicaVisibleLengthResponseProto) Reset()         { *m = GetReplicaVisibleLengthResponseProto{} }
 func (m *GetReplicaVisibleLengthResponseProto) String() string { return proto.CompactTextString(m) }
 func (*GetReplicaVisibleLengthResponseProto) ProtoMessage()    {}
 func (*GetReplicaVisibleLengthResponseProto) Descriptor() ([]byte, []int) {
-	return fileDescriptor6, []int{1}
+	return fileDescriptor_ClientDatanodeProtocol_48252578e1767fd2, []int{1}
 }
+func (m *GetReplicaVisibleLengthResponseProto) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_GetReplicaVisibleLengthResponseProto.Unmarshal(m, b)
+}
+func (m *GetReplicaVisibleLengthResponseProto) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_GetReplicaVisibleLengthResponseProto.Marshal(b, m, deterministic)
+}
+func (dst *GetReplicaVisibleLengthResponseProto) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_GetReplicaVisibleLengthResponseProto.Merge(dst, src)
+}
+func (m *GetReplicaVisibleLengthResponseProto) XXX_Size() int {
+	return xxx_messageInfo_GetReplicaVisibleLengthResponseProto.Size(m)
+}
+func (m *GetReplicaVisibleLengthResponseProto) XXX_DiscardUnknown() {
+	xxx_messageInfo_GetReplicaVisibleLengthResponseProto.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_GetReplicaVisibleLengthResponseProto proto.InternalMessageInfo
 
 func (m *GetReplicaVisibleLengthResponseProto) GetLength() uint64 {
 	if m != nil && m.Length != nil {
@@ -58,39 +102,102 @@ func (m *GetReplicaVisibleLengthResponseProto) GetLength() uint64 {
 // *
 // void request
 type RefreshNamenodesRequestProto struct {
-	XXX_unrecognized []byte `json:"-"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
 }
 
-func (m *RefreshNamenodesRequestProto) Reset()                    { *m = RefreshNamenodesRequestProto{} }
-func (m *RefreshNamenodesRequestProto) String() string            { return proto.CompactTextString(m) }
-func (*RefreshNamenodesRequestProto) ProtoMessage()               {}
-func (*RefreshNamenodesRequestProto) Descriptor() ([]byte, []int) { return fileDescriptor6, []int{2} }
+func (m *RefreshNamenodesRequestProto) Reset()         { *m = RefreshNamenodesRequestProto{} }
+func (m *RefreshNamenodesRequestProto) String() string { return proto.CompactTextString(m) }
+func (*RefreshNamenodesRequestProto) ProtoMessage()    {}
+func (*RefreshNamenodesRequestProto) Descriptor() ([]byte, []int) {
+	return fileDescriptor_ClientDatanodeProtocol_48252578e1767fd2, []int{2}
+}
+func (m *RefreshNamenodesRequestProto) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_RefreshNamenodesRequestProto.Unmarshal(m, b)
+}
+func (m *RefreshNamenodesRequestProto) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_RefreshNamenodesRequestProto.Marshal(b, m, deterministic)
+}
+func (dst *RefreshNamenodesRequestProto) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_RefreshNamenodesRequestProto.Merge(dst, src)
+}
+func (m *RefreshNamenodesRequestProto) XXX_Size() int {
+	return xxx_messageInfo_RefreshNamenodesRequestProto.Size(m)
+}
+func (m *RefreshNamenodesRequestProto) XXX_DiscardUnknown() {
+	xxx_messageInfo_RefreshNamenodesRequestProto.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_RefreshNamenodesRequestProto proto.InternalMessageInfo
 
 // *
 // void response
 type RefreshNamenodesResponseProto struct {
-	XXX_unrecognized []byte `json:"-"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
 }
 
-func (m *RefreshNamenodesResponseProto) Reset()                    { *m = RefreshNamenodesResponseProto{} }
-func (m *RefreshNamenodesResponseProto) String() string            { return proto.CompactTextString(m) }
-func (*RefreshNamenodesResponseProto) ProtoMessage()               {}
-func (*RefreshNamenodesResponseProto) Descriptor() ([]byte, []int) { return fileDescriptor6, []int{3} }
+func (m *RefreshNamenodesResponseProto) Reset()         { *m = RefreshNamenodesResponseProto{} }
+func (m *RefreshNamenodesResponseProto) String() string { return proto.CompactTextString(m) }
+func (*RefreshNamenodesResponseProto) ProtoMessage()    {}
+func (*RefreshNamenodesResponseProto) Descriptor() ([]byte, []int) {
+	return fileDescriptor_ClientDatanodeProtocol_48252578e1767fd2, []int{3}
+}
+func (m *RefreshNamenodesResponseProto) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_RefreshNamenodesResponseProto.Unmarshal(m, b)
+}
+func (m *RefreshNamenodesResponseProto) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_RefreshNamenodesResponseProto.Marshal(b, m, deterministic)
+}
+func (dst *RefreshNamenodesResponseProto) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_RefreshNamenodesResponseProto.Merge(dst, src)
+}
+func (m *RefreshNamenodesResponseProto) XXX_Size() int {
+	return xxx_messageInfo_RefreshNamenodesResponseProto.Size(m)
+}
+func (m *RefreshNamenodesResponseProto) XXX_DiscardUnknown() {
+	xxx_messageInfo_RefreshNamenodesResponseProto.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_RefreshNamenodesResponseProto proto.InternalMessageInfo
 
 // *
 // blockPool - block pool to be deleted
 // force - if false, delete the block pool only if it is empty.
 //         if true, delete the block pool even if it has blocks.
 type DeleteBlockPoolRequestProto struct {
-	BlockPool        *string `protobuf:"bytes,1,req,name=blockPool" json:"blockPool,omitempty"`
-	Force            *bool   `protobuf:"varint,2,req,name=force" json:"force,omitempty"`
-	XXX_unrecognized []byte  `json:"-"`
+	BlockPool            *string  `protobuf:"bytes,1,req,name=blockPool" json:"blockPool,omitempty"`
+	Force                *bool    `protobuf:"varint,2,req,name=force" json:"force,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
 }
 
-func (m *DeleteBlockPoolRequestProto) Reset()                    { *m = DeleteBlockPoolRequestProto{} }
-func (m *DeleteBlockPoolRequestProto) String() string            { return proto.CompactTextString(m) }
-func (*DeleteBlockPoolRequestProto) ProtoMessage()               {}
-func (*DeleteBlockPoolRequestProto) Descriptor() ([]byte, []int) { return fileDescriptor6, []int{4} }
+func (m *DeleteBlockPoolRequestProto) Reset()         { *m = DeleteBlockPoolRequestProto{} }
+func (m *DeleteBlockPoolRequestProto) String() string { return proto.CompactTextString(m) }
+func (*DeleteBlockPoolRequestProto) ProtoMessage()    {}
+func (*DeleteBlockPoolRequestProto) Descriptor() ([]byte, []int) {
+	return fileDescriptor_ClientDatanodeProtocol_48252578e1767fd2, []int{4}
+}
+func (m *DeleteBlockPoolRequestProto) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_DeleteBlockPoolRequestProto.Unmarshal(m, b)
+}
+func (m *DeleteBlockPoolRequestProto) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_DeleteBlockPoolRequestProto.Marshal(b, m, deterministic)
+}
+func (dst *DeleteBlockPoolRequestProto) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_DeleteBlockPoolRequestProto.Merge(dst, src)
+}
+func (m *DeleteBlockPoolRequestProto) XXX_Size() int {
+	return xxx_messageInfo_DeleteBlockPoolRequestProto.Size(m)
+}
+func (m *DeleteBlockPoolRequestProto) XXX_DiscardUnknown() {
+	xxx_messageInfo_DeleteBlockPoolRequestProto.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_DeleteBlockPoolRequestProto proto.InternalMessageInfo
 
 func (m *DeleteBlockPoolRequestProto) GetBlockPool() string {
 	if m != nil && m.BlockPool != nil {
@@ -109,13 +216,34 @@ func (m *DeleteBlockPoolRequestProto) GetForce() bool {
 // *
 // void response
 type DeleteBlockPoolResponseProto struct {
-	XXX_unrecognized []byte `json:"-"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
 }
 
-func (m *DeleteBlockPoolResponseProto) Reset()                    { *m = DeleteBlockPoolResponseProto{} }
-func (m *DeleteBlockPoolResponseProto) String() string            { return proto.CompactTextString(m) }
-func (*DeleteBlockPoolResponseProto) ProtoMessage()               {}
-func (*DeleteBlockPoolResponseProto) Descriptor() ([]byte, []int) { return fileDescriptor6, []int{5} }
+func (m *DeleteBlockPoolResponseProto) Reset()         { *m = DeleteBlockPoolResponseProto{} }
+func (m *DeleteBlockPoolResponseProto) String() string { return proto.CompactTextString(m) }
+func (*DeleteBlockPoolResponseProto) ProtoMessage()    {}
+func (*DeleteBlockPoolResponseProto) Descriptor() ([]byte, []int) {
+	return fileDescriptor_ClientDatanodeProtocol_48252578e1767fd2, []int{5}
+}
+func (m *DeleteBlockPoolResponseProto) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_DeleteBlockPoolResponseProto.Unmarshal(m, b)
+}
+func (m *DeleteBlockPoolResponseProto) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_DeleteBlockPoolResponseProto.Marshal(b, m, deterministic)
+}
+func (dst *DeleteBlockPoolResponseProto) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_DeleteBlockPoolResponseProto.Merge(dst, src)
+}
+func (m *DeleteBlockPoolResponseProto) XXX_Size() int {
+	return xxx_messageInfo_DeleteBlockPoolResponseProto.Size(m)
+}
+func (m *DeleteBlockPoolResponseProto) XXX_DiscardUnknown() {
+	xxx_messageInfo_DeleteBlockPoolResponseProto.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_DeleteBlockPoolResponseProto proto.InternalMessageInfo
 
 // *
 // Gets the file information where block and its metadata is stored
@@ -124,17 +252,36 @@ func (*DeleteBlockPoolResponseProto) Descriptor() ([]byte, []int) { return fileD
 //
 // This message is deprecated in favor of file descriptor passing.
 type GetBlockLocalPathInfoRequestProto struct {
-	Block            *ExtendedBlockProto       `protobuf:"bytes,1,req,name=block" json:"block,omitempty"`
-	Token            *hadoop_common.TokenProto `protobuf:"bytes,2,req,name=token" json:"token,omitempty"`
-	XXX_unrecognized []byte                    `json:"-"`
+	Block                *ExtendedBlockProto       `protobuf:"bytes,1,req,name=block" json:"block,omitempty"`
+	Token                *hadoop_common.TokenProto `protobuf:"bytes,2,req,name=token" json:"token,omitempty"`
+	XXX_NoUnkeyedLiteral struct{}                  `json:"-"`
+	XXX_unrecognized     []byte                    `json:"-"`
+	XXX_sizecache        int32                     `json:"-"`
 }
 
 func (m *GetBlockLocalPathInfoRequestProto) Reset()         { *m = GetBlockLocalPathInfoRequestProto{} }
 func (m *GetBlockLocalPathInfoRequestProto) String() string { return proto.CompactTextString(m) }
 func (*GetBlockLocalPathInfoRequestProto) ProtoMessage()    {}
 func (*GetBlockLocalPathInfoRequestProto) Descriptor() ([]byte, []int) {
-	return fileDescriptor6, []int{6}
+	return fileDescriptor_ClientDatanodeProtocol_48252578e1767fd2, []int{6}
 }
+func (m *GetBlockLocalPathInfoRequestProto) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_GetBlockLocalPathInfoRequestProto.Unmarshal(m, b)
+}
+func (m *GetBlockLocalPathInfoRequestProto) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_GetBlockLocalPathInfoRequestProto.Marshal(b, m, deterministic)
+}
+func (dst *GetBlockLocalPathInfoRequestProto) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_GetBlockLocalPathInfoRequestProto.Merge(dst, src)
+}
+func (m *GetBlockLocalPathInfoRequestProto) XXX_Size() int {
+	return xxx_messageInfo_GetBlockLocalPathInfoRequestProto.Size(m)
+}
+func (m *GetBlockLocalPathInfoRequestProto) XXX_DiscardUnknown() {
+	xxx_messageInfo_GetBlockLocalPathInfoRequestProto.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_GetBlockLocalPathInfoRequestProto proto.InternalMessageInfo
 
 func (m *GetBlockLocalPathInfoRequestProto) GetBlock() *ExtendedBlockProto {
 	if m != nil {
@@ -157,18 +304,37 @@ func (m *GetBlockLocalPathInfoRequestProto) GetToken() *hadoop_common.TokenProto
 //
 // This message is deprecated in favor of file descriptor passing.
 type GetBlockLocalPathInfoResponseProto struct {
-	Block            *ExtendedBlockProto `protobuf:"bytes,1,req,name=block" json:"block,omitempty"`
-	LocalPath        *string             `protobuf:"bytes,2,req,name=localPath" json:"localPath,omitempty"`
-	LocalMetaPath    *string             `protobuf:"bytes,3,req,name=localMetaPath" json:"localMetaPath,omitempty"`
-	XXX_unrecognized []byte              `json:"-"`
+	Block                *ExtendedBlockProto `protobuf:"bytes,1,req,name=block" json:"block,omitempty"`
+	LocalPath            *string             `protobuf:"bytes,2,req,name=localPath" json:"localPath,omitempty"`
+	LocalMetaPath        *string             `protobuf:"bytes,3,req,name=localMetaPath" json:"localMetaPath,omitempty"`
+	XXX_NoUnkeyedLiteral struct{}            `json:"-"`
+	XXX_unrecognized     []byte              `json:"-"`
+	XXX_sizecache        int32               `json:"-"`
 }
 
 func (m *GetBlockLocalPathInfoResponseProto) Reset()         { *m = GetBlockLocalPathInfoResponseProto{} }
 func (m *GetBlockLocalPathInfoResponseProto) String() string { return proto.CompactTextString(m) }
 func (*GetBlockLocalPathInfoResponseProto) ProtoMessage()    {}
 func (*GetBlockLocalPathInfoResponseProto) Descriptor() ([]byte, []int) {
-	return fileDescriptor6, []int{7}
+	return fileDescriptor_ClientDatanodeProtocol_48252578e1767fd2, []int{7}
 }
+func (m *GetBlockLocalPathInfoResponseProto) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_GetBlockLocalPathInfoResponseProto.Unmarshal(m, b)
+}
+func (m *GetBlockLocalPathInfoResponseProto) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_GetBlockLocalPathInfoResponseProto.Marshal(b, m, deterministic)
+}
+func (dst *GetBlockLocalPathInfoResponseProto) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_GetBlockLocalPathInfoResponseProto.Merge(dst, src)
+}
+func (m *GetBlockLocalPathInfoResponseProto) XXX_Size() int {
+	return xxx_messageInfo_GetBlockLocalPathInfoResponseProto.Size(m)
+}
+func (m *GetBlockLocalPathInfoResponseProto) XXX_DiscardUnknown() {
+	xxx_messageInfo_GetBlockLocalPathInfoResponseProto.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_GetBlockLocalPathInfoResponseProto proto.InternalMessageInfo
 
 func (m *GetBlockLocalPathInfoResponseProto) GetBlock() *ExtendedBlockProto {
 	if m != nil {
@@ -196,14 +362,35 @@ func (m *GetBlockLocalPathInfoResponseProto) GetLocalMetaPath() string {
 //              upgrade restart is instrumented. Otherwise, datanode does
 //              the regular shutdown.
 type ShutdownDatanodeRequestProto struct {
-	ForUpgrade       *bool  `protobuf:"varint,1,req,name=forUpgrade" json:"forUpgrade,omitempty"`
-	XXX_unrecognized []byte `json:"-"`
+	ForUpgrade           *bool    `protobuf:"varint,1,req,name=forUpgrade" json:"forUpgrade,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
 }
 
-func (m *ShutdownDatanodeRequestProto) Reset()                    { *m = ShutdownDatanodeRequestProto{} }
-func (m *ShutdownDatanodeRequestProto) String() string            { return proto.CompactTextString(m) }
-func (*ShutdownDatanodeRequestProto) ProtoMessage()               {}
-func (*ShutdownDatanodeRequestProto) Descriptor() ([]byte, []int) { return fileDescriptor6, []int{8} }
+func (m *ShutdownDatanodeRequestProto) Reset()         { *m = ShutdownDatanodeRequestProto{} }
+func (m *ShutdownDatanodeRequestProto) String() string { return proto.CompactTextString(m) }
+func (*ShutdownDatanodeRequestProto) ProtoMessage()    {}
+func (*ShutdownDatanodeRequestProto) Descriptor() ([]byte, []int) {
+	return fileDescriptor_ClientDatanodeProtocol_48252578e1767fd2, []int{8}
+}
+func (m *ShutdownDatanodeRequestProto) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_ShutdownDatanodeRequestProto.Unmarshal(m, b)
+}
+func (m *ShutdownDatanodeRequestProto) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_ShutdownDatanodeRequestProto.Marshal(b, m, deterministic)
+}
+func (dst *ShutdownDatanodeRequestProto) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_ShutdownDatanodeRequestProto.Merge(dst, src)
+}
+func (m *ShutdownDatanodeRequestProto) XXX_Size() int {
+	return xxx_messageInfo_ShutdownDatanodeRequestProto.Size(m)
+}
+func (m *ShutdownDatanodeRequestProto) XXX_DiscardUnknown() {
+	xxx_messageInfo_ShutdownDatanodeRequestProto.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_ShutdownDatanodeRequestProto proto.InternalMessageInfo
 
 func (m *ShutdownDatanodeRequestProto) GetForUpgrade() bool {
 	if m != nil && m.ForUpgrade != nil {
@@ -213,53 +400,158 @@ func (m *ShutdownDatanodeRequestProto) GetForUpgrade() bool {
 }
 
 type ShutdownDatanodeResponseProto struct {
-	XXX_unrecognized []byte `json:"-"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
 }
 
-func (m *ShutdownDatanodeResponseProto) Reset()                    { *m = ShutdownDatanodeResponseProto{} }
-func (m *ShutdownDatanodeResponseProto) String() string            { return proto.CompactTextString(m) }
-func (*ShutdownDatanodeResponseProto) ProtoMessage()               {}
-func (*ShutdownDatanodeResponseProto) Descriptor() ([]byte, []int) { return fileDescriptor6, []int{9} }
+func (m *ShutdownDatanodeResponseProto) Reset()         { *m = ShutdownDatanodeResponseProto{} }
+func (m *ShutdownDatanodeResponseProto) String() string { return proto.CompactTextString(m) }
+func (*ShutdownDatanodeResponseProto) ProtoMessage()    {}
+func (*ShutdownDatanodeResponseProto) Descriptor() ([]byte, []int) {
+	return fileDescriptor_ClientDatanodeProtocol_48252578e1767fd2, []int{9}
+}
+func (m *ShutdownDatanodeResponseProto) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_ShutdownDatanodeResponseProto.Unmarshal(m, b)
+}
+func (m *ShutdownDatanodeResponseProto) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_ShutdownDatanodeResponseProto.Marshal(b, m, deterministic)
+}
+func (dst *ShutdownDatanodeResponseProto) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_ShutdownDatanodeResponseProto.Merge(dst, src)
+}
+func (m *ShutdownDatanodeResponseProto) XXX_Size() int {
+	return xxx_messageInfo_ShutdownDatanodeResponseProto.Size(m)
+}
+func (m *ShutdownDatanodeResponseProto) XXX_DiscardUnknown() {
+	xxx_messageInfo_ShutdownDatanodeResponseProto.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_ShutdownDatanodeResponseProto proto.InternalMessageInfo
 
 // * Tell datanode to evict active clients that are writing
 type EvictWritersRequestProto struct {
-	XXX_unrecognized []byte `json:"-"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
 }
 
-func (m *EvictWritersRequestProto) Reset()                    { *m = EvictWritersRequestProto{} }
-func (m *EvictWritersRequestProto) String() string            { return proto.CompactTextString(m) }
-func (*EvictWritersRequestProto) ProtoMessage()               {}
-func (*EvictWritersRequestProto) Descriptor() ([]byte, []int) { return fileDescriptor6, []int{10} }
+func (m *EvictWritersRequestProto) Reset()         { *m = EvictWritersRequestProto{} }
+func (m *EvictWritersRequestProto) String() string { return proto.CompactTextString(m) }
+func (*EvictWritersRequestProto) ProtoMessage()    {}
+func (*EvictWritersRequestProto) Descriptor() ([]byte, []int) {
+	return fileDescriptor_ClientDatanodeProtocol_48252578e1767fd2, []int{10}
+}
+func (m *EvictWritersRequestProto) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_EvictWritersRequestProto.Unmarshal(m, b)
+}
+func (m *EvictWritersRequestProto) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_EvictWritersRequestProto.Marshal(b, m, deterministic)
+}
+func (dst *EvictWritersRequestProto) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_EvictWritersRequestProto.Merge(dst, src)
+}
+func (m *EvictWritersRequestProto) XXX_Size() int {
+	return xxx_messageInfo_EvictWritersRequestProto.Size(m)
+}
+func (m *EvictWritersRequestProto) XXX_DiscardUnknown() {
+	xxx_messageInfo_EvictWritersRequestProto.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_EvictWritersRequestProto proto.InternalMessageInfo
 
 type EvictWritersResponseProto struct {
-	XXX_unrecognized []byte `json:"-"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
 }
 
-func (m *EvictWritersResponseProto) Reset()                    { *m = EvictWritersResponseProto{} }
-func (m *EvictWritersResponseProto) String() string            { return proto.CompactTextString(m) }
-func (*EvictWritersResponseProto) ProtoMessage()               {}
-func (*EvictWritersResponseProto) Descriptor() ([]byte, []int) { return fileDescriptor6, []int{11} }
+func (m *EvictWritersResponseProto) Reset()         { *m = EvictWritersResponseProto{} }
+func (m *EvictWritersResponseProto) String() string { return proto.CompactTextString(m) }
+func (*EvictWritersResponseProto) ProtoMessage()    {}
+func (*EvictWritersResponseProto) Descriptor() ([]byte, []int) {
+	return fileDescriptor_ClientDatanodeProtocol_48252578e1767fd2, []int{11}
+}
+func (m *EvictWritersResponseProto) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_EvictWritersResponseProto.Unmarshal(m, b)
+}
+func (m *EvictWritersResponseProto) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_EvictWritersResponseProto.Marshal(b, m, deterministic)
+}
+func (dst *EvictWritersResponseProto) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_EvictWritersResponseProto.Merge(dst, src)
+}
+func (m *EvictWritersResponseProto) XXX_Size() int {
+	return xxx_messageInfo_EvictWritersResponseProto.Size(m)
+}
+func (m *EvictWritersResponseProto) XXX_DiscardUnknown() {
+	xxx_messageInfo_EvictWritersResponseProto.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_EvictWritersResponseProto proto.InternalMessageInfo
 
 // *
 // Ping datanode for liveness and quick info
 type GetDatanodeInfoRequestProto struct {
-	XXX_unrecognized []byte `json:"-"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
 }
 
-func (m *GetDatanodeInfoRequestProto) Reset()                    { *m = GetDatanodeInfoRequestProto{} }
-func (m *GetDatanodeInfoRequestProto) String() string            { return proto.CompactTextString(m) }
-func (*GetDatanodeInfoRequestProto) ProtoMessage()               {}
-func (*GetDatanodeInfoRequestProto) Descriptor() ([]byte, []int) { return fileDescriptor6, []int{12} }
+func (m *GetDatanodeInfoRequestProto) Reset()         { *m = GetDatanodeInfoRequestProto{} }
+func (m *GetDatanodeInfoRequestProto) String() string { return proto.CompactTextString(m) }
+func (*GetDatanodeInfoRequestProto) ProtoMessage()    {}
+func (*GetDatanodeInfoRequestProto) Descriptor() ([]byte, []int) {
+	return fileDescriptor_ClientDatanodeProtocol_48252578e1767fd2, []int{12}
+}
+func (m *GetDatanodeInfoRequestProto) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_GetDatanodeInfoRequestProto.Unmarshal(m, b)
+}
+func (m *GetDatanodeInfoRequestProto) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_GetDatanodeInfoRequestProto.Marshal(b, m, deterministic)
+}
+func (dst *GetDatanodeInfoRequestProto) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_GetDatanodeInfoRequestProto.Merge(dst, src)
+}
+func (m *GetDatanodeInfoRequestProto) XXX_Size() int {
+	return xxx_messageInfo_GetDatanodeInfoRequestProto.Size(m)
+}
+func (m *GetDatanodeInfoRequestProto) XXX_DiscardUnknown() {
+	xxx_messageInfo_GetDatanodeInfoRequestProto.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_GetDatanodeInfoRequestProto proto.InternalMessageInfo
 
 type GetDatanodeInfoResponseProto struct {
-	LocalInfo        *DatanodeLocalInfoProto `protobuf:"bytes,1,req,name=localInfo" json:"localInfo,omitempty"`
-	XXX_unrecognized []byte                  `json:"-"`
+	LocalInfo            *DatanodeLocalInfoProto `protobuf:"bytes,1,req,name=localInfo" json:"localInfo,omitempty"`
+	XXX_NoUnkeyedLiteral struct{}                `json:"-"`
+	XXX_unrecognized     []byte                  `json:"-"`
+	XXX_sizecache        int32                   `json:"-"`
 }
 
-func (m *GetDatanodeInfoResponseProto) Reset()                    { *m = GetDatanodeInfoResponseProto{} }
-func (m *GetDatanodeInfoResponseProto) String() string            { return proto.CompactTextString(m) }
-func (*GetDatanodeInfoResponseProto) ProtoMessage()               {}
-func (*GetDatanodeInfoResponseProto) Descriptor() ([]byte, []int) { return fileDescriptor6, []int{13} }
+func (m *GetDatanodeInfoResponseProto) Reset()         { *m = GetDatanodeInfoResponseProto{} }
+func (m *GetDatanodeInfoResponseProto) String() string { return proto.CompactTextString(m) }
+func (*GetDatanodeInfoResponseProto) ProtoMessage()    {}
+func (*GetDatanodeInfoResponseProto) Descriptor() ([]byte, []int) {
+	return fileDescriptor_ClientDatanodeProtocol_48252578e1767fd2, []int{13}
+}
+func (m *GetDatanodeInfoResponseProto) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_GetDatanodeInfoResponseProto.Unmarshal(m, b)
+}
+func (m *GetDatanodeInfoResponseProto) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_GetDatanodeInfoResponseProto.Marshal(b, m, deterministic)
+}
+func (dst *GetDatanodeInfoResponseProto) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_GetDatanodeInfoResponseProto.Merge(dst, src)
+}
+func (m *GetDatanodeInfoResponseProto) XXX_Size() int {
+	return xxx_messageInfo_GetDatanodeInfoResponseProto.Size(m)
+}
+func (m *GetDatanodeInfoResponseProto) XXX_DiscardUnknown() {
+	xxx_messageInfo_GetDatanodeInfoResponseProto.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_GetDatanodeInfoResponseProto proto.InternalMessageInfo
 
 func (m *GetDatanodeInfoResponseProto) GetLocalInfo() *DatanodeLocalInfoProto {
 	if m != nil {
@@ -269,14 +561,35 @@ func (m *GetDatanodeInfoResponseProto) GetLocalInfo() *DatanodeLocalInfoProto {
 }
 
 type TriggerBlockReportRequestProto struct {
-	Incremental      *bool  `protobuf:"varint,1,req,name=incremental" json:"incremental,omitempty"`
-	XXX_unrecognized []byte `json:"-"`
+	Incremental          *bool    `protobuf:"varint,1,req,name=incremental" json:"incremental,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
 }
 
-func (m *TriggerBlockReportRequestProto) Reset()                    { *m = TriggerBlockReportRequestProto{} }
-func (m *TriggerBlockReportRequestProto) String() string            { return proto.CompactTextString(m) }
-func (*TriggerBlockReportRequestProto) ProtoMessage()               {}
-func (*TriggerBlockReportRequestProto) Descriptor() ([]byte, []int) { return fileDescriptor6, []int{14} }
+func (m *TriggerBlockReportRequestProto) Reset()         { *m = TriggerBlockReportRequestProto{} }
+func (m *TriggerBlockReportRequestProto) String() string { return proto.CompactTextString(m) }
+func (*TriggerBlockReportRequestProto) ProtoMessage()    {}
+func (*TriggerBlockReportRequestProto) Descriptor() ([]byte, []int) {
+	return fileDescriptor_ClientDatanodeProtocol_48252578e1767fd2, []int{14}
+}
+func (m *TriggerBlockReportRequestProto) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_TriggerBlockReportRequestProto.Unmarshal(m, b)
+}
+func (m *TriggerBlockReportRequestProto) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_TriggerBlockReportRequestProto.Marshal(b, m, deterministic)
+}
+func (dst *TriggerBlockReportRequestProto) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_TriggerBlockReportRequestProto.Merge(dst, src)
+}
+func (m *TriggerBlockReportRequestProto) XXX_Size() int {
+	return xxx_messageInfo_TriggerBlockReportRequestProto.Size(m)
+}
+func (m *TriggerBlockReportRequestProto) XXX_DiscardUnknown() {
+	xxx_messageInfo_TriggerBlockReportRequestProto.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_TriggerBlockReportRequestProto proto.InternalMessageInfo
 
 func (m *TriggerBlockReportRequestProto) GetIncremental() bool {
 	if m != nil && m.Incremental != nil {
@@ -286,40 +599,97 @@ func (m *TriggerBlockReportRequestProto) GetIncremental() bool {
 }
 
 type TriggerBlockReportResponseProto struct {
-	XXX_unrecognized []byte `json:"-"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
 }
 
 func (m *TriggerBlockReportResponseProto) Reset()         { *m = TriggerBlockReportResponseProto{} }
 func (m *TriggerBlockReportResponseProto) String() string { return proto.CompactTextString(m) }
 func (*TriggerBlockReportResponseProto) ProtoMessage()    {}
 func (*TriggerBlockReportResponseProto) Descriptor() ([]byte, []int) {
-	return fileDescriptor6, []int{15}
+	return fileDescriptor_ClientDatanodeProtocol_48252578e1767fd2, []int{15}
+}
+func (m *TriggerBlockReportResponseProto) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_TriggerBlockReportResponseProto.Unmarshal(m, b)
+}
+func (m *TriggerBlockReportResponseProto) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_TriggerBlockReportResponseProto.Marshal(b, m, deterministic)
+}
+func (dst *TriggerBlockReportResponseProto) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_TriggerBlockReportResponseProto.Merge(dst, src)
+}
+func (m *TriggerBlockReportResponseProto) XXX_Size() int {
+	return xxx_messageInfo_TriggerBlockReportResponseProto.Size(m)
+}
+func (m *TriggerBlockReportResponseProto) XXX_DiscardUnknown() {
+	xxx_messageInfo_TriggerBlockReportResponseProto.DiscardUnknown(m)
 }
 
+var xxx_messageInfo_TriggerBlockReportResponseProto proto.InternalMessageInfo
+
 type GetBalancerBandwidthRequestProto struct {
-	XXX_unrecognized []byte `json:"-"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
 }
 
 func (m *GetBalancerBandwidthRequestProto) Reset()         { *m = GetBalancerBandwidthRequestProto{} }
 func (m *GetBalancerBandwidthRequestProto) String() string { return proto.CompactTextString(m) }
 func (*GetBalancerBandwidthRequestProto) ProtoMessage()    {}
 func (*GetBalancerBandwidthRequestProto) Descriptor() ([]byte, []int) {
-	return fileDescriptor6, []int{16}
+	return fileDescriptor_ClientDatanodeProtocol_48252578e1767fd2, []int{16}
 }
+func (m *GetBalancerBandwidthRequestProto) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_GetBalancerBandwidthRequestProto.Unmarshal(m, b)
+}
+func (m *GetBalancerBandwidthRequestProto) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_GetBalancerBandwidthRequestProto.Marshal(b, m, deterministic)
+}
+func (dst *GetBalancerBandwidthRequestProto) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_GetBalancerBandwidthRequestProto.Merge(dst, src)
+}
+func (m *GetBalancerBandwidthRequestProto) XXX_Size() int {
+	return xxx_messageInfo_GetBalancerBandwidthRequestProto.Size(m)
+}
+func (m *GetBalancerBandwidthRequestProto) XXX_DiscardUnknown() {
+	xxx_messageInfo_GetBalancerBandwidthRequestProto.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_GetBalancerBandwidthRequestProto proto.InternalMessageInfo
 
 // *
 // bandwidth - balancer bandwidth value of the datanode.
 type GetBalancerBandwidthResponseProto struct {
-	Bandwidth        *uint64 `protobuf:"varint,1,req,name=bandwidth" json:"bandwidth,omitempty"`
-	XXX_unrecognized []byte  `json:"-"`
+	Bandwidth            *uint64  `protobuf:"varint,1,req,name=bandwidth" json:"bandwidth,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
 }
 
 func (m *GetBalancerBandwidthResponseProto) Reset()         { *m = GetBalancerBandwidthResponseProto{} }
 func (m *GetBalancerBandwidthResponseProto) String() string { return proto.CompactTextString(m) }
 func (*GetBalancerBandwidthResponseProto) ProtoMessage()    {}
 func (*GetBalancerBandwidthResponseProto) Descriptor() ([]byte, []int) {
-	return fileDescriptor6, []int{17}
+	return fileDescriptor_ClientDatanodeProtocol_48252578e1767fd2, []int{17}
 }
+func (m *GetBalancerBandwidthResponseProto) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_GetBalancerBandwidthResponseProto.Unmarshal(m, b)
+}
+func (m *GetBalancerBandwidthResponseProto) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_GetBalancerBandwidthResponseProto.Marshal(b, m, deterministic)
+}
+func (dst *GetBalancerBandwidthResponseProto) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_GetBalancerBandwidthResponseProto.Merge(dst, src)
+}
+func (m *GetBalancerBandwidthResponseProto) XXX_Size() int {
+	return xxx_messageInfo_GetBalancerBandwidthResponseProto.Size(m)
+}
+func (m *GetBalancerBandwidthResponseProto) XXX_DiscardUnknown() {
+	xxx_messageInfo_GetBalancerBandwidthResponseProto.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_GetBalancerBandwidthResponseProto proto.InternalMessageInfo
 
 func (m *GetBalancerBandwidthResponseProto) GetBandwidth() uint64 {
 	if m != nil && m.Bandwidth != nil {
@@ -349,9 +719,11 @@ func init() {
 	proto.RegisterType((*GetBalancerBandwidthResponseProto)(nil), "hadoop.hdfs.GetBalancerBandwidthResponseProto")
 }
 
-func init() { proto.RegisterFile("ClientDatanodeProtocol.proto", fileDescriptor6) }
+func init() {
+	proto.RegisterFile("ClientDatanodeProtocol.proto", fileDescriptor_ClientDatanodeProtocol_48252578e1767fd2)
+}
 
-var fileDescriptor6 = []byte{
+var fileDescriptor_ClientDatanodeProtocol_48252578e1767fd2 = []byte{
 	// 804 bytes of a gzipped FileDescriptorProto
 	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xac, 0x56, 0x4b, 0x6f, 0xdb, 0x46,
 	0x10, 0x06, 0xdd, 0xba, 0xb0, 0x46, 0x7d, 0x61, 0xe1, 0xb6, 0x32, 0x2d, 0xd9, 0x32, 0x6d, 0x17,

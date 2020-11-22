@@ -12,10 +12,18 @@ var _ = proto.Marshal
 var _ = fmt.Errorf
 var _ = math.Inf
 
+// This is a compile-time assertion to ensure that this generated file
+// is compatible with the proto package it is being compiled against.
+// A compilation error at this line likely means your copy of the
+// proto package needs to be updated.
+const _ = proto.ProtoPackageIsVersion2 // please upgrade the proto package
+
 // *
 //  Refresh user to group mappings request.
 type RefreshUserToGroupsMappingsRequestProto struct {
-	XXX_unrecognized []byte `json:"-"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
 }
 
 func (m *RefreshUserToGroupsMappingsRequestProto) Reset() {
@@ -24,13 +32,32 @@ func (m *RefreshUserToGroupsMappingsRequestProto) Reset() {
 func (m *RefreshUserToGroupsMappingsRequestProto) String() string { return proto.CompactTextString(m) }
 func (*RefreshUserToGroupsMappingsRequestProto) ProtoMessage()    {}
 func (*RefreshUserToGroupsMappingsRequestProto) Descriptor() ([]byte, []int) {
-	return fileDescriptor9, []int{0}
+	return fileDescriptor_RefreshUserMappingsProtocol_881baac0fe66e155, []int{0}
 }
+func (m *RefreshUserToGroupsMappingsRequestProto) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_RefreshUserToGroupsMappingsRequestProto.Unmarshal(m, b)
+}
+func (m *RefreshUserToGroupsMappingsRequestProto) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_RefreshUserToGroupsMappingsRequestProto.Marshal(b, m, deterministic)
+}
+func (dst *RefreshUserToGroupsMappingsRequestProto) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_RefreshUserToGroupsMappingsRequestProto.Merge(dst, src)
+}
+func (m *RefreshUserToGroupsMappingsRequestProto) XXX_Size() int {
+	return xxx_messageInfo_RefreshUserToGroupsMappingsRequestProto.Size(m)
+}
+func (m *RefreshUserToGroupsMappingsRequestProto) XXX_DiscardUnknown() {
+	xxx_messageInfo_RefreshUserToGroupsMappingsRequestProto.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_RefreshUserToGroupsMappingsRequestProto proto.InternalMessageInfo
 
 // *
 // void response
 type RefreshUserToGroupsMappingsResponseProto struct {
-	XXX_unrecognized []byte `json:"-"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
 }
 
 func (m *RefreshUserToGroupsMappingsResponseProto) Reset() {
@@ -39,13 +66,32 @@ func (m *RefreshUserToGroupsMappingsResponseProto) Reset() {
 func (m *RefreshUserToGroupsMappingsResponseProto) String() string { return proto.CompactTextString(m) }
 func (*RefreshUserToGroupsMappingsResponseProto) ProtoMessage()    {}
 func (*RefreshUserToGroupsMappingsResponseProto) Descriptor() ([]byte, []int) {
-	return fileDescriptor9, []int{1}
+	return fileDescriptor_RefreshUserMappingsProtocol_881baac0fe66e155, []int{1}
 }
+func (m *RefreshUserToGroupsMappingsResponseProto) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_RefreshUserToGroupsMappingsResponseProto.Unmarshal(m, b)
+}
+func (m *RefreshUserToGroupsMappingsResponseProto) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_RefreshUserToGroupsMappingsResponseProto.Marshal(b, m, deterministic)
+}
+func (dst *RefreshUserToGroupsMappingsResponseProto) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_RefreshUserToGroupsMappingsResponseProto.Merge(dst, src)
+}
+func (m *RefreshUserToGroupsMappingsResponseProto) XXX_Size() int {
+	return xxx_messageInfo_RefreshUserToGroupsMappingsResponseProto.Size(m)
+}
+func (m *RefreshUserToGroupsMappingsResponseProto) XXX_DiscardUnknown() {
+	xxx_messageInfo_RefreshUserToGroupsMappingsResponseProto.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_RefreshUserToGroupsMappingsResponseProto proto.InternalMessageInfo
 
 // *
 // Refresh superuser configuration request.
 type RefreshSuperUserGroupsConfigurationRequestProto struct {
-	XXX_unrecognized []byte `json:"-"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
 }
 
 func (m *RefreshSuperUserGroupsConfigurationRequestProto) Reset() {
@@ -56,13 +102,32 @@ func (m *RefreshSuperUserGroupsConfigurationRequestProto) String() string {
 }
 func (*RefreshSuperUserGroupsConfigurationRequestProto) ProtoMessage() {}
 func (*RefreshSuperUserGroupsConfigurationRequestProto) Descriptor() ([]byte, []int) {
-	return fileDescriptor9, []int{2}
+	return fileDescriptor_RefreshUserMappingsProtocol_881baac0fe66e155, []int{2}
 }
+func (m *RefreshSuperUserGroupsConfigurationRequestProto) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_RefreshSuperUserGroupsConfigurationRequestProto.Unmarshal(m, b)
+}
+func (m *RefreshSuperUserGroupsConfigurationRequestProto) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_RefreshSuperUserGroupsConfigurationRequestProto.Marshal(b, m, deterministic)
+}
+func (dst *RefreshSuperUserGroupsConfigurationRequestProto) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_RefreshSuperUserGroupsConfigurationRequestProto.Merge(dst, src)
+}
+func (m *RefreshSuperUserGroupsConfigurationRequestProto) XXX_Size() int {
+	return xxx_messageInfo_RefreshSuperUserGroupsConfigurationRequestProto.Size(m)
+}
+func (m *RefreshSuperUserGroupsConfigurationRequestProto) XXX_DiscardUnknown() {
+	xxx_messageInfo_RefreshSuperUserGroupsConfigurationRequestProto.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_RefreshSuperUserGroupsConfigurationRequestProto proto.InternalMessageInfo
 
 // *
 // void response
 type RefreshSuperUserGroupsConfigurationResponseProto struct {
-	XXX_unrecognized []byte `json:"-"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
 }
 
 func (m *RefreshSuperUserGroupsConfigurationResponseProto) Reset() {
@@ -73,8 +138,25 @@ func (m *RefreshSuperUserGroupsConfigurationResponseProto) String() string {
 }
 func (*RefreshSuperUserGroupsConfigurationResponseProto) ProtoMessage() {}
 func (*RefreshSuperUserGroupsConfigurationResponseProto) Descriptor() ([]byte, []int) {
-	return fileDescriptor9, []int{3}
+	return fileDescriptor_RefreshUserMappingsProtocol_881baac0fe66e155, []int{3}
 }
+func (m *RefreshSuperUserGroupsConfigurationResponseProto) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_RefreshSuperUserGroupsConfigurationResponseProto.Unmarshal(m, b)
+}
+func (m *RefreshSuperUserGroupsConfigurationResponseProto) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_RefreshSuperUserGroupsConfigurationResponseProto.Marshal(b, m, deterministic)
+}
+func (dst *RefreshSuperUserGroupsConfigurationResponseProto) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_RefreshSuperUserGroupsConfigurationResponseProto.Merge(dst, src)
+}
+func (m *RefreshSuperUserGroupsConfigurationResponseProto) XXX_Size() int {
+	return xxx_messageInfo_RefreshSuperUserGroupsConfigurationResponseProto.Size(m)
+}
+func (m *RefreshSuperUserGroupsConfigurationResponseProto) XXX_DiscardUnknown() {
+	xxx_messageInfo_RefreshSuperUserGroupsConfigurationResponseProto.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_RefreshSuperUserGroupsConfigurationResponseProto proto.InternalMessageInfo
 
 func init() {
 	proto.RegisterType((*RefreshUserToGroupsMappingsRequestProto)(nil), "hadoop.common.RefreshUserToGroupsMappingsRequestProto")
@@ -83,9 +165,11 @@ func init() {
 	proto.RegisterType((*RefreshSuperUserGroupsConfigurationResponseProto)(nil), "hadoop.common.RefreshSuperUserGroupsConfigurationResponseProto")
 }
 
-func init() { proto.RegisterFile("RefreshUserMappingsProtocol.proto", fileDescriptor9) }
+func init() {
+	proto.RegisterFile("RefreshUserMappingsProtocol.proto", fileDescriptor_RefreshUserMappingsProtocol_881baac0fe66e155)
+}
 
-var fileDescriptor9 = []byte{
+var fileDescriptor_RefreshUserMappingsProtocol_881baac0fe66e155 = []byte{
 	// 249 bytes of a gzipped FileDescriptorProto
 	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xe2, 0x52, 0x0c, 0x4a, 0x4d, 0x2b,
 	0x4a, 0x2d, 0xce, 0x08, 0x2d, 0x4e, 0x2d, 0xf2, 0x4d, 0x2c, 0x28, 0xc8, 0xcc, 0x4b, 0x2f, 0x0e,

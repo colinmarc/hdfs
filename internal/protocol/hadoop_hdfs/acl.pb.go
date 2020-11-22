@@ -12,6 +12,12 @@ var _ = proto.Marshal
 var _ = fmt.Errorf
 var _ = math.Inf
 
+// This is a compile-time assertion to ensure that this generated file
+// is compatible with the proto package it is being compiled against.
+// A compilation error at this line likely means your copy of the
+// proto package needs to be updated.
+const _ = proto.ProtoPackageIsVersion2 // please upgrade the proto package
+
 type AclEntryProto_AclEntryScopeProto int32
 
 const (
@@ -45,7 +51,7 @@ func (x *AclEntryProto_AclEntryScopeProto) UnmarshalJSON(data []byte) error {
 	return nil
 }
 func (AclEntryProto_AclEntryScopeProto) EnumDescriptor() ([]byte, []int) {
-	return fileDescriptor9, []int{0, 0}
+	return fileDescriptor_acl_2d888d726507a1e8, []int{0, 0}
 }
 
 type AclEntryProto_AclEntryTypeProto int32
@@ -87,7 +93,7 @@ func (x *AclEntryProto_AclEntryTypeProto) UnmarshalJSON(data []byte) error {
 	return nil
 }
 func (AclEntryProto_AclEntryTypeProto) EnumDescriptor() ([]byte, []int) {
-	return fileDescriptor9, []int{0, 1}
+	return fileDescriptor_acl_2d888d726507a1e8, []int{0, 1}
 }
 
 type AclEntryProto_FsActionProto int32
@@ -141,21 +147,42 @@ func (x *AclEntryProto_FsActionProto) UnmarshalJSON(data []byte) error {
 	return nil
 }
 func (AclEntryProto_FsActionProto) EnumDescriptor() ([]byte, []int) {
-	return fileDescriptor9, []int{0, 2}
+	return fileDescriptor_acl_2d888d726507a1e8, []int{0, 2}
 }
 
 type AclEntryProto struct {
-	Type             *AclEntryProto_AclEntryTypeProto  `protobuf:"varint,1,req,name=type,enum=hadoop.hdfs.AclEntryProto_AclEntryTypeProto" json:"type,omitempty"`
-	Scope            *AclEntryProto_AclEntryScopeProto `protobuf:"varint,2,req,name=scope,enum=hadoop.hdfs.AclEntryProto_AclEntryScopeProto" json:"scope,omitempty"`
-	Permissions      *AclEntryProto_FsActionProto      `protobuf:"varint,3,req,name=permissions,enum=hadoop.hdfs.AclEntryProto_FsActionProto" json:"permissions,omitempty"`
-	Name             *string                           `protobuf:"bytes,4,opt,name=name" json:"name,omitempty"`
-	XXX_unrecognized []byte                            `json:"-"`
+	Type                 *AclEntryProto_AclEntryTypeProto  `protobuf:"varint,1,req,name=type,enum=hadoop.hdfs.AclEntryProto_AclEntryTypeProto" json:"type,omitempty"`
+	Scope                *AclEntryProto_AclEntryScopeProto `protobuf:"varint,2,req,name=scope,enum=hadoop.hdfs.AclEntryProto_AclEntryScopeProto" json:"scope,omitempty"`
+	Permissions          *AclEntryProto_FsActionProto      `protobuf:"varint,3,req,name=permissions,enum=hadoop.hdfs.AclEntryProto_FsActionProto" json:"permissions,omitempty"`
+	Name                 *string                           `protobuf:"bytes,4,opt,name=name" json:"name,omitempty"`
+	XXX_NoUnkeyedLiteral struct{}                          `json:"-"`
+	XXX_unrecognized     []byte                            `json:"-"`
+	XXX_sizecache        int32                             `json:"-"`
 }
 
-func (m *AclEntryProto) Reset()                    { *m = AclEntryProto{} }
-func (m *AclEntryProto) String() string            { return proto.CompactTextString(m) }
-func (*AclEntryProto) ProtoMessage()               {}
-func (*AclEntryProto) Descriptor() ([]byte, []int) { return fileDescriptor9, []int{0} }
+func (m *AclEntryProto) Reset()         { *m = AclEntryProto{} }
+func (m *AclEntryProto) String() string { return proto.CompactTextString(m) }
+func (*AclEntryProto) ProtoMessage()    {}
+func (*AclEntryProto) Descriptor() ([]byte, []int) {
+	return fileDescriptor_acl_2d888d726507a1e8, []int{0}
+}
+func (m *AclEntryProto) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_AclEntryProto.Unmarshal(m, b)
+}
+func (m *AclEntryProto) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_AclEntryProto.Marshal(b, m, deterministic)
+}
+func (dst *AclEntryProto) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_AclEntryProto.Merge(dst, src)
+}
+func (m *AclEntryProto) XXX_Size() int {
+	return xxx_messageInfo_AclEntryProto.Size(m)
+}
+func (m *AclEntryProto) XXX_DiscardUnknown() {
+	xxx_messageInfo_AclEntryProto.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_AclEntryProto proto.InternalMessageInfo
 
 func (m *AclEntryProto) GetType() AclEntryProto_AclEntryTypeProto {
 	if m != nil && m.Type != nil {
@@ -186,18 +213,39 @@ func (m *AclEntryProto) GetName() string {
 }
 
 type AclStatusProto struct {
-	Owner            *string            `protobuf:"bytes,1,req,name=owner" json:"owner,omitempty"`
-	Group            *string            `protobuf:"bytes,2,req,name=group" json:"group,omitempty"`
-	Sticky           *bool              `protobuf:"varint,3,req,name=sticky" json:"sticky,omitempty"`
-	Entries          []*AclEntryProto   `protobuf:"bytes,4,rep,name=entries" json:"entries,omitempty"`
-	Permission       *FsPermissionProto `protobuf:"bytes,5,opt,name=permission" json:"permission,omitempty"`
-	XXX_unrecognized []byte             `json:"-"`
+	Owner                *string            `protobuf:"bytes,1,req,name=owner" json:"owner,omitempty"`
+	Group                *string            `protobuf:"bytes,2,req,name=group" json:"group,omitempty"`
+	Sticky               *bool              `protobuf:"varint,3,req,name=sticky" json:"sticky,omitempty"`
+	Entries              []*AclEntryProto   `protobuf:"bytes,4,rep,name=entries" json:"entries,omitempty"`
+	Permission           *FsPermissionProto `protobuf:"bytes,5,opt,name=permission" json:"permission,omitempty"`
+	XXX_NoUnkeyedLiteral struct{}           `json:"-"`
+	XXX_unrecognized     []byte             `json:"-"`
+	XXX_sizecache        int32              `json:"-"`
 }
 
-func (m *AclStatusProto) Reset()                    { *m = AclStatusProto{} }
-func (m *AclStatusProto) String() string            { return proto.CompactTextString(m) }
-func (*AclStatusProto) ProtoMessage()               {}
-func (*AclStatusProto) Descriptor() ([]byte, []int) { return fileDescriptor9, []int{1} }
+func (m *AclStatusProto) Reset()         { *m = AclStatusProto{} }
+func (m *AclStatusProto) String() string { return proto.CompactTextString(m) }
+func (*AclStatusProto) ProtoMessage()    {}
+func (*AclStatusProto) Descriptor() ([]byte, []int) {
+	return fileDescriptor_acl_2d888d726507a1e8, []int{1}
+}
+func (m *AclStatusProto) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_AclStatusProto.Unmarshal(m, b)
+}
+func (m *AclStatusProto) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_AclStatusProto.Marshal(b, m, deterministic)
+}
+func (dst *AclStatusProto) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_AclStatusProto.Merge(dst, src)
+}
+func (m *AclStatusProto) XXX_Size() int {
+	return xxx_messageInfo_AclStatusProto.Size(m)
+}
+func (m *AclStatusProto) XXX_DiscardUnknown() {
+	xxx_messageInfo_AclStatusProto.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_AclStatusProto proto.InternalMessageInfo
 
 func (m *AclStatusProto) GetOwner() string {
 	if m != nil && m.Owner != nil {
@@ -235,15 +283,36 @@ func (m *AclStatusProto) GetPermission() *FsPermissionProto {
 }
 
 type ModifyAclEntriesRequestProto struct {
-	Src              *string          `protobuf:"bytes,1,req,name=src" json:"src,omitempty"`
-	AclSpec          []*AclEntryProto `protobuf:"bytes,2,rep,name=aclSpec" json:"aclSpec,omitempty"`
-	XXX_unrecognized []byte           `json:"-"`
+	Src                  *string          `protobuf:"bytes,1,req,name=src" json:"src,omitempty"`
+	AclSpec              []*AclEntryProto `protobuf:"bytes,2,rep,name=aclSpec" json:"aclSpec,omitempty"`
+	XXX_NoUnkeyedLiteral struct{}         `json:"-"`
+	XXX_unrecognized     []byte           `json:"-"`
+	XXX_sizecache        int32            `json:"-"`
 }
 
-func (m *ModifyAclEntriesRequestProto) Reset()                    { *m = ModifyAclEntriesRequestProto{} }
-func (m *ModifyAclEntriesRequestProto) String() string            { return proto.CompactTextString(m) }
-func (*ModifyAclEntriesRequestProto) ProtoMessage()               {}
-func (*ModifyAclEntriesRequestProto) Descriptor() ([]byte, []int) { return fileDescriptor9, []int{2} }
+func (m *ModifyAclEntriesRequestProto) Reset()         { *m = ModifyAclEntriesRequestProto{} }
+func (m *ModifyAclEntriesRequestProto) String() string { return proto.CompactTextString(m) }
+func (*ModifyAclEntriesRequestProto) ProtoMessage()    {}
+func (*ModifyAclEntriesRequestProto) Descriptor() ([]byte, []int) {
+	return fileDescriptor_acl_2d888d726507a1e8, []int{2}
+}
+func (m *ModifyAclEntriesRequestProto) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_ModifyAclEntriesRequestProto.Unmarshal(m, b)
+}
+func (m *ModifyAclEntriesRequestProto) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_ModifyAclEntriesRequestProto.Marshal(b, m, deterministic)
+}
+func (dst *ModifyAclEntriesRequestProto) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_ModifyAclEntriesRequestProto.Merge(dst, src)
+}
+func (m *ModifyAclEntriesRequestProto) XXX_Size() int {
+	return xxx_messageInfo_ModifyAclEntriesRequestProto.Size(m)
+}
+func (m *ModifyAclEntriesRequestProto) XXX_DiscardUnknown() {
+	xxx_messageInfo_ModifyAclEntriesRequestProto.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_ModifyAclEntriesRequestProto proto.InternalMessageInfo
 
 func (m *ModifyAclEntriesRequestProto) GetSrc() string {
 	if m != nil && m.Src != nil {
@@ -260,23 +329,65 @@ func (m *ModifyAclEntriesRequestProto) GetAclSpec() []*AclEntryProto {
 }
 
 type ModifyAclEntriesResponseProto struct {
-	XXX_unrecognized []byte `json:"-"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
 }
 
-func (m *ModifyAclEntriesResponseProto) Reset()                    { *m = ModifyAclEntriesResponseProto{} }
-func (m *ModifyAclEntriesResponseProto) String() string            { return proto.CompactTextString(m) }
-func (*ModifyAclEntriesResponseProto) ProtoMessage()               {}
-func (*ModifyAclEntriesResponseProto) Descriptor() ([]byte, []int) { return fileDescriptor9, []int{3} }
+func (m *ModifyAclEntriesResponseProto) Reset()         { *m = ModifyAclEntriesResponseProto{} }
+func (m *ModifyAclEntriesResponseProto) String() string { return proto.CompactTextString(m) }
+func (*ModifyAclEntriesResponseProto) ProtoMessage()    {}
+func (*ModifyAclEntriesResponseProto) Descriptor() ([]byte, []int) {
+	return fileDescriptor_acl_2d888d726507a1e8, []int{3}
+}
+func (m *ModifyAclEntriesResponseProto) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_ModifyAclEntriesResponseProto.Unmarshal(m, b)
+}
+func (m *ModifyAclEntriesResponseProto) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_ModifyAclEntriesResponseProto.Marshal(b, m, deterministic)
+}
+func (dst *ModifyAclEntriesResponseProto) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_ModifyAclEntriesResponseProto.Merge(dst, src)
+}
+func (m *ModifyAclEntriesResponseProto) XXX_Size() int {
+	return xxx_messageInfo_ModifyAclEntriesResponseProto.Size(m)
+}
+func (m *ModifyAclEntriesResponseProto) XXX_DiscardUnknown() {
+	xxx_messageInfo_ModifyAclEntriesResponseProto.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_ModifyAclEntriesResponseProto proto.InternalMessageInfo
 
 type RemoveAclRequestProto struct {
-	Src              *string `protobuf:"bytes,1,req,name=src" json:"src,omitempty"`
-	XXX_unrecognized []byte  `json:"-"`
+	Src                  *string  `protobuf:"bytes,1,req,name=src" json:"src,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
 }
 
-func (m *RemoveAclRequestProto) Reset()                    { *m = RemoveAclRequestProto{} }
-func (m *RemoveAclRequestProto) String() string            { return proto.CompactTextString(m) }
-func (*RemoveAclRequestProto) ProtoMessage()               {}
-func (*RemoveAclRequestProto) Descriptor() ([]byte, []int) { return fileDescriptor9, []int{4} }
+func (m *RemoveAclRequestProto) Reset()         { *m = RemoveAclRequestProto{} }
+func (m *RemoveAclRequestProto) String() string { return proto.CompactTextString(m) }
+func (*RemoveAclRequestProto) ProtoMessage()    {}
+func (*RemoveAclRequestProto) Descriptor() ([]byte, []int) {
+	return fileDescriptor_acl_2d888d726507a1e8, []int{4}
+}
+func (m *RemoveAclRequestProto) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_RemoveAclRequestProto.Unmarshal(m, b)
+}
+func (m *RemoveAclRequestProto) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_RemoveAclRequestProto.Marshal(b, m, deterministic)
+}
+func (dst *RemoveAclRequestProto) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_RemoveAclRequestProto.Merge(dst, src)
+}
+func (m *RemoveAclRequestProto) XXX_Size() int {
+	return xxx_messageInfo_RemoveAclRequestProto.Size(m)
+}
+func (m *RemoveAclRequestProto) XXX_DiscardUnknown() {
+	xxx_messageInfo_RemoveAclRequestProto.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_RemoveAclRequestProto proto.InternalMessageInfo
 
 func (m *RemoveAclRequestProto) GetSrc() string {
 	if m != nil && m.Src != nil {
@@ -286,24 +397,66 @@ func (m *RemoveAclRequestProto) GetSrc() string {
 }
 
 type RemoveAclResponseProto struct {
-	XXX_unrecognized []byte `json:"-"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
 }
 
-func (m *RemoveAclResponseProto) Reset()                    { *m = RemoveAclResponseProto{} }
-func (m *RemoveAclResponseProto) String() string            { return proto.CompactTextString(m) }
-func (*RemoveAclResponseProto) ProtoMessage()               {}
-func (*RemoveAclResponseProto) Descriptor() ([]byte, []int) { return fileDescriptor9, []int{5} }
+func (m *RemoveAclResponseProto) Reset()         { *m = RemoveAclResponseProto{} }
+func (m *RemoveAclResponseProto) String() string { return proto.CompactTextString(m) }
+func (*RemoveAclResponseProto) ProtoMessage()    {}
+func (*RemoveAclResponseProto) Descriptor() ([]byte, []int) {
+	return fileDescriptor_acl_2d888d726507a1e8, []int{5}
+}
+func (m *RemoveAclResponseProto) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_RemoveAclResponseProto.Unmarshal(m, b)
+}
+func (m *RemoveAclResponseProto) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_RemoveAclResponseProto.Marshal(b, m, deterministic)
+}
+func (dst *RemoveAclResponseProto) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_RemoveAclResponseProto.Merge(dst, src)
+}
+func (m *RemoveAclResponseProto) XXX_Size() int {
+	return xxx_messageInfo_RemoveAclResponseProto.Size(m)
+}
+func (m *RemoveAclResponseProto) XXX_DiscardUnknown() {
+	xxx_messageInfo_RemoveAclResponseProto.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_RemoveAclResponseProto proto.InternalMessageInfo
 
 type RemoveAclEntriesRequestProto struct {
-	Src              *string          `protobuf:"bytes,1,req,name=src" json:"src,omitempty"`
-	AclSpec          []*AclEntryProto `protobuf:"bytes,2,rep,name=aclSpec" json:"aclSpec,omitempty"`
-	XXX_unrecognized []byte           `json:"-"`
+	Src                  *string          `protobuf:"bytes,1,req,name=src" json:"src,omitempty"`
+	AclSpec              []*AclEntryProto `protobuf:"bytes,2,rep,name=aclSpec" json:"aclSpec,omitempty"`
+	XXX_NoUnkeyedLiteral struct{}         `json:"-"`
+	XXX_unrecognized     []byte           `json:"-"`
+	XXX_sizecache        int32            `json:"-"`
 }
 
-func (m *RemoveAclEntriesRequestProto) Reset()                    { *m = RemoveAclEntriesRequestProto{} }
-func (m *RemoveAclEntriesRequestProto) String() string            { return proto.CompactTextString(m) }
-func (*RemoveAclEntriesRequestProto) ProtoMessage()               {}
-func (*RemoveAclEntriesRequestProto) Descriptor() ([]byte, []int) { return fileDescriptor9, []int{6} }
+func (m *RemoveAclEntriesRequestProto) Reset()         { *m = RemoveAclEntriesRequestProto{} }
+func (m *RemoveAclEntriesRequestProto) String() string { return proto.CompactTextString(m) }
+func (*RemoveAclEntriesRequestProto) ProtoMessage()    {}
+func (*RemoveAclEntriesRequestProto) Descriptor() ([]byte, []int) {
+	return fileDescriptor_acl_2d888d726507a1e8, []int{6}
+}
+func (m *RemoveAclEntriesRequestProto) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_RemoveAclEntriesRequestProto.Unmarshal(m, b)
+}
+func (m *RemoveAclEntriesRequestProto) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_RemoveAclEntriesRequestProto.Marshal(b, m, deterministic)
+}
+func (dst *RemoveAclEntriesRequestProto) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_RemoveAclEntriesRequestProto.Merge(dst, src)
+}
+func (m *RemoveAclEntriesRequestProto) XXX_Size() int {
+	return xxx_messageInfo_RemoveAclEntriesRequestProto.Size(m)
+}
+func (m *RemoveAclEntriesRequestProto) XXX_DiscardUnknown() {
+	xxx_messageInfo_RemoveAclEntriesRequestProto.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_RemoveAclEntriesRequestProto proto.InternalMessageInfo
 
 func (m *RemoveAclEntriesRequestProto) GetSrc() string {
 	if m != nil && m.Src != nil {
@@ -320,23 +473,65 @@ func (m *RemoveAclEntriesRequestProto) GetAclSpec() []*AclEntryProto {
 }
 
 type RemoveAclEntriesResponseProto struct {
-	XXX_unrecognized []byte `json:"-"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
 }
 
-func (m *RemoveAclEntriesResponseProto) Reset()                    { *m = RemoveAclEntriesResponseProto{} }
-func (m *RemoveAclEntriesResponseProto) String() string            { return proto.CompactTextString(m) }
-func (*RemoveAclEntriesResponseProto) ProtoMessage()               {}
-func (*RemoveAclEntriesResponseProto) Descriptor() ([]byte, []int) { return fileDescriptor9, []int{7} }
+func (m *RemoveAclEntriesResponseProto) Reset()         { *m = RemoveAclEntriesResponseProto{} }
+func (m *RemoveAclEntriesResponseProto) String() string { return proto.CompactTextString(m) }
+func (*RemoveAclEntriesResponseProto) ProtoMessage()    {}
+func (*RemoveAclEntriesResponseProto) Descriptor() ([]byte, []int) {
+	return fileDescriptor_acl_2d888d726507a1e8, []int{7}
+}
+func (m *RemoveAclEntriesResponseProto) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_RemoveAclEntriesResponseProto.Unmarshal(m, b)
+}
+func (m *RemoveAclEntriesResponseProto) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_RemoveAclEntriesResponseProto.Marshal(b, m, deterministic)
+}
+func (dst *RemoveAclEntriesResponseProto) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_RemoveAclEntriesResponseProto.Merge(dst, src)
+}
+func (m *RemoveAclEntriesResponseProto) XXX_Size() int {
+	return xxx_messageInfo_RemoveAclEntriesResponseProto.Size(m)
+}
+func (m *RemoveAclEntriesResponseProto) XXX_DiscardUnknown() {
+	xxx_messageInfo_RemoveAclEntriesResponseProto.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_RemoveAclEntriesResponseProto proto.InternalMessageInfo
 
 type RemoveDefaultAclRequestProto struct {
-	Src              *string `protobuf:"bytes,1,req,name=src" json:"src,omitempty"`
-	XXX_unrecognized []byte  `json:"-"`
+	Src                  *string  `protobuf:"bytes,1,req,name=src" json:"src,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
 }
 
-func (m *RemoveDefaultAclRequestProto) Reset()                    { *m = RemoveDefaultAclRequestProto{} }
-func (m *RemoveDefaultAclRequestProto) String() string            { return proto.CompactTextString(m) }
-func (*RemoveDefaultAclRequestProto) ProtoMessage()               {}
-func (*RemoveDefaultAclRequestProto) Descriptor() ([]byte, []int) { return fileDescriptor9, []int{8} }
+func (m *RemoveDefaultAclRequestProto) Reset()         { *m = RemoveDefaultAclRequestProto{} }
+func (m *RemoveDefaultAclRequestProto) String() string { return proto.CompactTextString(m) }
+func (*RemoveDefaultAclRequestProto) ProtoMessage()    {}
+func (*RemoveDefaultAclRequestProto) Descriptor() ([]byte, []int) {
+	return fileDescriptor_acl_2d888d726507a1e8, []int{8}
+}
+func (m *RemoveDefaultAclRequestProto) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_RemoveDefaultAclRequestProto.Unmarshal(m, b)
+}
+func (m *RemoveDefaultAclRequestProto) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_RemoveDefaultAclRequestProto.Marshal(b, m, deterministic)
+}
+func (dst *RemoveDefaultAclRequestProto) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_RemoveDefaultAclRequestProto.Merge(dst, src)
+}
+func (m *RemoveDefaultAclRequestProto) XXX_Size() int {
+	return xxx_messageInfo_RemoveDefaultAclRequestProto.Size(m)
+}
+func (m *RemoveDefaultAclRequestProto) XXX_DiscardUnknown() {
+	xxx_messageInfo_RemoveDefaultAclRequestProto.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_RemoveDefaultAclRequestProto proto.InternalMessageInfo
 
 func (m *RemoveDefaultAclRequestProto) GetSrc() string {
 	if m != nil && m.Src != nil {
@@ -346,24 +541,66 @@ func (m *RemoveDefaultAclRequestProto) GetSrc() string {
 }
 
 type RemoveDefaultAclResponseProto struct {
-	XXX_unrecognized []byte `json:"-"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
 }
 
-func (m *RemoveDefaultAclResponseProto) Reset()                    { *m = RemoveDefaultAclResponseProto{} }
-func (m *RemoveDefaultAclResponseProto) String() string            { return proto.CompactTextString(m) }
-func (*RemoveDefaultAclResponseProto) ProtoMessage()               {}
-func (*RemoveDefaultAclResponseProto) Descriptor() ([]byte, []int) { return fileDescriptor9, []int{9} }
+func (m *RemoveDefaultAclResponseProto) Reset()         { *m = RemoveDefaultAclResponseProto{} }
+func (m *RemoveDefaultAclResponseProto) String() string { return proto.CompactTextString(m) }
+func (*RemoveDefaultAclResponseProto) ProtoMessage()    {}
+func (*RemoveDefaultAclResponseProto) Descriptor() ([]byte, []int) {
+	return fileDescriptor_acl_2d888d726507a1e8, []int{9}
+}
+func (m *RemoveDefaultAclResponseProto) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_RemoveDefaultAclResponseProto.Unmarshal(m, b)
+}
+func (m *RemoveDefaultAclResponseProto) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_RemoveDefaultAclResponseProto.Marshal(b, m, deterministic)
+}
+func (dst *RemoveDefaultAclResponseProto) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_RemoveDefaultAclResponseProto.Merge(dst, src)
+}
+func (m *RemoveDefaultAclResponseProto) XXX_Size() int {
+	return xxx_messageInfo_RemoveDefaultAclResponseProto.Size(m)
+}
+func (m *RemoveDefaultAclResponseProto) XXX_DiscardUnknown() {
+	xxx_messageInfo_RemoveDefaultAclResponseProto.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_RemoveDefaultAclResponseProto proto.InternalMessageInfo
 
 type SetAclRequestProto struct {
-	Src              *string          `protobuf:"bytes,1,req,name=src" json:"src,omitempty"`
-	AclSpec          []*AclEntryProto `protobuf:"bytes,2,rep,name=aclSpec" json:"aclSpec,omitempty"`
-	XXX_unrecognized []byte           `json:"-"`
+	Src                  *string          `protobuf:"bytes,1,req,name=src" json:"src,omitempty"`
+	AclSpec              []*AclEntryProto `protobuf:"bytes,2,rep,name=aclSpec" json:"aclSpec,omitempty"`
+	XXX_NoUnkeyedLiteral struct{}         `json:"-"`
+	XXX_unrecognized     []byte           `json:"-"`
+	XXX_sizecache        int32            `json:"-"`
 }
 
-func (m *SetAclRequestProto) Reset()                    { *m = SetAclRequestProto{} }
-func (m *SetAclRequestProto) String() string            { return proto.CompactTextString(m) }
-func (*SetAclRequestProto) ProtoMessage()               {}
-func (*SetAclRequestProto) Descriptor() ([]byte, []int) { return fileDescriptor9, []int{10} }
+func (m *SetAclRequestProto) Reset()         { *m = SetAclRequestProto{} }
+func (m *SetAclRequestProto) String() string { return proto.CompactTextString(m) }
+func (*SetAclRequestProto) ProtoMessage()    {}
+func (*SetAclRequestProto) Descriptor() ([]byte, []int) {
+	return fileDescriptor_acl_2d888d726507a1e8, []int{10}
+}
+func (m *SetAclRequestProto) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_SetAclRequestProto.Unmarshal(m, b)
+}
+func (m *SetAclRequestProto) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_SetAclRequestProto.Marshal(b, m, deterministic)
+}
+func (dst *SetAclRequestProto) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_SetAclRequestProto.Merge(dst, src)
+}
+func (m *SetAclRequestProto) XXX_Size() int {
+	return xxx_messageInfo_SetAclRequestProto.Size(m)
+}
+func (m *SetAclRequestProto) XXX_DiscardUnknown() {
+	xxx_messageInfo_SetAclRequestProto.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_SetAclRequestProto proto.InternalMessageInfo
 
 func (m *SetAclRequestProto) GetSrc() string {
 	if m != nil && m.Src != nil {
@@ -380,23 +617,65 @@ func (m *SetAclRequestProto) GetAclSpec() []*AclEntryProto {
 }
 
 type SetAclResponseProto struct {
-	XXX_unrecognized []byte `json:"-"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
 }
 
-func (m *SetAclResponseProto) Reset()                    { *m = SetAclResponseProto{} }
-func (m *SetAclResponseProto) String() string            { return proto.CompactTextString(m) }
-func (*SetAclResponseProto) ProtoMessage()               {}
-func (*SetAclResponseProto) Descriptor() ([]byte, []int) { return fileDescriptor9, []int{11} }
+func (m *SetAclResponseProto) Reset()         { *m = SetAclResponseProto{} }
+func (m *SetAclResponseProto) String() string { return proto.CompactTextString(m) }
+func (*SetAclResponseProto) ProtoMessage()    {}
+func (*SetAclResponseProto) Descriptor() ([]byte, []int) {
+	return fileDescriptor_acl_2d888d726507a1e8, []int{11}
+}
+func (m *SetAclResponseProto) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_SetAclResponseProto.Unmarshal(m, b)
+}
+func (m *SetAclResponseProto) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_SetAclResponseProto.Marshal(b, m, deterministic)
+}
+func (dst *SetAclResponseProto) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_SetAclResponseProto.Merge(dst, src)
+}
+func (m *SetAclResponseProto) XXX_Size() int {
+	return xxx_messageInfo_SetAclResponseProto.Size(m)
+}
+func (m *SetAclResponseProto) XXX_DiscardUnknown() {
+	xxx_messageInfo_SetAclResponseProto.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_SetAclResponseProto proto.InternalMessageInfo
 
 type GetAclStatusRequestProto struct {
-	Src              *string `protobuf:"bytes,1,req,name=src" json:"src,omitempty"`
-	XXX_unrecognized []byte  `json:"-"`
+	Src                  *string  `protobuf:"bytes,1,req,name=src" json:"src,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
 }
 
-func (m *GetAclStatusRequestProto) Reset()                    { *m = GetAclStatusRequestProto{} }
-func (m *GetAclStatusRequestProto) String() string            { return proto.CompactTextString(m) }
-func (*GetAclStatusRequestProto) ProtoMessage()               {}
-func (*GetAclStatusRequestProto) Descriptor() ([]byte, []int) { return fileDescriptor9, []int{12} }
+func (m *GetAclStatusRequestProto) Reset()         { *m = GetAclStatusRequestProto{} }
+func (m *GetAclStatusRequestProto) String() string { return proto.CompactTextString(m) }
+func (*GetAclStatusRequestProto) ProtoMessage()    {}
+func (*GetAclStatusRequestProto) Descriptor() ([]byte, []int) {
+	return fileDescriptor_acl_2d888d726507a1e8, []int{12}
+}
+func (m *GetAclStatusRequestProto) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_GetAclStatusRequestProto.Unmarshal(m, b)
+}
+func (m *GetAclStatusRequestProto) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_GetAclStatusRequestProto.Marshal(b, m, deterministic)
+}
+func (dst *GetAclStatusRequestProto) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_GetAclStatusRequestProto.Merge(dst, src)
+}
+func (m *GetAclStatusRequestProto) XXX_Size() int {
+	return xxx_messageInfo_GetAclStatusRequestProto.Size(m)
+}
+func (m *GetAclStatusRequestProto) XXX_DiscardUnknown() {
+	xxx_messageInfo_GetAclStatusRequestProto.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_GetAclStatusRequestProto proto.InternalMessageInfo
 
 func (m *GetAclStatusRequestProto) GetSrc() string {
 	if m != nil && m.Src != nil {
@@ -406,14 +685,35 @@ func (m *GetAclStatusRequestProto) GetSrc() string {
 }
 
 type GetAclStatusResponseProto struct {
-	Result           *AclStatusProto `protobuf:"bytes,1,req,name=result" json:"result,omitempty"`
-	XXX_unrecognized []byte          `json:"-"`
+	Result               *AclStatusProto `protobuf:"bytes,1,req,name=result" json:"result,omitempty"`
+	XXX_NoUnkeyedLiteral struct{}        `json:"-"`
+	XXX_unrecognized     []byte          `json:"-"`
+	XXX_sizecache        int32           `json:"-"`
 }
 
-func (m *GetAclStatusResponseProto) Reset()                    { *m = GetAclStatusResponseProto{} }
-func (m *GetAclStatusResponseProto) String() string            { return proto.CompactTextString(m) }
-func (*GetAclStatusResponseProto) ProtoMessage()               {}
-func (*GetAclStatusResponseProto) Descriptor() ([]byte, []int) { return fileDescriptor9, []int{13} }
+func (m *GetAclStatusResponseProto) Reset()         { *m = GetAclStatusResponseProto{} }
+func (m *GetAclStatusResponseProto) String() string { return proto.CompactTextString(m) }
+func (*GetAclStatusResponseProto) ProtoMessage()    {}
+func (*GetAclStatusResponseProto) Descriptor() ([]byte, []int) {
+	return fileDescriptor_acl_2d888d726507a1e8, []int{13}
+}
+func (m *GetAclStatusResponseProto) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_GetAclStatusResponseProto.Unmarshal(m, b)
+}
+func (m *GetAclStatusResponseProto) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_GetAclStatusResponseProto.Marshal(b, m, deterministic)
+}
+func (dst *GetAclStatusResponseProto) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_GetAclStatusResponseProto.Merge(dst, src)
+}
+func (m *GetAclStatusResponseProto) XXX_Size() int {
+	return xxx_messageInfo_GetAclStatusResponseProto.Size(m)
+}
+func (m *GetAclStatusResponseProto) XXX_DiscardUnknown() {
+	xxx_messageInfo_GetAclStatusResponseProto.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_GetAclStatusResponseProto proto.InternalMessageInfo
 
 func (m *GetAclStatusResponseProto) GetResult() *AclStatusProto {
 	if m != nil {
@@ -442,9 +742,9 @@ func init() {
 	proto.RegisterEnum("hadoop.hdfs.AclEntryProto_FsActionProto", AclEntryProto_FsActionProto_name, AclEntryProto_FsActionProto_value)
 }
 
-func init() { proto.RegisterFile("acl.proto", fileDescriptor9) }
+func init() { proto.RegisterFile("acl.proto", fileDescriptor_acl_2d888d726507a1e8) }
 
-var fileDescriptor9 = []byte{
+var fileDescriptor_acl_2d888d726507a1e8 = []byte{
 	// 605 bytes of a gzipped FileDescriptorProto
 	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xb4, 0x54, 0xdb, 0x6e, 0xd3, 0x40,
 	0x10, 0xad, 0x63, 0x27, 0xad, 0xc7, 0x6d, 0xb5, 0x5d, 0x68, 0x65, 0x4a, 0x81, 0xc8, 0x12, 0x52,

@@ -12,18 +12,43 @@ var _ = proto.Marshal
 var _ = fmt.Errorf
 var _ = math.Inf
 
+// This is a compile-time assertion to ensure that this generated file
+// is compatible with the proto package it is being compiled against.
+// A compilation error at this line likely means your copy of the
+// proto package needs to be updated.
+const _ = proto.ProtoPackageIsVersion2 // please upgrade the proto package
+
 type SetErasureCodingPolicyRequestProto struct {
-	Src              *string                   `protobuf:"bytes,1,req,name=src" json:"src,omitempty"`
-	EcPolicy         *ErasureCodingPolicyProto `protobuf:"bytes,2,opt,name=ecPolicy" json:"ecPolicy,omitempty"`
-	XXX_unrecognized []byte                    `json:"-"`
+	Src                  *string                   `protobuf:"bytes,1,req,name=src" json:"src,omitempty"`
+	EcPolicy             *ErasureCodingPolicyProto `protobuf:"bytes,2,opt,name=ecPolicy" json:"ecPolicy,omitempty"`
+	XXX_NoUnkeyedLiteral struct{}                  `json:"-"`
+	XXX_unrecognized     []byte                    `json:"-"`
+	XXX_sizecache        int32                     `json:"-"`
 }
 
 func (m *SetErasureCodingPolicyRequestProto) Reset()         { *m = SetErasureCodingPolicyRequestProto{} }
 func (m *SetErasureCodingPolicyRequestProto) String() string { return proto.CompactTextString(m) }
 func (*SetErasureCodingPolicyRequestProto) ProtoMessage()    {}
 func (*SetErasureCodingPolicyRequestProto) Descriptor() ([]byte, []int) {
-	return fileDescriptor3, []int{0}
+	return fileDescriptor_erasurecoding_32bc446db2723ab1, []int{0}
 }
+func (m *SetErasureCodingPolicyRequestProto) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_SetErasureCodingPolicyRequestProto.Unmarshal(m, b)
+}
+func (m *SetErasureCodingPolicyRequestProto) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_SetErasureCodingPolicyRequestProto.Marshal(b, m, deterministic)
+}
+func (dst *SetErasureCodingPolicyRequestProto) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_SetErasureCodingPolicyRequestProto.Merge(dst, src)
+}
+func (m *SetErasureCodingPolicyRequestProto) XXX_Size() int {
+	return xxx_messageInfo_SetErasureCodingPolicyRequestProto.Size(m)
+}
+func (m *SetErasureCodingPolicyRequestProto) XXX_DiscardUnknown() {
+	xxx_messageInfo_SetErasureCodingPolicyRequestProto.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_SetErasureCodingPolicyRequestProto proto.InternalMessageInfo
 
 func (m *SetErasureCodingPolicyRequestProto) GetSrc() string {
 	if m != nil && m.Src != nil {
@@ -40,38 +65,95 @@ func (m *SetErasureCodingPolicyRequestProto) GetEcPolicy() *ErasureCodingPolicyP
 }
 
 type SetErasureCodingPolicyResponseProto struct {
-	XXX_unrecognized []byte `json:"-"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
 }
 
 func (m *SetErasureCodingPolicyResponseProto) Reset()         { *m = SetErasureCodingPolicyResponseProto{} }
 func (m *SetErasureCodingPolicyResponseProto) String() string { return proto.CompactTextString(m) }
 func (*SetErasureCodingPolicyResponseProto) ProtoMessage()    {}
 func (*SetErasureCodingPolicyResponseProto) Descriptor() ([]byte, []int) {
-	return fileDescriptor3, []int{1}
+	return fileDescriptor_erasurecoding_32bc446db2723ab1, []int{1}
+}
+func (m *SetErasureCodingPolicyResponseProto) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_SetErasureCodingPolicyResponseProto.Unmarshal(m, b)
+}
+func (m *SetErasureCodingPolicyResponseProto) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_SetErasureCodingPolicyResponseProto.Marshal(b, m, deterministic)
+}
+func (dst *SetErasureCodingPolicyResponseProto) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_SetErasureCodingPolicyResponseProto.Merge(dst, src)
+}
+func (m *SetErasureCodingPolicyResponseProto) XXX_Size() int {
+	return xxx_messageInfo_SetErasureCodingPolicyResponseProto.Size(m)
+}
+func (m *SetErasureCodingPolicyResponseProto) XXX_DiscardUnknown() {
+	xxx_messageInfo_SetErasureCodingPolicyResponseProto.DiscardUnknown(m)
 }
 
+var xxx_messageInfo_SetErasureCodingPolicyResponseProto proto.InternalMessageInfo
+
 type GetErasureCodingPoliciesRequestProto struct {
-	XXX_unrecognized []byte `json:"-"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
 }
 
 func (m *GetErasureCodingPoliciesRequestProto) Reset()         { *m = GetErasureCodingPoliciesRequestProto{} }
 func (m *GetErasureCodingPoliciesRequestProto) String() string { return proto.CompactTextString(m) }
 func (*GetErasureCodingPoliciesRequestProto) ProtoMessage()    {}
 func (*GetErasureCodingPoliciesRequestProto) Descriptor() ([]byte, []int) {
-	return fileDescriptor3, []int{2}
+	return fileDescriptor_erasurecoding_32bc446db2723ab1, []int{2}
+}
+func (m *GetErasureCodingPoliciesRequestProto) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_GetErasureCodingPoliciesRequestProto.Unmarshal(m, b)
+}
+func (m *GetErasureCodingPoliciesRequestProto) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_GetErasureCodingPoliciesRequestProto.Marshal(b, m, deterministic)
+}
+func (dst *GetErasureCodingPoliciesRequestProto) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_GetErasureCodingPoliciesRequestProto.Merge(dst, src)
+}
+func (m *GetErasureCodingPoliciesRequestProto) XXX_Size() int {
+	return xxx_messageInfo_GetErasureCodingPoliciesRequestProto.Size(m)
+}
+func (m *GetErasureCodingPoliciesRequestProto) XXX_DiscardUnknown() {
+	xxx_messageInfo_GetErasureCodingPoliciesRequestProto.DiscardUnknown(m)
 }
 
+var xxx_messageInfo_GetErasureCodingPoliciesRequestProto proto.InternalMessageInfo
+
 type GetErasureCodingPoliciesResponseProto struct {
-	EcPolicies       []*ErasureCodingPolicyProto `protobuf:"bytes,1,rep,name=ecPolicies" json:"ecPolicies,omitempty"`
-	XXX_unrecognized []byte                      `json:"-"`
+	EcPolicies           []*ErasureCodingPolicyProto `protobuf:"bytes,1,rep,name=ecPolicies" json:"ecPolicies,omitempty"`
+	XXX_NoUnkeyedLiteral struct{}                    `json:"-"`
+	XXX_unrecognized     []byte                      `json:"-"`
+	XXX_sizecache        int32                       `json:"-"`
 }
 
 func (m *GetErasureCodingPoliciesResponseProto) Reset()         { *m = GetErasureCodingPoliciesResponseProto{} }
 func (m *GetErasureCodingPoliciesResponseProto) String() string { return proto.CompactTextString(m) }
 func (*GetErasureCodingPoliciesResponseProto) ProtoMessage()    {}
 func (*GetErasureCodingPoliciesResponseProto) Descriptor() ([]byte, []int) {
-	return fileDescriptor3, []int{3}
+	return fileDescriptor_erasurecoding_32bc446db2723ab1, []int{3}
 }
+func (m *GetErasureCodingPoliciesResponseProto) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_GetErasureCodingPoliciesResponseProto.Unmarshal(m, b)
+}
+func (m *GetErasureCodingPoliciesResponseProto) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_GetErasureCodingPoliciesResponseProto.Marshal(b, m, deterministic)
+}
+func (dst *GetErasureCodingPoliciesResponseProto) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_GetErasureCodingPoliciesResponseProto.Merge(dst, src)
+}
+func (m *GetErasureCodingPoliciesResponseProto) XXX_Size() int {
+	return xxx_messageInfo_GetErasureCodingPoliciesResponseProto.Size(m)
+}
+func (m *GetErasureCodingPoliciesResponseProto) XXX_DiscardUnknown() {
+	xxx_messageInfo_GetErasureCodingPoliciesResponseProto.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_GetErasureCodingPoliciesResponseProto proto.InternalMessageInfo
 
 func (m *GetErasureCodingPoliciesResponseProto) GetEcPolicies() []*ErasureCodingPolicyProto {
 	if m != nil {
@@ -81,16 +163,35 @@ func (m *GetErasureCodingPoliciesResponseProto) GetEcPolicies() []*ErasureCoding
 }
 
 type GetErasureCodingPolicyRequestProto struct {
-	Src              *string `protobuf:"bytes,1,req,name=src" json:"src,omitempty"`
-	XXX_unrecognized []byte  `json:"-"`
+	Src                  *string  `protobuf:"bytes,1,req,name=src" json:"src,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
 }
 
 func (m *GetErasureCodingPolicyRequestProto) Reset()         { *m = GetErasureCodingPolicyRequestProto{} }
 func (m *GetErasureCodingPolicyRequestProto) String() string { return proto.CompactTextString(m) }
 func (*GetErasureCodingPolicyRequestProto) ProtoMessage()    {}
 func (*GetErasureCodingPolicyRequestProto) Descriptor() ([]byte, []int) {
-	return fileDescriptor3, []int{4}
+	return fileDescriptor_erasurecoding_32bc446db2723ab1, []int{4}
 }
+func (m *GetErasureCodingPolicyRequestProto) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_GetErasureCodingPolicyRequestProto.Unmarshal(m, b)
+}
+func (m *GetErasureCodingPolicyRequestProto) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_GetErasureCodingPolicyRequestProto.Marshal(b, m, deterministic)
+}
+func (dst *GetErasureCodingPolicyRequestProto) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_GetErasureCodingPolicyRequestProto.Merge(dst, src)
+}
+func (m *GetErasureCodingPolicyRequestProto) XXX_Size() int {
+	return xxx_messageInfo_GetErasureCodingPolicyRequestProto.Size(m)
+}
+func (m *GetErasureCodingPolicyRequestProto) XXX_DiscardUnknown() {
+	xxx_messageInfo_GetErasureCodingPolicyRequestProto.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_GetErasureCodingPolicyRequestProto proto.InternalMessageInfo
 
 func (m *GetErasureCodingPolicyRequestProto) GetSrc() string {
 	if m != nil && m.Src != nil {
@@ -100,16 +201,35 @@ func (m *GetErasureCodingPolicyRequestProto) GetSrc() string {
 }
 
 type GetErasureCodingPolicyResponseProto struct {
-	EcPolicy         *ErasureCodingPolicyProto `protobuf:"bytes,1,opt,name=ecPolicy" json:"ecPolicy,omitempty"`
-	XXX_unrecognized []byte                    `json:"-"`
+	EcPolicy             *ErasureCodingPolicyProto `protobuf:"bytes,1,opt,name=ecPolicy" json:"ecPolicy,omitempty"`
+	XXX_NoUnkeyedLiteral struct{}                  `json:"-"`
+	XXX_unrecognized     []byte                    `json:"-"`
+	XXX_sizecache        int32                     `json:"-"`
 }
 
 func (m *GetErasureCodingPolicyResponseProto) Reset()         { *m = GetErasureCodingPolicyResponseProto{} }
 func (m *GetErasureCodingPolicyResponseProto) String() string { return proto.CompactTextString(m) }
 func (*GetErasureCodingPolicyResponseProto) ProtoMessage()    {}
 func (*GetErasureCodingPolicyResponseProto) Descriptor() ([]byte, []int) {
-	return fileDescriptor3, []int{5}
+	return fileDescriptor_erasurecoding_32bc446db2723ab1, []int{5}
 }
+func (m *GetErasureCodingPolicyResponseProto) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_GetErasureCodingPolicyResponseProto.Unmarshal(m, b)
+}
+func (m *GetErasureCodingPolicyResponseProto) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_GetErasureCodingPolicyResponseProto.Marshal(b, m, deterministic)
+}
+func (dst *GetErasureCodingPolicyResponseProto) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_GetErasureCodingPolicyResponseProto.Merge(dst, src)
+}
+func (m *GetErasureCodingPolicyResponseProto) XXX_Size() int {
+	return xxx_messageInfo_GetErasureCodingPolicyResponseProto.Size(m)
+}
+func (m *GetErasureCodingPolicyResponseProto) XXX_DiscardUnknown() {
+	xxx_messageInfo_GetErasureCodingPolicyResponseProto.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_GetErasureCodingPolicyResponseProto proto.InternalMessageInfo
 
 func (m *GetErasureCodingPolicyResponseProto) GetEcPolicy() *ErasureCodingPolicyProto {
 	if m != nil {
@@ -121,20 +241,41 @@ func (m *GetErasureCodingPolicyResponseProto) GetEcPolicy() *ErasureCodingPolicy
 // *
 // Block erasure coding reconstruction info
 type BlockECReconstructionInfoProto struct {
-	Block              *ExtendedBlockProto       `protobuf:"bytes,1,req,name=block" json:"block,omitempty"`
-	SourceDnInfos      *DatanodeInfosProto       `protobuf:"bytes,2,req,name=sourceDnInfos" json:"sourceDnInfos,omitempty"`
-	TargetDnInfos      *DatanodeInfosProto       `protobuf:"bytes,3,req,name=targetDnInfos" json:"targetDnInfos,omitempty"`
-	TargetStorageUuids *StorageUuidsProto        `protobuf:"bytes,4,req,name=targetStorageUuids" json:"targetStorageUuids,omitempty"`
-	TargetStorageTypes *StorageTypesProto        `protobuf:"bytes,5,req,name=targetStorageTypes" json:"targetStorageTypes,omitempty"`
-	LiveBlockIndices   []byte                    `protobuf:"bytes,6,req,name=liveBlockIndices" json:"liveBlockIndices,omitempty"`
-	EcPolicy           *ErasureCodingPolicyProto `protobuf:"bytes,7,req,name=ecPolicy" json:"ecPolicy,omitempty"`
-	XXX_unrecognized   []byte                    `json:"-"`
+	Block                *ExtendedBlockProto       `protobuf:"bytes,1,req,name=block" json:"block,omitempty"`
+	SourceDnInfos        *DatanodeInfosProto       `protobuf:"bytes,2,req,name=sourceDnInfos" json:"sourceDnInfos,omitempty"`
+	TargetDnInfos        *DatanodeInfosProto       `protobuf:"bytes,3,req,name=targetDnInfos" json:"targetDnInfos,omitempty"`
+	TargetStorageUuids   *StorageUuidsProto        `protobuf:"bytes,4,req,name=targetStorageUuids" json:"targetStorageUuids,omitempty"`
+	TargetStorageTypes   *StorageTypesProto        `protobuf:"bytes,5,req,name=targetStorageTypes" json:"targetStorageTypes,omitempty"`
+	LiveBlockIndices     []byte                    `protobuf:"bytes,6,req,name=liveBlockIndices" json:"liveBlockIndices,omitempty"`
+	EcPolicy             *ErasureCodingPolicyProto `protobuf:"bytes,7,req,name=ecPolicy" json:"ecPolicy,omitempty"`
+	XXX_NoUnkeyedLiteral struct{}                  `json:"-"`
+	XXX_unrecognized     []byte                    `json:"-"`
+	XXX_sizecache        int32                     `json:"-"`
 }
 
-func (m *BlockECReconstructionInfoProto) Reset()                    { *m = BlockECReconstructionInfoProto{} }
-func (m *BlockECReconstructionInfoProto) String() string            { return proto.CompactTextString(m) }
-func (*BlockECReconstructionInfoProto) ProtoMessage()               {}
-func (*BlockECReconstructionInfoProto) Descriptor() ([]byte, []int) { return fileDescriptor3, []int{6} }
+func (m *BlockECReconstructionInfoProto) Reset()         { *m = BlockECReconstructionInfoProto{} }
+func (m *BlockECReconstructionInfoProto) String() string { return proto.CompactTextString(m) }
+func (*BlockECReconstructionInfoProto) ProtoMessage()    {}
+func (*BlockECReconstructionInfoProto) Descriptor() ([]byte, []int) {
+	return fileDescriptor_erasurecoding_32bc446db2723ab1, []int{6}
+}
+func (m *BlockECReconstructionInfoProto) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_BlockECReconstructionInfoProto.Unmarshal(m, b)
+}
+func (m *BlockECReconstructionInfoProto) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_BlockECReconstructionInfoProto.Marshal(b, m, deterministic)
+}
+func (dst *BlockECReconstructionInfoProto) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_BlockECReconstructionInfoProto.Merge(dst, src)
+}
+func (m *BlockECReconstructionInfoProto) XXX_Size() int {
+	return xxx_messageInfo_BlockECReconstructionInfoProto.Size(m)
+}
+func (m *BlockECReconstructionInfoProto) XXX_DiscardUnknown() {
+	xxx_messageInfo_BlockECReconstructionInfoProto.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_BlockECReconstructionInfoProto proto.InternalMessageInfo
 
 func (m *BlockECReconstructionInfoProto) GetBlock() *ExtendedBlockProto {
 	if m != nil {
@@ -195,9 +336,9 @@ func init() {
 	proto.RegisterType((*BlockECReconstructionInfoProto)(nil), "hadoop.hdfs.BlockECReconstructionInfoProto")
 }
 
-func init() { proto.RegisterFile("erasurecoding.proto", fileDescriptor3) }
+func init() { proto.RegisterFile("erasurecoding.proto", fileDescriptor_erasurecoding_32bc446db2723ab1) }
 
-var fileDescriptor3 = []byte{
+var fileDescriptor_erasurecoding_32bc446db2723ab1 = []byte{
 	// 404 bytes of a gzipped FileDescriptorProto
 	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0x9c, 0x93, 0xcf, 0x6e, 0xd4, 0x30,
 	0x10, 0x87, 0x95, 0x5d, 0xca, 0x9f, 0x59, 0x90, 0xaa, 0xf4, 0x12, 0x71, 0x28, 0x91, 0x4b, 0xd0,

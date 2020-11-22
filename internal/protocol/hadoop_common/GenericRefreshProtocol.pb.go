@@ -12,18 +12,45 @@ var _ = proto.Marshal
 var _ = fmt.Errorf
 var _ = math.Inf
 
+// This is a compile-time assertion to ensure that this generated file
+// is compatible with the proto package it is being compiled against.
+// A compilation error at this line likely means your copy of the
+// proto package needs to be updated.
+const _ = proto.ProtoPackageIsVersion2 // please upgrade the proto package
+
 // *
 //  Refresh request.
 type GenericRefreshRequestProto struct {
-	Identifier       *string  `protobuf:"bytes,1,opt,name=identifier" json:"identifier,omitempty"`
-	Args             []string `protobuf:"bytes,2,rep,name=args" json:"args,omitempty"`
-	XXX_unrecognized []byte   `json:"-"`
+	Identifier           *string  `protobuf:"bytes,1,opt,name=identifier" json:"identifier,omitempty"`
+	Args                 []string `protobuf:"bytes,2,rep,name=args" json:"args,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
 }
 
-func (m *GenericRefreshRequestProto) Reset()                    { *m = GenericRefreshRequestProto{} }
-func (m *GenericRefreshRequestProto) String() string            { return proto.CompactTextString(m) }
-func (*GenericRefreshRequestProto) ProtoMessage()               {}
-func (*GenericRefreshRequestProto) Descriptor() ([]byte, []int) { return fileDescriptor3, []int{0} }
+func (m *GenericRefreshRequestProto) Reset()         { *m = GenericRefreshRequestProto{} }
+func (m *GenericRefreshRequestProto) String() string { return proto.CompactTextString(m) }
+func (*GenericRefreshRequestProto) ProtoMessage()    {}
+func (*GenericRefreshRequestProto) Descriptor() ([]byte, []int) {
+	return fileDescriptor_GenericRefreshProtocol_71e7fa3f93f60ec4, []int{0}
+}
+func (m *GenericRefreshRequestProto) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_GenericRefreshRequestProto.Unmarshal(m, b)
+}
+func (m *GenericRefreshRequestProto) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_GenericRefreshRequestProto.Marshal(b, m, deterministic)
+}
+func (dst *GenericRefreshRequestProto) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_GenericRefreshRequestProto.Merge(dst, src)
+}
+func (m *GenericRefreshRequestProto) XXX_Size() int {
+	return xxx_messageInfo_GenericRefreshRequestProto.Size(m)
+}
+func (m *GenericRefreshRequestProto) XXX_DiscardUnknown() {
+	xxx_messageInfo_GenericRefreshRequestProto.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_GenericRefreshRequestProto proto.InternalMessageInfo
 
 func (m *GenericRefreshRequestProto) GetIdentifier() string {
 	if m != nil && m.Identifier != nil {
@@ -42,16 +69,37 @@ func (m *GenericRefreshRequestProto) GetArgs() []string {
 // *
 // A single response from a refresh handler.
 type GenericRefreshResponseProto struct {
-	ExitStatus       *int32  `protobuf:"varint,1,opt,name=exitStatus" json:"exitStatus,omitempty"`
-	UserMessage      *string `protobuf:"bytes,2,opt,name=userMessage" json:"userMessage,omitempty"`
-	SenderName       *string `protobuf:"bytes,3,opt,name=senderName" json:"senderName,omitempty"`
-	XXX_unrecognized []byte  `json:"-"`
+	ExitStatus           *int32   `protobuf:"varint,1,opt,name=exitStatus" json:"exitStatus,omitempty"`
+	UserMessage          *string  `protobuf:"bytes,2,opt,name=userMessage" json:"userMessage,omitempty"`
+	SenderName           *string  `protobuf:"bytes,3,opt,name=senderName" json:"senderName,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
 }
 
-func (m *GenericRefreshResponseProto) Reset()                    { *m = GenericRefreshResponseProto{} }
-func (m *GenericRefreshResponseProto) String() string            { return proto.CompactTextString(m) }
-func (*GenericRefreshResponseProto) ProtoMessage()               {}
-func (*GenericRefreshResponseProto) Descriptor() ([]byte, []int) { return fileDescriptor3, []int{1} }
+func (m *GenericRefreshResponseProto) Reset()         { *m = GenericRefreshResponseProto{} }
+func (m *GenericRefreshResponseProto) String() string { return proto.CompactTextString(m) }
+func (*GenericRefreshResponseProto) ProtoMessage()    {}
+func (*GenericRefreshResponseProto) Descriptor() ([]byte, []int) {
+	return fileDescriptor_GenericRefreshProtocol_71e7fa3f93f60ec4, []int{1}
+}
+func (m *GenericRefreshResponseProto) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_GenericRefreshResponseProto.Unmarshal(m, b)
+}
+func (m *GenericRefreshResponseProto) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_GenericRefreshResponseProto.Marshal(b, m, deterministic)
+}
+func (dst *GenericRefreshResponseProto) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_GenericRefreshResponseProto.Merge(dst, src)
+}
+func (m *GenericRefreshResponseProto) XXX_Size() int {
+	return xxx_messageInfo_GenericRefreshResponseProto.Size(m)
+}
+func (m *GenericRefreshResponseProto) XXX_DiscardUnknown() {
+	xxx_messageInfo_GenericRefreshResponseProto.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_GenericRefreshResponseProto proto.InternalMessageInfo
 
 func (m *GenericRefreshResponseProto) GetExitStatus() int32 {
 	if m != nil && m.ExitStatus != nil {
@@ -77,16 +125,35 @@ func (m *GenericRefreshResponseProto) GetSenderName() string {
 // *
 // Collection of responses from zero or more handlers.
 type GenericRefreshResponseCollectionProto struct {
-	Responses        []*GenericRefreshResponseProto `protobuf:"bytes,1,rep,name=responses" json:"responses,omitempty"`
-	XXX_unrecognized []byte                         `json:"-"`
+	Responses            []*GenericRefreshResponseProto `protobuf:"bytes,1,rep,name=responses" json:"responses,omitempty"`
+	XXX_NoUnkeyedLiteral struct{}                       `json:"-"`
+	XXX_unrecognized     []byte                         `json:"-"`
+	XXX_sizecache        int32                          `json:"-"`
 }
 
 func (m *GenericRefreshResponseCollectionProto) Reset()         { *m = GenericRefreshResponseCollectionProto{} }
 func (m *GenericRefreshResponseCollectionProto) String() string { return proto.CompactTextString(m) }
 func (*GenericRefreshResponseCollectionProto) ProtoMessage()    {}
 func (*GenericRefreshResponseCollectionProto) Descriptor() ([]byte, []int) {
-	return fileDescriptor3, []int{2}
+	return fileDescriptor_GenericRefreshProtocol_71e7fa3f93f60ec4, []int{2}
 }
+func (m *GenericRefreshResponseCollectionProto) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_GenericRefreshResponseCollectionProto.Unmarshal(m, b)
+}
+func (m *GenericRefreshResponseCollectionProto) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_GenericRefreshResponseCollectionProto.Marshal(b, m, deterministic)
+}
+func (dst *GenericRefreshResponseCollectionProto) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_GenericRefreshResponseCollectionProto.Merge(dst, src)
+}
+func (m *GenericRefreshResponseCollectionProto) XXX_Size() int {
+	return xxx_messageInfo_GenericRefreshResponseCollectionProto.Size(m)
+}
+func (m *GenericRefreshResponseCollectionProto) XXX_DiscardUnknown() {
+	xxx_messageInfo_GenericRefreshResponseCollectionProto.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_GenericRefreshResponseCollectionProto proto.InternalMessageInfo
 
 func (m *GenericRefreshResponseCollectionProto) GetResponses() []*GenericRefreshResponseProto {
 	if m != nil {
@@ -101,9 +168,11 @@ func init() {
 	proto.RegisterType((*GenericRefreshResponseCollectionProto)(nil), "hadoop.common.GenericRefreshResponseCollectionProto")
 }
 
-func init() { proto.RegisterFile("GenericRefreshProtocol.proto", fileDescriptor3) }
+func init() {
+	proto.RegisterFile("GenericRefreshProtocol.proto", fileDescriptor_GenericRefreshProtocol_71e7fa3f93f60ec4)
+}
 
-var fileDescriptor3 = []byte{
+var fileDescriptor_GenericRefreshProtocol_71e7fa3f93f60ec4 = []byte{
 	// 293 bytes of a gzipped FileDescriptorProto
 	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0x8c, 0x92, 0xcf, 0x4a, 0xc3, 0x40,
 	0x10, 0xc6, 0xd9, 0x56, 0x91, 0x4e, 0xf1, 0xb2, 0xa7, 0xd0, 0xaa, 0x94, 0x80, 0x10, 0x3d, 0xe4,

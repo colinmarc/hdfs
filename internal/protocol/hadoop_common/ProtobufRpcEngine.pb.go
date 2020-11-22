@@ -12,6 +12,12 @@ var _ = proto.Marshal
 var _ = fmt.Errorf
 var _ = math.Inf
 
+// This is a compile-time assertion to ensure that this generated file
+// is compatible with the proto package it is being compiled against.
+// A compilation error at this line likely means your copy of the
+// proto package needs to be updated.
+const _ = proto.ProtoPackageIsVersion2 // please upgrade the proto package
+
 // *
 // This message is the header for the Protobuf Rpc Engine
 // when sending a RPC request from  RPC client to the RPC server.
@@ -38,14 +44,35 @@ type RequestHeaderProto struct {
 	// the declaringClassProtocolName field is set to the ProtocolInfoProto
 	DeclaringClassProtocolName *string `protobuf:"bytes,2,req,name=declaringClassProtocolName" json:"declaringClassProtocolName,omitempty"`
 	// * protocol version of class declaring the called method
-	ClientProtocolVersion *uint64 `protobuf:"varint,3,req,name=clientProtocolVersion" json:"clientProtocolVersion,omitempty"`
-	XXX_unrecognized      []byte  `json:"-"`
+	ClientProtocolVersion *uint64  `protobuf:"varint,3,req,name=clientProtocolVersion" json:"clientProtocolVersion,omitempty"`
+	XXX_NoUnkeyedLiteral  struct{} `json:"-"`
+	XXX_unrecognized      []byte   `json:"-"`
+	XXX_sizecache         int32    `json:"-"`
 }
 
-func (m *RequestHeaderProto) Reset()                    { *m = RequestHeaderProto{} }
-func (m *RequestHeaderProto) String() string            { return proto.CompactTextString(m) }
-func (*RequestHeaderProto) ProtoMessage()               {}
-func (*RequestHeaderProto) Descriptor() ([]byte, []int) { return fileDescriptor8, []int{0} }
+func (m *RequestHeaderProto) Reset()         { *m = RequestHeaderProto{} }
+func (m *RequestHeaderProto) String() string { return proto.CompactTextString(m) }
+func (*RequestHeaderProto) ProtoMessage()    {}
+func (*RequestHeaderProto) Descriptor() ([]byte, []int) {
+	return fileDescriptor_ProtobufRpcEngine_d48ed9baaf7049e8, []int{0}
+}
+func (m *RequestHeaderProto) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_RequestHeaderProto.Unmarshal(m, b)
+}
+func (m *RequestHeaderProto) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_RequestHeaderProto.Marshal(b, m, deterministic)
+}
+func (dst *RequestHeaderProto) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_RequestHeaderProto.Merge(dst, src)
+}
+func (m *RequestHeaderProto) XXX_Size() int {
+	return xxx_messageInfo_RequestHeaderProto.Size(m)
+}
+func (m *RequestHeaderProto) XXX_DiscardUnknown() {
+	xxx_messageInfo_RequestHeaderProto.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_RequestHeaderProto proto.InternalMessageInfo
 
 func (m *RequestHeaderProto) GetMethodName() string {
 	if m != nil && m.MethodName != nil {
@@ -72,9 +99,11 @@ func init() {
 	proto.RegisterType((*RequestHeaderProto)(nil), "hadoop.common.RequestHeaderProto")
 }
 
-func init() { proto.RegisterFile("ProtobufRpcEngine.proto", fileDescriptor8) }
+func init() {
+	proto.RegisterFile("ProtobufRpcEngine.proto", fileDescriptor_ProtobufRpcEngine_d48ed9baaf7049e8)
+}
 
-var fileDescriptor8 = []byte{
+var fileDescriptor_ProtobufRpcEngine_d48ed9baaf7049e8 = []byte{
 	// 197 bytes of a gzipped FileDescriptorProto
 	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0x7c, 0x8f, 0xb1, 0x6a, 0xc3, 0x30,
 	0x14, 0x45, 0x91, 0xdb, 0xa5, 0x82, 0x2e, 0x82, 0x52, 0xd3, 0xc1, 0x98, 0x4e, 0x9e, 0x34, 0x75,

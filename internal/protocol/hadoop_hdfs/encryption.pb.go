@@ -12,18 +12,43 @@ var _ = proto.Marshal
 var _ = fmt.Errorf
 var _ = math.Inf
 
+// This is a compile-time assertion to ensure that this generated file
+// is compatible with the proto package it is being compiled against.
+// A compilation error at this line likely means your copy of the
+// proto package needs to be updated.
+const _ = proto.ProtoPackageIsVersion2 // please upgrade the proto package
+
 type CreateEncryptionZoneRequestProto struct {
-	Src              *string `protobuf:"bytes,1,req,name=src" json:"src,omitempty"`
-	KeyName          *string `protobuf:"bytes,2,opt,name=keyName" json:"keyName,omitempty"`
-	XXX_unrecognized []byte  `json:"-"`
+	Src                  *string  `protobuf:"bytes,1,req,name=src" json:"src,omitempty"`
+	KeyName              *string  `protobuf:"bytes,2,opt,name=keyName" json:"keyName,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
 }
 
 func (m *CreateEncryptionZoneRequestProto) Reset()         { *m = CreateEncryptionZoneRequestProto{} }
 func (m *CreateEncryptionZoneRequestProto) String() string { return proto.CompactTextString(m) }
 func (*CreateEncryptionZoneRequestProto) ProtoMessage()    {}
 func (*CreateEncryptionZoneRequestProto) Descriptor() ([]byte, []int) {
-	return fileDescriptor2, []int{0}
+	return fileDescriptor_encryption_ee45fbe440be31dc, []int{0}
 }
+func (m *CreateEncryptionZoneRequestProto) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_CreateEncryptionZoneRequestProto.Unmarshal(m, b)
+}
+func (m *CreateEncryptionZoneRequestProto) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_CreateEncryptionZoneRequestProto.Marshal(b, m, deterministic)
+}
+func (dst *CreateEncryptionZoneRequestProto) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_CreateEncryptionZoneRequestProto.Merge(dst, src)
+}
+func (m *CreateEncryptionZoneRequestProto) XXX_Size() int {
+	return xxx_messageInfo_CreateEncryptionZoneRequestProto.Size(m)
+}
+func (m *CreateEncryptionZoneRequestProto) XXX_DiscardUnknown() {
+	xxx_messageInfo_CreateEncryptionZoneRequestProto.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_CreateEncryptionZoneRequestProto proto.InternalMessageInfo
 
 func (m *CreateEncryptionZoneRequestProto) GetSrc() string {
 	if m != nil && m.Src != nil {
@@ -40,25 +65,65 @@ func (m *CreateEncryptionZoneRequestProto) GetKeyName() string {
 }
 
 type CreateEncryptionZoneResponseProto struct {
-	XXX_unrecognized []byte `json:"-"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
 }
 
 func (m *CreateEncryptionZoneResponseProto) Reset()         { *m = CreateEncryptionZoneResponseProto{} }
 func (m *CreateEncryptionZoneResponseProto) String() string { return proto.CompactTextString(m) }
 func (*CreateEncryptionZoneResponseProto) ProtoMessage()    {}
 func (*CreateEncryptionZoneResponseProto) Descriptor() ([]byte, []int) {
-	return fileDescriptor2, []int{1}
+	return fileDescriptor_encryption_ee45fbe440be31dc, []int{1}
 }
+func (m *CreateEncryptionZoneResponseProto) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_CreateEncryptionZoneResponseProto.Unmarshal(m, b)
+}
+func (m *CreateEncryptionZoneResponseProto) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_CreateEncryptionZoneResponseProto.Marshal(b, m, deterministic)
+}
+func (dst *CreateEncryptionZoneResponseProto) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_CreateEncryptionZoneResponseProto.Merge(dst, src)
+}
+func (m *CreateEncryptionZoneResponseProto) XXX_Size() int {
+	return xxx_messageInfo_CreateEncryptionZoneResponseProto.Size(m)
+}
+func (m *CreateEncryptionZoneResponseProto) XXX_DiscardUnknown() {
+	xxx_messageInfo_CreateEncryptionZoneResponseProto.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_CreateEncryptionZoneResponseProto proto.InternalMessageInfo
 
 type ListEncryptionZonesRequestProto struct {
-	Id               *int64 `protobuf:"varint,1,req,name=id" json:"id,omitempty"`
-	XXX_unrecognized []byte `json:"-"`
+	Id                   *int64   `protobuf:"varint,1,req,name=id" json:"id,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
 }
 
-func (m *ListEncryptionZonesRequestProto) Reset()                    { *m = ListEncryptionZonesRequestProto{} }
-func (m *ListEncryptionZonesRequestProto) String() string            { return proto.CompactTextString(m) }
-func (*ListEncryptionZonesRequestProto) ProtoMessage()               {}
-func (*ListEncryptionZonesRequestProto) Descriptor() ([]byte, []int) { return fileDescriptor2, []int{2} }
+func (m *ListEncryptionZonesRequestProto) Reset()         { *m = ListEncryptionZonesRequestProto{} }
+func (m *ListEncryptionZonesRequestProto) String() string { return proto.CompactTextString(m) }
+func (*ListEncryptionZonesRequestProto) ProtoMessage()    {}
+func (*ListEncryptionZonesRequestProto) Descriptor() ([]byte, []int) {
+	return fileDescriptor_encryption_ee45fbe440be31dc, []int{2}
+}
+func (m *ListEncryptionZonesRequestProto) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_ListEncryptionZonesRequestProto.Unmarshal(m, b)
+}
+func (m *ListEncryptionZonesRequestProto) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_ListEncryptionZonesRequestProto.Marshal(b, m, deterministic)
+}
+func (dst *ListEncryptionZonesRequestProto) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_ListEncryptionZonesRequestProto.Merge(dst, src)
+}
+func (m *ListEncryptionZonesRequestProto) XXX_Size() int {
+	return xxx_messageInfo_ListEncryptionZonesRequestProto.Size(m)
+}
+func (m *ListEncryptionZonesRequestProto) XXX_DiscardUnknown() {
+	xxx_messageInfo_ListEncryptionZonesRequestProto.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_ListEncryptionZonesRequestProto proto.InternalMessageInfo
 
 func (m *ListEncryptionZonesRequestProto) GetId() int64 {
 	if m != nil && m.Id != nil {
@@ -73,13 +138,34 @@ type EncryptionZoneProto struct {
 	Suite                 *CipherSuiteProto           `protobuf:"varint,3,req,name=suite,enum=hadoop.hdfs.CipherSuiteProto" json:"suite,omitempty"`
 	CryptoProtocolVersion *CryptoProtocolVersionProto `protobuf:"varint,4,req,name=cryptoProtocolVersion,enum=hadoop.hdfs.CryptoProtocolVersionProto" json:"cryptoProtocolVersion,omitempty"`
 	KeyName               *string                     `protobuf:"bytes,5,req,name=keyName" json:"keyName,omitempty"`
+	XXX_NoUnkeyedLiteral  struct{}                    `json:"-"`
 	XXX_unrecognized      []byte                      `json:"-"`
+	XXX_sizecache         int32                       `json:"-"`
 }
 
-func (m *EncryptionZoneProto) Reset()                    { *m = EncryptionZoneProto{} }
-func (m *EncryptionZoneProto) String() string            { return proto.CompactTextString(m) }
-func (*EncryptionZoneProto) ProtoMessage()               {}
-func (*EncryptionZoneProto) Descriptor() ([]byte, []int) { return fileDescriptor2, []int{3} }
+func (m *EncryptionZoneProto) Reset()         { *m = EncryptionZoneProto{} }
+func (m *EncryptionZoneProto) String() string { return proto.CompactTextString(m) }
+func (*EncryptionZoneProto) ProtoMessage()    {}
+func (*EncryptionZoneProto) Descriptor() ([]byte, []int) {
+	return fileDescriptor_encryption_ee45fbe440be31dc, []int{3}
+}
+func (m *EncryptionZoneProto) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_EncryptionZoneProto.Unmarshal(m, b)
+}
+func (m *EncryptionZoneProto) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_EncryptionZoneProto.Marshal(b, m, deterministic)
+}
+func (dst *EncryptionZoneProto) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_EncryptionZoneProto.Merge(dst, src)
+}
+func (m *EncryptionZoneProto) XXX_Size() int {
+	return xxx_messageInfo_EncryptionZoneProto.Size(m)
+}
+func (m *EncryptionZoneProto) XXX_DiscardUnknown() {
+	xxx_messageInfo_EncryptionZoneProto.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_EncryptionZoneProto proto.InternalMessageInfo
 
 func (m *EncryptionZoneProto) GetId() int64 {
 	if m != nil && m.Id != nil {
@@ -117,17 +203,36 @@ func (m *EncryptionZoneProto) GetKeyName() string {
 }
 
 type ListEncryptionZonesResponseProto struct {
-	Zones            []*EncryptionZoneProto `protobuf:"bytes,1,rep,name=zones" json:"zones,omitempty"`
-	HasMore          *bool                  `protobuf:"varint,2,req,name=hasMore" json:"hasMore,omitempty"`
-	XXX_unrecognized []byte                 `json:"-"`
+	Zones                []*EncryptionZoneProto `protobuf:"bytes,1,rep,name=zones" json:"zones,omitempty"`
+	HasMore              *bool                  `protobuf:"varint,2,req,name=hasMore" json:"hasMore,omitempty"`
+	XXX_NoUnkeyedLiteral struct{}               `json:"-"`
+	XXX_unrecognized     []byte                 `json:"-"`
+	XXX_sizecache        int32                  `json:"-"`
 }
 
 func (m *ListEncryptionZonesResponseProto) Reset()         { *m = ListEncryptionZonesResponseProto{} }
 func (m *ListEncryptionZonesResponseProto) String() string { return proto.CompactTextString(m) }
 func (*ListEncryptionZonesResponseProto) ProtoMessage()    {}
 func (*ListEncryptionZonesResponseProto) Descriptor() ([]byte, []int) {
-	return fileDescriptor2, []int{4}
+	return fileDescriptor_encryption_ee45fbe440be31dc, []int{4}
 }
+func (m *ListEncryptionZonesResponseProto) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_ListEncryptionZonesResponseProto.Unmarshal(m, b)
+}
+func (m *ListEncryptionZonesResponseProto) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_ListEncryptionZonesResponseProto.Marshal(b, m, deterministic)
+}
+func (dst *ListEncryptionZonesResponseProto) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_ListEncryptionZonesResponseProto.Merge(dst, src)
+}
+func (m *ListEncryptionZonesResponseProto) XXX_Size() int {
+	return xxx_messageInfo_ListEncryptionZonesResponseProto.Size(m)
+}
+func (m *ListEncryptionZonesResponseProto) XXX_DiscardUnknown() {
+	xxx_messageInfo_ListEncryptionZonesResponseProto.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_ListEncryptionZonesResponseProto proto.InternalMessageInfo
 
 func (m *ListEncryptionZonesResponseProto) GetZones() []*EncryptionZoneProto {
 	if m != nil {
@@ -144,14 +249,35 @@ func (m *ListEncryptionZonesResponseProto) GetHasMore() bool {
 }
 
 type GetEZForPathRequestProto struct {
-	Src              *string `protobuf:"bytes,1,req,name=src" json:"src,omitempty"`
-	XXX_unrecognized []byte  `json:"-"`
+	Src                  *string  `protobuf:"bytes,1,req,name=src" json:"src,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
 }
 
-func (m *GetEZForPathRequestProto) Reset()                    { *m = GetEZForPathRequestProto{} }
-func (m *GetEZForPathRequestProto) String() string            { return proto.CompactTextString(m) }
-func (*GetEZForPathRequestProto) ProtoMessage()               {}
-func (*GetEZForPathRequestProto) Descriptor() ([]byte, []int) { return fileDescriptor2, []int{5} }
+func (m *GetEZForPathRequestProto) Reset()         { *m = GetEZForPathRequestProto{} }
+func (m *GetEZForPathRequestProto) String() string { return proto.CompactTextString(m) }
+func (*GetEZForPathRequestProto) ProtoMessage()    {}
+func (*GetEZForPathRequestProto) Descriptor() ([]byte, []int) {
+	return fileDescriptor_encryption_ee45fbe440be31dc, []int{5}
+}
+func (m *GetEZForPathRequestProto) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_GetEZForPathRequestProto.Unmarshal(m, b)
+}
+func (m *GetEZForPathRequestProto) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_GetEZForPathRequestProto.Marshal(b, m, deterministic)
+}
+func (dst *GetEZForPathRequestProto) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_GetEZForPathRequestProto.Merge(dst, src)
+}
+func (m *GetEZForPathRequestProto) XXX_Size() int {
+	return xxx_messageInfo_GetEZForPathRequestProto.Size(m)
+}
+func (m *GetEZForPathRequestProto) XXX_DiscardUnknown() {
+	xxx_messageInfo_GetEZForPathRequestProto.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_GetEZForPathRequestProto proto.InternalMessageInfo
 
 func (m *GetEZForPathRequestProto) GetSrc() string {
 	if m != nil && m.Src != nil {
@@ -161,14 +287,35 @@ func (m *GetEZForPathRequestProto) GetSrc() string {
 }
 
 type GetEZForPathResponseProto struct {
-	Zone             *EncryptionZoneProto `protobuf:"bytes,1,opt,name=zone" json:"zone,omitempty"`
-	XXX_unrecognized []byte               `json:"-"`
+	Zone                 *EncryptionZoneProto `protobuf:"bytes,1,opt,name=zone" json:"zone,omitempty"`
+	XXX_NoUnkeyedLiteral struct{}             `json:"-"`
+	XXX_unrecognized     []byte               `json:"-"`
+	XXX_sizecache        int32                `json:"-"`
 }
 
-func (m *GetEZForPathResponseProto) Reset()                    { *m = GetEZForPathResponseProto{} }
-func (m *GetEZForPathResponseProto) String() string            { return proto.CompactTextString(m) }
-func (*GetEZForPathResponseProto) ProtoMessage()               {}
-func (*GetEZForPathResponseProto) Descriptor() ([]byte, []int) { return fileDescriptor2, []int{6} }
+func (m *GetEZForPathResponseProto) Reset()         { *m = GetEZForPathResponseProto{} }
+func (m *GetEZForPathResponseProto) String() string { return proto.CompactTextString(m) }
+func (*GetEZForPathResponseProto) ProtoMessage()    {}
+func (*GetEZForPathResponseProto) Descriptor() ([]byte, []int) {
+	return fileDescriptor_encryption_ee45fbe440be31dc, []int{6}
+}
+func (m *GetEZForPathResponseProto) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_GetEZForPathResponseProto.Unmarshal(m, b)
+}
+func (m *GetEZForPathResponseProto) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_GetEZForPathResponseProto.Marshal(b, m, deterministic)
+}
+func (dst *GetEZForPathResponseProto) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_GetEZForPathResponseProto.Merge(dst, src)
+}
+func (m *GetEZForPathResponseProto) XXX_Size() int {
+	return xxx_messageInfo_GetEZForPathResponseProto.Size(m)
+}
+func (m *GetEZForPathResponseProto) XXX_DiscardUnknown() {
+	xxx_messageInfo_GetEZForPathResponseProto.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_GetEZForPathResponseProto proto.InternalMessageInfo
 
 func (m *GetEZForPathResponseProto) GetZone() *EncryptionZoneProto {
 	if m != nil {
@@ -187,9 +334,9 @@ func init() {
 	proto.RegisterType((*GetEZForPathResponseProto)(nil), "hadoop.hdfs.GetEZForPathResponseProto")
 }
 
-func init() { proto.RegisterFile("encryption.proto", fileDescriptor2) }
+func init() { proto.RegisterFile("encryption.proto", fileDescriptor_encryption_ee45fbe440be31dc) }
 
-var fileDescriptor2 = []byte{
+var fileDescriptor_encryption_ee45fbe440be31dc = []byte{
 	// 361 bytes of a gzipped FileDescriptorProto
 	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0x8c, 0x91, 0x41, 0x4b, 0xeb, 0x40,
 	0x14, 0x85, 0x99, 0xa4, 0xe5, 0xbd, 0xde, 0x42, 0x29, 0x79, 0x14, 0xe6, 0x3d, 0x78, 0x38, 0x46,

@@ -12,6 +12,12 @@ var _ = proto.Marshal
 var _ = fmt.Errorf
 var _ = math.Inf
 
+// This is a compile-time assertion to ensure that this generated file
+// is compatible with the proto package it is being compiled against.
+// A compilation error at this line likely means your copy of the
+// proto package needs to be updated.
+const _ = proto.ProtoPackageIsVersion2 // please upgrade the proto package
+
 type HAServiceStateProto int32
 
 const (
@@ -47,7 +53,9 @@ func (x *HAServiceStateProto) UnmarshalJSON(data []byte) error {
 	*x = HAServiceStateProto(value)
 	return nil
 }
-func (HAServiceStateProto) EnumDescriptor() ([]byte, []int) { return fileDescriptor11, []int{0} }
+func (HAServiceStateProto) EnumDescriptor() ([]byte, []int) {
+	return fileDescriptor_HAServiceProtocol_ee92690316313fb3, []int{0}
+}
 
 type HARequestSource int32
 
@@ -84,17 +92,40 @@ func (x *HARequestSource) UnmarshalJSON(data []byte) error {
 	*x = HARequestSource(value)
 	return nil
 }
-func (HARequestSource) EnumDescriptor() ([]byte, []int) { return fileDescriptor11, []int{1} }
-
-type HAStateChangeRequestInfoProto struct {
-	ReqSource        *HARequestSource `protobuf:"varint,1,req,name=reqSource,enum=hadoop.common.HARequestSource" json:"reqSource,omitempty"`
-	XXX_unrecognized []byte           `json:"-"`
+func (HARequestSource) EnumDescriptor() ([]byte, []int) {
+	return fileDescriptor_HAServiceProtocol_ee92690316313fb3, []int{1}
 }
 
-func (m *HAStateChangeRequestInfoProto) Reset()                    { *m = HAStateChangeRequestInfoProto{} }
-func (m *HAStateChangeRequestInfoProto) String() string            { return proto.CompactTextString(m) }
-func (*HAStateChangeRequestInfoProto) ProtoMessage()               {}
-func (*HAStateChangeRequestInfoProto) Descriptor() ([]byte, []int) { return fileDescriptor11, []int{0} }
+type HAStateChangeRequestInfoProto struct {
+	ReqSource            *HARequestSource `protobuf:"varint,1,req,name=reqSource,enum=hadoop.common.HARequestSource" json:"reqSource,omitempty"`
+	XXX_NoUnkeyedLiteral struct{}         `json:"-"`
+	XXX_unrecognized     []byte           `json:"-"`
+	XXX_sizecache        int32            `json:"-"`
+}
+
+func (m *HAStateChangeRequestInfoProto) Reset()         { *m = HAStateChangeRequestInfoProto{} }
+func (m *HAStateChangeRequestInfoProto) String() string { return proto.CompactTextString(m) }
+func (*HAStateChangeRequestInfoProto) ProtoMessage()    {}
+func (*HAStateChangeRequestInfoProto) Descriptor() ([]byte, []int) {
+	return fileDescriptor_HAServiceProtocol_ee92690316313fb3, []int{0}
+}
+func (m *HAStateChangeRequestInfoProto) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_HAStateChangeRequestInfoProto.Unmarshal(m, b)
+}
+func (m *HAStateChangeRequestInfoProto) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_HAStateChangeRequestInfoProto.Marshal(b, m, deterministic)
+}
+func (dst *HAStateChangeRequestInfoProto) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_HAStateChangeRequestInfoProto.Merge(dst, src)
+}
+func (m *HAStateChangeRequestInfoProto) XXX_Size() int {
+	return xxx_messageInfo_HAStateChangeRequestInfoProto.Size(m)
+}
+func (m *HAStateChangeRequestInfoProto) XXX_DiscardUnknown() {
+	xxx_messageInfo_HAStateChangeRequestInfoProto.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_HAStateChangeRequestInfoProto proto.InternalMessageInfo
 
 func (m *HAStateChangeRequestInfoProto) GetReqSource() HARequestSource {
 	if m != nil && m.ReqSource != nil {
@@ -106,36 +137,99 @@ func (m *HAStateChangeRequestInfoProto) GetReqSource() HARequestSource {
 // *
 // void request
 type MonitorHealthRequestProto struct {
-	XXX_unrecognized []byte `json:"-"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
 }
 
-func (m *MonitorHealthRequestProto) Reset()                    { *m = MonitorHealthRequestProto{} }
-func (m *MonitorHealthRequestProto) String() string            { return proto.CompactTextString(m) }
-func (*MonitorHealthRequestProto) ProtoMessage()               {}
-func (*MonitorHealthRequestProto) Descriptor() ([]byte, []int) { return fileDescriptor11, []int{1} }
+func (m *MonitorHealthRequestProto) Reset()         { *m = MonitorHealthRequestProto{} }
+func (m *MonitorHealthRequestProto) String() string { return proto.CompactTextString(m) }
+func (*MonitorHealthRequestProto) ProtoMessage()    {}
+func (*MonitorHealthRequestProto) Descriptor() ([]byte, []int) {
+	return fileDescriptor_HAServiceProtocol_ee92690316313fb3, []int{1}
+}
+func (m *MonitorHealthRequestProto) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_MonitorHealthRequestProto.Unmarshal(m, b)
+}
+func (m *MonitorHealthRequestProto) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_MonitorHealthRequestProto.Marshal(b, m, deterministic)
+}
+func (dst *MonitorHealthRequestProto) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_MonitorHealthRequestProto.Merge(dst, src)
+}
+func (m *MonitorHealthRequestProto) XXX_Size() int {
+	return xxx_messageInfo_MonitorHealthRequestProto.Size(m)
+}
+func (m *MonitorHealthRequestProto) XXX_DiscardUnknown() {
+	xxx_messageInfo_MonitorHealthRequestProto.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_MonitorHealthRequestProto proto.InternalMessageInfo
 
 // *
 // void response
 type MonitorHealthResponseProto struct {
-	XXX_unrecognized []byte `json:"-"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
 }
 
-func (m *MonitorHealthResponseProto) Reset()                    { *m = MonitorHealthResponseProto{} }
-func (m *MonitorHealthResponseProto) String() string            { return proto.CompactTextString(m) }
-func (*MonitorHealthResponseProto) ProtoMessage()               {}
-func (*MonitorHealthResponseProto) Descriptor() ([]byte, []int) { return fileDescriptor11, []int{2} }
+func (m *MonitorHealthResponseProto) Reset()         { *m = MonitorHealthResponseProto{} }
+func (m *MonitorHealthResponseProto) String() string { return proto.CompactTextString(m) }
+func (*MonitorHealthResponseProto) ProtoMessage()    {}
+func (*MonitorHealthResponseProto) Descriptor() ([]byte, []int) {
+	return fileDescriptor_HAServiceProtocol_ee92690316313fb3, []int{2}
+}
+func (m *MonitorHealthResponseProto) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_MonitorHealthResponseProto.Unmarshal(m, b)
+}
+func (m *MonitorHealthResponseProto) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_MonitorHealthResponseProto.Marshal(b, m, deterministic)
+}
+func (dst *MonitorHealthResponseProto) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_MonitorHealthResponseProto.Merge(dst, src)
+}
+func (m *MonitorHealthResponseProto) XXX_Size() int {
+	return xxx_messageInfo_MonitorHealthResponseProto.Size(m)
+}
+func (m *MonitorHealthResponseProto) XXX_DiscardUnknown() {
+	xxx_messageInfo_MonitorHealthResponseProto.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_MonitorHealthResponseProto proto.InternalMessageInfo
 
 // *
 // void request
 type TransitionToActiveRequestProto struct {
-	ReqInfo          *HAStateChangeRequestInfoProto `protobuf:"bytes,1,req,name=reqInfo" json:"reqInfo,omitempty"`
-	XXX_unrecognized []byte                         `json:"-"`
+	ReqInfo              *HAStateChangeRequestInfoProto `protobuf:"bytes,1,req,name=reqInfo" json:"reqInfo,omitempty"`
+	XXX_NoUnkeyedLiteral struct{}                       `json:"-"`
+	XXX_unrecognized     []byte                         `json:"-"`
+	XXX_sizecache        int32                          `json:"-"`
 }
 
-func (m *TransitionToActiveRequestProto) Reset()                    { *m = TransitionToActiveRequestProto{} }
-func (m *TransitionToActiveRequestProto) String() string            { return proto.CompactTextString(m) }
-func (*TransitionToActiveRequestProto) ProtoMessage()               {}
-func (*TransitionToActiveRequestProto) Descriptor() ([]byte, []int) { return fileDescriptor11, []int{3} }
+func (m *TransitionToActiveRequestProto) Reset()         { *m = TransitionToActiveRequestProto{} }
+func (m *TransitionToActiveRequestProto) String() string { return proto.CompactTextString(m) }
+func (*TransitionToActiveRequestProto) ProtoMessage()    {}
+func (*TransitionToActiveRequestProto) Descriptor() ([]byte, []int) {
+	return fileDescriptor_HAServiceProtocol_ee92690316313fb3, []int{3}
+}
+func (m *TransitionToActiveRequestProto) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_TransitionToActiveRequestProto.Unmarshal(m, b)
+}
+func (m *TransitionToActiveRequestProto) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_TransitionToActiveRequestProto.Marshal(b, m, deterministic)
+}
+func (dst *TransitionToActiveRequestProto) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_TransitionToActiveRequestProto.Merge(dst, src)
+}
+func (m *TransitionToActiveRequestProto) XXX_Size() int {
+	return xxx_messageInfo_TransitionToActiveRequestProto.Size(m)
+}
+func (m *TransitionToActiveRequestProto) XXX_DiscardUnknown() {
+	xxx_messageInfo_TransitionToActiveRequestProto.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_TransitionToActiveRequestProto proto.InternalMessageInfo
 
 func (m *TransitionToActiveRequestProto) GetReqInfo() *HAStateChangeRequestInfoProto {
 	if m != nil {
@@ -147,29 +241,67 @@ func (m *TransitionToActiveRequestProto) GetReqInfo() *HAStateChangeRequestInfoP
 // *
 // void response
 type TransitionToActiveResponseProto struct {
-	XXX_unrecognized []byte `json:"-"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
 }
 
 func (m *TransitionToActiveResponseProto) Reset()         { *m = TransitionToActiveResponseProto{} }
 func (m *TransitionToActiveResponseProto) String() string { return proto.CompactTextString(m) }
 func (*TransitionToActiveResponseProto) ProtoMessage()    {}
 func (*TransitionToActiveResponseProto) Descriptor() ([]byte, []int) {
-	return fileDescriptor11, []int{4}
+	return fileDescriptor_HAServiceProtocol_ee92690316313fb3, []int{4}
 }
+func (m *TransitionToActiveResponseProto) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_TransitionToActiveResponseProto.Unmarshal(m, b)
+}
+func (m *TransitionToActiveResponseProto) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_TransitionToActiveResponseProto.Marshal(b, m, deterministic)
+}
+func (dst *TransitionToActiveResponseProto) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_TransitionToActiveResponseProto.Merge(dst, src)
+}
+func (m *TransitionToActiveResponseProto) XXX_Size() int {
+	return xxx_messageInfo_TransitionToActiveResponseProto.Size(m)
+}
+func (m *TransitionToActiveResponseProto) XXX_DiscardUnknown() {
+	xxx_messageInfo_TransitionToActiveResponseProto.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_TransitionToActiveResponseProto proto.InternalMessageInfo
 
 // *
 // void request
 type TransitionToStandbyRequestProto struct {
-	ReqInfo          *HAStateChangeRequestInfoProto `protobuf:"bytes,1,req,name=reqInfo" json:"reqInfo,omitempty"`
-	XXX_unrecognized []byte                         `json:"-"`
+	ReqInfo              *HAStateChangeRequestInfoProto `protobuf:"bytes,1,req,name=reqInfo" json:"reqInfo,omitempty"`
+	XXX_NoUnkeyedLiteral struct{}                       `json:"-"`
+	XXX_unrecognized     []byte                         `json:"-"`
+	XXX_sizecache        int32                          `json:"-"`
 }
 
 func (m *TransitionToStandbyRequestProto) Reset()         { *m = TransitionToStandbyRequestProto{} }
 func (m *TransitionToStandbyRequestProto) String() string { return proto.CompactTextString(m) }
 func (*TransitionToStandbyRequestProto) ProtoMessage()    {}
 func (*TransitionToStandbyRequestProto) Descriptor() ([]byte, []int) {
-	return fileDescriptor11, []int{5}
+	return fileDescriptor_HAServiceProtocol_ee92690316313fb3, []int{5}
 }
+func (m *TransitionToStandbyRequestProto) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_TransitionToStandbyRequestProto.Unmarshal(m, b)
+}
+func (m *TransitionToStandbyRequestProto) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_TransitionToStandbyRequestProto.Marshal(b, m, deterministic)
+}
+func (dst *TransitionToStandbyRequestProto) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_TransitionToStandbyRequestProto.Merge(dst, src)
+}
+func (m *TransitionToStandbyRequestProto) XXX_Size() int {
+	return xxx_messageInfo_TransitionToStandbyRequestProto.Size(m)
+}
+func (m *TransitionToStandbyRequestProto) XXX_DiscardUnknown() {
+	xxx_messageInfo_TransitionToStandbyRequestProto.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_TransitionToStandbyRequestProto proto.InternalMessageInfo
 
 func (m *TransitionToStandbyRequestProto) GetReqInfo() *HAStateChangeRequestInfoProto {
 	if m != nil {
@@ -181,26 +313,66 @@ func (m *TransitionToStandbyRequestProto) GetReqInfo() *HAStateChangeRequestInfo
 // *
 // void response
 type TransitionToStandbyResponseProto struct {
-	XXX_unrecognized []byte `json:"-"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
 }
 
 func (m *TransitionToStandbyResponseProto) Reset()         { *m = TransitionToStandbyResponseProto{} }
 func (m *TransitionToStandbyResponseProto) String() string { return proto.CompactTextString(m) }
 func (*TransitionToStandbyResponseProto) ProtoMessage()    {}
 func (*TransitionToStandbyResponseProto) Descriptor() ([]byte, []int) {
-	return fileDescriptor11, []int{6}
+	return fileDescriptor_HAServiceProtocol_ee92690316313fb3, []int{6}
 }
+func (m *TransitionToStandbyResponseProto) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_TransitionToStandbyResponseProto.Unmarshal(m, b)
+}
+func (m *TransitionToStandbyResponseProto) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_TransitionToStandbyResponseProto.Marshal(b, m, deterministic)
+}
+func (dst *TransitionToStandbyResponseProto) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_TransitionToStandbyResponseProto.Merge(dst, src)
+}
+func (m *TransitionToStandbyResponseProto) XXX_Size() int {
+	return xxx_messageInfo_TransitionToStandbyResponseProto.Size(m)
+}
+func (m *TransitionToStandbyResponseProto) XXX_DiscardUnknown() {
+	xxx_messageInfo_TransitionToStandbyResponseProto.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_TransitionToStandbyResponseProto proto.InternalMessageInfo
 
 // *
 // void request
 type GetServiceStatusRequestProto struct {
-	XXX_unrecognized []byte `json:"-"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
 }
 
-func (m *GetServiceStatusRequestProto) Reset()                    { *m = GetServiceStatusRequestProto{} }
-func (m *GetServiceStatusRequestProto) String() string            { return proto.CompactTextString(m) }
-func (*GetServiceStatusRequestProto) ProtoMessage()               {}
-func (*GetServiceStatusRequestProto) Descriptor() ([]byte, []int) { return fileDescriptor11, []int{7} }
+func (m *GetServiceStatusRequestProto) Reset()         { *m = GetServiceStatusRequestProto{} }
+func (m *GetServiceStatusRequestProto) String() string { return proto.CompactTextString(m) }
+func (*GetServiceStatusRequestProto) ProtoMessage()    {}
+func (*GetServiceStatusRequestProto) Descriptor() ([]byte, []int) {
+	return fileDescriptor_HAServiceProtocol_ee92690316313fb3, []int{7}
+}
+func (m *GetServiceStatusRequestProto) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_GetServiceStatusRequestProto.Unmarshal(m, b)
+}
+func (m *GetServiceStatusRequestProto) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_GetServiceStatusRequestProto.Marshal(b, m, deterministic)
+}
+func (dst *GetServiceStatusRequestProto) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_GetServiceStatusRequestProto.Merge(dst, src)
+}
+func (m *GetServiceStatusRequestProto) XXX_Size() int {
+	return xxx_messageInfo_GetServiceStatusRequestProto.Size(m)
+}
+func (m *GetServiceStatusRequestProto) XXX_DiscardUnknown() {
+	xxx_messageInfo_GetServiceStatusRequestProto.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_GetServiceStatusRequestProto proto.InternalMessageInfo
 
 // *
 // Returns the state of the service
@@ -210,14 +382,35 @@ type GetServiceStatusResponseProto struct {
 	// ready to become active.
 	ReadyToBecomeActive *bool `protobuf:"varint,2,opt,name=readyToBecomeActive" json:"readyToBecomeActive,omitempty"`
 	// If not ready to become active, a textual explanation of why not
-	NotReadyReason   *string `protobuf:"bytes,3,opt,name=notReadyReason" json:"notReadyReason,omitempty"`
-	XXX_unrecognized []byte  `json:"-"`
+	NotReadyReason       *string  `protobuf:"bytes,3,opt,name=notReadyReason" json:"notReadyReason,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
 }
 
-func (m *GetServiceStatusResponseProto) Reset()                    { *m = GetServiceStatusResponseProto{} }
-func (m *GetServiceStatusResponseProto) String() string            { return proto.CompactTextString(m) }
-func (*GetServiceStatusResponseProto) ProtoMessage()               {}
-func (*GetServiceStatusResponseProto) Descriptor() ([]byte, []int) { return fileDescriptor11, []int{8} }
+func (m *GetServiceStatusResponseProto) Reset()         { *m = GetServiceStatusResponseProto{} }
+func (m *GetServiceStatusResponseProto) String() string { return proto.CompactTextString(m) }
+func (*GetServiceStatusResponseProto) ProtoMessage()    {}
+func (*GetServiceStatusResponseProto) Descriptor() ([]byte, []int) {
+	return fileDescriptor_HAServiceProtocol_ee92690316313fb3, []int{8}
+}
+func (m *GetServiceStatusResponseProto) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_GetServiceStatusResponseProto.Unmarshal(m, b)
+}
+func (m *GetServiceStatusResponseProto) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_GetServiceStatusResponseProto.Marshal(b, m, deterministic)
+}
+func (dst *GetServiceStatusResponseProto) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_GetServiceStatusResponseProto.Merge(dst, src)
+}
+func (m *GetServiceStatusResponseProto) XXX_Size() int {
+	return xxx_messageInfo_GetServiceStatusResponseProto.Size(m)
+}
+func (m *GetServiceStatusResponseProto) XXX_DiscardUnknown() {
+	xxx_messageInfo_GetServiceStatusResponseProto.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_GetServiceStatusResponseProto proto.InternalMessageInfo
 
 func (m *GetServiceStatusResponseProto) GetState() HAServiceStateProto {
 	if m != nil && m.State != nil {
@@ -254,9 +447,11 @@ func init() {
 	proto.RegisterEnum("hadoop.common.HARequestSource", HARequestSource_name, HARequestSource_value)
 }
 
-func init() { proto.RegisterFile("HAServiceProtocol.proto", fileDescriptor11) }
+func init() {
+	proto.RegisterFile("HAServiceProtocol.proto", fileDescriptor_HAServiceProtocol_ee92690316313fb3)
+}
 
-var fileDescriptor11 = []byte{
+var fileDescriptor_HAServiceProtocol_ee92690316313fb3 = []byte{
 	// 529 bytes of a gzipped FileDescriptorProto
 	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xb4, 0x54, 0xdd, 0x6e, 0xd3, 0x30,
 	0x14, 0x9e, 0x3b, 0xc1, 0xd8, 0x19, 0xdb, 0x22, 0x57, 0x82, 0x12, 0xb6, 0x52, 0x72, 0x81, 0xca,

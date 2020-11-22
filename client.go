@@ -91,6 +91,9 @@ type ClientOptions struct {
 	// has dfs.encrypt.data.transfer enabled, this setting is ignored and
 	// a level of "privacy" is used.
 	DataTransferProtection string
+	// CRC32Checksum specifies checksum algorithm to use
+	// MD5MD5CRC32C (default) or CRC32
+	CRC32Checksum bool
 }
 
 // ClientOptionsFromConf attempts to load any relevant configuration options

@@ -2,8 +2,10 @@ package hdfs
 
 import (
 	"crypto/md5"
+	"encoding/binary"
 	"errors"
 	"fmt"
+	"hash"
 	"io"
 	"os"
 	"time"
@@ -68,11 +70,130 @@ func (f *FileReader) SetDeadline(t time.Time) error {
 	return nil
 }
 
-// Checksum returns HDFS's internal "MD5MD5CRC32C" checksum for a given file.
+type checksum interface {
+	Update(blockChecksum []byte, blockLength uint64)
+	Sum() []byte
+}
+
+// "MD5MD5CRC32C" checksum
 //
 // Internally to HDFS, it works by calculating the MD5 of all the CRCs (which
 // are stored alongside the data) for each block, and then calculating the MD5
 // of all of those.
+//
+// Hadoop calculates this by writing the checksums out to a byte array, which
+// is automatically padded with zeroes out to the next  power of 2
+// (with a minimum of 32)... and then takes the MD5 of that array, including
+// the zeroes. This is pretty shady business, but we want to track
+// the 'hadoop fs -checksum' behavior if possible.
+type md5Checksum struct {
+	paddedLength int
+	totalLength  int
+	sum          hash.Hash
+}
+
+func createMD5Checksum() *md5Checksum {
+	return &md5Checksum{
+		paddedLength: 32,
+		totalLength:  0,
+		sum:          md5.New(),
+	}
+}
+
+func (c *md5Checksum) Update(blockChecksum []byte, blockLength uint64) {
+	c.sum.Write(blockChecksum)
+	c.totalLength += len(blockChecksum)
+	if c.paddedLength < c.totalLength {
+		c.paddedLength *= 2
+	}
+}
+
+func (c *md5Checksum) Sum() []byte {
+	c.sum.Write(make([]byte, c.paddedLength-c.totalLength))
+	return c.sum.Sum(nil)
+}
+
+// "COMPOSITE_CRC" checksum
+type crc32Checksum struct {
+	update bool
+	sum    uint32
+}
+
+func combineCRC32i(m []uint32, v uint32) uint32 {
+	var sum uint32
+	index := 0
+	for v != 0 {
+		if v&1 == 1 {
+			sum ^= m[index]
+		}
+		v = v >> 1 & 0x7FFFFFFF
+		index++
+	}
+	return sum
+}
+
+// https://stackoverflow.com/questions/35259527/using-zlib-crc32-combine-in-python
+func combineCRC32(crc1, crc2, length2 uint32) uint32 {
+	odd := make([]uint32, 32)
+	odd[0] = 0xedb88320
+	for i := 0; i < 31; i++ {
+		odd[i+1] = 1 << i
+	}
+	even := make([]uint32, 32)
+
+	for i := 0; i < 32; i++ {
+		even[i] = combineCRC32i(odd, odd[i])
+	}
+
+	for i := 0; i < 32; i++ {
+		odd[i] = combineCRC32i(even, even[i])
+	}
+
+	for length2 != 0 {
+		for i := 0; i < 32; i++ {
+			even[i] = combineCRC32i(odd, odd[i])
+		}
+		if length2&1 == 1 {
+			crc1 = combineCRC32i(even, crc1)
+		}
+		length2 >>= 1
+		if length2 == 0 {
+			break
+		}
+		for i := 0; i < 32; i++ {
+			odd[i] = combineCRC32i(even, even[i])
+		}
+		if length2&1 == 1 {
+			crc1 = combineCRC32i(odd, crc1)
+		}
+		length2 >>= 1
+	}
+
+	return crc1 ^ crc2
+}
+
+func createCrc32Checksum() *crc32Checksum {
+	return &crc32Checksum{}
+}
+
+func (c *crc32Checksum) Update(blockChecksum []byte, blockLength uint64) {
+	crc := binary.BigEndian.Uint32(blockChecksum)
+	if c.update {
+		c.sum = combineCRC32(c.sum, crc, uint32(blockLength))
+	} else {
+		c.sum = crc
+		c.update = true
+	}
+}
+
+func (c *crc32Checksum) Sum() []byte {
+	bs := make([]byte, 4)
+	binary.BigEndian.PutUint32(bs, c.sum)
+	return bs
+}
+
+// Checksum returns HDFS's checksum for a given file.
+// type of checksum can be controlled via options.ChecksumType
 func (f *FileReader) Checksum() ([]byte, error) {
 	if f.info.IsDir() {
 		return nil, &os.PathError{
@@ -89,14 +210,12 @@ func (f *FileReader) Checksum() ([]byte, error) {
 		}
 	}
 
-	// Hadoop calculates this by writing the checksums out to a byte array, which
-	// is automatically padded with zeroes out to the next  power of 2
-	// (with a minimum of 32)... and then takes the MD5 of that array, including
-	// the zeroes. This is pretty shady business, but we want to track
-	// the 'hadoop fs -checksum' behavior if possible.
-	paddedLength := 32
-	totalLength := 0
-	checksum := md5.New()
+	var checksum checksum
+	if f.client.options.CRC32Checksum {
+		checksum = createCrc32Checksum()
+	} else {
+		checksum = createMD5Checksum()
+	}
 
 	for _, block := range f.blocks {
 		d, err := f.client.wrapDatanodeDial(f.client.options.DatanodeDialFunc,
@@ -109,6 +228,7 @@ func (f *FileReader) Checksum() ([]byte, error) {
 			Block:               block,
 			UseDatanodeHostname: f.client.options.UseDatanodeHostname,
 			DialFunc:            d,
+			CRC32Checksum:       f.client.options.CRC32Checksum,
 		}
 
 		err = cr.SetDeadline(f.deadline)
@@ -120,16 +240,10 @@ func (f *FileReader) Checksum() ([]byte, error) {
 		if err != nil {
 			return nil, err
 		}
-
-		checksum.Write(blockChecksum)
-		totalLength += len(blockChecksum)
-		if paddedLength < totalLength {
-			paddedLength *= 2
-		}
+		checksum.Update(blockChecksum, block.B.GetNumBytes())
 	}
 
-	checksum.Write(make([]byte, paddedLength-totalLength))
-	return checksum.Sum(nil), nil
+	return checksum.Sum(), nil
 }
 
 // Seek implements io.Seeker.

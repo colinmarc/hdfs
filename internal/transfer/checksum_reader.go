@@ -21,6 +21,9 @@ type ChecksumReader struct {
 	UseDatanodeHostname bool
 	// DialFunc is used to connect to the datanodes. If nil, then (&net.Dialer{}).DialContext is used
 	DialFunc func(ctx context.Context, network, addr string) (net.Conn, error)
+	// CRC32Checksum specifies checksum algorithm to use
+	// MD5MD5CRC32C (default) or CRC32
+	CRC32Checksum bool
 
 	deadline  time.Time
 	datanodes *datanodeFailover
@@ -105,7 +108,14 @@ func (cr *ChecksumReader) readChecksum(address string) ([]byte, error) {
 func (cr *ChecksumReader) writeBlockChecksumRequest(w io.Writer) error {
 	header := []byte{0x00, dataTransferVersion, checksumBlockOp}
 
-	op := newChecksumBlockOp(cr.Block)
+	var checksumType hdfs.BlockChecksumTypeProto
+	if cr.CRC32Checksum == true {
+		checksumType = hdfs.BlockChecksumTypeProto_COMPOSITE_CRC
+	} else {
+		checksumType = hdfs.BlockChecksumTypeProto_MD5CRC
+	}
+
+	op := newChecksumBlockOp(cr.Block, checksumType)
 	opBytes, err := makePrefixedMessage(op)
 	if err != nil {
 		return err
@@ -130,11 +140,14 @@ func (cr *ChecksumReader) readBlockChecksumResponse(r io.Reader) (*hdfs.BlockOpR
 	return resp, err
 }
 
-func newChecksumBlockOp(block *hdfs.LocatedBlockProto) *hdfs.OpBlockChecksumProto {
+func newChecksumBlockOp(block *hdfs.LocatedBlockProto, checksumType hdfs.BlockChecksumTypeProto) *hdfs.OpBlockChecksumProto {
 	return &hdfs.OpBlockChecksumProto{
 		Header: &hdfs.BaseHeaderProto{
 			Block: block.GetB(),
 			Token: block.GetBlockToken(),
+		},
+		BlockChecksumOptions: &hdfs.BlockChecksumOptionsProto{
+			BlockChecksumType: &checksumType,
 		},
 	}
 }

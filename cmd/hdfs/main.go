@@ -32,7 +32,7 @@ Valid commands:
   head [-n LINES | -c BYTES] SOURCE...
   tail [-n LINES | -c BYTES] SOURCE...
   du [-sh] FILE...
-  checksum FILE...
+  checksum [-c] FILE...
   get SOURCE [DEST]
   getmerge SOURCE DEST
   put SOURCE DEST
@@ -78,6 +78,9 @@ Valid commands:
 	dfOpts = getopt.New()
 	dfh    = dfOpts.Bool('h')
 
+	checksumOpts = getopt.New()
+	checksumc    = checksumOpts.Bool('c')
+
 	cachedClients map[string]*hdfs.Client = make(map[string]*hdfs.Client)
 	status                                = 0
 )
@@ -93,6 +96,7 @@ func init() {
 	duOpts.SetUsage(printHelp)
 	getmergeOpts.SetUsage(printHelp)
 	dfOpts.SetUsage(printHelp)
+	checksumOpts.SetUsage(printHelp)
 }
 
 func main() {
@@ -135,7 +139,8 @@ func main() {
 		duOpts.Parse(argv)
 		du(duOpts.Args(), *dus, *duh)
 	case "checksum":
-		checksum(argv[1:])
+		checksumOpts.Parse(argv)
+		checksum(checksumOpts.Args())
 	case "get":
 		get(argv[1:])
 	case "getmerge":
@@ -211,6 +216,10 @@ func getClient(namenode string) (*hdfs.Client, error) {
 
 			options.User = u.Username
 		}
+	}
+
+	if *checksumc == true {
+		options.CRC32Checksum = true
 	}
 
 	// Set some basic defaults.

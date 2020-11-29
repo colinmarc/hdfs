@@ -2,7 +2,6 @@ package hdfs
 
 import (
 	"os"
-	"syscall"
 )
 
 const (
@@ -38,7 +37,7 @@ func interpretException(err error) error {
 	case permissionDeniedException:
 		return os.ErrPermission
 	case pathIsNotEmptyDirException:
-		return syscall.ENOTEMPTY
+		return osErrNotEmpty
 	case fileAlreadyExistsException:
 		return os.ErrExist
 	default:

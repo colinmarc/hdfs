@@ -235,6 +235,12 @@ func (c *Client) User() string {
 	return c.namenode.User
 }
 
+// Name returns the unique name that the Client uses in communication
+// with namenodes and datanodes.
+func (c *Client) Name() string {
+	return c.namenode.ClientName
+}
+
 // ReadFile reads the file named by filename and returns the contents.
 func (c *Client) ReadFile(filename string) ([]byte, error) {
 	f, err := c.Open(filename)

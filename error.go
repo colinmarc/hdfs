@@ -9,7 +9,7 @@ const (
 	fileNotFoundException      = "java.io.FileNotFoundException"
 	permissionDeniedException  = "org.apache.hadoop.security.AccessControlException"
 	pathIsNotEmptyDirException = "org.apache.hadoop.fs.PathIsNotEmptyDirectoryException"
-	fileAlreadyExistsException = "org.apache.hadoop.fs.fileAlreadyExistsException"
+	fileAlreadyExistsException = "org.apache.hadoop.fs.FileAlreadyExistsException"
 )
 
 // Error represents a remote java exception from an HDFS namenode or datanode.

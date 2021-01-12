@@ -11,17 +11,17 @@ import (
 )
 
 func put(args []string) {
-	if len(args) != 2 {
+	if len(args) != 3 {
 		printHelp()
 	}
-
-	dests, nn, err := normalizePaths(args[1:])
+	replication := int(args[0])
+	dests, nn, err := normalizePaths(args[2:])
 	if err != nil {
 		fatal(err)
 	}
 
 	dest := dests[0]
-	source, err := filepath.Abs(args[0])
+	source, err := filepath.Abs(args[1])
 	if err != nil {
 		fatal(err)
 	}
@@ -34,7 +34,7 @@ func put(args []string) {
 	if filepath.Base(source) == "-" {
 		putFromStdin(client, dest)
 	} else {
-		putFromFile(client, source, dest)
+		putFromFile(client, source, dest, replication)
 	}
 }
 

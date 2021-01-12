@@ -48,7 +48,7 @@ func (c *Client) Create(name string) (*FileWriter, error) {
 	return c.CreateFile(name, replication, blockSize, 0644)
 }
 
-func (c *Client) CreateWithReplication(name string, int replication) (*FileWriter, error) {
+func (c *Client) CreateWithReplication(name string, replication int) (*FileWriter, error) {
 	_, err := c.getFileInfo(name)
 	err = interpretException(err)
 	if err == nil {

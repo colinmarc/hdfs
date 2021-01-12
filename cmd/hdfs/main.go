@@ -35,7 +35,7 @@ Valid commands:
   checksum FILE...
   get SOURCE [DEST]
   getmerge SOURCE DEST
-  put SOURCE DEST
+  put REPLICATION SOURCE DEST
   df [-h]
 `, os.Args[0])
 

@@ -64,7 +64,7 @@ func putFromStdin(client *hdfs.Client, dest string) {
 	io.Copy(writer, os.Stdin)
 }
 
-func putFromFile(client *hdfs.Client, source string, dest string) {
+func putFromFile(client *hdfs.Client, source string, dest string, int replication=1) {
 	// If the destination is an existing directory, place it inside. Otherwise,
 	// the destination is really the parent directory, and we need to rename the
 	// source directory as we copy.
@@ -96,7 +96,7 @@ func putFromFile(client *hdfs.Client, source string, dest string) {
 		if fi.IsDir() {
 			client.Mkdir(fullDest, mode)
 		} else {
-			writer, err := client.Create(fullDest)
+			writer, err := client.CreateWithReplication(fullDest, replication)
 			if err != nil {
 				fmt.Fprintln(os.Stderr, err)
 				return nil

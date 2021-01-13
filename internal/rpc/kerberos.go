@@ -62,7 +62,7 @@ func (c *NamenodeConnection) doKerberosHandshake() error {
 			return err
 		}
 
-		qop := challenge.Qop[0]
+		qop := sasl.HighestQopLevel(challenge.Qop)
 		switch qop {
 		case sasl.QopPrivacy, sasl.QopIntegrity:
 			// Switch to SASL RPC handler

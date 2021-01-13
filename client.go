@@ -91,6 +91,11 @@ type ClientOptions struct {
 	// has dfs.encrypt.data.transfer enabled, this setting is ignored and
 	// a level of "privacy" is used.
 	DataTransferProtection string
+	// SkipDataTransferProtectionForPrivilegedPort specifies whether or not to
+	// use encryption when datanodes is running on privileged port. According to
+	// protocol documentation it must be true when `dfs.data.transfer.protection` is specified
+	// in configuration and `dfs.encrypt.data.transfer` is empty.
+	SkipDataTransferProtectionForPrivilegedPort bool
 }
 
 // ClientOptionsFromConf attempts to load any relevant configuration options
@@ -143,26 +148,31 @@ func ClientOptionsFromConf(conf hadoopconf.HadoopConf) ClientOptions {
 		options.KerberosServicePrincipleName = strings.Split(conf["dfs.namenode.kerberos.principal"], "@")[0]
 	}
 
-	// Note that we take the highest setting, rather than allowing a range of
-	// alternatives. 'authentication', 'integrity', and 'privacy' are
-	// alphabetical for our convenience.
-	dataTransferProt := strings.Split(
-		strings.ToLower(conf["dfs.data.transfer.protection"]), ",")
-	sort.Strings(dataTransferProt)
-
-	for _, val := range dataTransferProt {
-		switch val {
-		case "privacy":
-			options.DataTransferProtection = "privacy"
-		case "integrity":
-			options.DataTransferProtection = "integrity"
-		case "authentication":
-			options.DataTransferProtection = "authentication"
-		}
-	}
-
 	if strings.ToLower(conf["dfs.encrypt.data.transfer"]) == "true" {
 		options.DataTransferProtection = "privacy"
+	}
+
+	if options.DataTransferProtection == "" {
+		// Note that we take the highest setting, rather than allowing a range of
+		// alternatives. 'authentication', 'integrity', and 'privacy' are
+		// alphabetical for our convenience.
+		dataTransferProt := strings.Split(
+			strings.ToLower(conf["dfs.data.transfer.protection"]), ",")
+		sort.Strings(dataTransferProt)
+
+		for _, val := range dataTransferProt {
+			switch val {
+			case "privacy":
+				options.DataTransferProtection = "privacy"
+			case "integrity":
+				options.DataTransferProtection = "integrity"
+			case "authentication":
+				options.DataTransferProtection = "authentication"
+			}
+		}
+		if options.DataTransferProtection != "" {
+			options.SkipDataTransferProtectionForPrivilegedPort = true
+		}
 	}
 
 	return options
@@ -352,10 +362,11 @@ func (c *Client) wrapDatanodeDial(dc dialContext, token *hadoop.TokenProto) (dia
 		}
 
 		return (&transfer.SaslDialer{
-			DialFunc:   dc,
-			Key:        key,
-			Token:      token,
-			EnforceQop: c.options.DataTransferProtection,
+			DialFunc:                        dc,
+			Key:                             key,
+			Token:                           token,
+			EnforceQop:                      c.options.DataTransferProtection,
+			SkipSaslForRemotePrivilegedPort: c.options.SkipDataTransferProtectionForPrivilegedPort,
 		}).DialContext, nil
 	}
 

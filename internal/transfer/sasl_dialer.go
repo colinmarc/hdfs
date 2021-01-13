@@ -26,10 +26,11 @@ const (
 // data protection level is specified by the server, whether it be wire
 // encryption or integrity checks.
 type SaslDialer struct {
-	DialFunc   func(ctx context.Context, network, addr string) (net.Conn, error)
-	Key        *hdfs.DataEncryptionKeyProto
-	Token      *hadoop.TokenProto
-	EnforceQop string
+	DialFunc                        func(ctx context.Context, network, addr string) (net.Conn, error)
+	Key                             *hdfs.DataEncryptionKeyProto
+	Token                           *hadoop.TokenProto
+	EnforceQop                      string
+	SkipSaslForRemotePrivilegedPort bool
 }
 
 func (d *SaslDialer) DialContext(ctx context.Context, network, addr string) (net.Conn, error) {
@@ -49,6 +50,17 @@ func (d *SaslDialer) DialContext(ctx context.Context, network, addr string) (net
 // then returns a wrapped connection or any error encountered. In the case of
 // a protection setting of 'authentication', the bare connection is returned.
 func (d *SaslDialer) wrapDatanodeConn(conn net.Conn) (net.Conn, error) {
+	if d.SkipSaslForRemotePrivilegedPort {
+		switch addr := conn.RemoteAddr().(type) {
+		case *net.TCPAddr:
+			//Don't enable Sasl when DataNodes run on a privileged port
+			if addr.Port > 0 && addr.Port < 1024 {
+				return conn, nil
+			}
+		default:
+			return nil, fmt.Errorf("unable to obtain peer port number for %T", addr)
+		}
+	}
 	auth := &hadoop.RpcSaslProto_SaslAuth{}
 	auth.Method = proto.String(authMethod)
 	auth.Mechanism = proto.String(authMechanism)

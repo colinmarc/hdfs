@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"net"
 	"regexp"
+	"sort"
 
 	hadoop "github.com/colinmarc/hdfs/v2/internal/protocol/hadoop_common"
 	"github.com/colinmarc/hdfs/v2/internal/sasl"
@@ -62,7 +63,12 @@ func (c *NamenodeConnection) doKerberosHandshake() error {
 			return err
 		}
 
+		// Sort the qops in order of level of encryption, highest to lowest.
+		// Some versions of HDP 3.x seem to break if we pick a Qop that isn't
+		// the highest (even if they sent it first in the list).
+		sort.Sort(challenge.Qop)
 		qop := challenge.Qop[0]
+
 		switch qop {
 		case sasl.QopPrivacy, sasl.QopIntegrity:
 			// Switch to SASL RPC handler

@@ -20,12 +20,36 @@ const (
 	QopPrivacy = "auth-conf"
 )
 
+var qopPriority = map[string]int{
+	QopPrivacy:        2,
+	QopIntegrity:      1,
+	QopAuthentication: 0,
+}
+
+type Qops []string
+
+func (q Qops) Len() int { return len(q) }
+func (q Qops) Less(i, j int) bool {
+	p1, ok := qopPriority[q[i]]
+	if !ok {
+		p1 = -1
+	}
+
+	p2, ok := qopPriority[q[j]]
+	if !ok {
+		p2 = -1
+	}
+
+	return p1 > p2
+}
+func (q Qops) Swap(i, j int) { q[i], q[j] = q[j], q[i] }
+
 var challengeRegexp = regexp.MustCompile(",?([a-zA-Z0-9]+)=(\"([^\"]+)\"|([^,]+)),?")
 
 type Challenge struct {
 	Realm     string
 	Nonce     string
-	Qop       []string
+	Qop       Qops
 	Charset   string
 	Cipher    []string
 	Algorithm string

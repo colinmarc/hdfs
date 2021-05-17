@@ -83,13 +83,13 @@ func putFromFile(client *hdfs.Client, source string, dest string) {
 	err = filepath.Walk(source, func(p string, fi os.FileInfo, err error) error {
 		if err != nil {
 			fmt.Fprintln(os.Stderr, err)
-			return nil
+			return err
 		}
 
 		rel, err := filepath.Rel(source, p)
 		if err != nil {
 			fmt.Fprintln(os.Stderr, err)
-			return nil
+			return err
 		}
 
 		fullDest := path.Join(dest, rel)
@@ -99,23 +99,39 @@ func putFromFile(client *hdfs.Client, source string, dest string) {
 			writer, err := client.Create(fullDest)
 			if err != nil {
 				fmt.Fprintln(os.Stderr, err)
-				return nil
+				writer.Close()
+				return err
 			}
 
-			defer writer.Close()
 			reader, err := os.Open(p)
 			if err != nil {
 				fmt.Fprintln(os.Stderr, err)
-				return nil
+				writer.Close()
+				reader.Close()
+				return err
 			}
 
-			defer reader.Close()
 			_, err = io.Copy(writer, reader)
 			if err != nil {
 				fmt.Fprintln(os.Stderr, err)
+				writer.Close()
+				reader.Close()
+				return err
 			}
+
+			err = writer.Close()
+			if err != nil {
+				fmt.Fprintln(os.Stderr, err)
+				reader.Close()
+				return err
+			}
+			reader.Close()
 		}
 
 		return nil
 	})
+
+	if err != nil {
+		fatal(err)
+	}
 }

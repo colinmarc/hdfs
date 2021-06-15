@@ -3,6 +3,7 @@ package hdfs
 import (
 	"os"
 	"path"
+	"strings"
 	"time"
 
 	hdfs "github.com/colinmarc/hdfs/v2/internal/protocol/hadoop_hdfs"
@@ -34,6 +35,11 @@ func (c *Client) getFileInfo(name string) (os.FileInfo, error) {
 
 	err := c.namenode.Execute("getFileInfo", req, resp)
 	if err != nil {
+		//hack to allow git fns
+		//FIXME
+		if strings.Contains(name, "https") {
+			return nil, os.ErrNotExist
+		}
 		return nil, err
 	}
 

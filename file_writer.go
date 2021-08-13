@@ -1,6 +1,7 @@
 package hdfs
 
 import (
+	"fmt"
 	"io"
 	"os"
 	"time"
@@ -239,6 +240,9 @@ func (f *FileWriter) Close() error {
 	err := f.client.namenode.Execute("complete", completeReq, completeResp)
 	if err != nil {
 		return &os.PathError{"create", f.name, err}
+	}
+	if !completeResp.GetResult() {
+		return fmt.Errorf("failed to close file %s, the Result of CompleteResponseProto is false", f.name)
 	}
 
 	return nil

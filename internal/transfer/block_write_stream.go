@@ -311,6 +311,8 @@ func (s *blockWriteStream) getAckError() error {
 	return nil
 }
 
+var sixBytes = make([]byte, 6)
+
 // A packet for the datanode:
 // +-----------------------------------------------------------+
 // |  uint32 length of the packet                              |
@@ -340,6 +342,7 @@ func (s *blockWriteStream) writePacket(p outboundPacket) error {
 	}
 
 	s.header.Grow(6 + totalLength)
+	s.header.Write(sixBytes)
 	binary.BigEndian.PutUint32(s.header.Bytes(), uint32(totalLength))
 	binary.BigEndian.PutUint16(s.header.Bytes()[4:], uint16(len(infoBytes)))
 	s.header.Write(infoBytes)

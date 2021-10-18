@@ -64,6 +64,7 @@ type blockWriteStream struct {
 
 	heartbeats chan struct{}
 	writeLock  sync.Mutex
+	header     bytes.Buffer
 }
 
 type outboundPacket struct {
@@ -333,24 +334,18 @@ func (s *blockWriteStream) writePacket(p outboundPacket) error {
 	// Don't ask me why this doesn't include the header proto...
 	totalLength := len(p.data) + len(p.checksums) + 4
 
-	header := make([]byte, 6, 6+totalLength)
 	infoBytes, err := proto.Marshal(headerInfo)
 	if err != nil {
 		return err
 	}
 
-	binary.BigEndian.PutUint32(header, uint32(totalLength))
-	binary.BigEndian.PutUint16(header[4:], uint16(len(infoBytes)))
-	header = append(header, infoBytes...)
-	header = append(header, p.checksums...)
-	header = append(header, p.data...)
-
-	_, err = s.conn.Write(header)
-	if err != nil {
-		return err
-	}
-
-	return nil
+	binary.Write(&s.header, binary.BigEndian, uint32(totalLength))
+	binary.Write(&s.header, binary.BigEndian, uint16(len(infoBytes)))
+	s.header.Write(infoBytes)
+	s.header.Write(p.checksums)
+	s.header.Write(p.data)
+	_, err = s.header.WriteTo(s.conn)
+	return err
 }
 
 func (s *blockWriteStream) writeHeartbeats() {

@@ -14,6 +14,7 @@ import (
 
 	hdfs "github.com/colinmarc/hdfs/v2/internal/protocol/hadoop_hdfs"
 	"github.com/golang/protobuf/proto"
+	protoV2 "google.golang.org/protobuf/proto"
 )
 
 const (
@@ -333,19 +334,18 @@ func (s *blockWriteStream) writePacket(p outboundPacket) error {
 
 	// Don't ask me why this doesn't include the header proto...
 	totalLength := len(p.data) + len(p.checksums) + 4
-
-	infoBytes, err := proto.Marshal(headerInfo)
-	if err != nil {
-		return err
-	}
-
-	if cap(s.header) < 6 + totalLength {
-		s.header = make([]byte, 6 + totalLength)
+	headerInfoLength := proto.Size(headerInfo)
+	if cap(s.header) < 6 + headerInfoLength + totalLength {
+		s.header = make([]byte, 6 + headerInfoLength + totalLength)
 	}
 	s.header = s.header[:6]
 	binary.BigEndian.PutUint32(s.header, uint32(totalLength))
-	binary.BigEndian.PutUint16(s.header[4:], uint16(len(infoBytes)))
-	s.header = append(s.header, infoBytes...)
+	binary.BigEndian.PutUint16(s.header[4:], uint16(headerInfoLength))
+	var err error
+	s.header, err = protoV2.MarshalOptions{Deterministic: false, AllowPartial:  true}.MarshalAppend(s.header, proto.MessageV2(headerInfo))
+	if err != nil {
+		return err
+	}
 	s.header = append(s.header, p.checksums...)
 	s.header = append(s.header, p.data...)
 	_, err = s.conn.Write(s.header)

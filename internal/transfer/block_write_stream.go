@@ -64,7 +64,7 @@ type blockWriteStream struct {
 
 	heartbeats chan struct{}
 	writeLock  sync.Mutex
-	header     bytes.Buffer
+	header     []byte
 }
 
 type outboundPacket struct {
@@ -311,8 +311,6 @@ func (s *blockWriteStream) getAckError() error {
 	return nil
 }
 
-var sixBytes = make([]byte, 6)
-
 // A packet for the datanode:
 // +-----------------------------------------------------------+
 // |  uint32 length of the packet                              |
@@ -341,14 +339,16 @@ func (s *blockWriteStream) writePacket(p outboundPacket) error {
 		return err
 	}
 
-	s.header.Grow(6 + totalLength)
-	s.header.Write(sixBytes)
-	binary.BigEndian.PutUint32(s.header.Bytes(), uint32(totalLength))
-	binary.BigEndian.PutUint16(s.header.Bytes()[4:], uint16(len(infoBytes)))
-	s.header.Write(infoBytes)
-	s.header.Write(p.checksums)
-	s.header.Write(p.data)
-	_, err = s.header.WriteTo(s.conn)
+	if cap(s.header) < 6 + totalLength {
+		s.header = make([]byte, 6 + totalLength)
+	}
+	s.header = s.header[:6]
+	binary.BigEndian.PutUint32(s.header, uint32(totalLength))
+	binary.BigEndian.PutUint16(s.header[4:], uint16(len(infoBytes)))
+	s.header = append(s.header, infoBytes...)
+	s.header = append(s.header, p.checksums...)
+	s.header = append(s.header, p.data...)
+	_, err = s.conn.Write(s.header)
 	return err
 }
 

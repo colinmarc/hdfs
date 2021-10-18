@@ -91,7 +91,7 @@ func newBlockWriteStream(conn io.ReadWriter, offset int64) *blockWriteStream {
 		conn:       conn,
 		offset:     offset,
 		seqno:      1,
-		packets:    make(chan outboundPacket, maxPacketsInQueue),
+		packets:    make(chan int, maxPacketsInQueue),
 		acksDone:   make(chan struct{}),
 		heartbeats: make(chan struct{}),
 	}

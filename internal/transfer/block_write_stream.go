@@ -325,16 +325,16 @@ func (s *blockWriteStream) getAckError() error {
 // |  N chunks of payload data                                 |
 // +-----------------------------------------------------------+
 func (s *blockWriteStream) writePacket(p outboundPacket) error {
-	headerInfo := &hdfs.PacketHeaderProto{
+	headerInfo := proto.MessageV2(&hdfs.PacketHeaderProto{
 		OffsetInBlock:     proto.Int64(p.offset),
 		Seqno:             proto.Int64(int64(p.seqno)),
 		LastPacketInBlock: proto.Bool(p.last),
 		DataLen:           proto.Int32(int32(len(p.data))),
-	}
+	})
 
 	// Don't ask me why this doesn't include the header proto...
 	totalLength := len(p.data) + len(p.checksums) + 4
-	headerInfoLength := proto.Size(headerInfo)
+	headerInfoLength := protoV2.Size(headerInfo)
 	if cap(s.header) < 6 + headerInfoLength + totalLength {
 		s.header = make([]byte, 6 + headerInfoLength + totalLength)
 	}
@@ -342,7 +342,7 @@ func (s *blockWriteStream) writePacket(p outboundPacket) error {
 	binary.BigEndian.PutUint32(s.header, uint32(totalLength))
 	binary.BigEndian.PutUint16(s.header[4:], uint16(headerInfoLength))
 	var err error
-	s.header, err = protoV2.MarshalOptions{Deterministic: false, AllowPartial:  true}.MarshalAppend(s.header, proto.MessageV2(headerInfo))
+	s.header, err = protoV2.MarshalOptions{Deterministic: false, AllowPartial:  true}.MarshalAppend(s.header, headerInfo)
 	if err != nil {
 		return err
 	}

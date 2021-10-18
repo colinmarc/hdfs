@@ -339,8 +339,9 @@ func (s *blockWriteStream) writePacket(p outboundPacket) error {
 		return err
 	}
 
-	binary.Write(&s.header, binary.BigEndian, uint32(totalLength))
-	binary.Write(&s.header, binary.BigEndian, uint16(len(infoBytes)))
+	s.header.Grow(totalLength)
+	binary.BigEndian.PutUint32(s.header.Bytes(), uint32(totalLength))
+	binary.BigEndian.PutUint16(s.header.Bytes()[4:], uint16(len(infoBytes)))
 	s.header.Write(infoBytes)
 	s.header.Write(p.checksums)
 	s.header.Write(p.data)

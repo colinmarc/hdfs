@@ -55,7 +55,7 @@ type blockWriteStream struct {
 	offset int64
 	closed bool
 
-	packets chan outboundPacket
+	packets chan int
 	seqno   int
 
 	ackError        error
@@ -163,7 +163,7 @@ func (s *blockWriteStream) finish() error {
 		checksums: []byte{},
 		data:      []byte{},
 	}
-	s.packets <- lastPacket
+	s.packets <- lastPacket.seqno
 
 	err := s.writePacket(lastPacket)
 	if err != nil {
@@ -191,7 +191,7 @@ func (s *blockWriteStream) flush(force bool) error {
 
 	for s.buf.Len() > 0 && (force || s.buf.Len() >= outboundPacketSize) {
 		packet := s.makePacket()
-		s.packets <- packet
+		s.packets <- packet.seqno
 		s.offset += int64(len(packet.data))
 		s.seqno++
 
@@ -285,7 +285,7 @@ Acks:
 			}
 		}
 
-		if seqno != p.seqno {
+		if seqno != p {
 			s.ackError = ErrInvalidSeqno
 			break Acks
 		}

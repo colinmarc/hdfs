@@ -339,7 +339,7 @@ func (s *blockWriteStream) writePacket(p outboundPacket) error {
 		return err
 	}
 
-	s.header.Grow(totalLength)
+	s.header.Grow(6 + totalLength)
 	binary.BigEndian.PutUint32(s.header.Bytes(), uint32(totalLength))
 	binary.BigEndian.PutUint16(s.header.Bytes()[4:], uint16(len(infoBytes)))
 	s.header.Write(infoBytes)

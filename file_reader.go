@@ -1,6 +1,7 @@
 package hdfs
 
 import (
+	"crypto/cipher"
 	"crypto/md5"
 	"errors"
 	"fmt"
@@ -29,6 +30,16 @@ type FileReader struct {
 	readdirLast string
 
 	closed bool
+
+	// encryption
+	enc *transparentEncryptionInfo
+}
+
+// A transparentEncryptionInfo is a key and iv to encrypt or decrypt file data
+type transparentEncryptionInfo struct {
+	key    []byte
+	iv     []byte
+	cipher cipher.Block
 }
 
 // Open returns an FileReader which can be used for reading.
@@ -38,11 +49,25 @@ func (c *Client) Open(name string) (*FileReader, error) {
 		return nil, &os.PathError{"open", name, interpretException(err)}
 	}
 
+	status, ok := info.Sys().(*FileStatus)
+	if !ok {
+		return nil, &os.PathError{"open", name, errors.New("internal error: fail to access file status")}
+	}
+
+	var enc *transparentEncryptionInfo
+	if status.FileEncryptionInfo != nil {
+		enc, err = c.kmsGetKey(status.FileEncryptionInfo)
+		if err != nil {
+			return nil, &os.PathError{"open", name, err}
+		}
+	}
+
 	return &FileReader{
 		client: c,
 		name:   name,
 		info:   info,
 		closed: false,
+		enc:    enc,
 	}, nil
 }
 
@@ -184,6 +209,25 @@ func (f *FileReader) Read(b []byte) (int, error) {
 		return 0, io.ErrClosedPipe
 	}
 
+	offset := f.offset
+	n, err := f.readImpl(b)
+
+	// Decrypt data chunk if file from HDFS encrypted zone.
+	if f.enc != nil && n > 0 {
+		plaintext, err := aesCtrStep(offset, f.enc, b[:n])
+		if err != nil {
+			f.offset = offset
+			return 0, err
+		}
+		for i := 0; i < n; i++ {
+			b[i] = plaintext[i]
+		}
+	}
+
+	return n, err
+}
+
+func (f *FileReader) readImpl(b []byte) (int, error) {
 	if f.info.IsDir() {
 		return 0, &os.PathError{
 			"read",

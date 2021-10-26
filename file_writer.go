@@ -28,9 +28,13 @@ type FileWriter struct {
 	replication int
 	blockSize   int64
 	fileId      *uint64
+	offset      int64
 
 	blockWriter *transfer.BlockWriter
 	deadline    time.Time
+
+	// Key and IV for transparent encryption support.
+	enc *transparentEncryptionInfo
 }
 
 // Create opens a new file in HDFS with the default replication, block size,
@@ -63,13 +67,14 @@ func (c *Client) Create(name string) (*FileWriter, error) {
 // very important that Close is called after all data has been written.
 func (c *Client) CreateFile(name string, replication int, blockSize int64, perm os.FileMode) (*FileWriter, error) {
 	createReq := &hdfs.CreateRequestProto{
-		Src:          proto.String(name),
-		Masked:       &hdfs.FsPermissionProto{Perm: proto.Uint32(uint32(perm))},
-		ClientName:   proto.String(c.namenode.ClientName),
-		CreateFlag:   proto.Uint32(1),
-		CreateParent: proto.Bool(false),
-		Replication:  proto.Uint32(uint32(replication)),
-		BlockSize:    proto.Uint64(uint64(blockSize)),
+		Src:                   proto.String(name),
+		Masked:                &hdfs.FsPermissionProto{Perm: proto.Uint32(uint32(perm))},
+		ClientName:            proto.String(c.namenode.ClientName),
+		CreateFlag:            proto.Uint32(1),
+		CreateParent:          proto.Bool(false),
+		Replication:           proto.Uint32(uint32(replication)),
+		BlockSize:             proto.Uint64(uint64(blockSize)),
+		CryptoProtocolVersion: []hdfs.CryptoProtocolVersionProto{hdfs.CryptoProtocolVersionProto_ENCRYPTION_ZONES},
 	}
 	createResp := &hdfs.CreateResponseProto{}
 
@@ -78,12 +83,22 @@ func (c *Client) CreateFile(name string, replication int, blockSize int64, perm 
 		return nil, &os.PathError{"create", name, interpretCreateException(err)}
 	}
 
+	var enc *transparentEncryptionInfo
+	if createResp.GetFs().GetFileEncryptionInfo() != nil {
+		enc, err = c.kmsGetKey(createResp.GetFs().GetFileEncryptionInfo())
+		if err != nil {
+			c.Remove(name)
+			return nil, &os.PathError{"create", name, err}
+		}
+	}
+
 	return &FileWriter{
 		client:      c,
 		name:        name,
 		replication: replication,
 		blockSize:   blockSize,
 		fileId:      createResp.Fs.FileId,
+		enc:         enc,
 	}, nil
 }
 
@@ -108,12 +123,22 @@ func (c *Client) Append(name string) (*FileWriter, error) {
 		return nil, &os.PathError{"append", name, interpretException(err)}
 	}
 
+	var enc *transparentEncryptionInfo
+	if appendResp.GetStat().GetFileEncryptionInfo() != nil {
+		enc, err = c.kmsGetKey(appendResp.GetStat().GetFileEncryptionInfo())
+		if err != nil {
+			return nil, &os.PathError{"append", name, err}
+		}
+	}
+
 	f := &FileWriter{
 		client:      c,
 		name:        name,
 		replication: int(appendResp.Stat.GetBlockReplication()),
 		blockSize:   int64(appendResp.Stat.GetBlocksize()),
 		fileId:      appendResp.Stat.FileId,
+		offset:      int64(*appendResp.Stat.Length),
+		enc:         enc,
 	}
 
 	// This returns nil if there are no blocks (it's an empty file) or if the
@@ -179,6 +204,28 @@ func (f *FileWriter) SetDeadline(t time.Time) error {
 // of this, it is important that Close is called after all data has been
 // written.
 func (f *FileWriter) Write(b []byte) (int, error) {
+	// Encrypt data chunk if file in HDFS encrypted zone.
+	if f.enc != nil && len(b) > 0 {
+		var offset int
+		for offset < len(b) {
+			size := min(len(b)-offset, aesChunkSize)
+			ciphertext, err := aesCtrStep(f.offset, f.enc, b[offset:offset+size])
+			if err != nil {
+				return offset, err
+			}
+			writtenSize, err := f.writeImpl(ciphertext)
+			offset += writtenSize
+			if err != nil {
+				return offset, err
+			}
+		}
+		return offset, nil
+	} else {
+		return f.writeImpl(b)
+	}
+}
+
+func (f *FileWriter) writeImpl(b []byte) (int, error) {
 	if f.blockWriter == nil {
 		err := f.startNewBlock()
 		if err != nil {
@@ -190,6 +237,7 @@ func (f *FileWriter) Write(b []byte) (int, error) {
 	for off < len(b) {
 		n, err := f.blockWriter.Write(b[off:])
 		off += n
+		f.offset += int64(n)
 		if err == transfer.ErrEndOfBlock {
 			err = f.startNewBlock()
 		}
@@ -320,4 +368,11 @@ func (f *FileWriter) finalizeBlock() error {
 
 	f.blockWriter = nil
 	return nil
+}
+
+func min(a, b int) int {
+	if a < b {
+		return a
+	}
+	return b
 }

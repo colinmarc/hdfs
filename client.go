@@ -6,6 +6,8 @@ import (
 	"io"
 	"io/ioutil"
 	"net"
+	"net/http"
+	"net/http/cookiejar"
 	"os"
 	"os/user"
 	"sort"
@@ -36,6 +38,8 @@ type Client struct {
 
 	defaults      *hdfs.FsServerDefaultsProto
 	encryptionKey *hdfs.DataEncryptionKeyProto
+
+	http *http.Client
 }
 
 // ClientOptions represents the configurable options for a client.
@@ -203,7 +207,16 @@ func NewClient(options ClientOptions) (*Client, error) {
 		return nil, err
 	}
 
-	return &Client{namenode: namenode, options: options}, nil
+	// We need cookies to access KMS (required for HDFS encrypted zone).
+	jar, err := cookiejar.New(nil)
+	if err != nil {
+		return nil, errors.New("cant create cookie jar")
+	}
+
+	// Not extending ClientOptions to preserve compatibility, so timeouts not configured.
+	http := &http.Client{Jar: jar}
+
+	return &Client{namenode: namenode, options: options, http: http}, nil
 }
 
 // New returns Client connected to the namenode(s) specified by address, or an

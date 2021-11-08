@@ -531,3 +531,83 @@ func TestFileAppendDeadlineBefore(t *testing.T) {
 	_, err = writer.Write([]byte("foo\n"))
 	assert.Error(t, err)
 }
+
+func skipWithoutEncryptedZone(t *testing.T) {
+	if os.Getenv("TRANSPARENT_ENCRYPTION") != "true" {
+		t.Skip("Skipping, this test requires encryption zone to make sense")
+	}
+}
+
+func TestEncryptedZoneWriteChunks(t *testing.T) {
+	skipWithoutEncryptedZone(t)
+
+	originalText := []byte("some random plain text, nice to have it quite long")
+	client := getClient(t)
+	writer, err := client.Create("/_test/kms/write_chunks.txt")
+	require.NoError(t, err)
+
+	var pos int64 = 0
+	for _, x := range []int{5, 7, 6, 4, 28} {
+		_, err = writer.Write(originalText[pos : pos+int64(x)])
+		require.NoError(t, err)
+		pos += int64(x)
+	}
+	assertClose(t, writer)
+
+	reader, err := client.Open("/_test/kms/write_chunks.txt")
+	require.NoError(t, err)
+
+	bytes, err := ioutil.ReadAll(reader)
+	require.NoError(t, err)
+	assert.Equal(t, originalText, bytes)
+}
+
+func TestEncryptedZoneAppendChunks(t *testing.T) {
+	skipWithoutEncryptedZone(t)
+
+	originalText := []byte("some random plain text, nice to have it quite long")
+	client := getClient(t)
+	writer, err := client.Create("/_test/kms/append_chunks.txt")
+	require.NoError(t, err)
+	assertClose(t, writer)
+
+	var pos int64 = 0
+	for _, x := range []int{5, 7, 6, 4, 28} {
+		writer, err := client.Append("/_test/kms/append_chunks.txt")
+		require.NoError(t, err)
+		_, err = writer.Write(originalText[pos : pos+int64(x)])
+		require.NoError(t, err)
+		pos += int64(x)
+		assertClose(t, writer)
+	}
+
+	reader, err := client.Open("/_test/kms/append_chunks.txt")
+	require.NoError(t, err)
+	bytes, err := ioutil.ReadAll(reader)
+	require.NoError(t, err)
+	assert.Equal(t, originalText, bytes)
+}
+
+func TestEncryptedZoneLargeBlock(t *testing.T) {
+	skipWithoutEncryptedZone(t)
+
+	// Generate quite large (aesChunkSize * 1.5 bytes) block, so we can trigger encryption in chunks.
+	str := "some random text"
+	originalText := []byte(strings.Repeat(str, aesChunkSize*1.5/len(str)))
+	client := getClient(t)
+
+	// Create file with small (128Kb) block size, so encrypted chunk will be placed over multiple hdfs blocks.
+	writer, err := client.CreateFile("/_test/kms/large_write.txt", 1, 131072, 0755)
+	require.NoError(t, err)
+
+	_, err = writer.Write(originalText)
+	require.NoError(t, err)
+	assertClose(t, writer)
+
+	reader, err := client.Open("/_test/kms/large_write.txt")
+	require.NoError(t, err)
+
+	bytes, err := ioutil.ReadAll(reader)
+	require.NoError(t, err)
+	assert.Equal(t, originalText, bytes)
+}

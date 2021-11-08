@@ -2,7 +2,7 @@
 
 set -e
 
-KERBEROS=${KERBEROS-"false"}
+KERBEROS="${KERBEROS-false}"
 AES=${AES-"false"}
 if [ "$DATA_TRANSFER_PROTECTION" = "privacy" ]; then
   KERBEROS="true"
@@ -15,11 +15,18 @@ else
   ENCRYPT_DATA_TRANSFER="false"
 fi
 
+CONF_KMS_PROVIDER=""
+TRANSPARENT_ENCRYPTION=false
+if [ "$HADOOP_VERSION" != "2.10.1" ]; then
+    TRANSPARENT_ENCRYPTION=true
+    CONF_KMS_PROVIDER="kms://http@localhost:9600/kms"
+fi
+
 CONF_AUTHENTICATION="simple"
 KERBEROS_REALM="EXAMPLE.COM"
 KERBEROS_PRINCIPLE="administrator"
 KERBEROS_PASSWORD="password1234"
-if [ $KERBEROS = "true" ]; then
+if [ "$KERBEROS" = "true" ]; then
   CONF_AUTHENTICATION="kerberos"
 
   HOSTNAME=$(hostname)
@@ -50,13 +57,16 @@ EOF
   sudo apt-get install -y krb5-user krb5-kdc krb5-admin-server
 
   printf "$KERBEROS_PASSWORD\n$KERBEROS_PASSWORD" | sudo kdb5_util -r "$KERBEROS_REALM" create -s
-  for p in nn dn $USER gohdfs1 gohdfs2; do
+  for p in nn dn kms $USER gohdfs1 gohdfs2; do
     sudo kadmin.local -q "addprinc -randkey $p/$HOSTNAME@$KERBEROS_REALM"
     sudo kadmin.local -q "addprinc -randkey $p/localhost@$KERBEROS_REALM"
     sudo kadmin.local -q "xst -k /tmp/$p.keytab $p/$HOSTNAME@$KERBEROS_REALM"
     sudo kadmin.local -q "xst -k /tmp/$p.keytab $p/localhost@$KERBEROS_REALM"
     sudo chmod +rx /tmp/$p.keytab
   done
+  # HTTP service for KMS
+  sudo kadmin.local -q "addprinc -randkey HTTP/localhost@$KERBEROS_REALM"
+  sudo kadmin.local -q "xst -k /tmp/kms.keytab HTTP/localhost@$KERBEROS_REALM"
 
   echo "Restarting krb services..."
   sudo service krb5-kdc restart
@@ -116,6 +126,10 @@ sudo tee $HADOOP_ROOT/etc/hadoop/core-site.xml <<EOF
     <name>hadoop.rpc.protection</name>
     <value>$RPC_PROTECTION</value>
   </property>
+  <property>
+    <name>hadoop.security.key.provider.path</name>
+    <value>$CONF_KMS_PROVIDER</value>
+  </property>
 </configuration>
 EOF
 
@@ -124,6 +138,10 @@ sudo tee $HADOOP_ROOT/etc/hadoop/hdfs-site.xml <<EOF
   <property>
     <name>dfs.namenode.name.dir</name>
     <value>/tmp/hdfs/name</value>
+  </property>
+  <property>
+    <name>dfs.namenode.fs-limits.min-block-size</name>
+    <value>131072</value>
   </property>
   <property>
     <name>dfs.datanode.data.dir</name>
@@ -172,6 +190,41 @@ $HADOOP_ROOT/bin/hdfs namenode -format
 sudo groupadd hadoop
 sudo usermod -a -G hadoop $USER
 
+sudo tee $HADOOP_ROOT/etc/hadoop/kms-site.xml <<EOF
+<configuration>
+  <property>
+    <name>hadoop.kms.key.provider.uri</name>
+    <value>jceks://file@/tmp/hdfs/kms.keystore</value>
+  </property>
+  <property>
+    <name>hadoop.security.keystore.java-keystore-provider.password-file</name>
+    <value>kms.keystore.password</value>
+  </property>
+  <property>
+    <name>hadoop.kms.authentication.type</name>
+    <value>$CONF_AUTHENTICATION</value>
+  </property>
+  <property>
+    <name>hadoop.kms.authentication.kerberos.keytab</name>
+    <value>/tmp/kms.keytab</value>
+  </property>
+  <property>
+    <name>hadoop.kms.authentication.kerberos.principal</name>
+    <value>HTTP/localhost@$KERBEROS_REALM</value>
+  </property>
+</configuration>
+EOF
+
+sudo tee $HADOOP_ROOT/etc/hadoop/kms.keystore.password <<EOF
+123456
+EOF
+
+if [ "$TRANSPARENT_ENCRYPTION" = "true" ]; then
+    echo "Starting KMS..."
+    rm $HADOOP_ROOT/etc/hadoop/kms-log4j.properties
+    $HADOOP_ROOT/bin/hadoop kms > /tmp/hdfs/kms.log 2>&1 &
+fi
+
 echo "Starting namenode..."
 $HADOOP_ROOT/bin/hdfs namenode > /tmp/hdfs/namenode.log 2>&1 &
 
@@ -184,4 +237,5 @@ echo "Waiting for cluster to exit safe mode..."
 $HADOOP_ROOT/bin/hdfs dfsadmin -safemode wait
 
 echo "HADOOP_CONF_DIR=$(pwd)/$HADOOP_ROOT/etc/hadoop" >> $GITHUB_ENV
+echo "TRANSPARENT_ENCRYPTION=$TRANSPARENT_ENCRYPTION" >> $GITHUB_ENV
 echo "$(pwd)/$HADOOP_ROOT/bin" >> $GITHUB_PATH

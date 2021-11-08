@@ -1,6 +1,7 @@
 #!/bin/bash
 
 export HADOOP_FS=${HADOOP_FS-"hadoop fs"}
+export HADOOP_KEY=${HADOOP_KEY-"hadoop key"}
 export ROOT_TEST_DIR="$BATS_TEST_DIRNAME/../../.."
 export HDFS="$ROOT_TEST_DIR/hdfs"
 

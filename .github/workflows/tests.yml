@@ -1,0 +1,77 @@
+name: Tests
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+  workflow_dispatch:
+
+jobs:
+
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        include:
+          - hadoop_version: 2.10.1
+          - hadoop_version: 3.3.1
+          - hadoop_version: 3.3.1
+            kerberos: true
+            rpc_protection: authentication
+            transfer_protection: authentication
+          - hadoop_version: 3.3.1
+            kerberos: true
+            rpc_protection: integrity
+            transfer_protection: integrity
+          - hadoop_version: 3.3.1
+            kerberos: true
+            rpc_protection: privacy
+            transfer_protection: privacy
+          - hadoop_version: 3.3.1
+            kerberos: true
+            rpc_protection: privacy
+            transfer_protection: privacy
+            aes: true
+    steps:
+    - uses: actions/checkout@v2
+    - uses: actions/setup-go@v2
+      with:
+        go-version: 1.17
+
+    # This step installs downloads hadoop and starts a local cluster with one
+    # namenode and one datanode. It adds the hadoop binaries to GITHUB_PATH
+    # and HADOOP_CONF_DIR to GITHUB_ENV.
+    - name: install-hdfs.sh
+      run: ./.github/scripts/install-hdfs.sh
+      env:
+        HADOOP_VERSION: ${{ matrix.hadoop_version }}
+        KERBEROS: ${{ matrix.kerberos }}
+        RPC_PROTECTION: ${{ matrix.rpc_protection }}
+        TRANSFER_PROTECTION: ${{ matrix.transfer_protection }}
+        AES: ${{ matrix.aes }}
+
+    # Similarly, this step adds the bats binary to GITHUB_PATH.
+    - name: install-bats.sh
+      run: ./.github/scripts/install-bats.sh
+
+    - name: fixtures.sh
+      run: ./.github/scripts/fixtures.sh
+
+    # Touching the generated proto files ensures that make will not try to
+    # regenerate them.
+    - name: make
+      run: find -name '*.pb.go' -exec touch {} \; && make
+
+    - name: make test
+      run: |
+        make test
+
+    - name: cat namenode.log
+      if: always()
+      run: cat /tmp/hdfs/namenode.log
+
+    - name: cat datanode.log
+      if: always()
+      run: cat /tmp/hdfs/datanode.log

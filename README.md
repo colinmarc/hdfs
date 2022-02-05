@@ -111,8 +111,7 @@ Compatibility
 -------------
 
 This library uses "Version 9" of the HDFS protocol, which means it should work
-with hadoop distributions based on 2.2.x and above. The tests run against CDH
-5.x and HDP 2.x.
+with hadoop distributions based on 2.2.x and above, as well as 3.x.
 
 Acknowledgements
 ----------------

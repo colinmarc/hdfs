@@ -91,6 +91,12 @@ type ClientOptions struct {
 	// has dfs.encrypt.data.transfer enabled, this setting is ignored and
 	// a level of "privacy" is used.
 	DataTransferProtection string
+	// skipSaslForPrivilegedDatanodePorts implements a strange edge case present
+	// in the official java client. If data.transfer.protection is set but not
+	// dfs.encrypt.data.transfer, and the datanode is running on a privileged
+	// port, the client connects without doing a SASL handshake. This field is
+	// only set by ClientOptionsFromConf.
+	skipSaslForPrivilegedDatanodePorts bool
 }
 
 // ClientOptionsFromConf attempts to load any relevant configuration options
@@ -163,6 +169,9 @@ func ClientOptionsFromConf(conf hadoopconf.HadoopConf) ClientOptions {
 
 	if strings.ToLower(conf["dfs.encrypt.data.transfer"]) == "true" {
 		options.DataTransferProtection = "privacy"
+	} else {
+		// See the comment for this property above.
+		options.skipSaslForPrivilegedDatanodePorts = true
 	}
 
 	return options
@@ -352,10 +361,11 @@ func (c *Client) wrapDatanodeDial(dc dialContext, token *hadoop.TokenProto) (dia
 		}
 
 		return (&transfer.SaslDialer{
-			DialFunc:   dc,
-			Key:        key,
-			Token:      token,
-			EnforceQop: c.options.DataTransferProtection,
+			DialFunc:                  dc,
+			Key:                       key,
+			Token:                     token,
+			EnforceQop:                c.options.DataTransferProtection,
+			SkipSaslOnPrivilegedPorts: c.options.skipSaslForPrivilegedDatanodePorts,
 		}).DialContext, nil
 	}
 

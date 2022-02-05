@@ -4,11 +4,9 @@ on:
   push:
   pull_request:
     branches: [ master ]
-
   workflow_dispatch:
 
 jobs:
-
   test:
     runs-on: ubuntu-latest
     strategy:

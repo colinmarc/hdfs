@@ -1,0 +1,39 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - "v*.*.*"
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Release
+        uses: softprops/action-gh-release@v1
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+  workflow_dispatch:
+
+jobs:
+  steps:
+    - uses: actions/checkout@v2
+    - uses: actions/setup-go@v2
+      with:
+        go-version: 1.17
+
+    # Touching the generated proto files ensures that make will not try to
+    # regenerate them.
+    - name: make release
+      run: find -name '*.pb.go' -exec touch {} \; && make release
+
+    - name: Upload Release
+      uses: softprops/action-gh-release@v1
+      with:
+        files: gohdfs-*-linux-amd64.tar.gz

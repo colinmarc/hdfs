@@ -225,12 +225,8 @@ func (s *blockWriteStream) makePacket() outboundPacket {
 		offset:    s.offset,
 		last:      false,
 		checksums: make([]byte, numChunks*4),
-		data:      make([]byte, packetLength),
+		data:      s.buf.Next(packetLength),
 	}
-
-	// TODO: we shouldn't actually need this extra copy. We should also be able
-	// to "reuse" packets.
-	io.ReadFull(&s.buf, packet.data)
 
 	// Fill in the checksum for each chunk of data.
 	for i := 0; i < numChunks; i++ {

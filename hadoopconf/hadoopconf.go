@@ -123,7 +123,7 @@ func (conf HadoopConf) Namenodes() []string {
 	}
 
 	keys := make([]string, 0, len(nns))
-	for k := range nns {
+	for k, _ := range nns {
 		keys = append(keys, k)
 	}
 

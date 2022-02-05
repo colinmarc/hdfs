@@ -91,7 +91,7 @@ func (cr *ChecksumReader) readChecksum(address string) ([]byte, error) {
 		return nil, err
 	}
 
-	return resp.GetChecksumResponse().GetMd5(), nil
+	return resp.GetChecksumResponse().GetBlockChecksum(), nil
 }
 
 // A checksum request to a datanode:

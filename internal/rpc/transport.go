@@ -5,7 +5,7 @@ import (
 	"io"
 
 	hadoop "github.com/colinmarc/hdfs/v2/internal/protocol/hadoop_common"
-	"github.com/golang/protobuf/proto"
+	"google.golang.org/protobuf/proto"
 )
 
 var errUnexpectedSequenceNumber = errors.New("unexpected sequence number")

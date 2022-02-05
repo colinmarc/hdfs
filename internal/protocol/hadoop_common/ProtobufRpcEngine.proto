@@ -21,7 +21,7 @@
  * Please see http://wiki.apache.org/hadoop/Compatibility
  * for what changes are allowed for a *stable* .proto interface.
  */
-
+syntax = "proto2";
 /**
  * These are the messages used by Hadoop RPC for the Rpc Engine Protocol Buffer
  * to marshal the request and response in the RPC layer.
@@ -31,6 +31,7 @@
 option java_package = "org.apache.hadoop.ipc.protobuf";
 option java_outer_classname = "ProtobufRpcEngineProtos";
 option java_generate_equals_and_hash = true;
+option go_package = "github.com/colinmarc/hdfs/v2/internal/protocol/hadoop_common";
 package hadoop.common;
 
 /**

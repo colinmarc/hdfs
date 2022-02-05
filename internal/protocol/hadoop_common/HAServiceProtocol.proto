@@ -21,17 +21,19 @@
  * Please see http://wiki.apache.org/hadoop/Compatibility
  * for what changes are allowed for a *stable* .proto interface.
  */
-
+syntax = "proto2";
 option java_package = "org.apache.hadoop.ha.proto";
 option java_outer_classname = "HAServiceProtocolProtos";
 option java_generic_services = true;
 option java_generate_equals_and_hash = true;
+option go_package = "github.com/colinmarc/hdfs/v2/internal/protocol/hadoop_common";
 package hadoop.common;
 
 enum HAServiceStateProto {
   INITIALIZING = 0;
   ACTIVE = 1;
   STANDBY = 2;
+  OBSERVER = 3;
 }
 
 enum HARequestSource {
@@ -85,6 +87,19 @@ message TransitionToStandbyResponseProto {
 /**
  * void request
  */
+message TransitionToObserverRequestProto {
+  required HAStateChangeRequestInfoProto reqInfo = 1;
+}
+
+/**
+ * void response
+ */
+message TransitionToObserverResponseProto {
+}
+
+/**
+ * void request
+ */
 message GetServiceStatusRequestProto { 
 }
 
@@ -125,6 +140,12 @@ service HAServiceProtocolService {
    */
   rpc transitionToStandby(TransitionToStandbyRequestProto)
       returns(TransitionToStandbyResponseProto);
+
+  /**
+   * Request service to transition to observer state.
+   */
+  rpc transitionToObserver(TransitionToObserverRequestProto)
+      returns(TransitionToObserverResponseProto);
 
   /**
    * Get the current status of the service.

@@ -9,7 +9,7 @@ import (
 	"math/rand"
 	"time"
 
-	"github.com/golang/protobuf/proto"
+	"google.golang.org/protobuf/proto"
 )
 
 var errInvalidResponse = errors.New("invalid response from namenode")

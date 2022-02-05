@@ -21,13 +21,14 @@
  * Please see http://wiki.apache.org/hadoop/Compatibility
  * for what changes are allowed for a *stable* .proto interface.
  */
-
+syntax="proto2";
 // This file contains protocol buffers that are used to transfer data
 // to and from the datanode, as well as between datanodes.
 
 option java_package = "org.apache.hadoop.hdfs.protocol.proto";
 option java_outer_classname = "DataTransferProtos";
 option java_generate_equals_and_hash = true;
+option go_package = "github.com/colinmarc/hdfs/v2/internal/protocol/hadoop_hdfs";
 package hadoop.hdfs;
 
 import "Security.proto";
@@ -43,6 +44,12 @@ message DataTransferEncryptorMessageProto {
   optional bytes payload = 2;
   optional string message = 3;
   repeated CipherOptionProto cipherOption = 4;
+  optional HandshakeSecretProto handshakeSecret = 5;
+}
+
+message HandshakeSecretProto {
+  required bytes secret = 1;
+  required string bpid = 2;
 }
 
 message BaseHeaderProto {
@@ -125,12 +132,15 @@ message OpWriteBlockProto {
   //whether to pin the block, so Balancer won't move it.
   optional bool pinning = 14 [default = false];
   repeated bool targetPinnings = 15;
+  optional string storageId = 16;
+  repeated string targetStorageIds = 17;
 }
   
 message OpTransferBlockProto {
   required ClientOperationHeaderProto header = 1;
   repeated DatanodeInfoProto targets = 2;
   repeated StorageTypeProto targetStorageTypes = 3;
+  repeated string targetStorageIds = 4;
 }
 
 message OpReplaceBlockProto {
@@ -138,14 +148,16 @@ message OpReplaceBlockProto {
   required string delHint = 2;
   required DatanodeInfoProto source = 3;
   optional StorageTypeProto storageType = 4 [default = DISK];
+  optional string storageId = 5;
 }
 
 message OpCopyBlockProto {
   required BaseHeaderProto header = 1;
 }
 
-message OpBlockChecksumProto { 
+message OpBlockChecksumProto {
   required BaseHeaderProto header = 1;
+  optional BlockChecksumOptionsProto blockChecksumOptions = 2;
 }
 
 message OpBlockGroupChecksumProto {
@@ -154,6 +166,9 @@ message OpBlockGroupChecksumProto {
   // each internal block has a block token
   repeated hadoop.common.TokenProto blockTokens = 3;
   required ErasureCodingPolicyProto ecPolicy = 4;
+  repeated uint32 blockIndices = 5;
+  required uint64 requestedNumBytes = 6;
+  optional BlockChecksumOptionsProto blockChecksumOptions = 7;
 }
 
 /**
@@ -241,6 +256,7 @@ enum Status {
   OOB_RESERVED2 = 10;         // Reserved
   OOB_RESERVED3 = 11;         // Reserved
   IN_PROGRESS = 12;
+  ERROR_BLOCK_PINNED = 13;
 }
 
 enum ShortCircuitFdResponse {
@@ -306,8 +322,9 @@ message DNTransferAckProto {
 message OpBlockChecksumResponseProto {
   required uint32 bytesPerCrc = 1;
   required uint64 crcPerBlock = 2;
-  required bytes md5 = 3;
+  required bytes blockChecksum = 3;
   optional ChecksumTypeProto crcType = 4;
+  optional BlockChecksumOptionsProto blockChecksumOptions = 5;
 }
 
 message OpCustomProto {

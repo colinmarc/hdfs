@@ -21,18 +21,18 @@
  * Please see http://wiki.apache.org/hadoop/Compatibility
  * for what changes are allowed for a *stable* .proto interface.
  */
-
+syntax="proto2";
 // This file contains protocol buffers used to communicate edits to clients
 // as part of the inotify system.
 
 option java_package = "org.apache.hadoop.hdfs.protocol.proto";
 option java_outer_classname = "InotifyProtos";
 option java_generate_equals_and_hash = true;
+option go_package = "github.com/colinmarc/hdfs/v2/internal/protocol/hadoop_hdfs";
 package hadoop.hdfs;
 
 import "acl.proto";
 import "xattr.proto";
-import "hdfs.proto";
 
 enum EventType {
   EVENT_CREATE = 0x0;
@@ -80,6 +80,7 @@ message CreateEventProto {
   optional string symlinkTarget = 8;
   optional bool overwrite = 9;
   optional int64 defaultBlockSize = 10 [default=0];
+  optional bool erasureCoded = 11;
 }
 
 message CloseEventProto {

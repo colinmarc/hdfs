@@ -15,7 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
+syntax="proto2";
  // This file contains protocol buffers that are used to reconfigure NameNode
  // and DataNode by HDFS admin.
 
@@ -23,6 +23,7 @@ option java_package = "org.apache.hadoop.hdfs.protocol.proto";
 option java_outer_classname = "ReconfigurationProtocolProtos";
 option java_generic_services = true;
 option java_generate_equals_and_hash = true;
+option go_package = "github.com/colinmarc/hdfs/v2/internal/protocol/hadoop_hdfs";
 package hadoop.hdfs;
 
 /** Asks NN/DN to reload configuration file. */

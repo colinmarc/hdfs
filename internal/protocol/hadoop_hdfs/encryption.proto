@@ -21,7 +21,7 @@
  * Please see http://wiki.apache.org/hadoop/Compatibility
  * for what changes are allowed for a *stable* .proto interface.
  */
-
+syntax="proto2";
 // This file contains protocol buffers that are used throughout HDFS -- i.e.
 // by the client, server, and data transfer protocols.
 
@@ -29,6 +29,7 @@
 option java_package = "org.apache.hadoop.hdfs.protocol.proto";
 option java_outer_classname = "EncryptionZonesProtos";
 option java_generate_equals_and_hash = true;
+option go_package = "github.com/colinmarc/hdfs/v2/internal/protocol/hadoop_hdfs";
 package hadoop.hdfs;
 
 import "hdfs.proto";
@@ -55,6 +56,47 @@ message EncryptionZoneProto {
 
 message ListEncryptionZonesResponseProto {
   repeated EncryptionZoneProto zones = 1;
+  required bool hasMore = 2;
+}
+
+enum ReencryptActionProto {
+  CANCEL_REENCRYPT = 1;
+  START_REENCRYPT = 2;
+}
+
+message ReencryptEncryptionZoneRequestProto {
+  required ReencryptActionProto action = 1;
+  required string zone = 2;
+}
+
+message ReencryptEncryptionZoneResponseProto {
+}
+
+message ListReencryptionStatusRequestProto {
+  required int64 id = 1;
+}
+
+enum ReencryptionStateProto {
+  SUBMITTED = 1;
+  PROCESSING = 2;
+  COMPLETED = 3;
+}
+
+message ZoneReencryptionStatusProto {
+  required int64 id = 1;
+  required string path = 2;
+  required ReencryptionStateProto state = 3;
+  required string ezKeyVersionName = 4;
+  required int64 submissionTime = 5;
+  required bool canceled = 6;
+  required int64 numReencrypted = 7;
+  required int64 numFailures = 8;
+  optional int64 completionTime = 9;
+  optional string lastFile = 10;
+}
+
+message ListReencryptionStatusResponseProto {
+  repeated ZoneReencryptionStatusProto statuses = 1;
   required bool hasMore = 2;
 }
 

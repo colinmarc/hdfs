@@ -13,8 +13,9 @@ RELEASE_NAME = gohdfs-$(TAG)-$(ARCH)
 all: hdfs
 
 %.pb.go: $(HADOOP_HDFS_PROTOS) $(HADOOP_COMMON_PROTOS)
-	protoc --go_out='$(PROTO_MAPPING):internal/protocol/hadoop_common' -Iinternal/protocol/hadoop_common -Iinternal/protocol/hadoop_hdfs $(HADOOP_COMMON_PROTOS)
-	protoc --go_out='$(PROTO_MAPPING):internal/protocol/hadoop_hdfs' -Iinternal/protocol/hadoop_common -Iinternal/protocol/hadoop_hdfs $(HADOOP_HDFS_PROTOS)
+	echo $(HADOOP_COMMON_PROTOS)
+	protoc --go_out=internal/protocol/hadoop_common --go_opt=paths=source_relative -Iinternal/protocol/hadoop_common -Iinternal/protocol/hadoop_hdfs $(HADOOP_COMMON_PROTOS)
+	protoc --go_out=internal/protocol/hadoop_hdfs --go_opt=paths=source_relative -Iinternal/protocol/hadoop_common -Iinternal/protocol/hadoop_hdfs $(HADOOP_HDFS_PROTOS)
 
 clean-protos:
 	find . -name *.pb.go | xargs rm

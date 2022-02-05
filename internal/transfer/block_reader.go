@@ -11,7 +11,7 @@ import (
 	"time"
 
 	hdfs "github.com/colinmarc/hdfs/v2/internal/protocol/hadoop_hdfs"
-	"github.com/golang/protobuf/proto"
+	"google.golang.org/protobuf/proto"
 )
 
 // BlockReader implements io.ReadCloser, for reading a block. It abstracts over

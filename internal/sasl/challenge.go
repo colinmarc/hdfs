@@ -4,7 +4,6 @@ import (
 	"errors"
 	"fmt"
 	"regexp"
-	"sort"
 	"strings"
 )
 
@@ -74,7 +73,6 @@ func ParseChallenge(challenge []byte) (*Challenge, error) {
 			ch.Nonce = val
 		case "qop":
 			ch.Qop = strings.Split(val, ",")
-			sort.Sort(ch.Qop)
 		case "charset":
 			ch.Charset = val
 		case "cipher":

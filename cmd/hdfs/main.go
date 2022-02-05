@@ -6,6 +6,7 @@ import (
 	"net"
 	"os"
 	"os/user"
+	"strings"
 	"time"
 
 	"github.com/colinmarc/hdfs/v2"
@@ -189,7 +190,7 @@ func getClient(namenode string) (*hdfs.Client, error) {
 
 	options := hdfs.ClientOptionsFromConf(conf)
 	if namenode != "" {
-		options.Addresses = []string{namenode}
+		options.Addresses = strings.Split(namenode, ",")
 	}
 
 	if options.Addresses == nil {

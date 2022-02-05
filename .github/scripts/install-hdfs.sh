@@ -15,31 +15,14 @@ else
   ENCRYPT_DATA_TRANSFER="false"
 fi
 
-UBUNTU_CODENAME=$(lsb_release -cs)
-UBUNTU_VERSION=$(lsb_release -rs | sed s/\\.//)
-CDH_VERSION=6.3.2
-
-sudo tee /etc/apt/sources.list.d/cdh.list <<EOF
-deb [arch=amd64] https://archive.cloudera.com/cdh6/$CDH_VERSION/ubuntu$UBUNTU_VERSION/apt $UBUNTU_CODENAME-cdh6 contrib
-EOF
-
-sudo tee /etc/apt/preferences.d/cloudera.pref <<EOF
-Package: *
-Pin: release o=Cloudera, l=Cloudera
-Pin-Priority: 501
-EOF
-
-sudo apt-get update
-
 CONF_AUTHENTICATION="simple"
+KERBEROS_REALM="EXAMPLE.COM"
+KERBEROS_PRINCIPLE="administrator"
+KERBEROS_PASSWORD="password1234"
 if [ $KERBEROS = "true" ]; then
   CONF_AUTHENTICATION="kerberos"
 
   HOSTNAME=$(hostname)
-
-  KERBEROS_REALM="EXAMPLE.COM"
-  KERBEROS_PRINCIPLE="administrator"
-  KERBEROS_PASSWORD="password1234"
 
   sudo tee /etc/krb5.conf << EOF
 [libdefaults]
@@ -63,10 +46,11 @@ EOF
   sudo mkdir /etc/krb5kdc
   sudo printf '*/*@%s\t*' "$KERBEROS_REALM" | sudo tee /etc/krb5kdc/kadm5.acl
 
+  sudo apt-get update
   sudo apt-get install -y krb5-user krb5-kdc krb5-admin-server
 
   printf "$KERBEROS_PASSWORD\n$KERBEROS_PASSWORD" | sudo kdb5_util -r "$KERBEROS_REALM" create -s
-  for p in nn dn travis gohdfs1 gohdfs2; do
+  for p in nn dn gh gohdfs1 gohdfs2; do
     sudo kadmin.local -q "addprinc -randkey $p/$HOSTNAME@$KERBEROS_REALM"
     sudo kadmin.local -q "addprinc -randkey $p/localhost@$KERBEROS_REALM"
     sudo kadmin.local -q "xst -k /tmp/$p.keytab $p/$HOSTNAME@$KERBEROS_REALM"
@@ -74,19 +58,27 @@ EOF
     sudo chmod +rx /tmp/$p.keytab
   done
 
+  echo "Restarting krb services..."
   sudo service krb5-kdc restart
   sudo service krb5-admin-server restart
 
-  kinit -kt /tmp/travis.keytab "travis/localhost@$KERBEROS_REALM"
+  kinit -kt /tmp/gh.keytab "gh/localhost@$KERBEROS_REALM"
 
   # The go tests need ccache files for these principles in a specific place.
-  for p in travis gohdfs1 gohdfs2; do
+  for p in gh gohdfs1 gohdfs2; do
     kinit -kt "/tmp/$p.keytab" -c "/tmp/krb5cc_gohdfs_$p" "$p/localhost@$KERBEROS_REALM"
   done
 fi
 
-sudo mkdir -p /etc/hadoop/conf.gohdfs
-sudo tee /etc/hadoop/conf.gohdfs/core-site.xml <<EOF
+URL="https://dlcdn.apache.org/hadoop/core/hadoop-${HADOOP_VERSION}/hadoop-${HADOOP_VERSION}.tar.gz"
+echo "Downloading $URL"
+curl -o hadoop.tar.gz $URL
+tar zxf hadoop.tar.gz
+
+HADOOP_ROOT="hadoop-${HADOOP_VERSION}/"
+mkdir -p /tmp/hdfs/name /tmp/hdfs/data
+
+sudo tee $HADOOP_ROOT/etc/hadoop/core-site.xml <<EOF
 <configuration>
   <property>
     <name>fs.defaultFS</name>
@@ -127,15 +119,15 @@ sudo tee /etc/hadoop/conf.gohdfs/core-site.xml <<EOF
 </configuration>
 EOF
 
-sudo tee /etc/hadoop/conf.gohdfs/hdfs-site.xml <<EOF
+sudo tee $HADOOP_ROOT/etc/hadoop/hdfs-site.xml <<EOF
 <configuration>
   <property>
     <name>dfs.namenode.name.dir</name>
-    <value>/opt/hdfs/name</value>
+    <value>/tmp/hdfs/name</value>
   </property>
   <property>
     <name>dfs.datanode.data.dir</name>
-    <value>/opt/hdfs/data</value>
+    <value>/tmp/hdfs/data</value>
   </property>
   <property>
    <name>dfs.permissions.superusergroup</name>
@@ -176,21 +168,20 @@ sudo tee /etc/hadoop/conf.gohdfs/hdfs-site.xml <<EOF
 </configuration>
 EOF
 
-sudo update-alternatives --install /etc/hadoop/conf hadoop-conf /etc/hadoop/conf.gohdfs 99
-sudo apt-get install -y --allow-unauthenticated hadoop-hdfs-namenode hadoop-hdfs-datanode
+$HADOOP_ROOT/bin/hdfs namenode -format
+sudo groupadd hadoop
+sudo useradd -G hadoop gh
 
-sudo mkdir -p /opt/hdfs/data /opt/hdfs/name
-sudo chown -R hdfs:hdfs /opt/hdfs
-sudo -u hdfs hdfs namenode -format -nonInteractive
+echo "Starting namenode..."
+$HADOOP_ROOT/bin/hdfs namenode > /tmp/hdfs/namenode.log 2>&1 &
 
-sudo adduser travis hadoop
+echo "Starting datanode..."
+$HADOOP_ROOT/bin/hdfs datanode > /tmp/hdfs/datanode.log 2>&1 &
 
-if [ $ENCRYPT_DATA_TRANSFER = "true" ]; then
-  sudo apt-get install -y --allow-unauthenticated hadoop-kms hadoop-kms-server
-  sudo service hadoop-kms-server restart
-fi
+sleep 5
 
-sudo service hadoop-hdfs-datanode restart
-sudo service hadoop-hdfs-namenode restart
+echo "Waiting for cluster to exit safe mode..."
+$HADOOP_ROOT/bin/hdfs dfsadmin -safemode wait
 
-hdfs dfsadmin -safemode wait
+echo "HADOOP_CONF_DIR=$(pwd)/$HADOOP_ROOT/etc/hadoop" >> $GITHUB_ENV
+echo "$(pwd)/$HADOOP_ROOT/bin" >> $GITHUB_PATH

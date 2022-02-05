@@ -4,11 +4,8 @@ export HADOOP_FS=${HADOOP_FS-"hadoop fs"}
 export ROOT_TEST_DIR="$BATS_TEST_DIRNAME/../../.."
 export HDFS="$ROOT_TEST_DIR/hdfs"
 
-# jdk11 is missing some APIs that the older jars here rely on
-# so point at openjdk8 for now
-export JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64
-
-# stolen from https://github.com/sstephenson/rbenv/blob/master/test/test_helper.bash
+# This is mostly stolen from:
+# https://github.com/sstephenson/rbenv/blob/master/test/test_helper.bash
 
 flunk() {
   if [ "$#" -eq 0 ]; then cat -

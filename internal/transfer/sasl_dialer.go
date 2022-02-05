@@ -26,10 +26,11 @@ const (
 // data protection level is specified by the server, whether it be wire
 // encryption or integrity checks.
 type SaslDialer struct {
-	DialFunc   func(ctx context.Context, network, addr string) (net.Conn, error)
-	Key        *hdfs.DataEncryptionKeyProto
-	Token      *hadoop.TokenProto
-	EnforceQop string
+	DialFunc                  func(ctx context.Context, network, addr string) (net.Conn, error)
+	Key                       *hdfs.DataEncryptionKeyProto
+	Token                     *hadoop.TokenProto
+	EnforceQop                string
+	SkipSaslOnPrivilegedPorts bool
 }
 
 func (d *SaslDialer) DialContext(ctx context.Context, network, addr string) (net.Conn, error) {
@@ -40,6 +41,16 @@ func (d *SaslDialer) DialContext(ctx context.Context, network, addr string) (net
 	conn, err := d.DialFunc(ctx, network, addr)
 	if err != nil {
 		return nil, err
+	}
+
+	// If the port is privileged, and a certain combination of configuration
+	// variables are set, hadoop expects us to skip SASL negotiation. See the
+	// documentation for ClientOptions in the top-level package for more detail.
+	if d.SkipSaslOnPrivilegedPorts {
+		if addr, ok := conn.RemoteAddr().(*net.TCPAddr); ok && addr.Port < 1024 {
+			return conn, nil
+		}
+
 	}
 
 	return d.wrapDatanodeConn(conn)

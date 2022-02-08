@@ -133,6 +133,10 @@ func (br *BlockReader) Skip(off int64) error {
 
 	_, err := io.CopyN(io.Discard, br.stream, amountToSkip)
 	if err != nil {
+		if err == io.EOF {
+			err = io.ErrUnexpectedEOF
+		}
+
 		br.stream = nil
 		br.datanodes.recordFailure(err)
 	}
@@ -194,8 +198,8 @@ func (br *BlockReader) connectNext() error {
 	chunkSize := int(checksumInfo.GetBytesPerChecksum())
 	stream := newBlockReadStream(conn, chunkSize, checksumTab)
 
-	// The read will start aligned to a chunk boundary, so we need to seek forward
-	// to the requested offset.
+	// The read will start aligned to a chunk boundary, so we need to skip
+	// forward to the requested offset.
 	amountToDiscard := br.Offset - chunkOffset
 	if amountToDiscard > 0 {
 		_, err := io.CopyN(ioutil.Discard, stream, amountToDiscard)

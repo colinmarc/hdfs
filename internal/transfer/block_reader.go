@@ -39,6 +39,8 @@ type BlockReader struct {
 	closed    bool
 }
 
+const maxSkip = 65536
+
 // SetDeadline sets the deadline for future Read calls. A zero value for t
 // means Read will not time out.
 func (br *BlockReader) SetDeadline(t time.Time) error {
@@ -115,6 +117,29 @@ func (br *BlockReader) Read(b []byte) (int, error) {
 	return 0, err
 }
 
+// Skip attempts to discard bytes in the stream in order to skip forward. This
+// is an optimization for the case that the amount to skip is very small. It
+// returns an error if skip was not attempted at all (because the BlockReader
+// isn't connected, or the offset is out of bounds or too far ahead) or the seek
+// failed for some other reason.
+func (br *BlockReader) Skip(off int64) error {
+	blockSize := int64(br.Block.GetB().GetNumBytes())
+	amountToSkip := off - br.Offset
+
+	if br.stream == nil || off < 0 || off >= blockSize ||
+		amountToSkip < 0 || amountToSkip > maxSkip {
+		return errors.New("unable to skip")
+	}
+
+	_, err := io.CopyN(io.Discard, br.stream, amountToSkip)
+	if err != nil {
+		br.stream = nil
+		br.datanodes.recordFailure(err)
+	}
+
+	return err
+}
+
 // Close implements io.Closer.
 func (br *BlockReader) Close() error {
 	br.closed = true
@@ -165,12 +190,13 @@ func (br *BlockReader) connectNext() error {
 		return fmt.Errorf("unsupported checksum type: %d", checksumType)
 	}
 
+	chunkOffset := int64(readInfo.GetChunkOffset())
 	chunkSize := int(checksumInfo.GetBytesPerChecksum())
 	stream := newBlockReadStream(conn, chunkSize, checksumTab)
 
 	// The read will start aligned to a chunk boundary, so we need to seek forward
 	// to the requested offset.
-	amountToDiscard := br.Offset - int64(readInfo.GetChunkOffset())
+	amountToDiscard := br.Offset - chunkOffset
 	if amountToDiscard > 0 {
 		_, err := io.CopyN(ioutil.Discard, stream, amountToDiscard)
 		if err != nil {

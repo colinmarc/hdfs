@@ -23,9 +23,13 @@ const (
 	testStr    = "Abominable are the tumblers into which he pours his poison."
 	testStrOff = 48847
 
-	testStr2            = "http://www.gutenberg.org"
-	testStr2Off         = 1256988
-	testStr2NegativeOff = -288
+	testStr2            = "tumblers"
+	testStr2Off         = 48866
+	testStr2RelativeOff = 19
+
+	testStr3            = "http://www.gutenberg.org"
+	testStr3Off         = 1256988
+	testStr3NegativeOff = -288
 
 	testChecksum = "27c076e4987344253650d3335a5d08ce"
 )
@@ -171,16 +175,16 @@ func TestFileReadAt(t *testing.T) {
 
 	assert.EqualValues(t, string(buf), testStr)
 
-	buf = make([]byte, len(testStr2))
+	buf = make([]byte, len(testStr3))
 	off = 0
 	for off < len(buf) {
-		n, err := file.ReadAt(buf[off:], int64(testStr2Off+off))
+		n, err := file.ReadAt(buf[off:], int64(testStr3Off+off))
 		require.NoError(t, err)
 		assert.True(t, n > 0)
 		off += n
 	}
 
-	assert.EqualValues(t, testStr2, string(buf))
+	assert.EqualValues(t, testStr3, string(buf))
 }
 
 func TestFileReadAtEOF(t *testing.T) {
@@ -240,16 +244,35 @@ func TestFileSeek(t *testing.T) {
 	assert.EqualValues(t, len(testStr), n)
 	assert.EqualValues(t, testStr, string(buf.Bytes()))
 
-	// now seek forward to another block and read a string
-	off, err = file.Seek(testStr2NegativeOff, 2)
+	// Do a small forward seek within the block.
+	off, err = file.Seek(testStrOff, 0)
+	assert.NoError(t, err)
+	assert.EqualValues(t, testStrOff, off)
+	br := file.blockReader
+
+	off, err = file.Seek(testStr2RelativeOff, 1)
 	assert.NoError(t, err)
 	assert.EqualValues(t, testStr2Off, off)
+
+	// Make sure we didn't reconnect.
+	assert.Equal(t, br, file.blockReader)
 
 	buf.Reset()
 	n, err = io.CopyN(buf, file, int64(len(testStr2)))
 	assert.NoError(t, err)
 	assert.EqualValues(t, len(testStr2), n)
 	assert.EqualValues(t, testStr2, string(buf.Bytes()))
+
+	// now seek forward to another block and read a string
+	off, err = file.Seek(testStr3NegativeOff, 2)
+	assert.NoError(t, err)
+	assert.EqualValues(t, testStr3Off, off)
+
+	buf.Reset()
+	n, err = io.CopyN(buf, file, int64(len(testStr3)))
+	assert.NoError(t, err)
+	assert.EqualValues(t, len(testStr3), n)
+	assert.EqualValues(t, testStr3, string(buf.Bytes()))
 }
 
 func TestFileReadDir(t *testing.T) {

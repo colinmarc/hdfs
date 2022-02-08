@@ -307,23 +307,6 @@ func (c *Client) CopyToRemote(src string, dst string) error {
 	return remote.Close()
 }
 
-func (c *Client) fetchDefaults() (*hdfs.FsServerDefaultsProto, error) {
-	if c.defaults != nil {
-		return c.defaults, nil
-	}
-
-	req := &hdfs.GetServerDefaultsRequestProto{}
-	resp := &hdfs.GetServerDefaultsResponseProto{}
-
-	err := c.namenode.Execute("getServerDefaults", req, resp)
-	if err != nil {
-		return nil, err
-	}
-
-	c.defaults = resp.GetServerDefaults()
-	return c.defaults, nil
-}
-
 func (c *Client) fetchDataEncryptionKey() (*hdfs.DataEncryptionKeyProto, error) {
 	if c.encryptionKey != nil {
 		return c.encryptionKey, nil

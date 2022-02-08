@@ -189,7 +189,7 @@ func TestCopyToRemote(t *testing.T) {
 
 	baleet(t, "/_test/copytoremote.txt")
 	err := client.CopyToRemote("testdata/foo.txt", "/_test/copytoremote.txt")
-	require.NoError(t, err)
+	ignoreErrReplicating(t, err)
 
 	bytes, err := client.ReadFile("/_test/copytoremote.txt")
 	require.NoError(t, err)

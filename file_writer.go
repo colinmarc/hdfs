@@ -1,6 +1,7 @@
 package hdfs
 
 import (
+	"errors"
 	"io"
 	"os"
 	"time"
@@ -9,6 +10,8 @@ import (
 	"github.com/colinmarc/hdfs/v2/internal/transfer"
 	"google.golang.org/protobuf/proto"
 )
+
+var ErrReplicating = errors.New("replication in progress")
 
 // A FileWriter represents a writer for an open file in HDFS. It implements
 // Writer and Closer, and can only be used for writes. For reads, see
@@ -213,6 +216,12 @@ func (f *FileWriter) Flush() error {
 // Close closes the file, writing any remaining data out to disk and waiting
 // for acknowledgements from the datanodes. It is important that Close is called
 // after all data has been written.
+//
+// If the datanodes have acknowledged all writes but not yet to the namenode,
+// it can return ErrReplicating (wrapped in an os.PathError). This is safe to
+// ignore and the condition is transient, but may prevent reopening the file
+// for writing or appending until it clears. If the file needs to be immediately
+// reopened, it is safe to call Close multiple times until it returns nil.
 func (f *FileWriter) Close() error {
 	if f.closed {
 		return io.ErrClosedPipe
@@ -239,6 +248,8 @@ func (f *FileWriter) Close() error {
 	err := f.client.namenode.Execute("complete", completeReq, completeResp)
 	if err != nil {
 		return &os.PathError{"create", f.name, err}
+	} else if completeResp.GetResult() == false {
+		return &os.PathError{"create", f.name, ErrReplicating}
 	}
 
 	return nil

@@ -71,7 +71,7 @@ func (s *blockReadStream) Read(b []byte) (int, error) {
 
 		err = s.validateChecksum(s.chunk.Bytes())
 		if err != nil {
-			return 0, nil
+			return 0, err
 		}
 
 		s.chunkIndex++

@@ -41,6 +41,10 @@ func get(args []string) {
 	err = client.Walk(source, func(p string, fi os.FileInfo, err error) error {
 		fullDest := filepath.Join(dest, strings.TrimPrefix(p, source))
 
+		if err != nil {
+			fatal(err)
+		}
+
 		if fi.IsDir() {
 			err = os.Mkdir(fullDest, 0755)
 			if err != nil {

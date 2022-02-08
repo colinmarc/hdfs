@@ -2,7 +2,6 @@ package hdfs
 
 import (
 	"errors"
-	"io"
 	"os"
 	"time"
 
@@ -24,7 +23,6 @@ type FileWriter struct {
 
 	blockWriter *transfer.BlockWriter
 	deadline    time.Time
-	closed      bool
 }
 
 // Create opens a new file in HDFS with the default replication, block size,
@@ -171,10 +169,6 @@ func (f *FileWriter) SetDeadline(t time.Time) error {
 // of this, it is important that Close is called after all data has been
 // written.
 func (f *FileWriter) Write(b []byte) (int, error) {
-	if f.closed {
-		return 0, io.ErrClosedPipe
-	}
-
 	if f.blockWriter == nil {
 		err := f.startNewBlock()
 		if err != nil {
@@ -202,10 +196,6 @@ func (f *FileWriter) Write(b []byte) (int, error) {
 // a call to Flush, it is still necessary to call Close once all data has been
 // written.
 func (f *FileWriter) Flush() error {
-	if f.closed {
-		return io.ErrClosedPipe
-	}
-
 	if f.blockWriter != nil {
 		return f.blockWriter.Flush()
 	}
@@ -223,10 +213,6 @@ func (f *FileWriter) Flush() error {
 // for writing or appending until it clears. If the file needs to be immediately
 // reopened, it is safe to call Close multiple times until it returns nil.
 func (f *FileWriter) Close() error {
-	if f.closed {
-		return io.ErrClosedPipe
-	}
-
 	var lastBlock *hdfs.ExtendedBlockProto
 	if f.blockWriter != nil {
 		lastBlock = f.blockWriter.Block.GetB()

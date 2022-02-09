@@ -50,7 +50,7 @@ EOF
   sudo apt-get install -y krb5-user krb5-kdc krb5-admin-server
 
   printf "$KERBEROS_PASSWORD\n$KERBEROS_PASSWORD" | sudo kdb5_util -r "$KERBEROS_REALM" create -s
-  for p in nn dn gh gohdfs1 gohdfs2; do
+  for p in nn dn $USER gohdfs1 gohdfs2; do
     sudo kadmin.local -q "addprinc -randkey $p/$HOSTNAME@$KERBEROS_REALM"
     sudo kadmin.local -q "addprinc -randkey $p/localhost@$KERBEROS_REALM"
     sudo kadmin.local -q "xst -k /tmp/$p.keytab $p/$HOSTNAME@$KERBEROS_REALM"
@@ -62,10 +62,10 @@ EOF
   sudo service krb5-kdc restart
   sudo service krb5-admin-server restart
 
-  kinit -kt /tmp/gh.keytab "gh/localhost@$KERBEROS_REALM"
+  kinit -kt /tmp/$USER.keytab "$USER/localhost@$KERBEROS_REALM"
 
   # The go tests need ccache files for these principles in a specific place.
-  for p in gh gohdfs1 gohdfs2; do
+  for p in $USER gohdfs1 gohdfs2; do
     kinit -kt "/tmp/$p.keytab" -c "/tmp/krb5cc_gohdfs_$p" "$p/localhost@$KERBEROS_REALM"
   done
 fi
@@ -170,7 +170,7 @@ EOF
 
 $HADOOP_ROOT/bin/hdfs namenode -format
 sudo groupadd hadoop
-sudo useradd -G hadoop gh
+sudo useradd -G hadoop $USER
 
 echo "Starting namenode..."
 $HADOOP_ROOT/bin/hdfs namenode > /tmp/hdfs/namenode.log 2>&1 &

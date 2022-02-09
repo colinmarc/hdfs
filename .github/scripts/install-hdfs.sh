@@ -170,7 +170,7 @@ EOF
 
 $HADOOP_ROOT/bin/hdfs namenode -format
 sudo groupadd hadoop
-sudo useradd -G hadoop $USER
+usermod -a -G hadoop $USER
 
 echo "Starting namenode..."
 $HADOOP_ROOT/bin/hdfs namenode > /tmp/hdfs/namenode.log 2>&1 &

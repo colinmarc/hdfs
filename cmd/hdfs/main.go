@@ -98,7 +98,7 @@ func init() {
 
 func main() {
 	if len(os.Args) < 2 {
-		printHelp()
+		fatalWithUsage()
 	}
 
 	command := os.Args[1]
@@ -170,8 +170,13 @@ func fatal(msg ...interface{}) {
 }
 
 func fatalWithUsage(msg ...interface{}) {
-	msg = append(msg, "\n"+usage)
-	fatal(msg...)
+	if len(msg) > 0 {
+		fmt.Fprintln(os.Stderr, append(msg, "\n"+usage)...)
+	} else {
+		fmt.Fprintln(os.Stderr, usage)
+	}
+
+	os.Exit(2)
 }
 
 func getClient(namenode string) (*hdfs.Client, error) {

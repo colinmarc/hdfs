@@ -8,7 +8,7 @@ import (
 
 func chown(args []string, recursive bool) {
 	if len(args) < 2 {
-		printHelp()
+		fatalWithUsage()
 	}
 
 	parts := strings.SplitN(args[0], ":", 2)

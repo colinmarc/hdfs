@@ -12,7 +12,7 @@ import (
 
 func du(args []string, summarize, humanReadable bool) {
 	if len(args) == 0 {
-		printHelp()
+		fatalWithUsage()
 	}
 
 	expanded, client, err := getClientAndExpandedPaths(args)

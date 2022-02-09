@@ -8,7 +8,7 @@ import (
 
 func chmod(args []string, recursive bool) {
 	if len(args) < 2 {
-		printHelp()
+		fatalWithUsage()
 	}
 
 	mode, err := strconv.ParseUint(args[0], 8, 32)

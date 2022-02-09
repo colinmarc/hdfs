@@ -6,13 +6,13 @@ import (
 )
 
 func touch(paths []string, noCreate bool) {
+	if len(paths) == 0 {
+		fatalWithUsage()
+	}
+
 	paths, nn, err := normalizePaths(paths)
 	if err != nil {
 		fatal(err)
-	}
-
-	if len(paths) == 0 {
-		printHelp()
 	}
 
 	client, err := getClient(nn)

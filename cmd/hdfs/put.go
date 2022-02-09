@@ -11,7 +11,7 @@ import (
 
 func put(args []string) {
 	if len(args) != 2 {
-		printHelp()
+		fatalWithUsage()
 	}
 
 	dests, nn, err := normalizePaths(args[1:])

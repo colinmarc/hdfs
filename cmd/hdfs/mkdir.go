@@ -11,7 +11,7 @@ func mkdir(paths []string, all bool) {
 	}
 
 	if len(paths) == 0 {
-		printHelp()
+		fatalWithUsage()
 	}
 
 	client, err := getClient(nn)

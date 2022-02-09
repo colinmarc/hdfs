@@ -11,7 +11,7 @@ import (
 
 func get(args []string) {
 	if len(args) == 0 || len(args) > 2 {
-		printHelp()
+		fatalWithUsage()
 	}
 
 	sources, nn, err := normalizePaths(args[0:1])
@@ -68,7 +68,7 @@ func get(args []string) {
 
 func getmerge(args []string, addNewlines bool) {
 	if len(args) != 2 {
-		printHelp()
+		fatalWithUsage()
 	}
 
 	dest := args[1]

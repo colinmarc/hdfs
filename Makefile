@@ -6,7 +6,7 @@ SOURCES = $(shell find . -name '*.go') $(GENERATED_PROTOS)
 # Protobuf needs one of these for every 'import "foo.proto"' in .protoc files.
 PROTO_MAPPING = MSecurity.proto=github.com/colinmarc/hdfs/v2/internal/protocol/hadoop_common
 
-TAG ?= $(shell git rev-parse HEAD)
+TAG ?= $(shell git describe --tag)
 ARCH = $(shell go env GOOS)-$(shell go env GOARCH)
 RELEASE_NAME = gohdfs-$(TAG)-$(ARCH)
 

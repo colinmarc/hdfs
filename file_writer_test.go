@@ -18,7 +18,7 @@ import (
 func assertClose(t *testing.T, w *FileWriter) {
 	var err error
 	for i := 0; i < 5; i++ {
-		err := w.Close()
+		err = w.Close()
 		if IsErrReplicating(err) {
 			time.Sleep(200 * time.Millisecond)
 			continue

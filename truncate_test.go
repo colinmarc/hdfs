@@ -15,7 +15,7 @@ func waitTruncate(t *testing.T, client *Client, name string, size int64) {
 
 	var stat os.FileInfo
 	if !done {
-		for i := 0; i < 5; i++ {
+		for i := 0; i < 10; i++ {
 			stat, err = client.Stat(name)
 			require.NoError(t, err)
 

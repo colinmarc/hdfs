@@ -307,6 +307,35 @@ func (c *Client) CopyToRemote(src string, dst string) error {
 	return remote.Close()
 }
 
+
+// CopyToRemoteWithTimeout add a timeout argument, to avoid write to remote datanode blocked
+func (c *Client) CopyToRemoteWithTimeout(src string, dst string, timeout time.Duration) error {
+        local, err := os.Open(src)
+        if err != nil {
+                return err
+        }
+        defer local.Close()
+
+        remote, err := c.Create(dst)
+        if err != nil {
+                return err
+        }
+
+        err = remote.SetDeadline(time.Now().Add(timeout))
+        if err != nil {
+                return err
+        }
+
+        _, err = io.Copy(remote, local)
+        if err != nil {
+                remote.Close()
+                return err
+        }
+
+        return remote.Close()
+}
+
+
 func (c *Client) fetchDataEncryptionKey() (*hdfs.DataEncryptionKeyProto, error) {
 	if c.encryptionKey != nil {
 		return c.encryptionKey, nil

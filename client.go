@@ -57,8 +57,8 @@ type ClientOptions struct {
 	// Addresses specifies the namenode(s) to connect to.
 	Addresses []string
 	// User specifies which HDFS user the client will act as. It is required
-	// unless kerberos authentication is enabled, in which case it will be
-	// determined from the provided credentials if empty.
+	// unless kerberos authentication is enabled, in which case it is overridden
+	// by the username set in KerberosClient.
 	User string
 	// UseDatanodeHostname specifies whether the client should connect to the
 	// datanodes via hostname (which is useful in multi-homed setups) or IP

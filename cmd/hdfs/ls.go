@@ -13,7 +13,7 @@ import (
 	"github.com/colinmarc/hdfs/v2"
 )
 
-func ls(paths []string, long, all, humanReadable bool) {
+func ls(paths []string, long, all, humanReadable, recursive bool) {
 	paths, client, err := getClientAndExpandedPaths(paths)
 	if err != nil {
 		fatal(err)
@@ -25,7 +25,8 @@ func ls(paths []string, long, all, humanReadable bool) {
 
 	files := make([]string, 0, len(paths))
 	fileInfos := make([]os.FileInfo, 0, len(paths))
-	dirs := make([]string, 0, len(paths))
+
+	var dirs []string
 	for _, p := range paths {
 		fi, err := client.Stat(p)
 		if err != nil {
@@ -40,30 +41,60 @@ func ls(paths []string, long, all, humanReadable bool) {
 		}
 	}
 
+	// The target is a directory; print its contents instead of the directory
+	// entry itself. Even recursive ls on a single directory still just prints the
+	// toplevel first, without a leading "/foo/bar:".
+	skipTopLevel := false
 	if len(files) == 0 && len(dirs) == 1 {
 		printDir(client, dirs[0], long, all, humanReadable)
+		skipTopLevel = true
+	}
+
+	if long {
+		tw := lsTabWriter()
+		for i, p := range files {
+			printLong(tw, p, fileInfos[i], humanReadable)
+		}
+
+		tw.Flush()
 	} else {
-		if long {
-			tw := lsTabWriter()
-			for i, p := range files {
-				printLong(tw, p, fileInfos[i], humanReadable)
-			}
+		for _, p := range files {
+			fmt.Println(p)
+		}
+	}
 
-			tw.Flush()
-		} else {
-			for _, p := range files {
-				fmt.Println(p)
-			}
+	// Add all nested directories for the recursive case. These are printed as
+	// "siblings".
+	if recursive {
+		var nestedDirs []string
+		for _, dir := range dirs {
+			client.Walk(dir, func(path string, info os.FileInfo, err error) error {
+				if err != nil {
+					return err
+				}
+
+				if info.IsDir() {
+					nestedDirs = append(nestedDirs, path)
+				}
+
+				return nil
+			})
 		}
 
-		for i, dir := range dirs {
-			if i > 0 || len(files) > 0 {
-				fmt.Println()
-			}
+		dirs = nestedDirs
+	}
 
-			fmt.Printf("%s/:\n", dir)
-			printDir(client, dir, long, all, humanReadable)
+	if skipTopLevel && len(dirs) > 0 {
+		dirs = dirs[1:]
+	}
+
+	for i, dir := range dirs {
+		if i > 0 || len(files) > 0 || skipTopLevel {
+			fmt.Println()
 		}
+
+		fmt.Printf("%s:\n", dir)
+		printDir(client, dir, long, all, humanReadable)
 	}
 }
 

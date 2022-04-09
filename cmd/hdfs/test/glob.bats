@@ -17,12 +17,12 @@ setup() {
   run $HDFS ls /_test_cmd/glob/dir*/dir
   assert_success
   assert_output <<OUT
-/_test_cmd/glob/dir1/dir/:
+/_test_cmd/glob/dir1/dir:
 a
 b
 c
 
-/_test_cmd/glob/dir2/dir/:
+/_test_cmd/glob/dir2/dir:
 d
 OUT
 }
@@ -33,13 +33,29 @@ OUT
   assert_output <<OUT
 /_test_cmd/glob/dir1/foo
 
-/_test_cmd/glob/dir1/dir/:
+/_test_cmd/glob/dir1/dir:
 a
 b
 c
 
-/_test_cmd/glob/dir2/dir/:
+/_test_cmd/glob/dir2/dir:
 d
+OUT
+}
+
+@test "ls recursive on glob" {
+  run $HDFS ls -R /_test_cmd/glob/dir*/dir
+  assert_success
+  assert_output <<OUT
+/_test_cmd/ls/dir1:
+a
+b
+c
+
+/_test_cmd/ls/dir2:
+d
+
+/_test_cmd/ls/dir3:
 OUT
 }
 
@@ -49,12 +65,12 @@ OUT
   assert_output <<OUT
 /_test_cmd/glob/dir1/foo
 
-/_test_cmd/glob/dir1/dir/:
+/_test_cmd/glob/dir1/dir:
 a
 b
 c
 
-/_test_cmd/glob/dir2/dir/:
+/_test_cmd/glob/dir2/dir:
 d
 OUT
 }
@@ -63,12 +79,12 @@ OUT
   run $HDFS ls /_test_cmd/glob/dir*/dir*
   assert_success
   assert_output <<OUT
-/_test_cmd/glob/dir1/dir/:
+/_test_cmd/glob/dir1/dir:
 a
 b
 c
 
-/_test_cmd/glob/dir2/dir/:
+/_test_cmd/glob/dir2/dir:
 d
 OUT
 }

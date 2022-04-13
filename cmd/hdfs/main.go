@@ -32,6 +32,7 @@ Valid commands:
   cat SOURCE...
   head [-n LINES | -c BYTES] SOURCE...
   tail [-n LINES | -c BYTES] SOURCE...
+  test [-defsz] FILE...
   du [-sh] FILE...
   checksum FILE...
   get SOURCE [DEST]
@@ -56,6 +57,13 @@ Valid commands:
 
 	mkdirOpts = getopt.New()
 	mkdirp    = mkdirOpts.Bool('p')
+
+	testOpts = getopt.New()
+	teste    = testOpts.Bool('e')
+	testf    = testOpts.Bool('f')
+	testd    = testOpts.Bool('d')
+	testz    = testOpts.Bool('z')
+	tests    = testOpts.Bool('s')
 
 	touchOpts = getopt.New()
 	touchc    = touchOpts.Bool('c')
@@ -95,6 +103,7 @@ func init() {
 	duOpts.SetUsage(printHelp)
 	getmergeOpts.SetUsage(printHelp)
 	dfOpts.SetUsage(printHelp)
+	testOpts.SetUsage(printHelp)
 }
 
 func main() {
@@ -148,6 +157,9 @@ func main() {
 	case "df":
 		dfOpts.Parse(argv)
 		df(*dfh)
+	case "test":
+		testOpts.Parse(argv)
+		test(testOpts.Args(), *teste, *testf, *testd, *testz, *tests)
 	case "truncate":
 		truncate(argv[1:])
 	// it's a seeeeecret command

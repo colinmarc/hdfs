@@ -111,4 +111,25 @@ func TestChtimes(t *testing.T) {
 	assert.NoError(t, err)
 	assert.EqualValues(t, birthday, fi.ModTime().UTC(), birthday)
 	assert.EqualValues(t, birthday, fi.(*FileInfo).AccessTime().UTC(), birthday)
+
+
+        // Test if "no need to set time flag (empty time.Time{})" works fine
+	birthdayRetouch := time.Date(1991, 1, 22, 14, 33, 35, 0, time.UTC)
+
+        // Change atime, keep mtime
+	client.Chtimes("/_test/tochtime", birthdayRetouch, time.Time{})
+	fiAtime, err := client.Stat("/_test/tochtime")
+	assert.NoError(t, err)
+	assert.EqualValues(t, birthday, fiAtime.ModTime().UTC(), birthday)
+	assert.EqualValues(t, birthdayRetouch, fiAtime.(*FileInfo).AccessTime().UTC(), birthdayRetouch)
+
+        // Reset
+	client.Chtimes("/_test/tochtime", birthday, birthday)
+
+        // Keep atime, change mtime
+	client.Chtimes("/_test/tochtime", time.Time{}, birthdayRetouch)
+	fiMtime, err := client.Stat("/_test/tochtime")
+	assert.NoError(t, err)
+	assert.EqualValues(t, birthdayRetouch, fiMtime.ModTime().UTC(), birthdayRetouch)
+	assert.EqualValues(t, birthday, fiMtime.(*FileInfo).AccessTime().UTC(), birthday)
 }

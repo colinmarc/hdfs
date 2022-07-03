@@ -47,10 +47,28 @@ func (c *Client) Chown(name string, user, group string) error {
 
 // Chtimes changes the access and modification times of the named file.
 func (c *Client) Chtimes(name string, atime time.Time, mtime time.Time) error {
+
+	var protoAtime *uint64
+	var protoMtime *uint64
+
+	// Treat empty atime/mtime time objects as "no need to set time" flag
+	// Doc: https://hadoop.apache.org/docs/stable/api/org/apache/hadoop/fs/FileSystem.html#setTimes-org.apache.hadoop.fs.Path-long-long-
+	if (time.Time{}) == atime {
+		protoAtime = proto.Uint64(uint64(-1))
+	} else {
+		protoAtime = proto.Uint64(uint64(atime.Unix()) * 1000)
+	}
+
+	if (time.Time{}) == mtime {
+		protoMtime = proto.Uint64(uint64(-1))
+	} else {
+		protoMtime = proto.Uint64(uint64(mtime.Unix()) * 1000)
+	}
+
 	req := &hdfs.SetTimesRequestProto{
 		Src:   proto.String(name),
-		Mtime: proto.Uint64(uint64(mtime.Unix()) * 1000),
-		Atime: proto.Uint64(uint64(atime.Unix()) * 1000),
+		Mtime: protoMtime,
+		Atime: protoAtime,
 	}
 	resp := &hdfs.SetTimesResponseProto{}
 

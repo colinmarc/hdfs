@@ -40,6 +40,7 @@ type transparentEncryptionInfo struct {
 	key    []byte
 	iv     []byte
 	cipher cipher.Block
+	stream cipher.Stream
 }
 
 // Open returns an FileReader which can be used for reading.
@@ -184,6 +185,12 @@ func (f *FileReader) Seek(offset int64, whence int) (int64, error) {
 	if f.offset != off {
 		f.offset = off
 
+		// To make things simpler, we just destroy cipher.Stream (if any)
+		// It will be recreated in Read()
+		if f.enc != nil {
+			f.enc.stream = nil
+		}
+
 		if f.blockReader != nil {
 			// If the seek is within the next few chunks, it's much more
 			// efficient to throw away a few bytes than to reconnect and start
@@ -209,25 +216,6 @@ func (f *FileReader) Read(b []byte) (int, error) {
 		return 0, io.ErrClosedPipe
 	}
 
-	offset := f.offset
-	n, err := f.readImpl(b)
-
-	// Decrypt data chunk if file from HDFS encrypted zone.
-	if f.enc != nil && n > 0 {
-		plaintext, err := aesCtrStep(offset, f.enc, b[:n])
-		if err != nil {
-			f.offset = offset
-			return 0, err
-		}
-		for i := 0; i < n; i++ {
-			b[i] = plaintext[i]
-		}
-	}
-
-	return n, err
-}
-
-func (f *FileReader) readImpl(b []byte) (int, error) {
 	if f.info.IsDir() {
 		return 0, &os.PathError{
 			"read",
@@ -259,7 +247,21 @@ func (f *FileReader) readImpl(b []byte) (int, error) {
 			}
 		}
 
-		n, err := f.blockReader.Read(b)
+		var n int
+		var err error
+
+		if f.enc != nil {
+			if f.enc.stream == nil {
+				f.enc.stream, err = aesCreateCTRStream(f.offset, f.enc)
+				if err != nil {
+					return 0, err
+				}
+			}
+			n, err = cipher.StreamReader{S: f.enc.stream, R: f.blockReader}.Read(b)
+		} else {
+			n, err = f.blockReader.Read(b)
+		}
+
 		f.offset += int64(n)
 
 		if err != nil && err != io.EOF {

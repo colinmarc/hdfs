@@ -1,12 +1,31 @@
 package hdfs
 
 import (
+	"bytes"
+	"crypto/cipher"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
 )
 
-func TestAesChunks(t *testing.T) {
+// aesCtrRead perform AES-CTR XOR operation on given byte string.
+// Once encryption and decryption are exactly the same operation for CTR mode,
+// this function can be used to perform both.
+func aesCtrStep(offset int64, enc *transparentEncryptionInfo, b []byte) ([]byte, error) {
+	stream, err := aesCreateCTRStream(offset, enc)
+	if err != nil {
+		return nil, err
+	}
+
+	r := make([]byte, len(b))
+	_, err = cipher.StreamReader{S: stream, R: bytes.NewReader(b)}.Read(r)
+	if err != nil {
+		return nil, err
+	}
+	return r, nil
+}
+
+func TestAesIV(t *testing.T) {
 	originalText := []byte("some random plain text, nice to have it quite long")
 	key := []byte("0123456789abcdef")
 
@@ -46,5 +65,5 @@ func TestAesChunks(t *testing.T) {
 		decryptedByChunks = append(decryptedByChunks, tmp...)
 		pos += int64(x)
 	}
-	assert.Equal(t, decryptedByChunks, originalText)
+	assert.Equal(t, decryptedByChunks, decryptedText)
 }

@@ -7,11 +7,6 @@ import (
 	"fmt"
 )
 
-const (
-	// in FileWriter we use chunks upto aesChunkSize bytes to encrypt data
-	aesChunkSize = 1024 * 1024
-)
-
 // calculateIV `shifts` IV to given offset
 // based on calculateIV from AesCtrCryptoCodec.java
 func calculateIV(offset int64, initIV []byte) ([]byte, error) {
@@ -37,10 +32,8 @@ func calculateIV(offset int64, initIV []byte) ([]byte, error) {
 	return iv, nil
 }
 
-// aesCtrStep perform AES-CTR XOR operation on given byte string.
-// Once encryption and decryption are exactly the same operation for CTR mode,
-// this function can be used to perform both.
-func aesCtrStep(offset int64, enc *transparentEncryptionInfo, b []byte) ([]byte, error) {
+// aesCreateCTRStream create stream to encrypt/decrypt data from specific offset
+func aesCreateCTRStream(offset int64, enc *transparentEncryptionInfo) (cipher.Stream, error) {
 	iv, err := calculateIV(offset, enc.iv)
 	if err != nil {
 		return nil, err
@@ -61,8 +54,5 @@ func aesCtrStep(offset int64, enc *transparentEncryptionInfo, b []byte) ([]byte,
 		tmp := make([]byte, padding)
 		stream.XORKeyStream(tmp, tmp)
 	}
-
-	text := make([]byte, len(b))
-	stream.XORKeyStream(text, b)
-	return text, nil
+	return stream, nil
 }

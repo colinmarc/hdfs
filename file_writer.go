@@ -1,6 +1,7 @@
 package hdfs
 
 import (
+	"crypto/cipher"
 	"errors"
 	"os"
 	"time"
@@ -204,28 +205,6 @@ func (f *FileWriter) SetDeadline(t time.Time) error {
 // of this, it is important that Close is called after all data has been
 // written.
 func (f *FileWriter) Write(b []byte) (int, error) {
-	// Encrypt data chunk if file in HDFS encrypted zone.
-	if f.enc != nil && len(b) > 0 {
-		var offset int
-		for offset < len(b) {
-			size := min(len(b)-offset, aesChunkSize)
-			ciphertext, err := aesCtrStep(f.offset, f.enc, b[offset:offset+size])
-			if err != nil {
-				return offset, err
-			}
-			writtenSize, err := f.writeImpl(ciphertext)
-			offset += writtenSize
-			if err != nil {
-				return offset, err
-			}
-		}
-		return offset, nil
-	} else {
-		return f.writeImpl(b)
-	}
-}
-
-func (f *FileWriter) writeImpl(b []byte) (int, error) {
 	if f.blockWriter == nil {
 		err := f.startNewBlock()
 		if err != nil {
@@ -235,7 +214,25 @@ func (f *FileWriter) writeImpl(b []byte) (int, error) {
 
 	off := 0
 	for off < len(b) {
-		n, err := f.blockWriter.Write(b[off:])
+		var n int
+		var err error
+
+		if f.enc != nil {
+			if f.enc.stream == nil {
+				f.enc.stream, err = aesCreateCTRStream(f.offset, f.enc)
+				if err != nil {
+					return 0, err
+				}
+			}
+			n, err = cipher.StreamWriter{S: f.enc.stream, W: f.blockWriter}.Write(b[off:])
+			// If blockWriter writes less than expected bytes,
+			// we must recreate stream chipher, since it's internal counter goes forward.
+			if n != len(b[off:]) {
+				f.enc.stream = nil
+			}
+		} else {
+			n, err = f.blockWriter.Write(b[off:])
+		}
 		off += n
 		f.offset += int64(n)
 		if err == transfer.ErrEndOfBlock {
@@ -368,11 +365,4 @@ func (f *FileWriter) finalizeBlock() error {
 
 	f.blockWriter = nil
 	return nil
-}
-
-func min(a, b int) int {
-	if a < b {
-		return a
-	}
-	return b
 }

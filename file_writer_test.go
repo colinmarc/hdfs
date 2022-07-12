@@ -6,6 +6,7 @@ import (
 	"io/ioutil"
 	"math/rand"
 	"os"
+	"os/exec"
 	"path/filepath"
 	"strings"
 	"testing"
@@ -560,6 +561,10 @@ func TestEncryptedZoneWriteChunks(t *testing.T) {
 	bytes, err := ioutil.ReadAll(reader)
 	require.NoError(t, err)
 	assert.Equal(t, originalText, bytes)
+
+	hdfsOut, err := exec.Command("hadoop", "dfs", "-cat", "/_test/kms/write_chunks.txt").Output()
+	require.NoError(t, err)
+	assert.Equal(t, originalText, hdfsOut)
 }
 
 func TestEncryptedZoneAppendChunks(t *testing.T) {
@@ -586,28 +591,65 @@ func TestEncryptedZoneAppendChunks(t *testing.T) {
 	bytes, err := ioutil.ReadAll(reader)
 	require.NoError(t, err)
 	assert.Equal(t, originalText, bytes)
+
+	hdfsOut, err := exec.Command("hadoop", "dfs", "-cat", "/_test/kms/append_chunks.txt").Output()
+	require.NoError(t, err)
+	assert.Equal(t, originalText, hdfsOut)
 }
 
 func TestEncryptedZoneLargeBlock(t *testing.T) {
 	skipWithoutEncryptedZone(t)
 
-	// Generate quite large (aesChunkSize * 1.5 bytes) block, so we can trigger encryption in chunks.
-	str := "some random text"
-	originalText := []byte(strings.Repeat(str, aesChunkSize*1.5/len(str)))
+	// Generate quite large data block, so we can trigger encryption in chunks.
+	mobydick, err := os.Open("testdata/mobydick.txt")
+	require.NoError(t, err)
+	originalText, err := ioutil.ReadAll(mobydick)
+	require.NoError(t, err)
 	client := getClient(t)
 
 	// Create file with small (128Kb) block size, so encrypted chunk will be placed over multiple hdfs blocks.
-	writer, err := client.CreateFile("/_test/kms/large_write.txt", 1, 131072, 0755)
+	writer, err := client.CreateFile("/_test/kms/mobydick.unittest", 1, 131072, 0755)
 	require.NoError(t, err)
 
 	_, err = writer.Write(originalText)
 	require.NoError(t, err)
 	assertClose(t, writer)
 
-	reader, err := client.Open("/_test/kms/large_write.txt")
+	reader, err := client.Open("/_test/kms/mobydick.unittest")
 	require.NoError(t, err)
-
 	bytes, err := ioutil.ReadAll(reader)
 	require.NoError(t, err)
+	assert.Equal(t, originalText, bytes)
+
+	// Ensure read after seek works as expected:
+	_, err = reader.Seek(35657, io.SeekStart)
+	require.NoError(t, err)
+	bytes = make([]byte, 64)
+	_, err = reader.Read(bytes)
+	require.NoError(t, err)
+	assert.Equal(t, []byte("By reason of these things, then, the whaling voyage was welcome;"), bytes)
+
+	hdfsOut, err := exec.Command("hadoop", "dfs", "-cat", "/_test/kms/mobydick.unittest").Output()
+	require.NoError(t, err)
+	assert.Equal(t, originalText, hdfsOut)
+}
+
+func TestEncryptedZoneReadAfterJava(t *testing.T) {
+	skipWithoutEncryptedZone(t)
+
+	err := exec.Command("hadoop", "dfs", "-copyFromLocal", "testdata/mobydick.txt", "/_test/kms/mobydick.java").Run()
+	require.NoError(t, err)
+
+	mobydick, err := os.Open("testdata/mobydick.txt")
+	require.NoError(t, err)
+	originalText, err := ioutil.ReadAll(mobydick)
+	require.NoError(t, err)
+
+	client := getClient(t)
+	reader, err := client.Open("/_test/kms/mobydick.java")
+	require.NoError(t, err)
+	bytes, err := ioutil.ReadAll(reader)
+	require.NoError(t, err)
+
 	assert.Equal(t, originalText, bytes)
 }

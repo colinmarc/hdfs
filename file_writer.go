@@ -233,14 +233,23 @@ func (f *FileWriter) Close() error {
 		}
 	}
 
+	getFileInfoReq := &hdfs.GetFileInfoRequestProto{Src: proto.String(f.name)}
+	getFileInfoResp := &hdfs.GetFileInfoResponseProto{}
+
+	err := f.client.namenode.Execute("getFileInfo", getFileInfoReq, getFileInfoResp)
+	if err != nil {
+		return &os.PathError{"getFileInfo", f.name, err}
+	}
+
 	completeReq := &hdfs.CompleteRequestProto{
 		Src:        proto.String(f.name),
 		ClientName: proto.String(f.client.namenode.ClientName),
 		Last:       lastBlock,
+		FileId:     getFileInfoResp.Fs.FileId,
 	}
 	completeResp := &hdfs.CompleteResponseProto{}
 
-	err := f.client.namenode.Execute("complete", completeReq, completeResp)
+	err = f.client.namenode.Execute("complete", completeReq, completeResp)
 	if err != nil {
 		return &os.PathError{"create", f.name, err}
 	} else if completeResp.GetResult() == false {

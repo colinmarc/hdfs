@@ -27,6 +27,7 @@ type FileWriter struct {
 	name        string
 	replication int
 	blockSize   int64
+	fileId      uint64
 
 	blockWriter *transfer.BlockWriter
 	deadline    time.Time
@@ -82,6 +83,7 @@ func (c *Client) CreateFile(name string, replication int, blockSize int64, perm 
 		name:        name,
 		replication: replication,
 		blockSize:   blockSize,
+		fileId:      createResp.GetFs().GetFileId(),
 	}, nil
 }
 
@@ -111,6 +113,7 @@ func (c *Client) Append(name string) (*FileWriter, error) {
 		name:        name,
 		replication: int(appendResp.Stat.GetBlockReplication()),
 		blockSize:   int64(appendResp.Stat.GetBlocksize()),
+		fileId:      appendResp.GetStat().GetFileId(),
 	}
 
 	// This returns nil if there are no blocks (it's an empty file) or if the
@@ -237,6 +240,7 @@ func (f *FileWriter) Close() error {
 		Src:        proto.String(f.name),
 		ClientName: proto.String(f.client.namenode.ClientName),
 		Last:       lastBlock,
+		FileId:     proto.Uint64(f.fileId),
 	}
 	completeResp := &hdfs.CompleteResponseProto{}
 
@@ -267,6 +271,7 @@ func (f *FileWriter) startNewBlock() error {
 		Src:        proto.String(f.name),
 		ClientName: proto.String(f.client.namenode.ClientName),
 		Previous:   previous,
+		FileId:     proto.Uint64(f.fileId),
 	}
 	addBlockResp := &hdfs.AddBlockResponseProto{}
 

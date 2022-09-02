@@ -1,3 +1,5 @@
+![](docs/gopher.png)
+
 HDFS for Go
 ===========
 

@@ -1,4 +1,4 @@
-![](docs/gopher.png)
+<img src="docs/gopher.png" alt="gopher" align="right" width="200"/>
 
 HDFS for Go
 ===========

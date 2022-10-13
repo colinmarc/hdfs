@@ -184,19 +184,25 @@ func (br *BlockReader) connectNext() error {
 	checksumInfo := readInfo.GetChecksum()
 
 	var checksumTab *crc32.Table
+	var checksumSize int
 	checksumType := checksumInfo.GetType()
 	switch checksumType {
 	case hdfs.ChecksumTypeProto_CHECKSUM_CRC32:
 		checksumTab = crc32.IEEETable
+		checksumSize = 4
 	case hdfs.ChecksumTypeProto_CHECKSUM_CRC32C:
 		checksumTab = crc32.MakeTable(crc32.Castagnoli)
+		checksumSize = 4
+	case hdfs.ChecksumTypeProto_CHECKSUM_NULL:
+		checksumTab = nil
+		checksumSize = 0
 	default:
 		return fmt.Errorf("unsupported checksum type: %d", checksumType)
 	}
 
 	chunkOffset := int64(readInfo.GetChunkOffset())
 	chunkSize := int(checksumInfo.GetBytesPerChecksum())
-	stream := newBlockReadStream(conn, chunkSize, checksumTab)
+	stream := newBlockReadStream(conn, chunkSize, checksumTab, checksumSize)
 
 	// The read will start aligned to a chunk boundary, so we need to skip
 	// forward to the requested offset.

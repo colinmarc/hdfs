@@ -17,9 +17,10 @@ var errInvalidChecksum = errors.New("invalid checksum")
 // blockReadStream implements io.Reader for reading a packet stream for a single
 // block from a single datanode.
 type blockReadStream struct {
-	reader      io.Reader
-	checksumTab *crc32.Table
-	chunkSize   int
+	reader       io.Reader
+	checksumTab  *crc32.Table
+	chunkSize    int
+	checksumSize int
 
 	checksums bytes.Buffer
 	chunk     bytes.Buffer
@@ -30,11 +31,12 @@ type blockReadStream struct {
 	lastPacket   bool
 }
 
-func newBlockReadStream(reader io.Reader, chunkSize int, checksumTab *crc32.Table) *blockReadStream {
+func newBlockReadStream(reader io.Reader, chunkSize int, checksumTab *crc32.Table, checksumSize int) *blockReadStream {
 	return &blockReadStream{
-		reader:      reader,
-		chunkSize:   chunkSize,
-		checksumTab: checksumTab,
+		reader:       reader,
+		chunkSize:    chunkSize,
+		checksumTab:  checksumTab,
+		checksumSize: checksumSize,
 	}
 }
 
@@ -123,6 +125,10 @@ func (s *blockReadStream) Read(b []byte) (int, error) {
 }
 
 func (s *blockReadStream) validateChecksum(b []byte) error {
+	if s.checksumTab == nil {
+		return nil
+	}
+
 	checksumOffset := 4 * s.chunkIndex
 	checksumBytes := s.checksums.Bytes()[checksumOffset : checksumOffset+4]
 	checksum := binary.BigEndian.Uint32(checksumBytes)
@@ -144,8 +150,7 @@ func (s *blockReadStream) startPacket() error {
 	dataLength := int(header.GetDataLen())
 	numChunks := int(math.Ceil(float64(dataLength) / float64(s.chunkSize)))
 
-	// TODO don't assume checksum size is 4
-	checksumsLength := numChunks * 4
+	checksumsLength := numChunks * s.checksumSize
 	s.checksums.Reset()
 	s.checksums.Grow(checksumsLength)
 	_, err = io.CopyN(&s.checksums, s.reader, int64(checksumsLength))

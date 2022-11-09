@@ -390,7 +390,7 @@ func (f *FileReader) Close() error {
 	f.closed = true
 
 	if f.blockReader != nil {
-		f.blockReader.Close()
+		return f.blockReader.Close()
 	}
 
 	return nil

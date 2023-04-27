@@ -3609,7 +3609,7 @@ type FsServerDefaultsProto struct {
 const (
 	Default_FsServerDefaultsProto_EncryptDataTransfer = bool(false)
 	Default_FsServerDefaultsProto_TrashInterval       = uint64(0)
-	Default_FsServerDefaultsProto_ChecksumType        = ChecksumTypeProto_CHECKSUM_CRC32
+	Default_FsServerDefaultsProto_ChecksumType        = ChecksumTypeProto_CHECKSUM_CRC32C
 	Default_FsServerDefaultsProto_PolicyId            = uint32(0)
 )
 

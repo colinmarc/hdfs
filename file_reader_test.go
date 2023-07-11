@@ -216,6 +216,30 @@ func TestFileReadOversizedBuffer(t *testing.T) {
 	}
 }
 
+func TestFileSeekSkip(t *testing.T) {
+	client := getClient(t)
+
+	file, err := client.Open("/_test/mobydick.txt")
+	require.NoError(t, err)
+
+	off, err := file.Seek(testStrOff, 0)
+	assert.NoError(t, err)
+	assert.EqualValues(t, testStrOff, off)
+
+	skip := int64(3)
+
+	// Do a small forward seek within the block.
+	off, err = file.Seek(skip, io.SeekCurrent)
+	assert.NoError(t, err)
+	assert.EqualValues(t, testStrOff+skip, off)
+
+	buf := new(bytes.Buffer)
+	n, err := io.CopyN(buf, file, int64(len(testStr))-skip)
+	assert.NoError(t, err)
+	assert.EqualValues(t, len(testStr)-int(skip), n)
+	assert.EqualValues(t, testStr[skip:], string(buf.Bytes()))
+}
+
 func TestFileSeek(t *testing.T) {
 	client := getClient(t)
 

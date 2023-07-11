@@ -38,8 +38,8 @@ jobs:
         go-version: "1.20"
 
     # This step installs downloads hadoop and starts a local cluster with one
-    # namenode and one datanode. It adds the hadoop binaries to GITHUB_PATH
-    # and HADOOP_CONF_DIR to GITHUB_ENV.
+    # namenode and one datanode. It adds the hadoop binaries to GITHUB_PATH,
+    # TRANSPARENT_ENCRYPTION and HADOOP_CONF_DIR to GITHUB_ENV.
     - name: install-hdfs.sh
       run: ./.github/scripts/install-hdfs.sh
       env:
@@ -64,6 +64,16 @@ jobs:
     - name: make test
       run: |
         make test
+
+    - name: cat kms.log
+      if: always()
+      run: |
+        if [ -f /tmp/hdfs/kms.log ]
+        then
+          cat /tmp/hdfs/kms.log
+        else
+          echo "not exists"
+        fi
 
     - name: cat namenode.log
       if: always()

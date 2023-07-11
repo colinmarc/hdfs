@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"strconv"
 )
 
 func formatBytes(i uint64) string {
@@ -17,4 +18,11 @@ func formatBytes(i uint64) string {
 	default:
 		return fmt.Sprintf("%dB", i)
 	}
+}
+
+func formatBytesHuman(i uint64, humanReadable bool) string {
+	if humanReadable {
+		return formatBytes(i)
+	}
+	return strconv.FormatUint(i, 10)
 }

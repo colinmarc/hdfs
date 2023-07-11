@@ -23,6 +23,7 @@ The flags available are a subset of the POSIX ones, but should behave similarly.
 
 Valid commands:
   ls [-lah] [FILE]...
+  count [-h] [FILE]...
   rm [-rf] FILE...
   mv [-nT] SOURCE... DEST
   mkdir [-p] FILE...
@@ -74,6 +75,9 @@ Valid commands:
 	chownOpts = getopt.New()
 	chownR    = chownOpts.Bool('R')
 
+	countOpts = getopt.New()
+	counth    = countOpts.Bool('h')
+
 	headTailOpts = getopt.New()
 	headtailn    = headTailOpts.Int64('n', -1)
 	headtailc    = headTailOpts.Int64('c', -1)
@@ -99,6 +103,7 @@ func init() {
 	touchOpts.SetUsage(printHelp)
 	chmodOpts.SetUsage(printHelp)
 	chownOpts.SetUsage(printHelp)
+	countOpts.SetUsage(printHelp)
 	headTailOpts.SetUsage(printHelp)
 	duOpts.SetUsage(printHelp)
 	getmergeOpts.SetUsage(printHelp)
@@ -147,6 +152,9 @@ func main() {
 		du(duOpts.Args(), *dus, *duh)
 	case "checksum":
 		checksum(argv[1:])
+	case "count":
+		countOpts.Parse(argv)
+		count(countOpts.Args(), *counth)
 	case "get":
 		get(argv[1:])
 	case "getmerge":

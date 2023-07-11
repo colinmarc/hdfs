@@ -229,6 +229,7 @@ func (s *blockWriteStream) makePacket() outboundPacket {
 	}
 
 	// Fill in the checksum for each chunk of data.
+	tab := crc32.MakeTable(crc32.Castagnoli)
 	for i := 0; i < numChunks; i++ {
 		chunkOff := i * outboundChunkSize
 		chunkEnd := chunkOff + outboundChunkSize
@@ -236,7 +237,7 @@ func (s *blockWriteStream) makePacket() outboundPacket {
 			chunkEnd = len(packet.data)
 		}
 
-		checksum := crc32.Checksum(packet.data[chunkOff:chunkEnd], crc32.IEEETable)
+		checksum := crc32.Checksum(packet.data[chunkOff:chunkEnd], tab)
 		binary.BigEndian.PutUint32(packet.checksums[i*4:], checksum)
 	}
 

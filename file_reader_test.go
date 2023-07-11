@@ -226,18 +226,27 @@ func TestFileSeekSkip(t *testing.T) {
 	assert.NoError(t, err)
 	assert.EqualValues(t, testStrOff, off)
 
+	buf := new(bytes.Buffer)
+
+	firstRead := int64(2)
+
+	n, err := io.CopyN(buf, file, firstRead)
+	assert.NoError(t, err)
+	assert.EqualValues(t, firstRead, n)
+
 	skip := int64(3)
+	totalSkip := firstRead + skip
 
 	// Do a small forward seek within the block.
 	off, err = file.Seek(skip, io.SeekCurrent)
 	assert.NoError(t, err)
-	assert.EqualValues(t, testStrOff+skip, off)
+	assert.EqualValues(t, testStrOff+totalSkip, off)
 
-	buf := new(bytes.Buffer)
-	n, err := io.CopyN(buf, file, int64(len(testStr))-skip)
+	buf.Reset()
+	n, err = io.CopyN(buf, file, int64(len(testStr))-totalSkip)
 	assert.NoError(t, err)
-	assert.EqualValues(t, len(testStr)-int(skip), n)
-	assert.EqualValues(t, testStr[skip:], string(buf.Bytes()))
+	assert.EqualValues(t, len(testStr)-int(totalSkip), n)
+	assert.EqualValues(t, testStr[totalSkip:], string(buf.Bytes()))
 }
 
 func TestFileSeek(t *testing.T) {

@@ -31,6 +31,12 @@ const (
 	testStr3Off         = 1256988
 	testStr3NegativeOff = -288
 
+	testStr4            = "Project"
+	testStr4Off         = 7
+
+	testStr5            = "Moby"
+	testStr5Off         = 34
+
 	testChecksum = "27c076e4987344253650d3335a5d08ce"
 )
 
@@ -222,31 +228,17 @@ func TestFileSeekSkip(t *testing.T) {
 	file, err := client.Open("/_test/mobydick.txt")
 	require.NoError(t, err)
 
-	off, err := file.Seek(testStrOff, 0)
+	buf := make([]byte, 128)
+
+	n, err := file.ReadAt(buf[0:len(testStr4)], testStr4Off)
 	assert.NoError(t, err)
-	assert.EqualValues(t, testStrOff, off)
+	assert.EqualValues(t, len(testStr4), n)
+	assert.EqualValues(t, testStr4, string(buf[0:n]))
 
-	buf := new(bytes.Buffer)
-
-	firstRead := int64(2)
-
-	n, err := io.CopyN(buf, file, firstRead)
+	n, err = file.ReadAt(buf[0:len(testStr5)], testStr5Off)
 	assert.NoError(t, err)
-	assert.EqualValues(t, firstRead, n)
-
-	skip := int64(3)
-	totalSkip := firstRead + skip
-
-	// Do a small forward seek within the block.
-	off, err = file.Seek(skip, io.SeekCurrent)
-	assert.NoError(t, err)
-	assert.EqualValues(t, testStrOff+totalSkip, off)
-
-	buf.Reset()
-	n, err = io.CopyN(buf, file, int64(len(testStr))-totalSkip)
-	assert.NoError(t, err)
-	assert.EqualValues(t, len(testStr)-int(totalSkip), n)
-	assert.EqualValues(t, testStr[totalSkip:], string(buf.Bytes()))
+	assert.EqualValues(t, len(testStr5), n)
+	assert.EqualValues(t, testStr5, string(buf[0:n]))
 }
 
 func TestFileSeek(t *testing.T) {

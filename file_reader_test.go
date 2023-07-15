@@ -290,12 +290,12 @@ func TestFileSeekReadSkip(t *testing.T) {
 	n, err := file.ReadAt(buf, testStr4Off)
 	assert.NoError(t, err)
 	assert.Equal(t, len(buf), n)
-	assert.Equal(t, "Moby", string(buf))
+	assert.Equal(t, testStr4, string(buf))
 	br := file.blockReader
 
 	off, err := file.Seek(testStr5Off, 0)
 	assert.NoError(t, err)
-	assert.Equal(t, testStr5Off, off)
+	assert.EqualValues(t, testStr5Off, off)
 
 	// Make sure we didn't reconnect.
 	assert.Equal(t, br, file.blockReader)

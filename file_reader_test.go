@@ -31,11 +31,11 @@ const (
 	testStr3Off         = 1256988
 	testStr3NegativeOff = -288
 
-	testStr4            = "Project"
-	testStr4Off         = 7
+	testStr4    = "Project"
+	testStr4Off = 7
 
-	testStr5            = "Moby"
-	testStr5Off         = 34
+	testStr5    = "Moby"
+	testStr5Off = 34
 
 	testChecksum = "27c076e4987344253650d3335a5d08ce"
 )
@@ -228,14 +228,14 @@ func TestFileSeekSkip(t *testing.T) {
 	file, err := client.Open("/_test/mobydick.txt")
 	require.NoError(t, err)
 
-	buf := make([]byte, 128)
+	buf := make([]byte, 10)
 
-	n, err := file.ReadAt(buf[0:len(testStr4)], testStr4Off)
+	n, err := file.ReadAt(buf[:len(testStr4)], testStr4Off)
 	assert.NoError(t, err)
 	assert.EqualValues(t, len(testStr4), n)
 	assert.EqualValues(t, testStr4, string(buf[0:n]))
 
-	n, err = file.ReadAt(buf[0:len(testStr5)], testStr5Off)
+	n, err = file.ReadAt(buf[:len(testStr5)], testStr5Off)
 	assert.NoError(t, err)
 	assert.EqualValues(t, len(testStr5), n)
 	assert.EqualValues(t, testStr5, string(buf[0:n]))

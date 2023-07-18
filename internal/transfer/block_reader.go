@@ -123,10 +123,13 @@ func (br *BlockReader) Read(b []byte) (int, error) {
 // isn't connected, or the resulting offset would be out of bounds or too far
 // ahead) or the copy failed for some other reason.
 func (br *BlockReader) Skip(n int64) error {
+	if n == 0 {
+		return nil
+	}
 	blockSize := int64(br.Block.GetB().GetNumBytes())
 	resultingOffset := br.Offset + n
 
-	if br.stream == nil || n <= 0 || n > maxSkip || resultingOffset >= blockSize {
+	if br.stream == nil || n < 0 || n > maxSkip || resultingOffset >= blockSize {
 		return errors.New("unable to skip")
 	}
 

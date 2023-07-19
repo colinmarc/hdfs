@@ -90,43 +90,72 @@ func Load(path string) (HadoopConf, error) {
 	return conf, nil
 }
 
-// Namenodes returns the namenode hosts present in the configuration. The
-// returned slice will be sorted and deduped. The values are loaded from
-// fs.defaultFS (or the deprecated fs.default.name), or fields beginning with
-// dfs.namenode.rpc-address.
-//
-// To handle 'logical' clusters Namenodes will not return any cluster names
-// found in dfs.ha.namenodes.<clustername> properties.
-//
-// If no namenode addresses can befound, Namenodes returns a nil slice.
-func (conf HadoopConf) Namenodes() []string {
-	nns := make(map[string]bool)
+// DefaultNamenodes returns the namenodes that should be used given the
+// configuration's fs.defaultFS (or deprecated fs.default.name) property. If no
+// such property is found, i.e. if the configuration is using neither federated
+// namespaces nor high availability, then the dfs.namenode.rpc-address property
+// is returned if present. Otherwise, a nil slice is returned.
+func (conf HadoopConf) DefaultNamenodes() []string {
+	if fs, ok := conf["fs.defaultFS"]; ok {
+		// check if default nameservice is defined
+		fsurl, _ := url.Parse(fs)
+		if fsurl == nil {
+			return nil
+		}
+		return conf.Namenodes(fsurl.Host)
+	} else if ns, ok := conf["fs.default.name"]; ok {
+		// check if default nameservice is defined (through deprecated name)
+		return conf.Namenodes(ns)
+	} else if nn, ok := conf["dfs.namenode.rpc-address"]; ok {
+		// non-HA and non-federated config; return single namenode
+		return []string{nn}
+	} else {
+		// no namenodes found at all
+		return nil
+	}
+}
+
+// namenodesPerNS returns a mapping from clusters to the namenode(s) in those
+// clusters.
+func (conf HadoopConf) namenodesPerNS() map[string][]string {
+	nns := make(map[string][]string)
 	var clusterNames []string
 
-	for key, value := range conf {
-		if strings.Contains(key, "fs.default") {
-			nnUrl, _ := url.Parse(value)
-			nns[nnUrl.Host] = true
-		} else if strings.HasPrefix(key, "dfs.namenode.rpc-address.") {
-			nns[value] = true
-		} else if strings.HasPrefix(key, "dfs.ha.namenodes.") {
-			clusterNames = append(clusterNames, key[len("dfs.ha.namenodes."):])
+	// this property is required for high availability and/or federation. if
+	// it's not set, the configuration must be using a non-federated and non-HA
+	// architecture. check if the property is defined before updating
+	// clusterNames because strings.Split will return a non-empty slice given
+	// an empty string, covering up the distinction between no dfs.nameservices
+	// given and an empty dfs.nameservices.
+	if nameservices, ok := conf["dfs.nameservices"]; ok {
+		clusterNames = append(clusterNames, strings.Split(nameservices, ",")...)
+	}
+
+	// obtain logical namenode ids per nameservice
+	for _, ns := range clusterNames {
+		nnids, ha := conf["dfs.ha.namenodes."+ns]
+		if !ha {
+			// non-HA federated architecture
+			if nn, ok := conf["dfs.namenode.rpc-address."+ns]; ok {
+				nns[ns] = append(nns[ns], nn)
+			}
+		} else {
+			// HA architecture
+			for _, nnid := range strings.Split(nnids, ",") {
+				if nn, ok := conf["dfs.namenode.rpc-address."+ns+"."+nnid]; ok {
+					nns[ns] = append(nns[ns], nn)
+				}
+			}
+			sort.Strings(nns[ns])
 		}
 	}
 
-	for _, cn := range clusterNames {
-		delete(nns, cn)
-	}
+	return nns
+}
 
-	if len(nns) == 0 {
-		return nil
-	}
-
-	keys := make([]string, 0, len(nns))
-	for k, _ := range nns {
-		keys = append(keys, k)
-	}
-
-	sort.Strings(keys)
-	return keys
+// Namenodes returns the namenode hosts present in the configuration for the
+// given nameservice. The returned slice will be sorted. If no namenode
+// addresses can be found, Namenodes returns a nil slice.
+func (conf HadoopConf) Namenodes(ns string) []string {
+	return conf.namenodesPerNS()[ns]
 }

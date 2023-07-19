@@ -41,7 +41,7 @@ func getClientForUser(t *testing.T, username string) *Client {
 		t.Fatal("Couldn't load ambient config", err)
 	}
 
-	options := ClientOptionsFromConf(conf)
+	options := DefaultClientOptionsFromConf(conf)
 	if options.Addresses == nil {
 		t.Fatal("Missing namenode addresses in ambient config")
 	}
@@ -149,7 +149,7 @@ func TestNewWithMultipleNodes(t *testing.T) {
 		t.Fatal("Couldn't load ambient config", err)
 	}
 
-	nns := conf.Namenodes()
+	nns := conf.DefaultNamenodes()
 
 	nns = append([]string{"localhost:100"}, nns...)
 	_, err = NewClient(ClientOptions{Addresses: nns, User: "gohdfs1"})

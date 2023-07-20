@@ -236,7 +236,7 @@ func TestFileSeek(t *testing.T) {
 	n, err := io.CopyN(buf, file, int64(len(testStr)))
 	assert.NoError(t, err)
 	assert.EqualValues(t, len(testStr), n)
-	assert.EqualValues(t, testStr, string(buf.Bytes()))
+	assert.EqualValues(t, testStr, buf.String())
 
 	// seek backwards and read it again
 	off, err = file.Seek(-1*int64(len(testStr)), 1)
@@ -247,7 +247,7 @@ func TestFileSeek(t *testing.T) {
 	n, err = io.CopyN(buf, file, int64(len(testStr)))
 	assert.NoError(t, err)
 	assert.EqualValues(t, len(testStr), n)
-	assert.EqualValues(t, testStr, string(buf.Bytes()))
+	assert.EqualValues(t, testStr, buf.String())
 
 	// Do a small forward seek within the block.
 	off, err = file.Seek(testStrOff, 0)
@@ -266,7 +266,7 @@ func TestFileSeek(t *testing.T) {
 	n, err = io.CopyN(buf, file, int64(len(testStr2)))
 	assert.NoError(t, err)
 	assert.EqualValues(t, len(testStr2), n)
-	assert.EqualValues(t, testStr2, string(buf.Bytes()))
+	assert.EqualValues(t, testStr2, buf.String())
 
 	// Now seek forward to another block and read.
 	off, err = file.Seek(testStr3NegativeOff, 2)
@@ -277,7 +277,7 @@ func TestFileSeek(t *testing.T) {
 	n, err = io.CopyN(buf, file, int64(len(testStr3)))
 	assert.NoError(t, err)
 	assert.EqualValues(t, len(testStr3), n)
-	assert.EqualValues(t, testStr3, string(buf.Bytes()))
+	assert.EqualValues(t, testStr3, buf.String())
 }
 
 func TestFileSeekReadSkip(t *testing.T) {

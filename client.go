@@ -10,6 +10,7 @@ import (
 	"os/user"
 	"sort"
 	"strings"
+	"time"
 
 	"github.com/colinmarc/hdfs/v2/hadoopconf"
 	hadoop "github.com/colinmarc/hdfs/v2/internal/protocol/hadoop_common"
@@ -67,6 +68,10 @@ type ClientOptions struct {
 	// NamenodeDialFunc is used to connect to the namenodes. If nil, then
 	// (&net.Dialer{}).DialContext is used.
 	NamenodeDialFunc func(ctx context.Context, network, addr string) (net.Conn, error)
+	// NamenodeReadTimeout determines the deadline when reading from datanode connection
+	NamenodeReadTimeout time.Duration
+	// NamenodeWriteTimeout determines the deadline when writing to datanode connection
+	NamenodeWriteTimeout time.Duration
 	// DatanodeDialFunc is used to connect to the datanodes. If nil, then
 	// (&net.Dialer{}).DialContext is used.
 	DatanodeDialFunc func(ctx context.Context, network, addr string) (net.Conn, error)
@@ -194,6 +199,8 @@ func NewClient(options ClientOptions) (*Client, error) {
 			Addresses:                    options.Addresses,
 			User:                         options.User,
 			DialFunc:                     options.NamenodeDialFunc,
+			ReadTimeout:                  options.NamenodeReadTimeout,
+			WriteTimeout:                 options.NamenodeWriteTimeout,
 			KerberosClient:               options.KerberosClient,
 			KerberosServicePrincipleName: options.KerberosServicePrincipleName,
 		},

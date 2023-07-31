@@ -42,11 +42,13 @@ type NamenodeConnection struct {
 	kerberosServicePrincipleName string
 	kerberosRealm                string
 
-	dialFunc  func(ctx context.Context, network, addr string) (net.Conn, error)
-	conn      net.Conn
-	host      *namenodeHost
-	hostList  []*namenodeHost
-	transport transport
+	dialFunc     func(ctx context.Context, network, addr string) (net.Conn, error)
+	readTimeout  time.Duration
+	writeTimeout time.Duration
+	conn         net.Conn
+	host         *namenodeHost
+	hostList     []*namenodeHost
+	transport    transport
 
 	reqLock sync.Mutex
 	done    chan struct{}
@@ -64,6 +66,10 @@ type NamenodeConnectionOptions struct {
 	// DialFunc is used to connect to the namenodes. If nil, then
 	// (&net.Dialer{}).DialContext is used.
 	DialFunc func(ctx context.Context, network, addr string) (net.Conn, error)
+	// ReadTimeout determines the deadline when reading from datanode connection
+	ReadTimeout time.Duration
+	// WriteTimeout determines the deadline when writing to datanode connection
+	WriteTimeout time.Duration
 	// KerberosClient is used to connect to kerberized HDFS clusters. If provided,
 	// the NamenodeConnection will always mutually athenticate when connecting
 	// to the namenode(s).
@@ -114,9 +120,11 @@ func NewNamenodeConnection(options NamenodeConnectionOptions) (*NamenodeConnecti
 		kerberosServicePrincipleName: options.KerberosServicePrincipleName,
 		kerberosRealm:                realm,
 
-		dialFunc:  options.DialFunc,
-		hostList:  hostList,
-		transport: &basicTransport{clientID: clientId},
+		dialFunc:     options.DialFunc,
+		readTimeout:  options.ReadTimeout,
+		writeTimeout: options.WriteTimeout,
+		hostList:     hostList,
+		transport:    &basicTransport{clientID: clientId},
 
 		done: make(chan struct{}),
 	}
@@ -134,6 +142,9 @@ func NewNamenodeConnection(options NamenodeConnectionOptions) (*NamenodeConnecti
 
 func (c *NamenodeConnection) resolveConnection() error {
 	if c.conn != nil {
+		if err := c.setTimeout(); err != nil {
+			return nil
+		}
 		return nil
 	}
 
@@ -153,6 +164,10 @@ func (c *NamenodeConnection) resolveConnection() error {
 
 		c.host = host
 		c.conn, err = c.dialFunc(context.Background(), "tcp", host.address)
+		if err := c.setTimeout(); err != nil {
+			c.markFailure(err)
+			continue
+		}
 		if err != nil {
 			c.markFailure(err)
 			continue
@@ -181,6 +196,20 @@ func (c *NamenodeConnection) markFailure(err error) {
 	}
 	c.host.lastError = err
 	c.host.lastErrorAt = time.Now()
+}
+
+func (c *NamenodeConnection) setTimeout() error {
+	if c.readTimeout > 0 {
+		if err := c.conn.SetReadDeadline(time.Now().Add(c.readTimeout)); err != nil {
+			return err
+		}
+	}
+	if c.writeTimeout > 0 {
+		if err := c.conn.SetWriteDeadline(time.Now().Add(c.writeTimeout)); err != nil {
+			return err
+		}
+	}
+	return nil
 }
 
 // Execute performs an rpc call. It does this by sending req over the wire and

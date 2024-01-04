@@ -6,6 +6,7 @@ import (
 	"net"
 	"regexp"
 	"sort"
+	"strings"
 
 	hadoop "github.com/colinmarc/hdfs/v2/internal/protocol/hadoop_common"
 	"github.com/colinmarc/hdfs/v2/internal/sasl"
@@ -170,10 +171,53 @@ func (c *NamenodeConnection) readSaslResponse(expectedState hadoop.RpcSaslProto_
 	return resp, nil
 }
 
+func isValidHostname(host string, addr string) bool {
+	addrs, err := net.LookupHost(host)
+	if err != nil {
+		return false
+	}
+	if len(addrs) == 0 {
+		return false
+	}
+	for _, a := range addrs {
+		if a != addr {
+			return false
+		}
+	}
+	return true
+}
+
+func reverseLookup(host string, restrict bool) string {
+	addrs, err := net.LookupHost(host)
+	if err != nil {
+		return ""
+	}
+	for _, addr := range addrs {
+		names, err := net.LookupAddr(addr)
+		if err != nil {
+			continue
+		}
+		for _, name := range names {
+			if restrict {
+				if !isValidHostname(name, addr) {
+					continue
+				}
+			}
+			return strings.TrimSuffix(name, ".")
+		}
+	}
+	return ""
+}
+
 // getKerberosTicket returns an initial kerberos negotiation token and the
 // paired session key, along with an error if any occured.
 func (c *NamenodeConnection) getKerberosTicket() (spnego.NegTokenInit, krbtypes.EncryptionKey, error) {
 	host, _, _ := net.SplitHostPort(c.host.address)
+	// Hadoop uses the reverse-resolved hostname for the SPN, so we do the same.
+	// https://github.com/apache/hadoop/blob/7a7db7f0dc4107f44b281eb834fdffc9fd9b08b3/hadoop-hdfs-project/hadoop-hdfs/src/main/java/org/apache/hadoop/hdfs/DFSUtil.java#L445
+	if revHost := reverseLookup(host, true); revHost != "" {
+		host = revHost
+	}
 	spn := replaceSPNHostWildcard(c.kerberosServicePrincipleName, host)
 
 	ticket, key, err := c.kerberosClient.GetServiceTicket(spn)

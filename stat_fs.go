@@ -17,7 +17,7 @@ type FsInfo struct {
 	PendingDeletionBlocks uint64
 }
 
-func (c *Client) StatFs() (FsInfo, error) {
+func (c *ClientImpl) StatFs() (FsInfo, error) {
 	req := &hdfs.GetFsStatusRequestProto{}
 	resp := &hdfs.GetFsStatsResponseProto{}
 

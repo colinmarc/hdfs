@@ -330,8 +330,9 @@ func TestFileAppendLastBlockFull(t *testing.T) {
 	err = writer.Close()
 	require.NoError(t, err)
 
-	reader, err := client.Open("/_test/append/3.txt")
+	readerInf, err := client.Open("/_test/append/3.txt")
 	require.NoError(t, err)
+	reader := readerInf.(*FileReaderImpl)
 
 	err = reader.getBlocks()
 	require.NoError(t, err)

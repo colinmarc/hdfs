@@ -67,7 +67,7 @@ func ls(paths []string, long, all, humanReadable bool) {
 	}
 }
 
-func printDir(client *hdfs.Client, dir string, long, all, humanReadable bool) {
+func printDir(client hdfs.Client, dir string, long, all, humanReadable bool) {
 	dirReader, err := client.Open(dir)
 	if err != nil {
 		fatal(err)

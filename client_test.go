@@ -16,13 +16,13 @@ import (
 	"gopkg.in/jcmturner/gokrb5.v5/credentials"
 )
 
-var cachedClients = make(map[string]*Client)
+var cachedClients = make(map[string]Client)
 
-func getClient(t *testing.T) *Client {
+func getClient(t *testing.T) Client {
 	return getClientForUser(t, "gohdfs1")
 }
 
-func getClientForSuperUser(t *testing.T) *Client {
+func getClientForSuperUser(t *testing.T) Client {
 	u, err := user.Current()
 	if err != nil {
 		t.Fatal(err)
@@ -31,7 +31,7 @@ func getClientForSuperUser(t *testing.T) *Client {
 	return getClientForUser(t, u.Username)
 }
 
-func getClientForUser(t *testing.T, username string) *Client {
+func getClientForUser(t *testing.T, username string) Client {
 	if c, ok := cachedClients[username]; ok {
 		return c
 	}

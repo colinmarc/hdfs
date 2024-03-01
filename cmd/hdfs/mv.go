@@ -47,7 +47,7 @@ func mv(paths []string, force, treatDestAsFile bool) {
 	}
 }
 
-func moveInto(client *hdfs.Client, sources []string, dest string, force bool) {
+func moveInto(client hdfs.Client, sources []string, dest string, force bool) {
 	for _, source := range sources {
 		_, name := path.Split(source)
 
@@ -56,7 +56,7 @@ func moveInto(client *hdfs.Client, sources []string, dest string, force bool) {
 	}
 }
 
-func moveTo(client *hdfs.Client, source, dest string, force bool) {
+func moveTo(client hdfs.Client, source, dest string, force bool) {
 	sourceInfo, err := client.Stat(source)
 	if err != nil {
 		if pathErr, ok := err.(*os.PathError); ok {

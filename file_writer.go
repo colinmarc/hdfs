@@ -10,11 +10,33 @@ import (
 	"github.com/golang/protobuf/proto"
 )
 
-// A FileWriter represents a writer for an open file in HDFS. It implements
+type FileWriter interface {
+	// SetDeadline sets the deadline for future Write, Flush, and Close calls. A
+	// zero value for t means those calls will not time out.
+	//
+	// Note that because of buffering, Write calls that do not result in a blocking
+	// network call may still succeed after the deadline.
+	SetDeadline(t time.Time) error
+	// Write implements io.Writer for writing to a file in HDFS. Internally, it
+	// writes data to an internal buffer first, and then later out to HDFS. Because
+	// of this, it is important that Close is called after all data has been
+	// written.
+	Write(b []byte) (int, error)
+	// Flush flushes any buffered data out to the datanodes. Even immediately after
+	// a call to Flush, it is still necessary to call Close once all data has been
+	// written.
+	Flush() error
+	// Close closes the file, writing any remaining data out to disk and waiting
+	// for acknowledgements from the datanodes. It is important that Close is called
+	// after all data has been written.
+	Close() error
+}
+
+// A FileWriterImpl represents a writer for an open file in HDFS. It implements
 // Writer and Closer, and can only be used for writes. For reads, see
 // FileReader and Client.Open.
-type FileWriter struct {
-	client      *Client
+type FileWriterImpl struct {
+	client      *ClientImpl
 	name        string
 	replication int
 	blockSize   int64
@@ -29,7 +51,7 @@ type FileWriter struct {
 // to it. Because of the way that HDFS writes are buffered and acknowledged
 // asynchronously, it is very important that Close is called after all data has
 // been written.
-func (c *Client) Create(name string) (*FileWriter, error) {
+func (c *ClientImpl) Create(name string) (FileWriter, error) {
 	_, err := c.getFileInfo(name)
 	err = interpretException(err)
 	if err == nil {
@@ -52,7 +74,7 @@ func (c *Client) Create(name string) (*FileWriter, error) {
 // and permissions, and returns an io.WriteCloser for writing to it. Because of
 // the way that HDFS writes are buffered and acknowledged asynchronously, it is
 // very important that Close is called after all data has been written.
-func (c *Client) CreateFile(name string, replication int, blockSize int64, perm os.FileMode) (*FileWriter, error) {
+func (c *ClientImpl) CreateFile(name string, replication int, blockSize int64, perm os.FileMode) (FileWriter, error) {
 	createReq := &hdfs.CreateRequestProto{
 		Src:          proto.String(name),
 		Masked:       &hdfs.FsPermissionProto{Perm: proto.Uint32(uint32(perm))},
@@ -69,7 +91,7 @@ func (c *Client) CreateFile(name string, replication int, blockSize int64, perm 
 		return nil, &os.PathError{"create", name, interpretException(err)}
 	}
 
-	return &FileWriter{
+	return &FileWriterImpl{
 		client:      c,
 		name:        name,
 		replication: replication,
@@ -81,7 +103,7 @@ func (c *Client) CreateFile(name string, replication int, blockSize int64, perm 
 // writing to it. Because of the way that HDFS writes are buffered and
 // acknowledged asynchronously, it is very important that Close is called after
 // all data has been written.
-func (c *Client) Append(name string) (*FileWriter, error) {
+func (c *ClientImpl) Append(name string) (FileWriter, error) {
 	_, err := c.getFileInfo(name)
 	if err != nil {
 		return nil, &os.PathError{"append", name, interpretException(err)}
@@ -98,7 +120,7 @@ func (c *Client) Append(name string) (*FileWriter, error) {
 		return nil, &os.PathError{"append", name, interpretException(err)}
 	}
 
-	f := &FileWriter{
+	f := &FileWriterImpl{
 		client:      c,
 		name:        name,
 		replication: int(appendResp.Stat.GetBlockReplication()),
@@ -132,7 +154,7 @@ func (c *Client) Append(name string) (*FileWriter, error) {
 
 // CreateEmptyFile creates a empty file at the given name, with the
 // permissions 0644.
-func (c *Client) CreateEmptyFile(name string) error {
+func (c *ClientImpl) CreateEmptyFile(name string) error {
 	f, err := c.Create(name)
 	if err != nil {
 		return err
@@ -146,7 +168,7 @@ func (c *Client) CreateEmptyFile(name string) error {
 //
 // Note that because of buffering, Write calls that do not result in a blocking
 // network call may still succeed after the deadline.
-func (f *FileWriter) SetDeadline(t time.Time) error {
+func (f *FileWriterImpl) SetDeadline(t time.Time) error {
 	f.deadline = t
 	if f.blockWriter != nil {
 		return f.blockWriter.SetDeadline(t)
@@ -160,7 +182,7 @@ func (f *FileWriter) SetDeadline(t time.Time) error {
 // writes data to an internal buffer first, and then later out to HDFS. Because
 // of this, it is important that Close is called after all data has been
 // written.
-func (f *FileWriter) Write(b []byte) (int, error) {
+func (f *FileWriterImpl) Write(b []byte) (int, error) {
 	if f.closed {
 		return 0, io.ErrClosedPipe
 	}
@@ -191,7 +213,7 @@ func (f *FileWriter) Write(b []byte) (int, error) {
 // Flush flushes any buffered data out to the datanodes. Even immediately after
 // a call to Flush, it is still necessary to call Close once all data has been
 // written.
-func (f *FileWriter) Flush() error {
+func (f *FileWriterImpl) Flush() error {
 	if f.closed {
 		return io.ErrClosedPipe
 	}
@@ -206,7 +228,7 @@ func (f *FileWriter) Flush() error {
 // Close closes the file, writing any remaining data out to disk and waiting
 // for acknowledgements from the datanodes. It is important that Close is called
 // after all data has been written.
-func (f *FileWriter) Close() error {
+func (f *FileWriterImpl) Close() error {
 	if f.closed {
 		return io.ErrClosedPipe
 	}
@@ -237,7 +259,7 @@ func (f *FileWriter) Close() error {
 	return nil
 }
 
-func (f *FileWriter) startNewBlock() error {
+func (f *FileWriterImpl) startNewBlock() error {
 	var previous *hdfs.ExtendedBlockProto
 	if f.blockWriter != nil {
 		previous = f.blockWriter.Block.GetB()
@@ -273,7 +295,7 @@ func (f *FileWriter) startNewBlock() error {
 	return f.blockWriter.SetDeadline(f.deadline)
 }
 
-func (f *FileWriter) finalizeBlock() error {
+func (f *FileWriterImpl) finalizeBlock() error {
 	err := f.blockWriter.Close()
 	if err != nil {
 		return err

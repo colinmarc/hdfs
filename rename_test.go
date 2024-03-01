@@ -66,3 +66,23 @@ func TestRenameWithoutPermissionForDest(t *testing.T) {
 	err = client2.Rename("/_test/ownedbyother2", "/_test/accessdenied/tomovedest4")
 	assertPathError(t, err, "rename", "/_test/accessdenied/tomovedest4", os.ErrPermission)
 }
+
+func TestRenameWithOverwrite(t *testing.T) {
+	client := getClientForUser(t, "gohdfs2")
+
+	touch(t, "/_test/tomove2")
+	touch(t, "/_test/tomovedest2")
+
+	err := client.RenameWithOverwriteOption("/_test/tomove2", "/_test/tomovedest2", true)
+	require.NoError(t, err)
+}
+
+func TestRenameWithOverwriteDestExists(t *testing.T) {
+	client := getClientForUser(t, "gohdfs2")
+
+	touch(t, "/_test/tomoveDestExists")
+	touch(t, "/_test/tomoveDestExists2")
+
+	err := client.RenameWithOverwriteOption("/_test/tomoveDestExists", "/_test/tomoveDestExists2", false)
+	require.Error(t, err)
+}

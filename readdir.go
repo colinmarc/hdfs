@@ -7,7 +7,7 @@ import "os"
 //
 // The os.FileInfo values returned will not have block location attached to
 // the struct returned by Sys().
-func (c *Client) ReadDir(dirname string) ([]os.FileInfo, error) {
+func (c *ClientImpl) ReadDir(dirname string) ([]os.FileInfo, error) {
 	f, err := c.Open(dirname)
 	if err != nil {
 		return nil, err

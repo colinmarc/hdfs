@@ -82,7 +82,7 @@ func printSection(paths []string, numLines, numBytes int64, fromEnd bool) {
 	}
 }
 
-func headLines(file *hdfs.FileReader, numLines int64) {
+func headLines(file hdfs.FileReader, numLines int64) {
 	reader := bufio.NewReader(file)
 
 	var newlines, offset int64
@@ -114,7 +114,7 @@ func headLines(file *hdfs.FileReader, numLines int64) {
 	}
 }
 
-func tailLines(file *hdfs.FileReader, numLines int64) {
+func tailLines(file hdfs.FileReader, numLines int64) {
 	fileSize := file.Stat().Size()
 	searchPoint := file.Stat().Size() - tailSearchSize
 	if searchPoint < 0 {

@@ -53,7 +53,7 @@ func du(args []string, summarize, humanReadable bool) {
 	}
 }
 
-func duDir(client *hdfs.Client, tw *tabwriter.Writer, dir string, humanReadable bool) int64 {
+func duDir(client hdfs.Client, tw *tabwriter.Writer, dir string, humanReadable bool) int64 {
 	dirReader, err := client.Open(dir)
 	if err != nil {
 		fmt.Fprintln(os.Stderr, err)

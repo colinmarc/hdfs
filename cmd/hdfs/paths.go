@@ -15,7 +15,7 @@ var (
 	errMultipleNamenodeUrls = errors.New("Multiple namenode URLs specified")
 )
 
-func userDir(client *hdfs.Client) string {
+func userDir(client hdfs.Client) string {
 	return path.Join("/user", client.User())
 }
 
@@ -46,7 +46,7 @@ func normalizePaths(paths []string) ([]string, string, error) {
 	return cleanPaths, namenode, nil
 }
 
-func getClientAndExpandedPaths(paths []string) ([]string, *hdfs.Client, error) {
+func getClientAndExpandedPaths(paths []string) ([]string, hdfs.Client, error) {
 	paths, nn, err := normalizePaths(paths)
 	if err != nil {
 		return nil, nil, err
@@ -74,7 +74,7 @@ func hasGlob(fragment string) bool {
 
 // expandGlobs recursively expands globs in a filepath. It assumes the paths
 // are already cleaned and normalized (ie, absolute).
-func expandGlobs(client *hdfs.Client, globbedPath string) ([]string, error) {
+func expandGlobs(client hdfs.Client, globbedPath string) ([]string, error) {
 	parts := strings.Split(globbedPath, "/")[1:]
 	var res []string
 	var splitAt int
@@ -133,7 +133,7 @@ func expandGlobs(client *hdfs.Client, globbedPath string) ([]string, error) {
 	return res, nil
 }
 
-func expandPaths(client *hdfs.Client, paths []string) ([]string, error) {
+func expandPaths(client hdfs.Client, paths []string) ([]string, error) {
 	var res []string
 	home := userDir(client)
 

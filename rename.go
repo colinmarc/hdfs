@@ -9,12 +9,12 @@ import (
 )
 
 // Rename renames (moves) a file.
-func (c *Client) Rename(oldpath, newpath string) error {
+func (c *ClientImpl) Rename(oldpath, newpath string) error {
 	return c.RenameWithOverwriteOption(oldpath, newpath, true)
 }
 
 // RenameWithOverwrite renames (moves) a file. Overwrite option is taken as input.
-func (c *Client) RenameWithOverwriteOption(oldpath, newpath string, overwrite bool) error {
+func (c *ClientImpl) RenameWithOverwriteOption(oldpath, newpath string, overwrite bool) error {
 	f, err := c.getFileInfo(newpath)
 	err = interpretException(err)
 	if err != nil && !os.IsNotExist(err) {

@@ -78,8 +78,8 @@ Valid commands:
 	dfOpts = getopt.New()
 	dfh    = dfOpts.Bool('h')
 
-	cachedClients map[string]*hdfs.Client = make(map[string]*hdfs.Client)
-	status                                = 0
+	cachedClients map[string]hdfs.Client = make(map[string]hdfs.Client)
+	status                               = 0
 )
 
 func init() {
@@ -173,7 +173,7 @@ func fatalWithUsage(msg ...interface{}) {
 	fatal(msg...)
 }
 
-func getClient(namenode string) (*hdfs.Client, error) {
+func getClient(namenode string) (hdfs.Client, error) {
 	if cachedClients[namenode] != nil {
 		return cachedClients[namenode], nil
 	}

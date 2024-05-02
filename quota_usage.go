@@ -10,10 +10,9 @@ import (
 // TODO:  getTypesQuotaUsage
 // https://github.com/apache/hadoop/blob/daafc8a0b849ffdf851c6a618684656925f1df76/hadoop-common-project/hadoop-common/src/main/java/org/apache/hadoop/fs/QuotaUsage.java#L348C20-L348C38
 
-// ContentSummary represents a set of information about a file or directory in
+// QuotaUsage represents quota usage about a file or directory in
 // HDFS. It's provided directly by the namenode, and has no unix filesystem
 // analogue.
-
 type QuotaUsage struct {
 	name       string
 	quotaUsage *hdfs.QuotaUsageProto

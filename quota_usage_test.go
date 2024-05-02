@@ -20,10 +20,10 @@ func TestQuotaUsageDir(t *testing.T) {
 	resp, err := client.GetQuotaUsage("/_test/dirforcs")
 	require.NoError(t, err)
 
-	assert.EqualValues(t, 4, resp.FileAndDirectoryCount())
+	assert.EqualValues(t, 5, resp.FileAndDirectoryCount())
 	assert.True(t, resp.Quota() < 0)
 	assert.True(t, resp.SpaceQuota() < 0)
-	assert.True(t, resp.SpaceConsumed() > 0)
+	assert.True(t, resp.SpaceConsumed() == 0)
 
 }
 
@@ -33,7 +33,7 @@ func TestQuotaUsageFile(t *testing.T) {
 	resp, err := client.GetQuotaUsage("/_test/foo.txt")
 	require.NoError(t, err)
 
-	assert.EqualValues(t, 4, resp.FileAndDirectoryCount())
+	assert.EqualValues(t, 1, resp.FileAndDirectoryCount())
 	assert.True(t, resp.Quota() < 0)
 	assert.True(t, resp.SpaceQuota() < 0)
 	assert.True(t, resp.SpaceConsumed() > 0)

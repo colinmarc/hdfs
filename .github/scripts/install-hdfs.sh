@@ -70,7 +70,7 @@ EOF
   done
 fi
 
-URL="https://dlcdn.apache.org/hadoop/core/hadoop-${HADOOP_VERSION}/hadoop-${HADOOP_VERSION}.tar.gz"
+URL="https://archive.apache.org/dist/hadoop/core/hadoop-${HADOOP_VERSION}/hadoop-${HADOOP_VERSION}.tar.gz"
 echo "Downloading $URL"
 curl -o hadoop.tar.gz $URL
 tar zxf hadoop.tar.gz

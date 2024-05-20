@@ -86,6 +86,7 @@ func getmerge(args []string, addNewlines bool) {
 	if err != nil {
 		fatal(err)
 	}
+	defer local.Close()
 
 	source := sources[0]
 	children, err := client.ReadDir(source)

@@ -5,6 +5,11 @@ HDFS for Go
 
 [![GoDoc](https://godoc.org/github.com/colinmarc/hdfs/web?status.svg)](https://godoc.org/github.com/colinmarc/hdfs/v2) [![build](https://github.com/colinmarc/hdfs/actions/workflows/tests.yml/badge.svg?branch=master)](https://github.com/colinmarc/hdfs/actions/workflows/tests.yml)
 
+> [!IMPORTANT]
+> Maintainer(s) wanted! If you or your company uses this in production (I don't
+> anymore) and is interested in taking the project over, please get in touch via
+> email.
+
 This is a native golang client for hdfs. It connects directly to the namenode using
 the protocol buffers API.
 

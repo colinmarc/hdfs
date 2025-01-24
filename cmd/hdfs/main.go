@@ -40,6 +40,7 @@ Valid commands:
   put SOURCE DEST
   df [-h]
   truncate SIZE FILE
+  count [-q] [-h] <path> ...
 `, os.Args[0])
 
 	lsOpts = getopt.New()
@@ -82,6 +83,10 @@ Valid commands:
 	duOpts = getopt.New()
 	dus    = duOpts.Bool('s')
 	duh    = duOpts.Bool('h')
+
+	countOpts = getopt.New()
+	countq    = countOpts.Bool('q')
+	counth    = countOpts.Bool('h')
 
 	getmergeOpts = getopt.New()
 	getmergen    = getmergeOpts.Bool('n')
@@ -146,6 +151,9 @@ func main() {
 	case "du":
 		duOpts.Parse(argv)
 		du(duOpts.Args(), *dus, *duh)
+	case "count":
+		countOpts.Parse(argv)
+		count(countOpts.Args(), *countq, *counth)
 	case "checksum":
 		checksum(argv[1:])
 	case "get":

@@ -19,7 +19,7 @@ func TestConfFallback(t *testing.T) {
 	conf, err := LoadFromEnvironment()
 	assert.NoError(t, err)
 
-	nns := conf.Namenodes()
+	nns := conf.DefaultNamenodes()
 	assert.NoError(t, err)
 	assert.EqualValues(t, conf2Namenodes, nns, "loading via HADOOP_CONF_DIR (testdata/conf2)")
 
@@ -28,7 +28,7 @@ func TestConfFallback(t *testing.T) {
 	conf, err = LoadFromEnvironment()
 	assert.NoError(t, err)
 
-	nns = conf.Namenodes()
+	nns = conf.DefaultNamenodes()
 	assert.NoError(t, err)
 	assert.EqualValues(t, confNamenodes, nns, "loading via HADOOP_HOME (testdata/conf)")
 

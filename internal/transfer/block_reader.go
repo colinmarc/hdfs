@@ -6,7 +6,6 @@ import (
 	"fmt"
 	"hash/crc32"
 	"io"
-	"io/ioutil"
 	"net"
 	"time"
 
@@ -210,7 +209,7 @@ func (br *BlockReader) connectNext() error {
 	// forward to the requested offset.
 	amountToDiscard := br.Offset - chunkOffset
 	if amountToDiscard > 0 {
-		_, err := io.CopyN(ioutil.Discard, stream, amountToDiscard)
+		_, err := io.CopyN(io.Discard, stream, amountToDiscard)
 		if err != nil {
 			if err == io.EOF {
 				err = io.ErrUnexpectedEOF

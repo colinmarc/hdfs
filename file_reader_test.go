@@ -7,7 +7,6 @@ import (
 	"fmt"
 	"hash/crc32"
 	"io"
-	"io/ioutil"
 	"math/rand"
 	"net"
 	"os"
@@ -53,7 +52,7 @@ func TestFileRead(t *testing.T) {
 	file, err := client.Open("/_test/foo.txt")
 	require.NoError(t, err)
 
-	bytes, err := ioutil.ReadAll(file)
+	bytes, err := io.ReadAll(file)
 	assert.NoError(t, err)
 	assert.EqualValues(t, "bar\n", string(bytes))
 
@@ -72,7 +71,7 @@ func TestReadEmptyFile(t *testing.T) {
 	file, err := client.Open("/_test/emptyfile")
 	require.NoError(t, err)
 
-	bytes, err := ioutil.ReadAll(file)
+	bytes, err := io.ReadAll(file)
 	assert.NoError(t, err)
 	assert.EqualValues(t, "", string(bytes))
 }
@@ -147,7 +146,7 @@ func TestFileBigReadN(t *testing.T) {
 	file, err := client.Open("/_test/mobydick.txt")
 	require.NoError(t, err)
 
-	n, err := io.CopyN(ioutil.Discard, file, 1000000)
+	n, err := io.CopyN(io.Discard, file, 1000000)
 	assert.NoError(t, err)
 	assert.EqualValues(t, n, 1000000)
 }

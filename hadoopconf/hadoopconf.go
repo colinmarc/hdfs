@@ -5,7 +5,6 @@ package hadoopconf
 import (
 	"encoding/xml"
 	"fmt"
-	"io/ioutil"
 	"net/url"
 	"os"
 	"path/filepath"
@@ -66,7 +65,7 @@ func Load(path string) (HadoopConf, error) {
 
 	for _, file := range confFiles {
 		pList := propertyList{}
-		f, err := ioutil.ReadFile(filepath.Join(path, file))
+		f, err := os.ReadFile(filepath.Join(path, file))
 		if os.IsNotExist(err) {
 			continue
 		} else if err != nil {
@@ -123,7 +122,7 @@ func (conf HadoopConf) Namenodes() []string {
 	}
 
 	keys := make([]string, 0, len(nns))
-	for k, _ := range nns {
+	for k := range nns {
 		keys = append(keys, k)
 	}
 

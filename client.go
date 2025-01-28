@@ -4,7 +4,6 @@ import (
 	"context"
 	"errors"
 	"io"
-	"io/ioutil"
 	"net"
 	"os"
 	"os/user"
@@ -257,7 +256,7 @@ func (c *Client) ReadFile(filename string) ([]byte, error) {
 	}
 
 	defer f.Close()
-	return ioutil.ReadAll(f)
+	return io.ReadAll(f)
 }
 
 // CopyToLocal copies the HDFS file specified by src to the local file at dst.

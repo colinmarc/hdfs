@@ -2,7 +2,7 @@ package gohdfs
 
 import (
 	"fmt"
-	"io/ioutil"
+	"io"
 	"os"
 	"os/user"
 	"path/filepath"
@@ -172,7 +172,7 @@ func TestReadFile(t *testing.T) {
 func TestCopyToLocal(t *testing.T) {
 	client := getClient(t)
 
-	dir, _ := ioutil.TempDir("", "hdfs-test")
+	dir, _ := os.MkdirTemp("", "hdfs-test")
 	tmpfile := filepath.Join(dir, "foo.txt")
 	err := client.CopyToLocal("/_test/foo.txt", tmpfile)
 	require.NoError(t, err)
@@ -180,7 +180,7 @@ func TestCopyToLocal(t *testing.T) {
 	f, err := os.Open(tmpfile)
 	require.NoError(t, err)
 
-	bytes, _ := ioutil.ReadAll(f)
+	bytes, _ := io.ReadAll(f)
 	assert.EqualValues(t, "bar\n", string(bytes))
 }
 

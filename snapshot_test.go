@@ -1,7 +1,7 @@
 package gohdfs
 
 import (
-	"io/ioutil"
+	"io"
 	"os"
 	"path"
 	"testing"
@@ -32,7 +32,7 @@ func writeAndVerifyTestFile(t *testing.T, snapshotDir, filepath string) {
 	nf, err := c.Open(filepath)
 	require.NoError(t, err)
 
-	br, err := ioutil.ReadAll(nf)
+	br, err := io.ReadAll(nf)
 	require.NoError(t, err)
 	nf.Close()
 

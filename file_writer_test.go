@@ -3,7 +3,6 @@ package gohdfs
 import (
 	"hash/crc32"
 	"io"
-	"io/ioutil"
 	"math/rand"
 	"os"
 	"path/filepath"
@@ -57,7 +56,7 @@ func TestFileWrite(t *testing.T) {
 	reader, err := client.Open("/_test/create/1.txt")
 	require.NoError(t, err)
 
-	bytes, err := ioutil.ReadAll(reader)
+	bytes, err := io.ReadAll(reader)
 	require.NoError(t, err)
 	assert.Equal(t, "foobar", string(bytes))
 }
@@ -88,7 +87,7 @@ func TestFileWriteLeaseRenewal(t *testing.T) {
 	reader, err := client.Open("/_test/create/1.txt")
 	require.NoError(t, err)
 
-	bytes, err := ioutil.ReadAll(reader)
+	bytes, err := io.ReadAll(reader)
 	require.NoError(t, err)
 	assert.Equal(t, "foobar", string(bytes))
 }
@@ -230,7 +229,7 @@ func TestFileWriteSmallFlushes(t *testing.T) {
 	reader, err := client.Open("/_test/create/6.txt")
 	require.NoError(t, err)
 
-	bytes, err := ioutil.ReadAll(reader)
+	bytes, err := io.ReadAll(reader)
 	require.NoError(t, err)
 	assert.Equal(t, len(expected), len(bytes))
 	assert.Equal(t, expected, string(bytes))
@@ -339,7 +338,7 @@ func TestFileAppend(t *testing.T) {
 	reader, err := client.Open("/_test/append/1.txt")
 	require.NoError(t, err)
 
-	bytes, err := ioutil.ReadAll(reader)
+	bytes, err := io.ReadAll(reader)
 	require.NoError(t, err)
 	assert.Equal(t, "foobar\nfoobaz", string(bytes))
 }
@@ -366,7 +365,7 @@ func TestFileAppendEmptyFile(t *testing.T) {
 	reader, err := client.Open("/_test/append/2.txt")
 	require.NoError(t, err)
 
-	bytes, err := ioutil.ReadAll(reader)
+	bytes, err := io.ReadAll(reader)
 	require.NoError(t, err)
 	assert.Equal(t, "foobar", string(bytes))
 }
@@ -442,7 +441,7 @@ func TestFileAppendRepeatedly(t *testing.T) {
 	reader, err := client.Open("/_test/append/4.txt")
 	require.NoError(t, err)
 
-	bytes, err := ioutil.ReadAll(reader)
+	bytes, err := io.ReadAll(reader)
 	require.NoError(t, err)
 	assert.Equal(t, len(expected), len(bytes))
 	assert.Equal(t, expected, string(bytes))

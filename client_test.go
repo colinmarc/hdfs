@@ -135,6 +135,13 @@ func baleet(t *testing.T, path string) {
 	}
 }
 
+func cleanEnv(t *testing.T, path string, c *Client) {
+	err := c.RemoveAll(path)
+	if err != nil && !os.IsNotExist(err) {
+		t.Fatal(err)
+	}
+}
+
 func assertPathError(t *testing.T, err error, op, path string, wrappedErr error) {
 	require.NotNil(t, err)
 
@@ -198,8 +205,8 @@ func TestCopyToRemote(t *testing.T) {
 }
 
 func TestCopyHDFSToHDFS(t *testing.T) {
-	client := getClientForUser(t, "admin")
-	baleet(t, "/_test/copytoremote.txt")
+	client := getClientForUser(t, "hdfs_test")
+	cleanEnv(t, "/_test/copytoremote.txt", client)
 	client.MkdirAll("/_test/", 0644)
 	err := client.CopyToRemote("testdata/foo.txt", "/_test/copytoremote.txt")
 	ignoreErrReplicating(t, err)

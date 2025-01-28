@@ -6,3 +6,5 @@ minicluster.log
 
 
 **/vendor/**
+**/testdata/*.xml
+**/testdata/*.keytab

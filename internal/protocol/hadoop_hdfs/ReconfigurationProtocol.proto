@@ -66,4 +66,3 @@ service ReconfigurationProtocolService {
   rpc listReconfigurableProperties(ListReconfigurablePropertiesRequestProto)
       returns (ListReconfigurablePropertiesResponseProto);
 }
-}

@@ -196,3 +196,16 @@ func TestCopyToRemote(t *testing.T) {
 
 	assert.EqualValues(t, "bar\n", string(bytes))
 }
+
+func TestCopyHDFSToHDFS(t *testing.T) {
+	client := getClientForUser(t, "admin")
+	baleet(t, "/_test/copytoremote.txt")
+	client.MkdirAll("/_test/", 0644)
+	err := client.CopyToRemote("testdata/foo.txt", "/_test/copytoremote.txt")
+	ignoreErrReplicating(t, err)
+	err = client.Copy("/_test/copytoremote.txt", "/_test/copy.txt")
+	ignoreErrReplicating(t, err)
+	bytes, err := client.ReadFile("/_test/copy.txt")
+	require.NoError(t, err)
+	assert.EqualValues(t, "bar\n", string(bytes))
+}

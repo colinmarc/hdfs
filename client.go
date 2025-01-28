@@ -353,6 +353,24 @@ func (c *Client) wrapDatanodeDial(dc dialContext, token *hadoop.TokenProto) (dia
 	return dc, nil
 }
 
+func (c *Client) Copy(src string, dst string) error {
+	remote_src, err := c.Open(src)
+	if err != nil {
+		return err
+	}
+	defer remote_src.Close()
+	remote_dst, err := c.Create(dst)
+	if err != nil {
+		return err
+	}
+	_, err = io.Copy(remote_dst, remote_src)
+	if err != nil {
+		remote_dst.Close()
+		return err
+	}
+	return remote_dst.Close()
+}
+
 // Close terminates all underlying socket connections to remote server.
 func (c *Client) Close() error {
 	return c.namenode.Close()

@@ -1,7 +1,7 @@
-package hdfs
+package gohdfs
 
 import (
-	hdfs "github.com/colinmarc/hdfs/v2/internal/protocol/hadoop_hdfs"
+	hdfs "github.com/acceldata-io/gohdfs/internal/protocol/hadoop_hdfs"
 )
 
 // AllowSnapshots marks a directory as available for snapshots.

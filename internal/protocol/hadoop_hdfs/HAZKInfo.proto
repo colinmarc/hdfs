@@ -22,10 +22,11 @@
  * for what changes are allowed for a *stable* .proto interface.
  */
 syntax = "proto2";
-option java_package = "org.apache.hadoop.hdfs.server.namenode.ha.proto";
-option java_outer_classname = "HAZKInfoProtos";
-option go_package = "github.com/colinmarc/hdfs/v2/internal/protocol/hadoop_hdfs";
 package hadoop.hdfs;
+
+option go_package = "github.com/acceldata-io/gohdfs/internal/protocol/hadoop_hdfs";
+option java_outer_classname = "HAZKInfoProtos";
+option java_package = "org.apache.hadoop.hdfs.server.namenode.ha.proto";
 
 message ActiveNodeInfo {
   required string nameserviceId = 1;

@@ -4,7 +4,7 @@ import (
 	"errors"
 	"io"
 
-	hadoop "github.com/colinmarc/hdfs/v2/internal/protocol/hadoop_common"
+	hadoop "github.com/acceldata-io/gohdfs/internal/protocol/hadoop_common"
 	"google.golang.org/protobuf/proto"
 )
 

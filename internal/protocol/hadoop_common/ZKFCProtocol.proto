@@ -22,26 +22,21 @@
  * for what changes are allowed for a *stable* .proto interface.
  */
 syntax = "proto2";
-option java_package = "org.apache.hadoop.ha.proto";
-option java_outer_classname = "ZKFCProtocolProtos";
-option java_generic_services = true;
-option java_generate_equals_and_hash = true;
-option go_package = "github.com/colinmarc/hdfs/v2/internal/protocol/hadoop_common";
 package hadoop.common;
 
-message CedeActiveRequestProto {
-  required uint32 millisToCede = 1;
-}
+option go_package = "github.com/acceldata-io/gohdfs/internal/protocol/hadoop_common";
+option java_generate_equals_and_hash = true;
+option java_generic_services = true;
+option java_outer_classname = "ZKFCProtocolProtos";
+option java_package = "org.apache.hadoop.ha.proto";
 
-message CedeActiveResponseProto {
-}
+message CedeActiveRequestProto { required uint32 millisToCede = 1; }
 
-message GracefulFailoverRequestProto {
-}
+message CedeActiveResponseProto {}
 
-message GracefulFailoverResponseProto {
-}
+message GracefulFailoverRequestProto {}
 
+message GracefulFailoverResponseProto {}
 
 /**
  * Protocol provides manual control of the ZK Failover Controllers
@@ -51,10 +46,8 @@ service ZKFCProtocolService {
    * Request that the service cede its active state, and quit the election
    * for some amount of time
    */
-  rpc cedeActive(CedeActiveRequestProto)
-      returns(CedeActiveResponseProto);
-
+  rpc cedeActive(CedeActiveRequestProto) returns (CedeActiveResponseProto);
 
   rpc gracefulFailover(GracefulFailoverRequestProto)
-      returns(GracefulFailoverResponseProto);
+      returns (GracefulFailoverResponseProto);
 }

@@ -26,20 +26,18 @@ option java_package = "org.apache.hadoop.security.proto";
 option java_outer_classname = "RefreshAuthorizationPolicyProtocolProtos";
 option java_generic_services = true;
 option java_generate_equals_and_hash = true;
-option go_package = "github.com/colinmarc/hdfs/v2/internal/protocol/hadoop_common";
+option go_package = "github.com/acceldata-io/gohdfs/internal/protocol/hadoop_common";
 package hadoop.common;
 
 /**
  *  Refresh service acl request.
  */
-message RefreshServiceAclRequestProto {
-}
+message RefreshServiceAclRequestProto {}
 
 /**
  * void response
  */
-message RefreshServiceAclResponseProto {
-}
+message RefreshServiceAclResponseProto {}
 
 /**
  * Protocol which is used to refresh the authorization policy in use currently.
@@ -49,5 +47,5 @@ service RefreshAuthorizationPolicyProtocolService {
    * Refresh the service-level authorization policy in-effect.
    */
   rpc refreshServiceAcl(RefreshServiceAclRequestProto)
-      returns(RefreshServiceAclResponseProto);
+      returns (RefreshServiceAclResponseProto);
 }

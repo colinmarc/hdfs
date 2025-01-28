@@ -22,12 +22,13 @@
  * for what changes are allowed for a *stable* .proto interface.
  */
 syntax = "proto2";
-option java_package = "org.apache.hadoop.ha.proto";
-option java_outer_classname = "HAServiceProtocolProtos";
-option java_generic_services = true;
-option java_generate_equals_and_hash = true;
-option go_package = "github.com/colinmarc/hdfs/v2/internal/protocol/hadoop_common";
 package hadoop.common;
+
+option go_package = "github.com/acceldata-io/gohdfs/internal/protocol/hadoop_common";
+option java_generate_equals_and_hash = true;
+option java_generic_services = true;
+option java_outer_classname = "HAServiceProtocolProtos";
+option java_package = "org.apache.hadoop.ha.proto";
 
 enum HAServiceStateProto {
   INITIALIZING = 0;
@@ -49,40 +50,36 @@ message HAStateChangeRequestInfoProto {
 /**
  * void request
  */
-message MonitorHealthRequestProto { 
-}
+message MonitorHealthRequestProto {}
 
 /**
  * void response
  */
-message MonitorHealthResponseProto { 
-}
+message MonitorHealthResponseProto {}
 
 /**
  * void request
  */
-message TransitionToActiveRequestProto { 
+message TransitionToActiveRequestProto {
   required HAStateChangeRequestInfoProto reqInfo = 1;
 }
 
 /**
  * void response
  */
-message TransitionToActiveResponseProto { 
-}
+message TransitionToActiveResponseProto {}
 
 /**
  * void request
  */
-message TransitionToStandbyRequestProto { 
+message TransitionToStandbyRequestProto {
   required HAStateChangeRequestInfoProto reqInfo = 1;
 }
 
 /**
  * void response
  */
-message TransitionToStandbyResponseProto { 
-}
+message TransitionToStandbyResponseProto {}
 
 /**
  * void request
@@ -94,19 +91,17 @@ message TransitionToObserverRequestProto {
 /**
  * void response
  */
-message TransitionToObserverResponseProto {
-}
+message TransitionToObserverResponseProto {}
 
 /**
  * void request
  */
-message GetServiceStatusRequestProto { 
-}
+message GetServiceStatusRequestProto {}
 
 /**
  * Returns the state of the service
  */
-message GetServiceStatusResponseProto { 
+message GetServiceStatusResponseProto {
   required HAServiceStateProto state = 1;
 
   // If state is STANDBY, indicate whether it is
@@ -117,7 +112,7 @@ message GetServiceStatusResponseProto {
 }
 
 /**
- * Protocol interface provides High availability related 
+ * Protocol interface provides High availability related
  * primitives to monitor and failover a service.
  *
  * For details see o.a.h.ha.HAServiceProtocol.
@@ -127,29 +122,29 @@ service HAServiceProtocolService {
    * Monitor the health of a service.
    */
   rpc monitorHealth(MonitorHealthRequestProto)
-      returns(MonitorHealthResponseProto);
+      returns (MonitorHealthResponseProto);
 
   /**
    * Request service to tranisition to active state.
    */
   rpc transitionToActive(TransitionToActiveRequestProto)
-      returns(TransitionToActiveResponseProto);
+      returns (TransitionToActiveResponseProto);
 
   /**
    * Request service to transition to standby state.
    */
   rpc transitionToStandby(TransitionToStandbyRequestProto)
-      returns(TransitionToStandbyResponseProto);
+      returns (TransitionToStandbyResponseProto);
 
   /**
    * Request service to transition to observer state.
    */
   rpc transitionToObserver(TransitionToObserverRequestProto)
-      returns(TransitionToObserverResponseProto);
+      returns (TransitionToObserverResponseProto);
 
   /**
    * Get the current status of the service.
    */
   rpc getServiceStatus(GetServiceStatusRequestProto)
-      returns(GetServiceStatusResponseProto);
+      returns (GetServiceStatusResponseProto);
 }

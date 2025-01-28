@@ -29,11 +29,12 @@
 package hadoop_hdfs
 
 import (
-	hadoop_common "github.com/colinmarc/hdfs/v2/internal/protocol/hadoop_common"
-	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
-	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	reflect "reflect"
 	sync "sync"
+
+	hadoop_common "github.com/acceldata-io/gohdfs/internal/protocol/hadoop_common"
+	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
+	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 )
 
 const (
@@ -43,7 +44,7 @@ const (
 	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
 
-//*
+// *
 // block - block for which visible length is requested
 type GetReplicaVisibleLengthRequestProto struct {
 	state         protoimpl.MessageState
@@ -92,7 +93,7 @@ func (x *GetReplicaVisibleLengthRequestProto) GetBlock() *ExtendedBlockProto {
 	return nil
 }
 
-//*
+// *
 // length - visible length of the block
 type GetReplicaVisibleLengthResponseProto struct {
 	state         protoimpl.MessageState
@@ -141,7 +142,7 @@ func (x *GetReplicaVisibleLengthResponseProto) GetLength() uint64 {
 	return 0
 }
 
-//*
+// *
 // void request
 type RefreshNamenodesRequestProto struct {
 	state         protoimpl.MessageState
@@ -181,7 +182,7 @@ func (*RefreshNamenodesRequestProto) Descriptor() ([]byte, []int) {
 	return file_ClientDatanodeProtocol_proto_rawDescGZIP(), []int{2}
 }
 
-//*
+// *
 // void response
 type RefreshNamenodesResponseProto struct {
 	state         protoimpl.MessageState
@@ -221,10 +222,11 @@ func (*RefreshNamenodesResponseProto) Descriptor() ([]byte, []int) {
 	return file_ClientDatanodeProtocol_proto_rawDescGZIP(), []int{3}
 }
 
-//*
+// *
 // blockPool - block pool to be deleted
 // force - if false, delete the block pool only if it is empty.
-//         if true, delete the block pool even if it has blocks.
+//
+//	if true, delete the block pool even if it has blocks.
 type DeleteBlockPoolRequestProto struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -280,7 +282,7 @@ func (x *DeleteBlockPoolRequestProto) GetForce() bool {
 	return false
 }
 
-//*
+// *
 // void response
 type DeleteBlockPoolResponseProto struct {
 	state         protoimpl.MessageState
@@ -320,7 +322,7 @@ func (*DeleteBlockPoolResponseProto) Descriptor() ([]byte, []int) {
 	return file_ClientDatanodeProtocol_proto_rawDescGZIP(), []int{5}
 }
 
-//*
+// *
 // Gets the file information where block and its metadata is stored
 // block - block for which path information is being requested
 // token - block token
@@ -381,7 +383,7 @@ func (x *GetBlockLocalPathInfoRequestProto) GetToken() *hadoop_common.TokenProto
 	return nil
 }
 
-//*
+// *
 // block - block for which file path information is being returned
 // localPath - file path where the block data is stored
 // localMetaPath - file path where the block meta data is stored
@@ -450,10 +452,11 @@ func (x *GetBlockLocalPathInfoResponseProto) GetLocalMetaPath() string {
 	return ""
 }
 
-//*
+// *
 // forUpgrade - if true, clients are advised to wait for restart and quick
-//              upgrade restart is instrumented. Otherwise, datanode does
-//              the regular shutdown.
+//
+//	upgrade restart is instrumented. Otherwise, datanode does
+//	the regular shutdown.
 type ShutdownDatanodeRequestProto struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -539,7 +542,7 @@ func (*ShutdownDatanodeResponseProto) Descriptor() ([]byte, []int) {
 	return file_ClientDatanodeProtocol_proto_rawDescGZIP(), []int{9}
 }
 
-//* Tell datanode to evict active clients that are writing
+// * Tell datanode to evict active clients that are writing
 type EvictWritersRequestProto struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -616,7 +619,7 @@ func (*EvictWritersResponseProto) Descriptor() ([]byte, []int) {
 	return file_ClientDatanodeProtocol_proto_rawDescGZIP(), []int{11}
 }
 
-//*
+// *
 // Ping datanode for liveness and quick info
 type GetDatanodeInfoRequestProto struct {
 	state         protoimpl.MessageState
@@ -919,7 +922,7 @@ func (*GetBalancerBandwidthRequestProto) Descriptor() ([]byte, []int) {
 	return file_ClientDatanodeProtocol_proto_rawDescGZIP(), []int{18}
 }
 
-//*
+// *
 // bandwidth - balancer bandwidth value of the datanode.
 type GetBalancerBandwidthResponseProto struct {
 	state         protoimpl.MessageState
@@ -968,7 +971,7 @@ func (x *GetBalancerBandwidthResponseProto) GetBandwidth() uint64 {
 	return 0
 }
 
-//*
+// *
 // This message allows a client to submit a disk
 // balancer plan to a data node.
 type SubmitDiskBalancerPlanRequestProto struct {
@@ -1050,7 +1053,7 @@ func (x *SubmitDiskBalancerPlanRequestProto) GetPlanFile() string {
 	return ""
 }
 
-//*
+// *
 // Response from the DataNode on Plan Submit request
 type SubmitDiskBalancerPlanResponseProto struct {
 	state         protoimpl.MessageState
@@ -1090,7 +1093,7 @@ func (*SubmitDiskBalancerPlanResponseProto) Descriptor() ([]byte, []int) {
 	return file_ClientDatanodeProtocol_proto_rawDescGZIP(), []int{21}
 }
 
-//*
+// *
 // This message describes a request to cancel an
 // outstanding disk balancer plan
 type CancelPlanRequestProto struct {
@@ -1140,7 +1143,7 @@ func (x *CancelPlanRequestProto) GetPlanID() string {
 	return ""
 }
 
-//*
+// *
 // This is the response for the cancellation request
 type CancelPlanResponseProto struct {
 	state         protoimpl.MessageState
@@ -1180,7 +1183,7 @@ func (*CancelPlanResponseProto) Descriptor() ([]byte, []int) {
 	return file_ClientDatanodeProtocol_proto_rawDescGZIP(), []int{23}
 }
 
-//*
+// *
 // This message allows a client to query data node to see
 // if a disk balancer plan is executing and if so what is
 // the status.
@@ -1222,7 +1225,7 @@ func (*QueryPlanStatusRequestProto) Descriptor() ([]byte, []int) {
 	return file_ClientDatanodeProtocol_proto_rawDescGZIP(), []int{24}
 }
 
-//*
+// *
 // This message describes a plan if it is in progress
 type QueryPlanStatusResponseProto struct {
 	state         protoimpl.MessageState
@@ -1295,7 +1298,7 @@ func (x *QueryPlanStatusResponseProto) GetPlanFile() string {
 	return ""
 }
 
-//*
+// *
 // This message sends a request to data node get a specific setting
 // that is used by disk balancer.
 type DiskBalancerSettingRequestProto struct {
@@ -1345,7 +1348,7 @@ func (x *DiskBalancerSettingRequestProto) GetKey() string {
 	return ""
 }
 
-//*
+// *
 // Response that describes the value of requested disk balancer setting.
 type DiskBalancerSettingResponseProto struct {
 	state         protoimpl.MessageState
@@ -1669,47 +1672,49 @@ func file_ClientDatanodeProtocol_proto_rawDescGZIP() []byte {
 	return file_ClientDatanodeProtocol_proto_rawDescData
 }
 
-var file_ClientDatanodeProtocol_proto_msgTypes = make([]protoimpl.MessageInfo, 28)
-var file_ClientDatanodeProtocol_proto_goTypes = []interface{}{
-	(*GetReplicaVisibleLengthRequestProto)(nil),       // 0: hadoop.hdfs.GetReplicaVisibleLengthRequestProto
-	(*GetReplicaVisibleLengthResponseProto)(nil),      // 1: hadoop.hdfs.GetReplicaVisibleLengthResponseProto
-	(*RefreshNamenodesRequestProto)(nil),              // 2: hadoop.hdfs.RefreshNamenodesRequestProto
-	(*RefreshNamenodesResponseProto)(nil),             // 3: hadoop.hdfs.RefreshNamenodesResponseProto
-	(*DeleteBlockPoolRequestProto)(nil),               // 4: hadoop.hdfs.DeleteBlockPoolRequestProto
-	(*DeleteBlockPoolResponseProto)(nil),              // 5: hadoop.hdfs.DeleteBlockPoolResponseProto
-	(*GetBlockLocalPathInfoRequestProto)(nil),         // 6: hadoop.hdfs.GetBlockLocalPathInfoRequestProto
-	(*GetBlockLocalPathInfoResponseProto)(nil),        // 7: hadoop.hdfs.GetBlockLocalPathInfoResponseProto
-	(*ShutdownDatanodeRequestProto)(nil),              // 8: hadoop.hdfs.ShutdownDatanodeRequestProto
-	(*ShutdownDatanodeResponseProto)(nil),             // 9: hadoop.hdfs.ShutdownDatanodeResponseProto
-	(*EvictWritersRequestProto)(nil),                  // 10: hadoop.hdfs.EvictWritersRequestProto
-	(*EvictWritersResponseProto)(nil),                 // 11: hadoop.hdfs.EvictWritersResponseProto
-	(*GetDatanodeInfoRequestProto)(nil),               // 12: hadoop.hdfs.GetDatanodeInfoRequestProto
-	(*GetDatanodeInfoResponseProto)(nil),              // 13: hadoop.hdfs.GetDatanodeInfoResponseProto
-	(*GetVolumeReportRequestProto)(nil),               // 14: hadoop.hdfs.GetVolumeReportRequestProto
-	(*GetVolumeReportResponseProto)(nil),              // 15: hadoop.hdfs.GetVolumeReportResponseProto
-	(*TriggerBlockReportRequestProto)(nil),            // 16: hadoop.hdfs.TriggerBlockReportRequestProto
-	(*TriggerBlockReportResponseProto)(nil),           // 17: hadoop.hdfs.TriggerBlockReportResponseProto
-	(*GetBalancerBandwidthRequestProto)(nil),          // 18: hadoop.hdfs.GetBalancerBandwidthRequestProto
-	(*GetBalancerBandwidthResponseProto)(nil),         // 19: hadoop.hdfs.GetBalancerBandwidthResponseProto
-	(*SubmitDiskBalancerPlanRequestProto)(nil),        // 20: hadoop.hdfs.SubmitDiskBalancerPlanRequestProto
-	(*SubmitDiskBalancerPlanResponseProto)(nil),       // 21: hadoop.hdfs.SubmitDiskBalancerPlanResponseProto
-	(*CancelPlanRequestProto)(nil),                    // 22: hadoop.hdfs.CancelPlanRequestProto
-	(*CancelPlanResponseProto)(nil),                   // 23: hadoop.hdfs.CancelPlanResponseProto
-	(*QueryPlanStatusRequestProto)(nil),               // 24: hadoop.hdfs.QueryPlanStatusRequestProto
-	(*QueryPlanStatusResponseProto)(nil),              // 25: hadoop.hdfs.QueryPlanStatusResponseProto
-	(*DiskBalancerSettingRequestProto)(nil),           // 26: hadoop.hdfs.DiskBalancerSettingRequestProto
-	(*DiskBalancerSettingResponseProto)(nil),          // 27: hadoop.hdfs.DiskBalancerSettingResponseProto
-	(*ExtendedBlockProto)(nil),                        // 28: hadoop.hdfs.ExtendedBlockProto
-	(*hadoop_common.TokenProto)(nil),                  // 29: hadoop.common.TokenProto
-	(*DatanodeLocalInfoProto)(nil),                    // 30: hadoop.hdfs.DatanodeLocalInfoProto
-	(*DatanodeVolumeInfoProto)(nil),                   // 31: hadoop.hdfs.DatanodeVolumeInfoProto
-	(*GetReconfigurationStatusRequestProto)(nil),      // 32: hadoop.hdfs.GetReconfigurationStatusRequestProto
-	(*StartReconfigurationRequestProto)(nil),          // 33: hadoop.hdfs.StartReconfigurationRequestProto
-	(*ListReconfigurablePropertiesRequestProto)(nil),  // 34: hadoop.hdfs.ListReconfigurablePropertiesRequestProto
-	(*GetReconfigurationStatusResponseProto)(nil),     // 35: hadoop.hdfs.GetReconfigurationStatusResponseProto
-	(*StartReconfigurationResponseProto)(nil),         // 36: hadoop.hdfs.StartReconfigurationResponseProto
-	(*ListReconfigurablePropertiesResponseProto)(nil), // 37: hadoop.hdfs.ListReconfigurablePropertiesResponseProto
-}
+var (
+	file_ClientDatanodeProtocol_proto_msgTypes = make([]protoimpl.MessageInfo, 28)
+	file_ClientDatanodeProtocol_proto_goTypes  = []interface{}{
+		(*GetReplicaVisibleLengthRequestProto)(nil),       // 0: hadoop.hdfs.GetReplicaVisibleLengthRequestProto
+		(*GetReplicaVisibleLengthResponseProto)(nil),      // 1: hadoop.hdfs.GetReplicaVisibleLengthResponseProto
+		(*RefreshNamenodesRequestProto)(nil),              // 2: hadoop.hdfs.RefreshNamenodesRequestProto
+		(*RefreshNamenodesResponseProto)(nil),             // 3: hadoop.hdfs.RefreshNamenodesResponseProto
+		(*DeleteBlockPoolRequestProto)(nil),               // 4: hadoop.hdfs.DeleteBlockPoolRequestProto
+		(*DeleteBlockPoolResponseProto)(nil),              // 5: hadoop.hdfs.DeleteBlockPoolResponseProto
+		(*GetBlockLocalPathInfoRequestProto)(nil),         // 6: hadoop.hdfs.GetBlockLocalPathInfoRequestProto
+		(*GetBlockLocalPathInfoResponseProto)(nil),        // 7: hadoop.hdfs.GetBlockLocalPathInfoResponseProto
+		(*ShutdownDatanodeRequestProto)(nil),              // 8: hadoop.hdfs.ShutdownDatanodeRequestProto
+		(*ShutdownDatanodeResponseProto)(nil),             // 9: hadoop.hdfs.ShutdownDatanodeResponseProto
+		(*EvictWritersRequestProto)(nil),                  // 10: hadoop.hdfs.EvictWritersRequestProto
+		(*EvictWritersResponseProto)(nil),                 // 11: hadoop.hdfs.EvictWritersResponseProto
+		(*GetDatanodeInfoRequestProto)(nil),               // 12: hadoop.hdfs.GetDatanodeInfoRequestProto
+		(*GetDatanodeInfoResponseProto)(nil),              // 13: hadoop.hdfs.GetDatanodeInfoResponseProto
+		(*GetVolumeReportRequestProto)(nil),               // 14: hadoop.hdfs.GetVolumeReportRequestProto
+		(*GetVolumeReportResponseProto)(nil),              // 15: hadoop.hdfs.GetVolumeReportResponseProto
+		(*TriggerBlockReportRequestProto)(nil),            // 16: hadoop.hdfs.TriggerBlockReportRequestProto
+		(*TriggerBlockReportResponseProto)(nil),           // 17: hadoop.hdfs.TriggerBlockReportResponseProto
+		(*GetBalancerBandwidthRequestProto)(nil),          // 18: hadoop.hdfs.GetBalancerBandwidthRequestProto
+		(*GetBalancerBandwidthResponseProto)(nil),         // 19: hadoop.hdfs.GetBalancerBandwidthResponseProto
+		(*SubmitDiskBalancerPlanRequestProto)(nil),        // 20: hadoop.hdfs.SubmitDiskBalancerPlanRequestProto
+		(*SubmitDiskBalancerPlanResponseProto)(nil),       // 21: hadoop.hdfs.SubmitDiskBalancerPlanResponseProto
+		(*CancelPlanRequestProto)(nil),                    // 22: hadoop.hdfs.CancelPlanRequestProto
+		(*CancelPlanResponseProto)(nil),                   // 23: hadoop.hdfs.CancelPlanResponseProto
+		(*QueryPlanStatusRequestProto)(nil),               // 24: hadoop.hdfs.QueryPlanStatusRequestProto
+		(*QueryPlanStatusResponseProto)(nil),              // 25: hadoop.hdfs.QueryPlanStatusResponseProto
+		(*DiskBalancerSettingRequestProto)(nil),           // 26: hadoop.hdfs.DiskBalancerSettingRequestProto
+		(*DiskBalancerSettingResponseProto)(nil),          // 27: hadoop.hdfs.DiskBalancerSettingResponseProto
+		(*ExtendedBlockProto)(nil),                        // 28: hadoop.hdfs.ExtendedBlockProto
+		(*hadoop_common.TokenProto)(nil),                  // 29: hadoop.common.TokenProto
+		(*DatanodeLocalInfoProto)(nil),                    // 30: hadoop.hdfs.DatanodeLocalInfoProto
+		(*DatanodeVolumeInfoProto)(nil),                   // 31: hadoop.hdfs.DatanodeVolumeInfoProto
+		(*GetReconfigurationStatusRequestProto)(nil),      // 32: hadoop.hdfs.GetReconfigurationStatusRequestProto
+		(*StartReconfigurationRequestProto)(nil),          // 33: hadoop.hdfs.StartReconfigurationRequestProto
+		(*ListReconfigurablePropertiesRequestProto)(nil),  // 34: hadoop.hdfs.ListReconfigurablePropertiesRequestProto
+		(*GetReconfigurationStatusResponseProto)(nil),     // 35: hadoop.hdfs.GetReconfigurationStatusResponseProto
+		(*StartReconfigurationResponseProto)(nil),         // 36: hadoop.hdfs.StartReconfigurationResponseProto
+		(*ListReconfigurablePropertiesResponseProto)(nil), // 37: hadoop.hdfs.ListReconfigurablePropertiesResponseProto
+	}
+)
 var file_ClientDatanodeProtocol_proto_depIdxs = []int32{
 	28, // 0: hadoop.hdfs.GetReplicaVisibleLengthRequestProto.block:type_name -> hadoop.hdfs.ExtendedBlockProto
 	28, // 1: hadoop.hdfs.GetBlockLocalPathInfoRequestProto.block:type_name -> hadoop.hdfs.ExtendedBlockProto

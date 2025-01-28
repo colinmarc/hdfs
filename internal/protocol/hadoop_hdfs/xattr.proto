@@ -15,62 +15,55 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-syntax="proto2";
-option java_package = "org.apache.hadoop.hdfs.protocol.proto";
-option java_outer_classname = "XAttrProtos";
-option java_generate_equals_and_hash = true;
-option go_package = "github.com/colinmarc/hdfs/v2/internal/protocol/hadoop_hdfs";
+syntax = "proto2";
 package hadoop.hdfs;
-  
+
+option go_package = "github.com/acceldata-io/gohdfs/internal/protocol/hadoop_hdfs";
+option java_generate_equals_and_hash = true;
+option java_outer_classname = "XAttrProtos";
+option java_package = "org.apache.hadoop.hdfs.protocol.proto";
+
 message XAttrProto {
   enum XAttrNamespaceProto {
-    USER      = 0;
-    TRUSTED   = 1;
-    SECURITY  = 2;
-    SYSTEM    = 3;
-    RAW       = 4;
+    USER = 0;
+    TRUSTED = 1;
+    SECURITY = 2;
+    SYSTEM = 3;
+    RAW = 4;
   }
-  
+
   required XAttrNamespaceProto namespace = 1;
   required string name = 2;
   optional bytes value = 3;
 }
-  
+
 enum XAttrSetFlagProto {
-  XATTR_CREATE     = 0x01;
-  XATTR_REPLACE    = 0x02;
+  XATTR_CREATE = 0x01;
+  XATTR_REPLACE = 0x02;
 }
 
 message SetXAttrRequestProto {
-  required string src          = 1;
-  optional XAttrProto xAttr    = 2;
-  optional uint32 flag         = 3; //bits set using XAttrSetFlagProto
+  required string src = 1;
+  optional XAttrProto xAttr = 2;
+  optional uint32 flag = 3; // bits set using XAttrSetFlagProto
 }
 
-message SetXAttrResponseProto {
-}
+message SetXAttrResponseProto {}
 
 message GetXAttrsRequestProto {
   required string src = 1;
   repeated XAttrProto xAttrs = 2;
 }
 
-message GetXAttrsResponseProto {
-  repeated XAttrProto xAttrs = 1;
-}
+message GetXAttrsResponseProto { repeated XAttrProto xAttrs = 1; }
 
-message ListXAttrsRequestProto {
-  required string src = 1;
-}
+message ListXAttrsRequestProto { required string src = 1; }
 
-message ListXAttrsResponseProto {
-  repeated XAttrProto xAttrs = 1;
-}
+message ListXAttrsResponseProto { repeated XAttrProto xAttrs = 1; }
 
 message RemoveXAttrRequestProto {
-  required string src        = 1;
-  optional XAttrProto xAttr  = 2;
+  required string src = 1;
+  optional XAttrProto xAttr = 2;
 }
 
-message RemoveXAttrResponseProto {
-}
+message RemoveXAttrResponseProto {}

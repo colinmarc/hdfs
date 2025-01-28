@@ -7,7 +7,7 @@ import (
 	"net"
 	"time"
 
-	hdfs "github.com/colinmarc/hdfs/v2/internal/protocol/hadoop_hdfs"
+	hdfs "github.com/acceldata-io/gohdfs/internal/protocol/hadoop_hdfs"
 )
 
 // ChecksumReader provides an interface for reading the "MD5CRC32" checksums of

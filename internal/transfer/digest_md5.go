@@ -10,7 +10,7 @@ import (
 	"net"
 	"strings"
 
-	"github.com/colinmarc/hdfs/v2/internal/sasl"
+	"github.com/acceldata-io/gohdfs/internal/sasl"
 )
 
 const (
@@ -86,28 +86,28 @@ func (d *digestMD5Handshake) challengeStep2(challenge []byte) error {
 // compute implements the computation of md5 digest authentication per RFC 2831.
 // The response value computation is defined as:
 //
-//     HEX(KD(HEX(H(A1)),
-//       { nonce-value, ":", nc-value, ":", cnonce-value, ":", qop-value,
-//         ":", HEX(H(A2)) }))
-//     A1 = { H({ username-value, ":", realm-value, ":", passwd }),
-//            ":", nonce-value, ":", cnonce-value }
+//	    HEX(KD(HEX(H(A1)),
+//	      { nonce-value, ":", nc-value, ":", cnonce-value, ":", qop-value,
+//	        ":", HEX(H(A2)) }))
+//	    A1 = { H({ username-value, ":", realm-value, ":", passwd }),
+//	           ":", nonce-value, ":", cnonce-value }
 //
-//   If "qop" is "auth":
+//	  If "qop" is "auth":
 //
-//		 A2 = { "AUTHENTICATE:", digest-uri-value }
+//			 A2 = { "AUTHENTICATE:", digest-uri-value }
 //
-//   If "qop" is "auth-int" or "auth-conf":
+//	  If "qop" is "auth-int" or "auth-conf":
 //
-//       A2 = { "AUTHENTICATE:", digest-uri-value,
-//              ":00000000000000000000000000000000" }
+//	      A2 = { "AUTHENTICATE:", digest-uri-value,
+//	             ":00000000000000000000000000000000" }
 //
-//   Where:
+//	  Where:
 //
-//     - { a, b, ... } is the concatenation of the octet strings a, b, ...
-//     - H(s) is the 16 octet MD5 Hash [RFC1321] of the octet string s
-//     - KD(k, s) is H({k, ":", s})
-//     - HEX(n) is the representation of the 16 octet MD5 hash n as a string of
-//       32 hex digits (with alphabetic characters in lower case)
+//	    - { a, b, ... } is the concatenation of the octet strings a, b, ...
+//	    - H(s) is the 16 octet MD5 Hash [RFC1321] of the octet string s
+//	    - KD(k, s) is H({k, ":", s})
+//	    - HEX(n) is the representation of the 16 octet MD5 hash n as a string of
+//	      32 hex digits (with alphabetic characters in lower case)
 func (d *digestMD5Handshake) compute(initial bool) string {
 	x := hex.EncodeToString(h(d.a1()))
 	y := strings.Join([]string{
@@ -123,7 +123,6 @@ func (d *digestMD5Handshake) compute(initial bool) string {
 func (d *digestMD5Handshake) a1() string {
 	x := h(strings.Join([]string{string(d.authID), d.token.Realm, d.passwd}, ":"))
 	return strings.Join([]string{string(x[:]), d.token.Nonce, d.cnonce}, ":")
-
 }
 
 func (d *digestMD5Handshake) a2(initial bool) string {

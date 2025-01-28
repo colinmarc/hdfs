@@ -8,8 +8,8 @@ import (
 	"sync"
 	"time"
 
-	hadoop "github.com/colinmarc/hdfs/v2/internal/protocol/hadoop_common"
-	hdfs "github.com/colinmarc/hdfs/v2/internal/protocol/hadoop_hdfs"
+	hadoop "github.com/acceldata-io/gohdfs/internal/protocol/hadoop_common"
+	hdfs "github.com/acceldata-io/gohdfs/internal/protocol/hadoop_hdfs"
 	krb "github.com/jcmturner/gokrb5/v8/client"
 	"google.golang.org/protobuf/proto"
 )
@@ -232,8 +232,8 @@ func (c *NamenodeConnection) Execute(method string, req proto.Message, resp prot
 // |  Auth protocol, 1 byte (Auth method None = 0x00)          |
 // +-----------------------------------------------------------+
 //
-//  If the auth protocol is something other than 'none', the authentication
-//  handshake happens here. Otherwise, everything can be sent as one packet.
+//	If the auth protocol is something other than 'none', the authentication
+//	handshake happens here. Otherwise, everything can be sent as one packet.
 //
 // +-----------------------------------------------------------+
 // |  uint32 length of the next two parts                      |

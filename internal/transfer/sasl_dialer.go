@@ -9,9 +9,9 @@ import (
 
 	"google.golang.org/protobuf/proto"
 
-	hadoop "github.com/colinmarc/hdfs/v2/internal/protocol/hadoop_common"
-	hdfs "github.com/colinmarc/hdfs/v2/internal/protocol/hadoop_hdfs"
-	"github.com/colinmarc/hdfs/v2/internal/sasl"
+	hadoop "github.com/acceldata-io/gohdfs/internal/protocol/hadoop_common"
+	hdfs "github.com/acceldata-io/gohdfs/internal/protocol/hadoop_hdfs"
+	"github.com/acceldata-io/gohdfs/internal/sasl"
 )
 
 const (
@@ -50,7 +50,6 @@ func (d *SaslDialer) DialContext(ctx context.Context, network, addr string) (net
 		if addr, ok := conn.RemoteAddr().(*net.TCPAddr); ok && addr.Port < 1024 {
 			return conn, nil
 		}
-
 	}
 
 	return d.wrapDatanodeConn(conn)

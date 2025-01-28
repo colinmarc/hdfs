@@ -16,17 +16,18 @@
  * limitations under the License.
  */
 syntax = "proto2";
-option java_package = "org.apache.hadoop.hdfs.protocol.proto";
-option java_outer_classname = "EditLogProtos";
-option java_generate_equals_and_hash = true;
-option go_package = "github.com/colinmarc/hdfs/v2/internal/protocol/hadoop_hdfs";
 package hadoop.hdfs;
 
 import "acl.proto";
 import "xattr.proto";
 
+option go_package = "github.com/acceldata-io/gohdfs/internal/protocol/hadoop_hdfs";
+option java_generate_equals_and_hash = true;
+option java_outer_classname = "EditLogProtos";
+option java_package = "org.apache.hadoop.hdfs.protocol.proto";
+
 message AclEditLogProto {
-  required string src            = 1;
+  required string src = 1;
   repeated AclEntryProto entries = 2;
 }
 

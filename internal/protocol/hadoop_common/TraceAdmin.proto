@@ -22,15 +22,15 @@
  * for what changes are allowed for a *stable* .proto interface.
  */
 syntax = "proto2";
-option java_package = "org.apache.hadoop.tracing";
-option java_outer_classname = "TraceAdminPB";
-option java_generic_services = true;
-option java_generate_equals_and_hash = true;
-option go_package = "github.com/colinmarc/hdfs/v2/internal/protocol/hadoop_common";
 package hadoop.common;
 
-message ListSpanReceiversRequestProto {
-}
+option go_package = "github.com/acceldata-io/gohdfs/internal/protocol/hadoop_common";
+option java_generate_equals_and_hash = true;
+option java_generic_services = true;
+option java_outer_classname = "TraceAdminPB";
+option java_package = "org.apache.hadoop.tracing";
+
+message ListSpanReceiversRequestProto {}
 
 message SpanReceiverListInfo {
   required int64 id = 1;
@@ -51,24 +51,19 @@ message AddSpanReceiverRequestProto {
   repeated ConfigPair config = 2;
 }
 
-message AddSpanReceiverResponseProto {
-  required int64 id = 1;
-}
+message AddSpanReceiverResponseProto { required int64 id = 1; }
 
-message RemoveSpanReceiverRequestProto {
-  required int64 id = 1;
-}
+message RemoveSpanReceiverRequestProto { required int64 id = 1; }
 
-message RemoveSpanReceiverResponseProto {
-}
+message RemoveSpanReceiverResponseProto {}
 
 service TraceAdminService {
   rpc listSpanReceivers(ListSpanReceiversRequestProto)
-      returns(ListSpanReceiversResponseProto);
+      returns (ListSpanReceiversResponseProto);
 
   rpc addSpanReceiver(AddSpanReceiverRequestProto)
-      returns(AddSpanReceiverResponseProto);
+      returns (AddSpanReceiverResponseProto);
 
   rpc removeSpanReceiver(RemoveSpanReceiverRequestProto)
-      returns(RemoveSpanReceiverResponseProto);
+      returns (RemoveSpanReceiverResponseProto);
 }

@@ -25,15 +25,15 @@
 // This file contains protocol buffers that are used throughout HDFS -- i.e.
 // by the client, server, and data transfer protocols.
 syntax = "proto2";
-
-option java_package = "org.apache.hadoop.hdfs.protocol.proto";
-option java_outer_classname = "HdfsServerProtos";
-option java_generate_equals_and_hash = true;
-option go_package = "github.com/colinmarc/hdfs/v2/internal/protocol/hadoop_hdfs";
 package hadoop.hdfs;
 
-import "hdfs.proto";
 import "HAServiceProtocol.proto";
+import "hdfs.proto";
+
+option go_package = "github.com/acceldata-io/gohdfs/internal/protocol/hadoop_hdfs";
+option java_generate_equals_and_hash = true;
+option java_outer_classname = "HdfsServerProtos";
+option java_package = "org.apache.hadoop.hdfs.protocol.proto";
 
 /**
  * Block access token information
@@ -59,7 +59,7 @@ message ExportedBlockKeysProto {
  * Block and datanodes where is it located
  */
 message BlockWithLocationsProto {
-  required BlockProto block = 1;   // Block
+  required BlockProto block = 1;     // Block
   repeated string datanodeUuids = 2; // Datanodes with replicas of the block
   repeated string storageUuids = 3;  // Storages with replicas of the block
   repeated StorageTypeProto storageTypes = 4;
@@ -80,9 +80,9 @@ message BlocksWithLocationsProto {
  * Editlog information with available transactions
  */
 message RemoteEditLogProto {
-  required uint64 startTxId = 1;  // Starting available edit log transaction
-  required uint64 endTxId = 2;    // Ending available edit log transaction
-  optional bool isInProgress = 3 [default = false];
+  required uint64 startTxId = 1; // Starting available edit log transaction
+  required uint64 endTxId = 2;   // Ending available edit log transaction
+  optional bool isInProgress = 3 [ default = false ];
 }
 
 /**
@@ -97,12 +97,13 @@ message RemoteEditLogManifestProto {
  * Namespace information that describes namespace on a namenode
  */
 message NamespaceInfoProto {
-  required string buildVersion = 1;         // Software revision version (e.g. an svn or git revision)
-  required uint32 unused = 2;               // Retained for backward compatibility
-  required string blockPoolID = 3;          // block pool used by the namespace
-  required StorageInfoProto storageInfo = 4;// Node information
-  required string softwareVersion = 5;      // Software version number (e.g. 2.0.0)
-  optional uint64 capabilities = 6 [default = 0]; // feature flags
+  required string buildVersion =
+      1; // Software revision version (e.g. an svn or git revision)
+  required uint32 unused = 2;      // Retained for backward compatibility
+  required string blockPoolID = 3; // block pool used by the namespace
+  required StorageInfoProto storageInfo = 4; // Node information
+  required string softwareVersion = 5; // Software version number (e.g. 2.0.0)
+  optional uint64 capabilities = 6 [ default = 0 ]; // feature flags
   optional NNHAStatusHeartbeatProto.State state = 7;
 }
 
@@ -110,20 +111,20 @@ message NamespaceInfoProto {
  * State of a block replica at a datanode
  */
 enum ReplicaStateProto {
-  FINALIZED = 0;  // State of a replica when it is not modified
-  RBW = 1;        // State of replica that is being written to
-  RWR = 2;        // State of replica that is waiting to be recovered
-  RUR = 3;        // State of replica that is under recovery
-  TEMPORARY = 4;  // State of replica that is created for replication
+  FINALIZED = 0; // State of a replica when it is not modified
+  RBW = 1;       // State of replica that is being written to
+  RWR = 2;       // State of replica that is waiting to be recovered
+  RUR = 3;       // State of replica that is under recovery
+  TEMPORARY = 4; // State of replica that is created for replication
 }
 
 /**
  * Block that needs to be recovered with at a given location
  */
 message RecoveringBlockProto {
-  required uint64 newGenStamp = 1;        // New genstamp post recovery
-  required LocatedBlockProto block = 2;   // Block to be recovered
-  optional BlockProto truncateBlock = 3;  // New block for recovery (truncate)
+  required uint64 newGenStamp = 1;       // New genstamp post recovery
+  required LocatedBlockProto block = 2;  // Block to be recovered
+  optional BlockProto truncateBlock = 3; // New block for recovery (truncate)
 
   optional ErasureCodingPolicyProto ecPolicy = 4;
   // block indices of striped internal blocks for each storage in LocatedBlock
@@ -159,8 +160,8 @@ message CheckpointCommandProto {
  */
 message NamenodeCommandProto {
   enum Type {
-    NamenodeCommand = 0;      // Base command
-    CheckPointCommand = 1;    // Check point command
+    NamenodeCommand = 0;   // Base command
+    CheckPointCommand = 1; // Check point command
   }
   required uint32 action = 1;
   required Type type = 2;
@@ -170,15 +171,12 @@ message NamenodeCommandProto {
 /**
  * void request
  */
-message VersionRequestProto {
-}
+message VersionRequestProto {}
 
 /**
  * Version response from namenode.
  */
-message VersionResponseProto {
-  required NamespaceInfoProto info = 1;
-}
+message VersionResponseProto { required NamespaceInfoProto info = 1; }
 
 /**
  * Common node information shared by all the nodes in the cluster
@@ -194,15 +192,15 @@ message StorageInfoProto {
  * Information sent by a namenode to identify itself to the primary namenode.
  */
 message NamenodeRegistrationProto {
-  required string rpcAddress = 1;    // host:port of the namenode RPC address
-  required string httpAddress = 2;   // host:port of the namenode http server
+  required string rpcAddress = 1;  // host:port of the namenode RPC address
+  required string httpAddress = 2; // host:port of the namenode http server
   enum NamenodeRoleProto {
     NAMENODE = 1;
     BACKUP = 2;
     CHECKPOINT = 3;
   }
-  required StorageInfoProto storageInfo = 3;  // Node information
-  optional NamenodeRoleProto role = 4 [default = NAMENODE];        // Namenode role
+  required StorageInfoProto storageInfo = 3; // Node information
+  optional NamenodeRoleProto role = 4 [ default = NAMENODE ]; // Namenode role
 }
 
 /**

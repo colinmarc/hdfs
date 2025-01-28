@@ -21,36 +21,37 @@
  * Please see http://wiki.apache.org/hadoop/Compatibility
  * for what changes are allowed for a *stable* .proto interface.
  */
-syntax="proto2";
-option java_package = "org.apache.hadoop.hdfs.protocol.proto";
-option java_outer_classname = "ClientNamenodeProtocolProtos";
-option java_generic_services = true;
-option java_generate_equals_and_hash = true;
-option go_package = "github.com/colinmarc/hdfs/v2/internal/protocol/hadoop_hdfs";
+syntax = "proto2";
 package hadoop.hdfs;
 
-import "Security.proto";
-import "hdfs.proto";
-import "acl.proto";
-import "xattr.proto";
-import "encryption.proto";
-import "inotify.proto";
-import "erasurecoding.proto";
 import "HAServiceProtocol.proto";
+import "Security.proto";
+import "acl.proto";
+import "encryption.proto";
+import "erasurecoding.proto";
+import "hdfs.proto";
+import "inotify.proto";
+import "xattr.proto";
+
+option go_package = "github.com/acceldata-io/gohdfs/internal/protocol/hadoop_hdfs";
+option java_generate_equals_and_hash = true;
+option java_generic_services = true;
+option java_outer_classname = "ClientNamenodeProtocolProtos";
+option java_package = "org.apache.hadoop.hdfs.protocol.proto";
 
 /**
- * The ClientNamenodeProtocol Service defines the interface between a client 
+ * The ClientNamenodeProtocol Service defines the interface between a client
  * (as runnign inside a MR Task) and the Namenode.
- * See org.apache.hadoop.hdfs.protocol.ClientProtocol for the javadoc 
+ * See org.apache.hadoop.hdfs.protocol.ClientProtocol for the javadoc
  * for each of the methods.
  * The exceptions declared in the above class also apply to this protocol.
  * Exceptions are unwrapped and thrown by the  PB libraries.
  */
 
 message GetBlockLocationsRequestProto {
-  required string src = 1;     // file name
-  required uint64 offset = 2;  // range start offset
-  required uint64 length = 3;  // range length
+  required string src = 1;    // file name
+  required uint64 offset = 2; // range start offset
+  required uint64 length = 3; // range length
 }
 
 message GetBlockLocationsResponseProto {
@@ -65,11 +66,11 @@ message GetServerDefaultsResponseProto {
 }
 
 enum CreateFlagProto {
-  CREATE = 0x01;    // Create a file
-  OVERWRITE = 0x02; // Truncate/overwrite a file. Same as POSIX O_TRUNC
-  APPEND = 0x04;    // Append to a file
-  LAZY_PERSIST = 0x10; // File with reduced durability guarantees.
-  NEW_BLOCK = 0x20; // Write data to a new block when appending
+  CREATE = 0x01;           // Create a file
+  OVERWRITE = 0x02;        // Truncate/overwrite a file. Same as POSIX O_TRUNC
+  APPEND = 0x04;           // Append to a file
+  LAZY_PERSIST = 0x10;     // File with reduced durability guarantees.
+  NEW_BLOCK = 0x20;        // Write data to a new block when appending
   SHOULD_REPLICATE = 0x80; // Enforce to create a replicate file
 }
 
@@ -77,7 +78,7 @@ message CreateRequestProto {
   required string src = 1;
   required FsPermissionProto masked = 2;
   required string clientName = 3;
-  required uint32 createFlag = 4;  // bits set using CreateFlag
+  required uint32 createFlag = 4; // bits set using CreateFlag
   required bool createParent = 5;
   required uint32 replication = 6; // Short: Only 16 bits used
   required uint64 blockSize = 7;
@@ -87,9 +88,7 @@ message CreateRequestProto {
   optional string storagePolicy = 11;
 }
 
-message CreateResponseProto {
-  optional HdfsFileStatusProto fs = 1;
-}
+message CreateResponseProto { optional HdfsFileStatusProto fs = 1; }
 
 message AppendRequestProto {
   required string src = 1;
@@ -107,9 +106,7 @@ message SetReplicationRequestProto {
   required uint32 replication = 2; // Short: Only 16 bits used
 }
 
-message SetReplicationResponseProto {
-  required bool result = 1;
-}
+message SetReplicationResponseProto { required bool result = 1; }
 
 message SetStoragePolicyRequestProto {
   required string src = 1;
@@ -119,16 +116,11 @@ message SetStoragePolicyRequestProto {
 message SetStoragePolicyResponseProto { // void response
 }
 
-message UnsetStoragePolicyRequestProto {
-  required string src = 1;
-}
+message UnsetStoragePolicyRequestProto { required string src = 1; }
 
-message UnsetStoragePolicyResponseProto {
-}
+message UnsetStoragePolicyResponseProto {}
 
-message GetStoragePolicyRequestProto {
-  required string path = 1;
-}
+message GetStoragePolicyRequestProto { required string path = 1; }
 
 message GetStoragePolicyResponseProto {
   required BlockStoragePolicyProto storagePolicy = 1;
@@ -162,14 +154,14 @@ message AbandonBlockRequestProto {
   required ExtendedBlockProto b = 1;
   required string src = 2;
   required string holder = 3;
-  optional uint64 fileId = 4 [default = 0];  // default to GRANDFATHER_INODE_ID
+  optional uint64 fileId = 4 [ default = 0 ]; // default to GRANDFATHER_INODE_ID
 }
 
 message AbandonBlockResponseProto { // void response
 }
 
 enum AddBlockFlagProto {
-  NO_LOCAL_WRITE = 1; // avoid writing to local node.
+  NO_LOCAL_WRITE = 1;         // avoid writing to local node.
   IGNORE_CLIENT_LOCALITY = 2; // write to a random node
 }
 
@@ -178,14 +170,12 @@ message AddBlockRequestProto {
   required string clientName = 2;
   optional ExtendedBlockProto previous = 3;
   repeated DatanodeInfoProto excludeNodes = 4;
-  optional uint64 fileId = 5 [default = 0];  // default as a bogus id
-  repeated string favoredNodes = 6; //the set of datanodes to use for the block
+  optional uint64 fileId = 5 [ default = 0 ]; // default as a bogus id
+  repeated string favoredNodes = 6; // the set of datanodes to use for the block
   repeated AddBlockFlagProto flags = 7; // default to empty.
 }
 
-message AddBlockResponseProto {
-  required LocatedBlockProto block = 1;
-}
+message AddBlockResponseProto { required LocatedBlockProto block = 1; }
 
 message GetAdditionalDatanodeRequestProto {
   required string src = 1;
@@ -195,7 +185,7 @@ message GetAdditionalDatanodeRequestProto {
   required uint32 numAdditionalNodes = 5;
   required string clientName = 6;
   repeated string existingStorageUuids = 7;
-  optional uint64 fileId = 8 [default = 0];  // default to GRANDFATHER_INODE_ID
+  optional uint64 fileId = 8 [ default = 0 ]; // default to GRANDFATHER_INODE_ID
 }
 
 message GetAdditionalDatanodeResponseProto {
@@ -206,16 +196,12 @@ message CompleteRequestProto {
   required string src = 1;
   required string clientName = 2;
   optional ExtendedBlockProto last = 3;
-  optional uint64 fileId = 4 [default = 0];  // default to GRANDFATHER_INODE_ID
+  optional uint64 fileId = 4 [ default = 0 ]; // default to GRANDFATHER_INODE_ID
 }
 
-message CompleteResponseProto {
-  required bool result = 1;
-}
+message CompleteResponseProto { required bool result = 1; }
 
-message ReportBadBlocksRequestProto {
-  repeated LocatedBlockProto blocks = 1;
-}
+message ReportBadBlocksRequestProto { repeated LocatedBlockProto blocks = 1; }
 
 message ReportBadBlocksResponseProto { // void response
 }
@@ -234,19 +220,14 @@ message TruncateRequestProto {
   required string clientName = 3;
 }
 
-message TruncateResponseProto {
-  required bool result = 1;
-}
+message TruncateResponseProto { required bool result = 1; }
 
 message RenameRequestProto {
   required string src = 1;
   required string dst = 2;
 }
 
-message RenameResponseProto {
-  required bool result = 1;
-}
-
+message RenameResponseProto { required bool result = 1; }
 
 message Rename2RequestProto {
   required string src = 1;
@@ -263,9 +244,7 @@ message DeleteRequestProto {
   required bool recursive = 2;
 }
 
-message DeleteResponseProto {
-    required bool result = 1;
-}
+message DeleteResponseProto { required bool result = 1; }
 
 message MkdirsRequestProto {
   required string src = 1;
@@ -273,18 +252,14 @@ message MkdirsRequestProto {
   required bool createParent = 3;
   optional FsPermissionProto unmasked = 4;
 }
-message MkdirsResponseProto {
-    required bool result = 1;
-}
+message MkdirsResponseProto { required bool result = 1; }
 
 message GetListingRequestProto {
   required string src = 1;
   required bytes startAfter = 2;
   required bool needLocation = 3;
 }
-message GetListingResponseProto {
-  optional DirectoryListingProto dirList = 1;
-}
+message GetListingResponseProto { optional DirectoryListingProto dirList = 1; }
 
 message GetBatchedListingRequestProto {
   repeated string paths = 1;
@@ -323,20 +298,16 @@ message GetSnapshotDiffReportListingRequestProto {
 message GetSnapshotDiffReportListingResponseProto {
   required SnapshotDiffReportListingProto diffReport = 1;
 }
-message RenewLeaseRequestProto {
-  required string clientName = 1;
-}
+message RenewLeaseRequestProto { required string clientName = 1; }
 
-message RenewLeaseResponseProto { //void response
+message RenewLeaseResponseProto { // void response
 }
 
 message RecoverLeaseRequestProto {
   required string src = 1;
   required string clientName = 2;
 }
-message RecoverLeaseResponseProto {
-  required bool result = 1;
-}
+message RecoverLeaseResponseProto { required bool result = 1; }
 
 message GetFsStatusRequestProto { // no input paramters
 }
@@ -364,7 +335,6 @@ message GetFsReplicatedBlockStatsResponseProto {
   required uint64 blocks_in_future = 5;
   required uint64 pending_deletion_blocks = 6;
   optional uint64 highest_prio_low_redundancy_blocks = 7;
-
 }
 
 message GetFsECBlockGroupStatsRequestProto { // no input paramters
@@ -379,7 +349,7 @@ message GetFsECBlockGroupStatsResponseProto {
   optional uint64 highest_prio_low_redundancy_blocks = 6;
 }
 
-enum DatanodeReportTypeProto {  // type of the datanode report
+enum DatanodeReportTypeProto { // type of the datanode report
   ALL = 1;
   LIVE = 2;
   DEAD = 3;
@@ -392,9 +362,7 @@ message GetDatanodeReportRequestProto {
   required DatanodeReportTypeProto type = 1;
 }
 
-message GetDatanodeReportResponseProto {
-  repeated DatanodeInfoProto di = 1;
-}
+message GetDatanodeReportResponseProto { repeated DatanodeInfoProto di = 1; }
 
 message GetDatanodeStorageReportRequestProto {
   required DatanodeReportTypeProto type = 1;
@@ -409,13 +377,9 @@ message GetDatanodeStorageReportResponseProto {
   repeated DatanodeStorageReportProto datanodeStorageReports = 1;
 }
 
-message GetPreferredBlockSizeRequestProto {
-  required string filename = 1;
-}
+message GetPreferredBlockSizeRequestProto { required string filename = 1; }
 
-message GetPreferredBlockSizeResponseProto {
-  required uint64 bsize = 1;
-}
+message GetPreferredBlockSizeResponseProto { required uint64 bsize = 1; }
 
 enum SafeModeActionProto {
   SAFEMODE_LEAVE = 1;
@@ -426,20 +390,18 @@ enum SafeModeActionProto {
 
 message SetSafeModeRequestProto {
   required SafeModeActionProto action = 1;
-  optional bool checked = 2 [default = false];
+  optional bool checked = 2 [ default = false ];
 }
 
-message SetSafeModeResponseProto {
-  required bool result = 1;
-}
+message SetSafeModeResponseProto { required bool result = 1; }
 
 message SaveNamespaceRequestProto {
-  optional uint64 timeWindow = 1 [default = 0];
-  optional uint64 txGap = 2 [default = 0];
+  optional uint64 timeWindow = 1 [ default = 0 ];
+  optional uint64 txGap = 2 [ default = 0 ];
 }
 
 message SaveNamespaceResponseProto { // void response
-  optional bool saved = 1 [default = true];
+  optional bool saved = 1 [ default = true ];
 }
 
 message RollEditsRequestProto { // no parameters
@@ -449,13 +411,9 @@ message RollEditsResponseProto { // response
   required uint64 newSegmentTxId = 1;
 }
 
-message RestoreFailedStorageRequestProto {
-  required string arg = 1;
-}
+message RestoreFailedStorageRequestProto { required string arg = 1; }
 
-message RestoreFailedStorageResponseProto {
-    required bool result = 1;
-}
+message RestoreFailedStorageResponseProto { required bool result = 1; }
 
 message RefreshNodesRequestProto { // no parameters
 }
@@ -472,9 +430,7 @@ message FinalizeUpgradeResponseProto { // void response
 message UpgradeStatusRequestProto { // no parameters
 }
 
-message UpgradeStatusResponseProto {
- required bool upgradeFinalized = 1;
-}
+message UpgradeStatusResponseProto { required bool upgradeFinalized = 1; }
 
 enum RollingUpgradeActionProto {
   QUERY = 1;
@@ -494,7 +450,7 @@ message RollingUpgradeInfoProto {
 }
 
 message RollingUpgradeResponseProto {
-  optional RollingUpgradeInfoProto rollingUpgradeInfo= 1;
+  optional RollingUpgradeInfoProto rollingUpgradeInfo = 1;
 }
 message ListCorruptFileBlocksRequestProto {
   required string path = 1;
@@ -505,37 +461,25 @@ message ListCorruptFileBlocksResponseProto {
   required CorruptFileBlocksProto corrupt = 1;
 }
 
-message MetaSaveRequestProto {
-  required string filename = 1;
-}
+message MetaSaveRequestProto { required string filename = 1; }
 
 message MetaSaveResponseProto { // void response
 }
 
-message GetFileInfoRequestProto {
-  required string src = 1;
-}
+message GetFileInfoRequestProto { required string src = 1; }
 
-message GetFileInfoResponseProto {
-  optional HdfsFileStatusProto fs = 1;
-}
+message GetFileInfoResponseProto { optional HdfsFileStatusProto fs = 1; }
 
 message GetLocatedFileInfoRequestProto {
   optional string src = 1;
-  optional bool needBlockToken = 2 [default = false];
+  optional bool needBlockToken = 2 [ default = false ];
 }
 
-message GetLocatedFileInfoResponseProto {
-  optional HdfsFileStatusProto fs = 1;
-}
+message GetLocatedFileInfoResponseProto { optional HdfsFileStatusProto fs = 1; }
 
-message IsFileClosedRequestProto {
-  required string src = 1;
-}
+message IsFileClosedRequestProto { required string src = 1; }
 
-message IsFileClosedResponseProto {
-  required bool result = 1;
-}
+message IsFileClosedResponseProto { required bool result = 1; }
 
 message CacheDirectiveInfoProto {
   optional int64 id = 1;
@@ -559,32 +503,26 @@ message CacheDirectiveStatsProto {
 }
 
 enum CacheFlagProto {
-  FORCE = 0x01;    // Ignore pool resource limits
+  FORCE = 0x01; // Ignore pool resource limits
 }
 
 message AddCacheDirectiveRequestProto {
   required CacheDirectiveInfoProto info = 1;
-  optional uint32 cacheFlags = 2;  // bits set using CacheFlag
+  optional uint32 cacheFlags = 2; // bits set using CacheFlag
 }
 
-message AddCacheDirectiveResponseProto {
-  required int64 id = 1;
-}
+message AddCacheDirectiveResponseProto { required int64 id = 1; }
 
 message ModifyCacheDirectiveRequestProto {
   required CacheDirectiveInfoProto info = 1;
-  optional uint32 cacheFlags = 2;  // bits set using CacheFlag
+  optional uint32 cacheFlags = 2; // bits set using CacheFlag
 }
 
-message ModifyCacheDirectiveResponseProto {
-}
+message ModifyCacheDirectiveResponseProto {}
 
-message RemoveCacheDirectiveRequestProto {
-  required int64 id = 1;
-}
+message RemoveCacheDirectiveRequestProto { required int64 id = 1; }
 
-message RemoveCacheDirectiveResponseProto {
-}
+message RemoveCacheDirectiveResponseProto {}
 
 message ListCacheDirectivesRequestProto {
   required int64 prevId = 1;
@@ -608,7 +546,7 @@ message CachePoolInfoProto {
   optional int32 mode = 4;
   optional int64 limit = 5;
   optional int64 maxRelativeExpiry = 6;
-  optional uint32 defaultReplication = 7 [default=1];
+  optional uint32 defaultReplication = 7 [ default = 1 ];
 }
 
 message CachePoolStatsProto {
@@ -619,30 +557,22 @@ message CachePoolStatsProto {
   required int64 filesCached = 5;
 }
 
-message AddCachePoolRequestProto {
-  required CachePoolInfoProto info = 1;
-}
+message AddCachePoolRequestProto { required CachePoolInfoProto info = 1; }
 
 message AddCachePoolResponseProto { // void response
 }
 
-message ModifyCachePoolRequestProto {
-  required CachePoolInfoProto info = 1;
-}
+message ModifyCachePoolRequestProto { required CachePoolInfoProto info = 1; }
 
 message ModifyCachePoolResponseProto { // void response
 }
 
-message RemoveCachePoolRequestProto {
-  required string poolName = 1;
-}
+message RemoveCachePoolRequestProto { required string poolName = 1; }
 
 message RemoveCachePoolResponseProto { // void response
 }
 
-message ListCachePoolsRequestProto {
-  required string prevPoolName = 1;
-}
+message ListCachePoolsRequestProto { required string prevPoolName = 1; }
 
 message ListCachePoolsResponseProto {
   repeated CachePoolEntryProto entries = 1;
@@ -654,29 +584,19 @@ message CachePoolEntryProto {
   required CachePoolStatsProto stats = 2;
 }
 
-message GetFileLinkInfoRequestProto {
-  required string src = 1;
-}
+message GetFileLinkInfoRequestProto { required string src = 1; }
 
-message GetFileLinkInfoResponseProto {
-  optional HdfsFileStatusProto fs = 1;
-}
+message GetFileLinkInfoResponseProto { optional HdfsFileStatusProto fs = 1; }
 
-message GetContentSummaryRequestProto {
-  required string path = 1;
-}
+message GetContentSummaryRequestProto { required string path = 1; }
 
 message GetContentSummaryResponseProto {
   required ContentSummaryProto summary = 1;
 }
 
-message GetQuotaUsageRequestProto {
-  required string path = 1;
-}
+message GetQuotaUsageRequestProto { required string path = 1; }
 
-message GetQuotaUsageResponseProto {
-  required QuotaUsageProto usage = 1;
-}
+message GetQuotaUsageResponseProto { required QuotaUsageProto usage = 1; }
 
 message SetQuotaRequestProto {
   required string path = 1;
@@ -691,8 +611,8 @@ message SetQuotaResponseProto { // void response
 message FsyncRequestProto {
   required string src = 1;
   required string client = 2;
-  optional sint64 lastBlockLength = 3 [default = -1];
-  optional uint64 fileId = 4 [default = 0];  // default to GRANDFATHER_INODE_ID
+  optional sint64 lastBlockLength = 3 [ default = -1 ];
+  optional uint64 fileId = 4 [ default = 0 ]; // default to GRANDFATHER_INODE_ID
 }
 
 message FsyncResponseProto { // void response
@@ -717,12 +637,8 @@ message CreateSymlinkRequestProto {
 message CreateSymlinkResponseProto { // void response
 }
 
-message GetLinkTargetRequestProto {
-  required string path = 1;
-}
-message GetLinkTargetResponseProto {
-  optional string targetPath = 1;
-}
+message GetLinkTargetRequestProto { required string path = 1; }
+message GetLinkTargetResponseProto { optional string targetPath = 1; }
 
 message UpdateBlockForPipelineRequestProto {
   required ExtendedBlockProto block = 1;
@@ -744,9 +660,7 @@ message UpdatePipelineRequestProto {
 message UpdatePipelineResponseProto { // void response
 }
 
-message SetBalancerBandwidthRequestProto {
-  required int64 bandwidth = 1;
-}
+message SetBalancerBandwidthRequestProto { required int64 bandwidth = 1; }
 
 message SetBalancerBandwidthResponseProto { // void response
 }
@@ -763,9 +677,7 @@ message CreateSnapshotRequestProto {
   optional string snapshotName = 2;
 }
 
-message CreateSnapshotResponseProto {
-  required string snapshotPath = 1;
-}
+message CreateSnapshotResponseProto { required string snapshotPath = 1; }
 
 message RenameSnapshotRequestProto {
   required string snapshotRoot = 1;
@@ -776,19 +688,13 @@ message RenameSnapshotRequestProto {
 message RenameSnapshotResponseProto { // void response
 }
 
-message AllowSnapshotRequestProto {
-  required string snapshotRoot = 1;
-}
+message AllowSnapshotRequestProto { required string snapshotRoot = 1; }
 
-message AllowSnapshotResponseProto {
-}
+message AllowSnapshotResponseProto {}
 
-message DisallowSnapshotRequestProto {
-  required string snapshotRoot = 1;
-}
+message DisallowSnapshotRequestProto { required string snapshotRoot = 1; }
 
-message DisallowSnapshotResponseProto {
-}
+message DisallowSnapshotResponseProto {}
 
 message DeleteSnapshotRequestProto {
   required string snapshotRoot = 1;
@@ -806,16 +712,11 @@ message CheckAccessRequestProto {
 message CheckAccessResponseProto { // void response
 }
 
-message GetCurrentEditLogTxidRequestProto {
-}
+message GetCurrentEditLogTxidRequestProto {}
 
-message GetCurrentEditLogTxidResponseProto {
-  required int64 txid = 1;
-}
+message GetCurrentEditLogTxidResponseProto { required int64 txid = 1; }
 
-message GetEditsFromTxidRequestProto {
-  required int64 txid = 1;
-}
+message GetEditsFromTxidRequestProto { required int64 txid = 1; }
 
 message GetEditsFromTxidResponseProto {
   required EventsListProto eventsList = 1;
@@ -845,22 +746,15 @@ message ListOpenFilesResponseProto {
   repeated OpenFilesTypeProto types = 3;
 }
 
-message MsyncRequestProto {
-}
+message MsyncRequestProto {}
 
-message MsyncResponseProto {
-}
+message MsyncResponseProto {}
 
-message SatisfyStoragePolicyRequestProto {
-  required string src = 1;
-}
+message SatisfyStoragePolicyRequestProto { required string src = 1; }
 
-message SatisfyStoragePolicyResponseProto {
+message SatisfyStoragePolicyResponseProto {}
 
-}
-
-message HAServiceStateRequestProto {
-}
+message HAServiceStateRequestProto {}
 
 message HAServiceStateResponseProto {
   required hadoop.common.HAServiceStateProto state = 1;
@@ -868,74 +762,75 @@ message HAServiceStateResponseProto {
 
 service ClientNamenodeProtocol {
   rpc getBlockLocations(GetBlockLocationsRequestProto)
-      returns(GetBlockLocationsResponseProto);
+      returns (GetBlockLocationsResponseProto);
   rpc getServerDefaults(GetServerDefaultsRequestProto)
-      returns(GetServerDefaultsResponseProto);
-  rpc create(CreateRequestProto)returns(CreateResponseProto);
-  rpc append(AppendRequestProto) returns(AppendResponseProto);
+      returns (GetServerDefaultsResponseProto);
+  rpc create(CreateRequestProto) returns (CreateResponseProto);
+  rpc append(AppendRequestProto) returns (AppendResponseProto);
   rpc setReplication(SetReplicationRequestProto)
-      returns(SetReplicationResponseProto);
+      returns (SetReplicationResponseProto);
   rpc setStoragePolicy(SetStoragePolicyRequestProto)
-      returns(SetStoragePolicyResponseProto);
+      returns (SetStoragePolicyResponseProto);
   rpc unsetStoragePolicy(UnsetStoragePolicyRequestProto)
-      returns(UnsetStoragePolicyResponseProto);
+      returns (UnsetStoragePolicyResponseProto);
   rpc getStoragePolicy(GetStoragePolicyRequestProto)
-      returns(GetStoragePolicyResponseProto);
+      returns (GetStoragePolicyResponseProto);
   rpc getStoragePolicies(GetStoragePoliciesRequestProto)
-      returns(GetStoragePoliciesResponseProto);
+      returns (GetStoragePoliciesResponseProto);
   rpc setPermission(SetPermissionRequestProto)
-      returns(SetPermissionResponseProto);
-  rpc setOwner(SetOwnerRequestProto) returns(SetOwnerResponseProto);
-  rpc abandonBlock(AbandonBlockRequestProto) returns(AbandonBlockResponseProto);
-  rpc addBlock(AddBlockRequestProto) returns(AddBlockResponseProto);
+      returns (SetPermissionResponseProto);
+  rpc setOwner(SetOwnerRequestProto) returns (SetOwnerResponseProto);
+  rpc abandonBlock(AbandonBlockRequestProto)
+      returns (AbandonBlockResponseProto);
+  rpc addBlock(AddBlockRequestProto) returns (AddBlockResponseProto);
   rpc getAdditionalDatanode(GetAdditionalDatanodeRequestProto)
-      returns(GetAdditionalDatanodeResponseProto);
-  rpc complete(CompleteRequestProto) returns(CompleteResponseProto);
+      returns (GetAdditionalDatanodeResponseProto);
+  rpc complete(CompleteRequestProto) returns (CompleteResponseProto);
   rpc reportBadBlocks(ReportBadBlocksRequestProto)
-      returns(ReportBadBlocksResponseProto);
-  rpc concat(ConcatRequestProto) returns(ConcatResponseProto);
-  rpc truncate(TruncateRequestProto) returns(TruncateResponseProto);
-  rpc rename(RenameRequestProto) returns(RenameResponseProto);
-  rpc rename2(Rename2RequestProto) returns(Rename2ResponseProto);
-  rpc delete(DeleteRequestProto) returns(DeleteResponseProto);
-  rpc mkdirs(MkdirsRequestProto) returns(MkdirsResponseProto);
-  rpc getListing(GetListingRequestProto) returns(GetListingResponseProto);
-  rpc getBatchedListing (GetBatchedListingRequestProto) returns (GetBatchedListingResponseProto);
-  rpc renewLease(RenewLeaseRequestProto) returns(RenewLeaseResponseProto);
+      returns (ReportBadBlocksResponseProto);
+  rpc concat(ConcatRequestProto) returns (ConcatResponseProto);
+  rpc truncate(TruncateRequestProto) returns (TruncateResponseProto);
+  rpc rename(RenameRequestProto) returns (RenameResponseProto);
+  rpc rename2(Rename2RequestProto) returns (Rename2ResponseProto);
+  rpc delete (DeleteRequestProto) returns (DeleteResponseProto);
+  rpc mkdirs(MkdirsRequestProto) returns (MkdirsResponseProto);
+  rpc getListing(GetListingRequestProto) returns (GetListingResponseProto);
+  rpc getBatchedListing(GetBatchedListingRequestProto)
+      returns (GetBatchedListingResponseProto);
+  rpc renewLease(RenewLeaseRequestProto) returns (RenewLeaseResponseProto);
   rpc recoverLease(RecoverLeaseRequestProto)
-      returns(RecoverLeaseResponseProto);
-  rpc getFsStats(GetFsStatusRequestProto) returns(GetFsStatsResponseProto);
+      returns (RecoverLeaseResponseProto);
+  rpc getFsStats(GetFsStatusRequestProto) returns (GetFsStatsResponseProto);
   rpc getFsReplicatedBlockStats(GetFsReplicatedBlockStatsRequestProto)
       returns (GetFsReplicatedBlockStatsResponseProto);
   rpc getFsECBlockGroupStats(GetFsECBlockGroupStatsRequestProto)
       returns (GetFsECBlockGroupStatsResponseProto);
   rpc getDatanodeReport(GetDatanodeReportRequestProto)
-      returns(GetDatanodeReportResponseProto);
+      returns (GetDatanodeReportResponseProto);
   rpc getDatanodeStorageReport(GetDatanodeStorageReportRequestProto)
-      returns(GetDatanodeStorageReportResponseProto);
+      returns (GetDatanodeStorageReportResponseProto);
   rpc getPreferredBlockSize(GetPreferredBlockSizeRequestProto)
-      returns(GetPreferredBlockSizeResponseProto);
-  rpc setSafeMode(SetSafeModeRequestProto)
-      returns(SetSafeModeResponseProto);
+      returns (GetPreferredBlockSizeResponseProto);
+  rpc setSafeMode(SetSafeModeRequestProto) returns (SetSafeModeResponseProto);
   rpc saveNamespace(SaveNamespaceRequestProto)
-      returns(SaveNamespaceResponseProto);
-  rpc rollEdits(RollEditsRequestProto)
-      returns(RollEditsResponseProto);
+      returns (SaveNamespaceResponseProto);
+  rpc rollEdits(RollEditsRequestProto) returns (RollEditsResponseProto);
   rpc restoreFailedStorage(RestoreFailedStorageRequestProto)
-      returns(RestoreFailedStorageResponseProto);
-  rpc refreshNodes(RefreshNodesRequestProto) returns(RefreshNodesResponseProto);
+      returns (RestoreFailedStorageResponseProto);
+  rpc refreshNodes(RefreshNodesRequestProto)
+      returns (RefreshNodesResponseProto);
   rpc finalizeUpgrade(FinalizeUpgradeRequestProto)
-      returns(FinalizeUpgradeResponseProto);
+      returns (FinalizeUpgradeResponseProto);
   rpc upgradeStatus(UpgradeStatusRequestProto)
-      returns(UpgradeStatusResponseProto);
+      returns (UpgradeStatusResponseProto);
   rpc rollingUpgrade(RollingUpgradeRequestProto)
-      returns(RollingUpgradeResponseProto);
+      returns (RollingUpgradeResponseProto);
   rpc listCorruptFileBlocks(ListCorruptFileBlocksRequestProto)
-      returns(ListCorruptFileBlocksResponseProto);
-  rpc metaSave(MetaSaveRequestProto) returns(MetaSaveResponseProto);
-  rpc getFileInfo(GetFileInfoRequestProto) returns(GetFileInfoResponseProto);
+      returns (ListCorruptFileBlocksResponseProto);
+  rpc metaSave(MetaSaveRequestProto) returns (MetaSaveResponseProto);
+  rpc getFileInfo(GetFileInfoRequestProto) returns (GetFileInfoResponseProto);
   rpc getLocatedFileInfo(GetLocatedFileInfoRequestProto)
-      returns(GetLocatedFileInfoResponseProto);
+      returns (GetLocatedFileInfoResponseProto);
   rpc addCacheDirective(AddCacheDirectiveRequestProto)
       returns (AddCacheDirectiveResponseProto);
   rpc modifyCacheDirective(ModifyCacheDirectiveRequestProto)
@@ -945,120 +840,112 @@ service ClientNamenodeProtocol {
   rpc listCacheDirectives(ListCacheDirectivesRequestProto)
       returns (ListCacheDirectivesResponseProto);
   rpc addCachePool(AddCachePoolRequestProto)
-      returns(AddCachePoolResponseProto);
+      returns (AddCachePoolResponseProto);
   rpc modifyCachePool(ModifyCachePoolRequestProto)
-      returns(ModifyCachePoolResponseProto);
+      returns (ModifyCachePoolResponseProto);
   rpc removeCachePool(RemoveCachePoolRequestProto)
-      returns(RemoveCachePoolResponseProto);
+      returns (RemoveCachePoolResponseProto);
   rpc listCachePools(ListCachePoolsRequestProto)
-      returns(ListCachePoolsResponseProto);
+      returns (ListCachePoolsResponseProto);
   rpc getFileLinkInfo(GetFileLinkInfoRequestProto)
-      returns(GetFileLinkInfoResponseProto);
+      returns (GetFileLinkInfoResponseProto);
   rpc getContentSummary(GetContentSummaryRequestProto)
-      returns(GetContentSummaryResponseProto);
-  rpc setQuota(SetQuotaRequestProto) returns(SetQuotaResponseProto);
-  rpc fsync(FsyncRequestProto) returns(FsyncResponseProto);
-  rpc setTimes(SetTimesRequestProto) returns(SetTimesResponseProto);
+      returns (GetContentSummaryResponseProto);
+  rpc setQuota(SetQuotaRequestProto) returns (SetQuotaResponseProto);
+  rpc fsync(FsyncRequestProto) returns (FsyncResponseProto);
+  rpc setTimes(SetTimesRequestProto) returns (SetTimesResponseProto);
   rpc createSymlink(CreateSymlinkRequestProto)
-      returns(CreateSymlinkResponseProto);
+      returns (CreateSymlinkResponseProto);
   rpc getLinkTarget(GetLinkTargetRequestProto)
-      returns(GetLinkTargetResponseProto);
+      returns (GetLinkTargetResponseProto);
   rpc updateBlockForPipeline(UpdateBlockForPipelineRequestProto)
-      returns(UpdateBlockForPipelineResponseProto);
+      returns (UpdateBlockForPipelineResponseProto);
   rpc updatePipeline(UpdatePipelineRequestProto)
-      returns(UpdatePipelineResponseProto);
+      returns (UpdatePipelineResponseProto);
   rpc getDelegationToken(hadoop.common.GetDelegationTokenRequestProto)
-      returns(hadoop.common.GetDelegationTokenResponseProto);
+      returns (hadoop.common.GetDelegationTokenResponseProto);
   rpc renewDelegationToken(hadoop.common.RenewDelegationTokenRequestProto)
-      returns(hadoop.common.RenewDelegationTokenResponseProto);
+      returns (hadoop.common.RenewDelegationTokenResponseProto);
   rpc cancelDelegationToken(hadoop.common.CancelDelegationTokenRequestProto)
-      returns(hadoop.common.CancelDelegationTokenResponseProto);
+      returns (hadoop.common.CancelDelegationTokenResponseProto);
   rpc setBalancerBandwidth(SetBalancerBandwidthRequestProto)
-      returns(SetBalancerBandwidthResponseProto);
+      returns (SetBalancerBandwidthResponseProto);
   rpc getDataEncryptionKey(GetDataEncryptionKeyRequestProto)
-      returns(GetDataEncryptionKeyResponseProto);
+      returns (GetDataEncryptionKeyResponseProto);
   rpc createSnapshot(CreateSnapshotRequestProto)
-      returns(CreateSnapshotResponseProto);
+      returns (CreateSnapshotResponseProto);
   rpc renameSnapshot(RenameSnapshotRequestProto)
-      returns(RenameSnapshotResponseProto);
+      returns (RenameSnapshotResponseProto);
   rpc allowSnapshot(AllowSnapshotRequestProto)
-      returns(AllowSnapshotResponseProto);
+      returns (AllowSnapshotResponseProto);
   rpc disallowSnapshot(DisallowSnapshotRequestProto)
-      returns(DisallowSnapshotResponseProto);   
+      returns (DisallowSnapshotResponseProto);
   rpc getSnapshottableDirListing(GetSnapshottableDirListingRequestProto)
-      returns(GetSnapshottableDirListingResponseProto);
+      returns (GetSnapshottableDirListingResponseProto);
   rpc deleteSnapshot(DeleteSnapshotRequestProto)
-      returns(DeleteSnapshotResponseProto);
+      returns (DeleteSnapshotResponseProto);
   rpc getSnapshotDiffReport(GetSnapshotDiffReportRequestProto)
-      returns(GetSnapshotDiffReportResponseProto);
+      returns (GetSnapshotDiffReportResponseProto);
   rpc getSnapshotDiffReportListing(GetSnapshotDiffReportListingRequestProto)
-      returns(GetSnapshotDiffReportListingResponseProto);
+      returns (GetSnapshotDiffReportListingResponseProto);
   rpc isFileClosed(IsFileClosedRequestProto)
-      returns(IsFileClosedResponseProto);
+      returns (IsFileClosedResponseProto);
   rpc modifyAclEntries(ModifyAclEntriesRequestProto)
-      returns(ModifyAclEntriesResponseProto);
+      returns (ModifyAclEntriesResponseProto);
   rpc removeAclEntries(RemoveAclEntriesRequestProto)
-      returns(RemoveAclEntriesResponseProto);
+      returns (RemoveAclEntriesResponseProto);
   rpc removeDefaultAcl(RemoveDefaultAclRequestProto)
-      returns(RemoveDefaultAclResponseProto);
-  rpc removeAcl(RemoveAclRequestProto)
-      returns(RemoveAclResponseProto);
-  rpc setAcl(SetAclRequestProto)
-      returns(SetAclResponseProto);
+      returns (RemoveDefaultAclResponseProto);
+  rpc removeAcl(RemoveAclRequestProto) returns (RemoveAclResponseProto);
+  rpc setAcl(SetAclRequestProto) returns (SetAclResponseProto);
   rpc getAclStatus(GetAclStatusRequestProto)
-      returns(GetAclStatusResponseProto);
-  rpc setXAttr(SetXAttrRequestProto)
-      returns(SetXAttrResponseProto);
-  rpc getXAttrs(GetXAttrsRequestProto)
-      returns(GetXAttrsResponseProto);
-  rpc listXAttrs(ListXAttrsRequestProto)
-      returns(ListXAttrsResponseProto);
-  rpc removeXAttr(RemoveXAttrRequestProto)
-      returns(RemoveXAttrResponseProto);
-  rpc checkAccess(CheckAccessRequestProto)
-      returns(CheckAccessResponseProto);
+      returns (GetAclStatusResponseProto);
+  rpc setXAttr(SetXAttrRequestProto) returns (SetXAttrResponseProto);
+  rpc getXAttrs(GetXAttrsRequestProto) returns (GetXAttrsResponseProto);
+  rpc listXAttrs(ListXAttrsRequestProto) returns (ListXAttrsResponseProto);
+  rpc removeXAttr(RemoveXAttrRequestProto) returns (RemoveXAttrResponseProto);
+  rpc checkAccess(CheckAccessRequestProto) returns (CheckAccessResponseProto);
   rpc createEncryptionZone(CreateEncryptionZoneRequestProto)
-      returns(CreateEncryptionZoneResponseProto);
+      returns (CreateEncryptionZoneResponseProto);
   rpc listEncryptionZones(ListEncryptionZonesRequestProto)
-      returns(ListEncryptionZonesResponseProto);
+      returns (ListEncryptionZonesResponseProto);
   rpc reencryptEncryptionZone(ReencryptEncryptionZoneRequestProto)
-      returns(ReencryptEncryptionZoneResponseProto);
+      returns (ReencryptEncryptionZoneResponseProto);
   rpc listReencryptionStatus(ListReencryptionStatusRequestProto)
-      returns(ListReencryptionStatusResponseProto);
+      returns (ListReencryptionStatusResponseProto);
   rpc getEZForPath(GetEZForPathRequestProto)
-      returns(GetEZForPathResponseProto);
+      returns (GetEZForPathResponseProto);
   rpc setErasureCodingPolicy(SetErasureCodingPolicyRequestProto)
-      returns(SetErasureCodingPolicyResponseProto);
+      returns (SetErasureCodingPolicyResponseProto);
   rpc unsetErasureCodingPolicy(UnsetErasureCodingPolicyRequestProto)
-      returns(UnsetErasureCodingPolicyResponseProto);
+      returns (UnsetErasureCodingPolicyResponseProto);
   rpc getECTopologyResultForPolicies(GetECTopologyResultForPoliciesRequestProto)
-      returns(GetECTopologyResultForPoliciesResponseProto);
+      returns (GetECTopologyResultForPoliciesResponseProto);
   rpc getCurrentEditLogTxid(GetCurrentEditLogTxidRequestProto)
-      returns(GetCurrentEditLogTxidResponseProto);
+      returns (GetCurrentEditLogTxidResponseProto);
   rpc getEditsFromTxid(GetEditsFromTxidRequestProto)
-      returns(GetEditsFromTxidResponseProto);
+      returns (GetEditsFromTxidResponseProto);
   rpc getErasureCodingPolicies(GetErasureCodingPoliciesRequestProto)
-      returns(GetErasureCodingPoliciesResponseProto);
+      returns (GetErasureCodingPoliciesResponseProto);
   rpc addErasureCodingPolicies(AddErasureCodingPoliciesRequestProto)
-      returns(AddErasureCodingPoliciesResponseProto);
+      returns (AddErasureCodingPoliciesResponseProto);
   rpc removeErasureCodingPolicy(RemoveErasureCodingPolicyRequestProto)
-      returns(RemoveErasureCodingPolicyResponseProto);
+      returns (RemoveErasureCodingPolicyResponseProto);
   rpc enableErasureCodingPolicy(EnableErasureCodingPolicyRequestProto)
-      returns(EnableErasureCodingPolicyResponseProto);
+      returns (EnableErasureCodingPolicyResponseProto);
   rpc disableErasureCodingPolicy(DisableErasureCodingPolicyRequestProto)
-      returns(DisableErasureCodingPolicyResponseProto);
+      returns (DisableErasureCodingPolicyResponseProto);
   rpc getErasureCodingPolicy(GetErasureCodingPolicyRequestProto)
-      returns(GetErasureCodingPolicyResponseProto);
+      returns (GetErasureCodingPolicyResponseProto);
   rpc getErasureCodingCodecs(GetErasureCodingCodecsRequestProto)
-      returns(GetErasureCodingCodecsResponseProto);
+      returns (GetErasureCodingCodecsResponseProto);
   rpc getQuotaUsage(GetQuotaUsageRequestProto)
-      returns(GetQuotaUsageResponseProto);
+      returns (GetQuotaUsageResponseProto);
   rpc listOpenFiles(ListOpenFilesRequestProto)
-      returns(ListOpenFilesResponseProto);
-  rpc msync(MsyncRequestProto)
-      returns(MsyncResponseProto);
+      returns (ListOpenFilesResponseProto);
+  rpc msync(MsyncRequestProto) returns (MsyncResponseProto);
   rpc satisfyStoragePolicy(SatisfyStoragePolicyRequestProto)
-      returns(SatisfyStoragePolicyResponseProto);
+      returns (SatisfyStoragePolicyResponseProto);
   rpc getHAServiceState(HAServiceStateRequestProto)
-      returns(HAServiceStateResponseProto);
+      returns (HAServiceStateResponseProto);
 }

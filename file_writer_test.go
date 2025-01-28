@@ -1,4 +1,4 @@
-package hdfs
+package gohdfs
 
 import (
 	"hash/crc32"

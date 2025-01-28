@@ -22,12 +22,13 @@
  * for what changes are allowed for a *stable* .proto interface.
  */
 syntax = "proto2";
-option java_package = "org.apache.hadoop.ipc.protobuf";
-option java_outer_classname = "ProtocolInfoProtos";
-option java_generic_services = true;
-option java_generate_equals_and_hash = true;
-option go_package = "github.com/colinmarc/hdfs/v2/internal/protocol/hadoop_common";
 package hadoop.common;
+
+option go_package = "github.com/acceldata-io/gohdfs/internal/protocol/hadoop_common";
+option java_generate_equals_and_hash = true;
+option java_generic_services = true;
+option java_outer_classname = "ProtocolInfoProtos";
+option java_package = "org.apache.hadoop.ipc.protobuf";
 
 /**
  * Request to get protocol versions for all supported rpc kinds.
@@ -40,14 +41,15 @@ message GetProtocolVersionsRequestProto {
  * Protocol version with corresponding rpc kind.
  */
 message ProtocolVersionProto {
-  required string rpcKind = 1; //RPC kind
-  repeated uint64 versions = 2; //Protocol version corresponding to the rpc kind.
+  required string rpcKind = 1; // RPC kind
+  repeated uint64 versions =
+      2; // Protocol version corresponding to the rpc kind.
 }
 
 /**
  * Get protocol version response.
  */
-message GetProtocolVersionsResponseProto { 
+message GetProtocolVersionsResponseProto {
   repeated ProtocolVersionProto protocolVersions = 1;
 }
 
@@ -56,12 +58,12 @@ message GetProtocolVersionsResponseProto {
  */
 message GetProtocolSignatureRequestProto {
   required string protocol = 1; // Protocol name
-  required string rpcKind = 2; // RPC kind
+  required string rpcKind = 2;  // RPC kind
 }
 
 /**
  * Get protocol signature response.
- */ 
+ */
 message GetProtocolSignatureResponseProto {
   repeated ProtocolSignatureProto protocolSignature = 1;
 }
@@ -79,12 +81,12 @@ service ProtocolInfoService {
    * Return protocol version corresponding to protocol interface for each
    * supported rpc kind.
    */
-  rpc getProtocolVersions(GetProtocolVersionsRequestProto) 
+  rpc getProtocolVersions(GetProtocolVersionsRequestProto)
       returns (GetProtocolVersionsResponseProto);
 
   /**
    * Return protocol version corresponding to protocol interface.
    */
-  rpc getProtocolSignature(GetProtocolSignatureRequestProto) 
+  rpc getProtocolSignature(GetProtocolSignatureRequestProto)
       returns (GetProtocolSignatureResponseProto);
 }

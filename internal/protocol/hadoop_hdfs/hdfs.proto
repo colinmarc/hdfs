@@ -21,36 +21,34 @@
  * Please see http://wiki.apache.org/hadoop/Compatibility
  * for what changes are allowed for a *stable* .proto interface.
  */
-syntax="proto2";
-// This file contains protocol buffers that are used throughout HDFS -- i.e.
-// by the client, server, and data transfer protocols.
-
-
-option java_package = "org.apache.hadoop.hdfs.protocol.proto";
-option java_outer_classname = "HdfsProtos";
-option java_generate_equals_and_hash = true;
-option go_package = "github.com/colinmarc/hdfs/v2/internal/protocol/hadoop_hdfs";
+syntax = "proto2";
 package hadoop.hdfs;
 
 import "Security.proto";
 import "acl.proto";
 
+option go_package = "github.com/acceldata-io/gohdfs/internal/protocol/hadoop_hdfs";
+option java_generate_equals_and_hash = true;
+option java_outer_classname = "HdfsProtos";
+// This file contains protocol buffers that are used throughout HDFS -- i.e.
+// by the client, server, and data transfer protocols.
+option java_package = "org.apache.hadoop.hdfs.protocol.proto";
+
 /**
  * Extended block idenfies a block
  */
 message ExtendedBlockProto {
-  required string poolId = 1;   // Block pool id - globally unique across clusters
-  required uint64 blockId = 2;  // the local id within a pool
+  required string poolId = 1; // Block pool id - globally unique across clusters
+  required uint64 blockId = 2; // the local id within a pool
   required uint64 generationStamp = 3;
-  optional uint64 numBytes = 4 [default = 0];  // len does not belong in ebid 
-                                               // here for historical reasons
+  optional uint64 numBytes = 4 [ default = 0 ]; // len does not belong in ebid
+  // here for historical reasons
 }
 
-
 /**
-* ProvidedStorageLocation will contain the exact location in the provided
-  storage. The path, offset and length will result in ranged read. The nonce
-  is there to verify that you receive what you expect.
+   * ProvidedStorageLocation will contain the exact location in the provided
+     storage. The path, offset and length will result in ranged read. The nonce
+     is there to verify that you receive what you expect.
 */
 
 message ProvidedStorageLocationProto {
@@ -64,16 +62,16 @@ message ProvidedStorageLocationProto {
  * Identifies a Datanode
  */
 message DatanodeIDProto {
-  required string ipAddr = 1;    // IP address
-  required string hostName = 2;  // hostname
-  required string datanodeUuid = 3;     // UUID assigned to the Datanode. For
-                                        // upgraded clusters this is the same
-                                        // as the original StorageID of the
-                                        // Datanode.
-  required uint32 xferPort = 4;  // data streaming port
-  required uint32 infoPort = 5;  // datanode http port
-  required uint32 ipcPort = 6;   // ipc server port
-  optional uint32 infoSecurePort = 7 [default = 0]; // datanode https port
+  required string ipAddr = 1;       // IP address
+  required string hostName = 2;     // hostname
+  required string datanodeUuid = 3; // UUID assigned to the Datanode. For
+  // upgraded clusters this is the same
+  // as the original StorageID of the
+  // Datanode.
+  required uint32 xferPort = 4;                       // data streaming port
+  required uint32 infoPort = 5;                       // datanode http port
+  required uint32 ipcPort = 6;                        // ipc server port
+  optional uint32 infoSecurePort = 7 [ default = 0 ]; // datanode https port
 }
 
 /**
@@ -101,21 +99,19 @@ message DatanodeVolumeInfoProto {
 /**
  * DatanodeInfo array
  */
-message DatanodeInfosProto {
-  repeated DatanodeInfoProto datanodes = 1;
-}
+message DatanodeInfosProto { repeated DatanodeInfoProto datanodes = 1; }
 
 /**
  * The status of a Datanode
  */
 message DatanodeInfoProto {
   required DatanodeIDProto id = 1;
-  optional uint64 capacity = 2 [default = 0];
-  optional uint64 dfsUsed = 3 [default = 0];
-  optional uint64 remaining = 4 [default = 0];
-  optional uint64 blockPoolUsed = 5 [default = 0];
-  optional uint64 lastUpdate = 6 [default = 0];
-  optional uint32 xceiverCount = 7 [default = 0];
+  optional uint64 capacity = 2 [ default = 0 ];
+  optional uint64 dfsUsed = 3 [ default = 0 ];
+  optional uint64 remaining = 4 [ default = 0 ];
+  optional uint64 blockPoolUsed = 5 [ default = 0 ];
+  optional uint64 lastUpdate = 6 [ default = 0 ];
+  optional uint32 xceiverCount = 7 [ default = 0 ];
   optional string location = 8;
   optional uint64 nonDfsUsed = 9;
   enum AdminState {
@@ -126,14 +122,14 @@ message DatanodeInfoProto {
     IN_MAINTENANCE = 4;
   }
 
-  optional AdminState adminState = 10 [default = NORMAL];
-  optional uint64 cacheCapacity = 11 [default = 0];
-  optional uint64 cacheUsed = 12 [default = 0];
-  optional uint64 lastUpdateMonotonic = 13 [default = 0];
+  optional AdminState adminState = 10 [ default = NORMAL ];
+  optional uint64 cacheCapacity = 11 [ default = 0 ];
+  optional uint64 cacheUsed = 12 [ default = 0 ];
+  optional uint64 lastUpdateMonotonic = 13 [ default = 0 ];
   optional string upgradeDomain = 14;
-  optional uint64 lastBlockReportTime = 15 [default = 0];
-  optional uint64 lastBlockReportMonotonic = 16 [default = 0];
-  optional uint32 numBlocks = 17 [default = 0];
+  optional uint64 lastBlockReportTime = 15 [ default = 0 ];
+  optional uint64 lastBlockReportMonotonic = 16 [ default = 0 ];
+  optional uint32 numBlocks = 17 [ default = 0 ];
 }
 
 /**
@@ -146,8 +142,8 @@ message DatanodeStorageProto {
   }
 
   required string storageUuid = 1;
-  optional StorageState state = 2 [default = NORMAL];
-  optional StorageTypeProto storageType = 3 [default = DISK];
+  optional StorageState state = 2 [ default = NORMAL ];
+  optional StorageTypeProto storageType = 3 [ default = DISK ];
 }
 
 message StorageReportProto {
@@ -198,7 +194,7 @@ message StorageTypeQuotaInfosProto {
 }
 
 message StorageTypeQuotaInfoProto {
-  optional StorageTypeProto type = 1 [default = DISK];
+  optional StorageTypeProto type = 1 [ default = DISK ];
   required uint64 quota = 2;
   required uint64 consumed = 3;
 }
@@ -209,8 +205,8 @@ message StorageTypeQuotaInfoProto {
  *
  */
 message CorruptFileBlocksProto {
- repeated string files = 1;
- required string   cookie = 2;
+  repeated string files = 1;
+  required string cookie = 2;
 }
 
 /**
@@ -233,11 +229,9 @@ enum BlockTypeProto {
 }
 
 /**
- * A list of storage types. 
+ * A list of storage types.
  */
-message StorageTypesProto {
-  repeated StorageTypeProto storageTypes = 1;
-}
+message StorageTypesProto { repeated StorageTypeProto storageTypes = 1; }
 
 /**
  * Block replica storage policy.
@@ -253,26 +247,30 @@ message BlockStoragePolicyProto {
   optional StorageTypesProto replicationFallbackPolicy = 5;
 }
 
-
 /**
  * A LocatedBlock gives information about a block and its location.
- */ 
+ */
 message LocatedBlockProto {
-  required ExtendedBlockProto b  = 1;
-  required uint64 offset = 2;           // offset of first byte of block in the file
-  repeated DatanodeInfoProto locs = 3;  // Locations ordered by proximity to client ip
-  required bool corrupt = 4;            // true if all replicas of a block are corrupt, else false
-                                        // If block has few corrupt replicas, they are filtered and 
-                                        // their locations are not part of this object
+  required ExtendedBlockProto b = 1;
+  required uint64 offset = 2; // offset of first byte of block in the file
+  repeated DatanodeInfoProto locs =
+      3; // Locations ordered by proximity to client ip
+  required bool corrupt =
+      4; // true if all replicas of a block are corrupt, else false
+  // If block has few corrupt replicas, they are filtered and
+  // their locations are not part of this object
 
   required hadoop.common.TokenProto blockToken = 5;
-  repeated bool isCached = 6 [packed=true]; // if a location in locs is cached
+  repeated bool isCached = 6
+      [ packed = true ]; // if a location in locs is cached
   repeated StorageTypeProto storageTypes = 7;
   repeated string storageIDs = 8;
 
   // striped block related fields
-  optional bytes blockIndices = 9; // used for striped block to indicate block index for each storage
-  repeated hadoop.common.TokenProto blockTokens = 10; // each internal block has a block token
+  optional bytes blockIndices =
+      9; // used for striped block to indicate block index for each storage
+  repeated hadoop.common.TokenProto blockTokens =
+      10; // each internal block has a block token
 }
 
 message BatchedListingKeyProto {
@@ -294,16 +292,16 @@ message DataEncryptionKeyProto {
  * Cipher suite.
  */
 enum CipherSuiteProto {
-    UNKNOWN = 1;
-    AES_CTR_NOPADDING = 2;
+  UNKNOWN = 1;
+  AES_CTR_NOPADDING = 2;
 }
 
 /**
  * Crypto protocol version used to access encrypted files.
  */
 enum CryptoProtocolVersionProto {
-    UNKNOWN_PROTOCOL_VERSION = 1;
-    ENCRYPTION_ZONES = 2;
+  UNKNOWN_PROTOCOL_VERSION = 1;
+  ENCRYPTION_ZONES = 2;
 }
 
 /**
@@ -410,7 +408,7 @@ message ErasureCodingPolicyProto {
   optional ECSchemaProto schema = 2;
   optional uint32 cellSize = 3;
   required uint32 id = 4; // Actually a byte - only 8 bits used
-  optional ErasureCodingPolicyState state = 5 [default = ENABLED];
+  optional ErasureCodingPolicyState state = 5 [ default = ENABLED ];
 }
 
 message AddErasureCodingPolicyResponseProto {
@@ -435,7 +433,8 @@ message HdfsPathHandleProto {
 
 /**
  * Status of a file, directory or symlink
- * Optionally includes a file's block locations if requested by client on the rpc call.
+ * Optionally includes a file's block locations if requested by client on the
+ * rpc call.
  */
 message HdfsFileStatusProto {
   enum FileType {
@@ -444,13 +443,13 @@ message HdfsFileStatusProto {
     IS_SYMLINK = 3;
   }
   enum Flags {
-    HAS_ACL   = 0x01; // has ACLs
-    HAS_CRYPT = 0x02; // encrypted
-    HAS_EC    = 0x04; // erasure coded
-    SNAPSHOT_ENABLED    = 0x08; // SNAPSHOT ENABLED
+    HAS_ACL = 0x01;          // has ACLs
+    HAS_CRYPT = 0x02;        // encrypted
+    HAS_EC = 0x04;           // erasure coded
+    SNAPSHOT_ENABLED = 0x08; // SNAPSHOT ENABLED
   }
   required FileType fileType = 1;
-  required bytes path = 2;          // local name of inode encoded java UTF8
+  required bytes path = 2; // local name of inode encoded java UTF8
   required uint64 length = 3;
   required FsPermissionProto permission = 4;
   required string owner = 5;
@@ -459,26 +458,26 @@ message HdfsFileStatusProto {
   required uint64 access_time = 8;
 
   // Optional fields for symlink
-  optional bytes symlink = 9;             // if symlink, target encoded java UTF8 
+  optional bytes symlink = 9; // if symlink, target encoded java UTF8
 
   // Optional fields for file
-  optional uint32 block_replication = 10 [default = 0]; // only 16bits used
-  optional uint64 blocksize = 11 [default = 0];
-  optional LocatedBlocksProto locations = 12;  // suppled only if asked by client
+  optional uint32 block_replication = 10 [ default = 0 ]; // only 16bits used
+  optional uint64 blocksize = 11 [ default = 0 ];
+  optional LocatedBlocksProto locations = 12; // suppled only if asked by client
 
   // Optional field for fileId
-  optional uint64 fileId = 13 [default = 0]; // default as an invalid id
-  optional int32 childrenNum = 14 [default = -1];
+  optional uint64 fileId = 13 [ default = 0 ]; // default as an invalid id
+  optional int32 childrenNum = 14 [ default = -1 ];
   // Optional field for file encryption
   optional FileEncryptionInfoProto fileEncryptionInfo = 15;
 
-  optional uint32 storagePolicy = 16 [default = 0]; // block storage policy id
+  optional uint32 storagePolicy = 16 [ default = 0 ]; // block storage policy id
 
   // Optional field for erasure coding
   optional ErasureCodingPolicyProto ecPolicy = 17;
 
   // Set of flags
-  optional uint32 flags = 18 [default = 0];
+  optional uint32 flags = 18 [ default = 0 ];
 }
 
 /**
@@ -493,8 +492,8 @@ enum ChecksumTypeProto {
 }
 
 enum BlockChecksumTypeProto {
-  MD5CRC = 1;  // BlockChecksum obtained by taking the MD5 digest of chunk CRCs
-  COMPOSITE_CRC = 2;  // Chunk-independent CRC, optionally striped
+  MD5CRC = 1; // BlockChecksum obtained by taking the MD5 digest of chunk CRCs
+  COMPOSITE_CRC = 2; // Chunk-independent CRC, optionally striped
 }
 
 /**
@@ -504,7 +503,7 @@ enum BlockChecksumTypeProto {
  * org.apache.hadoop.hdfs.protocol.BlockChecksumOptions.
  */
 message BlockChecksumOptionsProto {
-  optional BlockChecksumTypeProto blockChecksumType = 1 [default = MD5CRC];
+  optional BlockChecksumTypeProto blockChecksumType = 1 [ default = MD5CRC ];
 
   // Only used if blockChecksumType specifies a striped format, such as
   // COMPOSITE_CRC. If so, then the blockChecksum in the response is expected
@@ -522,20 +521,19 @@ message FsServerDefaultsProto {
   required uint32 writePacketSize = 3;
   required uint32 replication = 4; // Actually a short - only 16 bits used
   required uint32 fileBufferSize = 5;
-  optional bool encryptDataTransfer = 6 [default = false];
-  optional uint64 trashInterval = 7 [default = 0];
-  optional ChecksumTypeProto checksumType = 8 [default = CHECKSUM_CRC32];
+  optional bool encryptDataTransfer = 6 [ default = false ];
+  optional uint64 trashInterval = 7 [ default = 0 ];
+  optional ChecksumTypeProto checksumType = 8 [ default = CHECKSUM_CRC32 ];
   optional string keyProviderUri = 9;
-  optional uint32 policyId = 10 [default = 0];
+  optional uint32 policyId = 10 [ default = 0 ];
 }
-
 
 /**
  * Directory listing
  */
 message DirectoryListingProto {
   repeated HdfsFileStatusProto partialListing = 1;
-  required uint32 remainingEntries  = 2;
+  required uint32 remainingEntries = 2;
 }
 
 message RemoteExceptionProto {
@@ -551,9 +549,9 @@ message BatchedDirectoryListingProto {
 }
 
 /**
- * Status of a snapshottable directory: besides the normal information for 
+ * Status of a snapshottable directory: besides the normal information for
  * a directory status, also include snapshot quota, number of snapshots, and
- * the full path of the parent directory. 
+ * the full path of the parent directory.
  */
 message SnapshottableDirectoryStatusProto {
   required HdfsFileStatusProto dirStatus = 1;
@@ -604,8 +602,9 @@ message SnapshotDiffReportListingEntryProto {
 
 message SnapshotDiffReportCursorProto {
   required bytes startPath = 1;
-  required int32 index = 2 [default = -1];
+  required int32 index = 2 [ default = -1 ];
 }
+
 /**
  * Snapshot diff report listing
  */
@@ -617,6 +616,7 @@ message SnapshotDiffReportListingProto {
   required bool isFromEarlier = 4;
   optional SnapshotDiffReportCursorProto cursor = 5;
 }
+
 /**
  * Block information
  *
@@ -629,7 +629,7 @@ message SnapshotDiffReportListingProto {
 message BlockProto {
   required uint64 blockId = 1;
   required uint64 genStamp = 2;
-  optional uint64 numBytes = 3 [default = 0];
+  optional uint64 numBytes = 3 [ default = 0 ];
 }
 
 /**
@@ -651,25 +651,22 @@ message SnapshotInfoProto {
  */
 message RollingUpgradeStatusProto {
   required string blockPoolId = 1;
-  optional bool finalized = 2 [default = false];
+  optional bool finalized = 2 [ default = false ];
 }
-
 
 /**
  * A list of storage IDs.
  */
-message StorageUuidsProto {
-  repeated string storageUuids = 1;
-}
+message StorageUuidsProto { repeated string storageUuids = 1; }
 
 /**
  * File access permissions mode.
  */
 enum AccessModeProto {
-    READ = 1;
-    WRITE = 2;
-    COPY = 3;
-    REPLACE = 4;
+  READ = 1;
+  WRITE = 2;
+  COPY = 3;
+  REPLACE = 4;
 }
 
 /**

@@ -15,33 +15,30 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-syntax="proto2";
- // This file contains protocol buffers that are used to reconfigure NameNode
- // and DataNode by HDFS admin.
-
-option java_package = "org.apache.hadoop.hdfs.protocol.proto";
-option java_outer_classname = "ReconfigurationProtocolProtos";
-option java_generic_services = true;
-option java_generate_equals_and_hash = true;
-option go_package = "github.com/colinmarc/hdfs/v2/internal/protocol/hadoop_hdfs";
+syntax = "proto2";
 package hadoop.hdfs;
 
-/** Asks NN/DN to reload configuration file. */
-message StartReconfigurationRequestProto {
-}
+option go_package = "github.com/acceldata-io/gohdfs/internal/protocol/hadoop_hdfs";
+option java_generate_equals_and_hash = true;
+option java_generic_services = true;
+option java_outer_classname = "ReconfigurationProtocolProtos";
+// This file contains protocol buffers that are used to reconfigure NameNode
+// and DataNode by HDFS admin.
+option java_package = "org.apache.hadoop.hdfs.protocol.proto";
 
-message StartReconfigurationResponseProto {
-}
+/** Asks NN/DN to reload configuration file. */
+message StartReconfigurationRequestProto {}
+
+message StartReconfigurationResponseProto {}
 
 /** Query the running status of reconfiguration process */
-message GetReconfigurationStatusRequestProto {
-}
+message GetReconfigurationStatusRequestProto {}
 
 message GetReconfigurationStatusConfigChangeProto {
   required string name = 1;
   required string oldValue = 2;
   optional string newValue = 3;
-  optional string errorMessage = 4;  // It is empty if success.
+  optional string errorMessage = 4; // It is empty if success.
 }
 
 message GetReconfigurationStatusResponseProto {
@@ -51,12 +48,9 @@ message GetReconfigurationStatusResponseProto {
 }
 
 /** Query the reconfigurable properties on NN/DN. */
-message ListReconfigurablePropertiesRequestProto {
-}
+message ListReconfigurablePropertiesRequestProto {}
 
-message ListReconfigurablePropertiesResponseProto {
-  repeated string name = 1;
-}
+message ListReconfigurablePropertiesResponseProto { repeated string name = 1; }
 
 /**
  * Protocol used from client to the NN/DN.
@@ -64,12 +58,12 @@ message ListReconfigurablePropertiesResponseProto {
  */
 service ReconfigurationProtocolService {
   rpc getReconfigurationStatus(GetReconfigurationStatusRequestProto)
-      returns(GetReconfigurationStatusResponseProto);
+      returns (GetReconfigurationStatusResponseProto);
 
   rpc startReconfiguration(StartReconfigurationRequestProto)
-      returns(StartReconfigurationResponseProto);
+      returns (StartReconfigurationResponseProto);
 
-  rpc listReconfigurableProperties(
-      ListReconfigurablePropertiesRequestProto)
-      returns(ListReconfigurablePropertiesResponseProto);
+  rpc listReconfigurableProperties(ListReconfigurablePropertiesRequestProto)
+      returns (ListReconfigurablePropertiesResponseProto);
+}
 }

@@ -22,14 +22,16 @@
  * for what changes are allowed for a *stable* .proto interface.
  */
 syntax = "proto2";
-option java_package = "org.apache.hadoop.ipc.protobuf";
-option java_outer_classname = "IpcConnectionContextProtos";
-option java_generate_equals_and_hash = true;
-option go_package = "github.com/colinmarc/hdfs/v2/internal/protocol/hadoop_common";
 package hadoop.common;
 
+option go_package = "github.com/acceldata-io/gohdfs/internal/protocol/hadoop_common";
+option java_generate_equals_and_hash = true;
+option java_outer_classname = "IpcConnectionContextProtos";
+option java_package = "org.apache.hadoop.ipc.protobuf";
+
 /**
- * Spec for UserInformationProto is specified in ProtoUtil#makeIpcConnectionContext
+ * Spec for UserInformationProto is specified in
+ * ProtoUtil#makeIpcConnectionContext
  */
 message UserInformationProto {
   optional string effectiveUser = 1;
@@ -41,7 +43,7 @@ message UserInformationProto {
  * It establishes the context for ALL Rpc calls within the connection.
  */
 message IpcConnectionContextProto {
-  // UserInfo beyond what is determined as part of security handshake 
+  // UserInfo beyond what is determined as part of security handshake
   // at connection time (kerberos, tokens etc).
   optional UserInformationProto userInfo = 2;
 

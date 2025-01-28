@@ -22,27 +22,23 @@
  * for what changes are allowed for a *stable* .proto interface.
  */
 syntax = "proto2";
-option java_package = "org.apache.hadoop.tools.proto";
-option java_outer_classname = "GetUserMappingsProtocolProtos";
-option java_generic_services = true;
-option java_generate_equals_and_hash = true;
-option go_package = "github.com/colinmarc/hdfs/v2/internal/protocol/hadoop_common";
 package hadoop.common;
+
+option go_package = "github.com/acceldata-io/gohdfs/internal/protocol/hadoop_common";
+option java_generate_equals_and_hash = true;
+option java_generic_services = true;
+option java_outer_classname = "GetUserMappingsProtocolProtos";
+option java_package = "org.apache.hadoop.tools.proto";
 
 /**
  *  Get groups for user request.
  */
-message GetGroupsForUserRequestProto {
-  required string user = 1;
-}
+message GetGroupsForUserRequestProto { required string user = 1; }
 
 /**
  * Response for get groups.
  */
-message GetGroupsForUserResponseProto {
-  repeated string groups = 1;
-}
-
+message GetGroupsForUserResponseProto { repeated string groups = 1; }
 
 /**
  * Protocol which maps users to groups.
@@ -52,5 +48,5 @@ service GetUserMappingsProtocolService {
    * Get the groups which are mapped to the given user.
    */
   rpc getGroupsForUser(GetGroupsForUserRequestProto)
-      returns(GetGroupsForUserResponseProto);
+      returns (GetGroupsForUserResponseProto);
 }

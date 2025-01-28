@@ -22,12 +22,13 @@
  * for what changes are allowed for a *stable* .proto interface.
  */
 syntax = "proto2";
-option java_package = "org.apache.hadoop.security.proto";
-option java_outer_classname = "SecurityProtos";
-option java_generic_services = true;
-option java_generate_equals_and_hash = true;
-option go_package = "github.com/colinmarc/hdfs/v2/internal/protocol/hadoop_common";
 package hadoop.common;
+
+option go_package = "github.com/acceldata-io/gohdfs/internal/protocol/hadoop_common";
+option java_generate_equals_and_hash = true;
+option java_generic_services = true;
+option java_outer_classname = "SecurityProtos";
+option java_package = "org.apache.hadoop.security.proto";
 
 /**
  * Security token identifier
@@ -50,9 +51,7 @@ message CredentialsProto {
   repeated hadoop.common.CredentialsKVProto secrets = 2;
 }
 
-message GetDelegationTokenRequestProto {
-  required string renewer = 1;
-}
+message GetDelegationTokenRequestProto { required string renewer = 1; }
 
 message GetDelegationTokenResponseProto {
   optional hadoop.common.TokenProto token = 1;
@@ -62,9 +61,7 @@ message RenewDelegationTokenRequestProto {
   required hadoop.common.TokenProto token = 1;
 }
 
-message RenewDelegationTokenResponseProto {
-  required uint64 newExpiryTime = 1;
-}
+message RenewDelegationTokenResponseProto { required uint64 newExpiryTime = 1; }
 
 message CancelDelegationTokenRequestProto {
   required hadoop.common.TokenProto token = 1;
@@ -72,4 +69,3 @@ message CancelDelegationTokenRequestProto {
 
 message CancelDelegationTokenResponseProto { // void response
 }
-

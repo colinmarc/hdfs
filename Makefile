@@ -21,19 +21,9 @@ clean-protos:
 	find . -name *.pb.go | xargs rm
 
 hdfs: clean $(SOURCES)
-	go build -ldflags "-X main.version=$(TAG)" ./cmd/hdfs
 
 test: hdfs
 	go test -v -race -timeout 30s ./...
 	bats ./cmd/hdfs/test/*.bats
-
-clean:
-	rm -f ./hdfs
-	rm -rf gohdfs-*
-
-release: hdfs
-	mkdir -p $(RELEASE_NAME)
-	cp hdfs README.md LICENSE.txt cmd/hdfs/bash_completion $(RELEASE_NAME)/
-	tar -cvzf $(RELEASE_NAME).tar.gz $(RELEASE_NAME)
 
 .PHONY: clean clean-protos install test release

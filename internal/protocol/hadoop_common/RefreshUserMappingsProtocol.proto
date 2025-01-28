@@ -22,36 +22,33 @@
  * for what changes are allowed for a *stable* .proto interface.
  */
 syntax = "proto2";
-option java_package = "org.apache.hadoop.security.proto";
-option java_outer_classname = "RefreshUserMappingsProtocolProtos";
-option java_generic_services = true;
-option java_generate_equals_and_hash = true;
-option go_package = "github.com/colinmarc/hdfs/v2/internal/protocol/hadoop_common";
 package hadoop.common;
+
+option go_package = "github.com/acceldata-io/gohdfs/internal/protocol/hadoop_common";
+option java_generate_equals_and_hash = true;
+option java_generic_services = true;
+option java_outer_classname = "RefreshUserMappingsProtocolProtos";
+option java_package = "org.apache.hadoop.security.proto";
 
 /**
  *  Refresh user to group mappings request.
  */
-message RefreshUserToGroupsMappingsRequestProto {
-}
+message RefreshUserToGroupsMappingsRequestProto {}
 
 /**
  * void response
  */
-message RefreshUserToGroupsMappingsResponseProto {
-}
+message RefreshUserToGroupsMappingsResponseProto {}
 
 /**
  * Refresh superuser configuration request.
  */
-message RefreshSuperUserGroupsConfigurationRequestProto {
-}
+message RefreshSuperUserGroupsConfigurationRequestProto {}
 
 /**
  * void response
  */
-message RefreshSuperUserGroupsConfigurationResponseProto {
-}
+message RefreshSuperUserGroupsConfigurationResponseProto {}
 
 /**
  * Protocol to refresh the user mappings.
@@ -61,11 +58,12 @@ service RefreshUserMappingsProtocolService {
    * Refresh user to group mappings.
    */
   rpc refreshUserToGroupsMappings(RefreshUserToGroupsMappingsRequestProto)
-      returns(RefreshUserToGroupsMappingsResponseProto);
+      returns (RefreshUserToGroupsMappingsResponseProto);
 
   /**
    * Refresh superuser proxy group list.
    */
-  rpc refreshSuperUserGroupsConfiguration(RefreshSuperUserGroupsConfigurationRequestProto)
-      returns(RefreshSuperUserGroupsConfigurationResponseProto);
+  rpc refreshSuperUserGroupsConfiguration(
+      RefreshSuperUserGroupsConfigurationRequestProto)
+      returns (RefreshSuperUserGroupsConfigurationResponseProto);
 }

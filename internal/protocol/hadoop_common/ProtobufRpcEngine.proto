@@ -22,17 +22,18 @@
  * for what changes are allowed for a *stable* .proto interface.
  */
 syntax = "proto2";
+package hadoop.common;
+
+option go_package = "github.com/acceldata-io/gohdfs/internal/protocol/hadoop_common";
+option java_generate_equals_and_hash = true;
+option java_outer_classname = "ProtobufRpcEngineProtos";
 /**
  * These are the messages used by Hadoop RPC for the Rpc Engine Protocol Buffer
  * to marshal the request and response in the RPC layer.
- * The messages are sent in addition to the normal RPC header as 
+ * The messages are sent in addition to the normal RPC header as
  * defined in RpcHeader.proto
  */
 option java_package = "org.apache.hadoop.ipc.protobuf";
-option java_outer_classname = "ProtobufRpcEngineProtos";
-option java_generate_equals_and_hash = true;
-option go_package = "github.com/colinmarc/hdfs/v2/internal/protocol/hadoop_common";
-package hadoop.common;
 
 /**
  * This message is the header for the Protobuf Rpc Engine
@@ -40,21 +41,21 @@ package hadoop.common;
  * The actual request (serialized as protobuf) follows this request.
  *
  * No special header is needed for the Rpc Response for Protobuf Rpc Engine.
- * The normal RPC response header (see RpcHeader.proto) are sufficient. 
+ * The normal RPC response header (see RpcHeader.proto) are sufficient.
  */
 message RequestHeaderProto {
   /** Name of the RPC method */
   required string methodName = 1;
 
-  /** 
+  /**
    * RPCs for a particular interface (ie protocol) are done using a
    * IPC connection that is setup using rpcProxy.
-   * The rpcProxy's has a declared protocol name that is 
-   * sent form client to server at connection time. 
-   * 
-   * Each Rpc call also sends a protocol name 
+   * The rpcProxy's has a declared protocol name that is
+   * sent form client to server at connection time.
+   *
+   * Each Rpc call also sends a protocol name
    * (called declaringClassprotocolName). This name is usually the same
-   * as the connection protocol name except in some cases. 
+   * as the connection protocol name except in some cases.
    * For example metaProtocols such ProtocolInfoProto which get metainfo
    * about the protocol reuse the connection but need to indicate that
    * the actual protocol is different (i.e. the protocol is
@@ -62,7 +63,7 @@ message RequestHeaderProto {
    * the declaringClassProtocolName field is set to the ProtocolInfoProto
    */
   required string declaringClassProtocolName = 2;
-  
+
   /** protocol version of class declaring the called method */
   required uint64 clientProtocolVersion = 3;
 }

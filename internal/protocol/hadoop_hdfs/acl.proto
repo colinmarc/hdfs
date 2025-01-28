@@ -15,100 +15,88 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-syntax="proto2";
-option java_package = "org.apache.hadoop.hdfs.protocol.proto";
-option java_outer_classname = "AclProtos";
-option java_generate_equals_and_hash = true;
-option go_package = "github.com/colinmarc/hdfs/v2/internal/protocol/hadoop_hdfs";
+syntax = "proto2";
 package hadoop.hdfs;
+
+option go_package = "github.com/acceldata-io/gohdfs/internal/protocol/hadoop_hdfs";
+option java_generate_equals_and_hash = true;
+option java_outer_classname = "AclProtos";
+option java_package = "org.apache.hadoop.hdfs.protocol.proto";
 
 /**
  * File or Directory permision - same spec as posix
  */
 message FsPermissionProto {
-  required uint32 perm = 1;       // Actually a short - only 16bits used
+  required uint32 perm = 1; // Actually a short - only 16bits used
 }
 
 message AclEntryProto {
   enum AclEntryScopeProto {
-    ACCESS  = 0x0;
+    ACCESS = 0x0;
     DEFAULT = 0x1;
   }
 
   enum AclEntryTypeProto {
-    USER  = 0x0;
+    USER = 0x0;
     GROUP = 0x1;
-    MASK  = 0x2;
+    MASK = 0x2;
     OTHER = 0x3;
   }
 
   enum FsActionProto {
-    NONE          = 0x0;
-    EXECUTE       = 0x1;
-    WRITE         = 0x2;
+    NONE = 0x0;
+    EXECUTE = 0x1;
+    WRITE = 0x2;
     WRITE_EXECUTE = 0x3;
-    READ          = 0x4;
-    READ_EXECUTE  = 0x5;
-    READ_WRITE    = 0x6;
-    PERM_ALL      = 0x7;
+    READ = 0x4;
+    READ_EXECUTE = 0x5;
+    READ_WRITE = 0x6;
+    PERM_ALL = 0x7;
   }
 
-  required AclEntryTypeProto type    = 1;
-  required AclEntryScopeProto scope  = 2;
+  required AclEntryTypeProto type = 1;
+  required AclEntryScopeProto scope = 2;
   required FsActionProto permissions = 3;
-  optional string name               = 4;
+  optional string name = 4;
 }
 
 message AclStatusProto {
-  required string owner          = 1;
-  required string group          = 2;
-  required bool sticky           = 3;
+  required string owner = 1;
+  required string group = 2;
+  required bool sticky = 3;
   repeated AclEntryProto entries = 4;
   optional FsPermissionProto permission = 5;
 }
 
 message ModifyAclEntriesRequestProto {
-  required string src            = 1;
+  required string src = 1;
   repeated AclEntryProto aclSpec = 2;
 }
 
-message ModifyAclEntriesResponseProto {
-}
+message ModifyAclEntriesResponseProto {}
 
-message RemoveAclRequestProto {
-  required string src = 1;
-}
+message RemoveAclRequestProto { required string src = 1; }
 
-message RemoveAclResponseProto {
-}
+message RemoveAclResponseProto {}
 
 message RemoveAclEntriesRequestProto {
-  required string src            = 1;
+  required string src = 1;
   repeated AclEntryProto aclSpec = 2;
 }
 
-message RemoveAclEntriesResponseProto {
-}
+message RemoveAclEntriesResponseProto {}
 
-message RemoveDefaultAclRequestProto {
-  required string src = 1;
-}
+message RemoveDefaultAclRequestProto { required string src = 1; }
 
-message RemoveDefaultAclResponseProto {
-}
+message RemoveDefaultAclResponseProto {}
 
 message SetAclRequestProto {
-  required string src            = 1;
+  required string src = 1;
   repeated AclEntryProto aclSpec = 2;
 }
 
-message SetAclResponseProto {
-}
+message SetAclResponseProto {}
 
-message GetAclStatusRequestProto {
-  required string src = 1;
-}
+message GetAclStatusRequestProto { required string src = 1; }
 
-message GetAclStatusResponseProto {
-  required AclStatusProto result = 1;
-}
+message GetAclStatusResponseProto { required AclStatusProto result = 1; }

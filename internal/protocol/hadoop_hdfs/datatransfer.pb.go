@@ -29,11 +29,12 @@
 package hadoop_hdfs
 
 import (
-	hadoop_common "github.com/colinmarc/hdfs/v2/internal/protocol/hadoop_common"
-	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
-	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	reflect "reflect"
 	sync "sync"
+
+	hadoop_common "github.com/acceldata-io/gohdfs/internal/protocol/hadoop_common"
+	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
+	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 )
 
 const (
@@ -861,7 +862,7 @@ type OpWriteBlockProto struct {
 	// storage i.e. memory and written to disk lazily. The DataNode is free
 	// to ignore this hint.
 	AllowLazyPersist *bool `protobuf:"varint,13,opt,name=allowLazyPersist,def=0" json:"allowLazyPersist,omitempty"`
-	//whether to pin the block, so Balancer won't move it.
+	// whether to pin the block, so Balancer won't move it.
 	Pinning          *bool    `protobuf:"varint,14,opt,name=pinning,def=0" json:"pinning,omitempty"`
 	TargetPinnings   []bool   `protobuf:"varint,15,rep,name=targetPinnings" json:"targetPinnings,omitempty"`
 	StorageId        *string  `protobuf:"bytes,16,opt,name=storageId" json:"storageId,omitempty"`
@@ -1379,7 +1380,7 @@ func (x *OpBlockGroupChecksumProto) GetBlockChecksumOptions() *BlockChecksumOpti
 	return nil
 }
 
-//*
+// *
 // An ID uniquely identifying a shared memory segment.
 type ShortCircuitShmIdProto struct {
 	state         protoimpl.MessageState
@@ -1436,7 +1437,7 @@ func (x *ShortCircuitShmIdProto) GetLo() int64 {
 	return 0
 }
 
-//*
+// *
 // An ID uniquely identifying a slot within a shared memory segment.
 type ShortCircuitShmSlotProto struct {
 	state         protoimpl.MessageState
@@ -1969,7 +1970,7 @@ func (x *PipelineAckProto) GetFlag() []uint32 {
 	return nil
 }
 
-//*
+// *
 // Sent as part of the BlockOpResponseProto
 // for READ_BLOCK and COPY_BLOCK operations.
 type ReadOpChecksumInfoProto struct {
@@ -2126,7 +2127,7 @@ func (x *BlockOpResponseProto) GetShortCircuitAccessVersion() uint32 {
 	return 0
 }
 
-//*
+// *
 // Message sent from the client to the DN after reading the entire
 // read request.
 type ClientReadStatusProto struct {
@@ -2781,52 +2782,54 @@ func file_datatransfer_proto_rawDescGZIP() []byte {
 	return file_datatransfer_proto_rawDescData
 }
 
-var file_datatransfer_proto_enumTypes = make([]protoimpl.EnumInfo, 4)
-var file_datatransfer_proto_msgTypes = make([]protoimpl.MessageInfo, 29)
-var file_datatransfer_proto_goTypes = []interface{}{
-	(Status)(0),                 // 0: hadoop.hdfs.Status
-	(ShortCircuitFdResponse)(0), // 1: hadoop.hdfs.ShortCircuitFdResponse
-	(DataTransferEncryptorMessageProto_DataTransferEncryptorStatus)(0), // 2: hadoop.hdfs.DataTransferEncryptorMessageProto.DataTransferEncryptorStatus
-	(OpWriteBlockProto_BlockConstructionStage)(0),                      // 3: hadoop.hdfs.OpWriteBlockProto.BlockConstructionStage
-	(*DataTransferEncryptorMessageProto)(nil),                          // 4: hadoop.hdfs.DataTransferEncryptorMessageProto
-	(*HandshakeSecretProto)(nil),                                       // 5: hadoop.hdfs.HandshakeSecretProto
-	(*BaseHeaderProto)(nil),                                            // 6: hadoop.hdfs.BaseHeaderProto
-	(*DataTransferTraceInfoProto)(nil),                                 // 7: hadoop.hdfs.DataTransferTraceInfoProto
-	(*ClientOperationHeaderProto)(nil),                                 // 8: hadoop.hdfs.ClientOperationHeaderProto
-	(*CachingStrategyProto)(nil),                                       // 9: hadoop.hdfs.CachingStrategyProto
-	(*OpReadBlockProto)(nil),                                           // 10: hadoop.hdfs.OpReadBlockProto
-	(*ChecksumProto)(nil),                                              // 11: hadoop.hdfs.ChecksumProto
-	(*OpWriteBlockProto)(nil),                                          // 12: hadoop.hdfs.OpWriteBlockProto
-	(*OpTransferBlockProto)(nil),                                       // 13: hadoop.hdfs.OpTransferBlockProto
-	(*OpReplaceBlockProto)(nil),                                        // 14: hadoop.hdfs.OpReplaceBlockProto
-	(*OpCopyBlockProto)(nil),                                           // 15: hadoop.hdfs.OpCopyBlockProto
-	(*OpBlockChecksumProto)(nil),                                       // 16: hadoop.hdfs.OpBlockChecksumProto
-	(*OpBlockGroupChecksumProto)(nil),                                  // 17: hadoop.hdfs.OpBlockGroupChecksumProto
-	(*ShortCircuitShmIdProto)(nil),                                     // 18: hadoop.hdfs.ShortCircuitShmIdProto
-	(*ShortCircuitShmSlotProto)(nil),                                   // 19: hadoop.hdfs.ShortCircuitShmSlotProto
-	(*OpRequestShortCircuitAccessProto)(nil),                           // 20: hadoop.hdfs.OpRequestShortCircuitAccessProto
-	(*ReleaseShortCircuitAccessRequestProto)(nil),                      // 21: hadoop.hdfs.ReleaseShortCircuitAccessRequestProto
-	(*ReleaseShortCircuitAccessResponseProto)(nil),                     // 22: hadoop.hdfs.ReleaseShortCircuitAccessResponseProto
-	(*ShortCircuitShmRequestProto)(nil),                                // 23: hadoop.hdfs.ShortCircuitShmRequestProto
-	(*ShortCircuitShmResponseProto)(nil),                               // 24: hadoop.hdfs.ShortCircuitShmResponseProto
-	(*PacketHeaderProto)(nil),                                          // 25: hadoop.hdfs.PacketHeaderProto
-	(*PipelineAckProto)(nil),                                           // 26: hadoop.hdfs.PipelineAckProto
-	(*ReadOpChecksumInfoProto)(nil),                                    // 27: hadoop.hdfs.ReadOpChecksumInfoProto
-	(*BlockOpResponseProto)(nil),                                       // 28: hadoop.hdfs.BlockOpResponseProto
-	(*ClientReadStatusProto)(nil),                                      // 29: hadoop.hdfs.ClientReadStatusProto
-	(*DNTransferAckProto)(nil),                                         // 30: hadoop.hdfs.DNTransferAckProto
-	(*OpBlockChecksumResponseProto)(nil),                               // 31: hadoop.hdfs.OpBlockChecksumResponseProto
-	(*OpCustomProto)(nil),                                              // 32: hadoop.hdfs.OpCustomProto
-	(*CipherOptionProto)(nil),                                          // 33: hadoop.hdfs.CipherOptionProto
-	(*ExtendedBlockProto)(nil),                                         // 34: hadoop.hdfs.ExtendedBlockProto
-	(*hadoop_common.TokenProto)(nil),                                   // 35: hadoop.common.TokenProto
-	(ChecksumTypeProto)(0),                                             // 36: hadoop.hdfs.ChecksumTypeProto
-	(*DatanodeInfoProto)(nil),                                          // 37: hadoop.hdfs.DatanodeInfoProto
-	(StorageTypeProto)(0),                                              // 38: hadoop.hdfs.StorageTypeProto
-	(*BlockChecksumOptionsProto)(nil),                                  // 39: hadoop.hdfs.BlockChecksumOptionsProto
-	(*DatanodeInfosProto)(nil),                                         // 40: hadoop.hdfs.DatanodeInfosProto
-	(*ErasureCodingPolicyProto)(nil),                                   // 41: hadoop.hdfs.ErasureCodingPolicyProto
-}
+var (
+	file_datatransfer_proto_enumTypes = make([]protoimpl.EnumInfo, 4)
+	file_datatransfer_proto_msgTypes  = make([]protoimpl.MessageInfo, 29)
+	file_datatransfer_proto_goTypes   = []interface{}{
+		(Status)(0),                 // 0: hadoop.hdfs.Status
+		(ShortCircuitFdResponse)(0), // 1: hadoop.hdfs.ShortCircuitFdResponse
+		(DataTransferEncryptorMessageProto_DataTransferEncryptorStatus)(0), // 2: hadoop.hdfs.DataTransferEncryptorMessageProto.DataTransferEncryptorStatus
+		(OpWriteBlockProto_BlockConstructionStage)(0),                      // 3: hadoop.hdfs.OpWriteBlockProto.BlockConstructionStage
+		(*DataTransferEncryptorMessageProto)(nil),                          // 4: hadoop.hdfs.DataTransferEncryptorMessageProto
+		(*HandshakeSecretProto)(nil),                                       // 5: hadoop.hdfs.HandshakeSecretProto
+		(*BaseHeaderProto)(nil),                                            // 6: hadoop.hdfs.BaseHeaderProto
+		(*DataTransferTraceInfoProto)(nil),                                 // 7: hadoop.hdfs.DataTransferTraceInfoProto
+		(*ClientOperationHeaderProto)(nil),                                 // 8: hadoop.hdfs.ClientOperationHeaderProto
+		(*CachingStrategyProto)(nil),                                       // 9: hadoop.hdfs.CachingStrategyProto
+		(*OpReadBlockProto)(nil),                                           // 10: hadoop.hdfs.OpReadBlockProto
+		(*ChecksumProto)(nil),                                              // 11: hadoop.hdfs.ChecksumProto
+		(*OpWriteBlockProto)(nil),                                          // 12: hadoop.hdfs.OpWriteBlockProto
+		(*OpTransferBlockProto)(nil),                                       // 13: hadoop.hdfs.OpTransferBlockProto
+		(*OpReplaceBlockProto)(nil),                                        // 14: hadoop.hdfs.OpReplaceBlockProto
+		(*OpCopyBlockProto)(nil),                                           // 15: hadoop.hdfs.OpCopyBlockProto
+		(*OpBlockChecksumProto)(nil),                                       // 16: hadoop.hdfs.OpBlockChecksumProto
+		(*OpBlockGroupChecksumProto)(nil),                                  // 17: hadoop.hdfs.OpBlockGroupChecksumProto
+		(*ShortCircuitShmIdProto)(nil),                                     // 18: hadoop.hdfs.ShortCircuitShmIdProto
+		(*ShortCircuitShmSlotProto)(nil),                                   // 19: hadoop.hdfs.ShortCircuitShmSlotProto
+		(*OpRequestShortCircuitAccessProto)(nil),                           // 20: hadoop.hdfs.OpRequestShortCircuitAccessProto
+		(*ReleaseShortCircuitAccessRequestProto)(nil),                      // 21: hadoop.hdfs.ReleaseShortCircuitAccessRequestProto
+		(*ReleaseShortCircuitAccessResponseProto)(nil),                     // 22: hadoop.hdfs.ReleaseShortCircuitAccessResponseProto
+		(*ShortCircuitShmRequestProto)(nil),                                // 23: hadoop.hdfs.ShortCircuitShmRequestProto
+		(*ShortCircuitShmResponseProto)(nil),                               // 24: hadoop.hdfs.ShortCircuitShmResponseProto
+		(*PacketHeaderProto)(nil),                                          // 25: hadoop.hdfs.PacketHeaderProto
+		(*PipelineAckProto)(nil),                                           // 26: hadoop.hdfs.PipelineAckProto
+		(*ReadOpChecksumInfoProto)(nil),                                    // 27: hadoop.hdfs.ReadOpChecksumInfoProto
+		(*BlockOpResponseProto)(nil),                                       // 28: hadoop.hdfs.BlockOpResponseProto
+		(*ClientReadStatusProto)(nil),                                      // 29: hadoop.hdfs.ClientReadStatusProto
+		(*DNTransferAckProto)(nil),                                         // 30: hadoop.hdfs.DNTransferAckProto
+		(*OpBlockChecksumResponseProto)(nil),                               // 31: hadoop.hdfs.OpBlockChecksumResponseProto
+		(*OpCustomProto)(nil),                                              // 32: hadoop.hdfs.OpCustomProto
+		(*CipherOptionProto)(nil),                                          // 33: hadoop.hdfs.CipherOptionProto
+		(*ExtendedBlockProto)(nil),                                         // 34: hadoop.hdfs.ExtendedBlockProto
+		(*hadoop_common.TokenProto)(nil),                                   // 35: hadoop.common.TokenProto
+		(ChecksumTypeProto)(0),                                             // 36: hadoop.hdfs.ChecksumTypeProto
+		(*DatanodeInfoProto)(nil),                                          // 37: hadoop.hdfs.DatanodeInfoProto
+		(StorageTypeProto)(0),                                              // 38: hadoop.hdfs.StorageTypeProto
+		(*BlockChecksumOptionsProto)(nil),                                  // 39: hadoop.hdfs.BlockChecksumOptionsProto
+		(*DatanodeInfosProto)(nil),                                         // 40: hadoop.hdfs.DatanodeInfosProto
+		(*ErasureCodingPolicyProto)(nil),                                   // 41: hadoop.hdfs.ErasureCodingPolicyProto
+	}
+)
 var file_datatransfer_proto_depIdxs = []int32{
 	2,  // 0: hadoop.hdfs.DataTransferEncryptorMessageProto.status:type_name -> hadoop.hdfs.DataTransferEncryptorMessageProto.DataTransferEncryptorStatus
 	33, // 1: hadoop.hdfs.DataTransferEncryptorMessageProto.cipherOption:type_name -> hadoop.hdfs.CipherOptionProto

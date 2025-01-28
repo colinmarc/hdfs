@@ -29,11 +29,12 @@
 package hadoop_hdfs
 
 import (
-	hadoop_common "github.com/colinmarc/hdfs/v2/internal/protocol/hadoop_common"
-	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
-	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	reflect "reflect"
 	sync "sync"
+
+	hadoop_common "github.com/acceldata-io/gohdfs/internal/protocol/hadoop_common"
+	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
+	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 )
 
 const (
@@ -43,7 +44,7 @@ const (
 	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
 
-//*
+// *
 // Types of recognized storage media.
 type StorageTypeProto int32
 
@@ -110,7 +111,7 @@ func (StorageTypeProto) EnumDescriptor() ([]byte, []int) {
 	return file_hdfs_proto_rawDescGZIP(), []int{0}
 }
 
-//*
+// *
 // Types of recognized blocks.
 type BlockTypeProto int32
 
@@ -168,7 +169,7 @@ func (BlockTypeProto) EnumDescriptor() ([]byte, []int) {
 	return file_hdfs_proto_rawDescGZIP(), []int{1}
 }
 
-//*
+// *
 // Cipher suite.
 type CipherSuiteProto int32
 
@@ -226,7 +227,7 @@ func (CipherSuiteProto) EnumDescriptor() ([]byte, []int) {
 	return file_hdfs_proto_rawDescGZIP(), []int{2}
 }
 
-//*
+// *
 // Crypto protocol version used to access encrypted files.
 type CryptoProtocolVersionProto int32
 
@@ -284,7 +285,7 @@ func (CryptoProtocolVersionProto) EnumDescriptor() ([]byte, []int) {
 	return file_hdfs_proto_rawDescGZIP(), []int{3}
 }
 
-//*
+// *
 // EC policy state.
 type ErasureCodingPolicyState int32
 
@@ -345,7 +346,7 @@ func (ErasureCodingPolicyState) EnumDescriptor() ([]byte, []int) {
 	return file_hdfs_proto_rawDescGZIP(), []int{4}
 }
 
-//*
+// *
 // Checksum algorithms/types used in HDFS
 // Make sure this enum's integer values match enum values' id properties defined
 // in org.apache.hadoop.util.DataChecksum.Type
@@ -464,7 +465,7 @@ func (BlockChecksumTypeProto) EnumDescriptor() ([]byte, []int) {
 	return file_hdfs_proto_rawDescGZIP(), []int{6}
 }
 
-//*
+// *
 // File access permissions mode.
 type AccessModeProto int32
 
@@ -770,7 +771,7 @@ func (HdfsFileStatusProto_Flags) EnumDescriptor() ([]byte, []int) {
 	return file_hdfs_proto_rawDescGZIP(), []int{31, 1}
 }
 
-//*
+// *
 // Extended block idenfies a block
 type ExtendedBlockProto struct {
 	state         protoimpl.MessageState
@@ -919,7 +920,7 @@ func (x *ProvidedStorageLocationProto) GetNonce() []byte {
 	return nil
 }
 
-//*
+// *
 // Identifies a Datanode
 type DatanodeIDProto struct {
 	state         protoimpl.MessageState
@@ -1024,7 +1025,7 @@ func (x *DatanodeIDProto) GetInfoSecurePort() uint32 {
 	return Default_DatanodeIDProto_InfoSecurePort
 }
 
-//*
+// *
 // Datanode local information
 type DatanodeLocalInfoProto struct {
 	state         protoimpl.MessageState
@@ -1089,7 +1090,7 @@ func (x *DatanodeLocalInfoProto) GetUptime() uint64 {
 	return 0
 }
 
-//*
+// *
 // Datanode volume information
 type DatanodeVolumeInfoProto struct {
 	state         protoimpl.MessageState
@@ -1186,7 +1187,7 @@ func (x *DatanodeVolumeInfoProto) GetNumBlocks() uint64 {
 	return 0
 }
 
-//*
+// *
 // DatanodeInfo array
 type DatanodeInfosProto struct {
 	state         protoimpl.MessageState
@@ -1235,7 +1236,7 @@ func (x *DatanodeInfosProto) GetDatanodes() []*DatanodeInfoProto {
 	return nil
 }
 
-//*
+// *
 // The status of a Datanode
 type DatanodeInfoProto struct {
 	state         protoimpl.MessageState
@@ -1429,7 +1430,7 @@ func (x *DatanodeInfoProto) GetNumBlocks() uint32 {
 	return Default_DatanodeInfoProto_NumBlocks
 }
 
-//*
+// *
 // Represents a storage available on the datanode
 type DatanodeStorageProto struct {
 	state         protoimpl.MessageState
@@ -1614,7 +1615,7 @@ func (x *StorageReportProto) GetNonDfsUsed() uint64 {
 	return 0
 }
 
-//*
+// *
 // Summary of a file or directory
 type ContentSummaryProto struct {
 	state         protoimpl.MessageState
@@ -1751,7 +1752,7 @@ func (x *ContentSummaryProto) GetErasureCodingPolicy() string {
 	return ""
 }
 
-//*
+// *
 // Summary of quota usage of a directory
 type QuotaUsageProto struct {
 	state         protoimpl.MessageState
@@ -1832,7 +1833,7 @@ func (x *QuotaUsageProto) GetTypeQuotaInfos() *StorageTypeQuotaInfosProto {
 	return nil
 }
 
-//*
+// *
 // Storage type quota and usage information of a file or directory
 type StorageTypeQuotaInfosProto struct {
 	state         protoimpl.MessageState
@@ -1949,10 +1950,9 @@ func (x *StorageTypeQuotaInfoProto) GetConsumed() uint64 {
 	return 0
 }
 
-//*
+// *
 // Contains a list of paths corresponding to corrupt files and a cookie
 // used for iterative calls to NameNode.listCorruptFileBlocks.
-//
 type CorruptFileBlocksProto struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -2008,7 +2008,7 @@ func (x *CorruptFileBlocksProto) GetCookie() string {
 	return ""
 }
 
-//*
+// *
 // A list of storage types.
 type StorageTypesProto struct {
 	state         protoimpl.MessageState
@@ -2057,7 +2057,7 @@ func (x *StorageTypesProto) GetStorageTypes() []StorageTypeProto {
 	return nil
 }
 
-//*
+// *
 // Block replica storage policy.
 type BlockStoragePolicyProto struct {
 	state         protoimpl.MessageState
@@ -2141,7 +2141,7 @@ func (x *BlockStoragePolicyProto) GetReplicationFallbackPolicy() *StorageTypesPr
 	return nil
 }
 
-//*
+// *
 // A LocatedBlock gives information about a block and its location.
 type LocatedBlockProto struct {
 	state         protoimpl.MessageState
@@ -2413,7 +2413,7 @@ func (x *DataEncryptionKeyProto) GetEncryptionAlgorithm() string {
 	return ""
 }
 
-//*
+// *
 // Encryption information for a file.
 type FileEncryptionInfoProto struct {
 	state         protoimpl.MessageState
@@ -2502,7 +2502,7 @@ func (x *FileEncryptionInfoProto) GetEzKeyVersionName() string {
 	return ""
 }
 
-//*
+// *
 // Encryption information for an individual
 // file within an encryption zone
 type PerFileEncryptionInfoProto struct {
@@ -2568,7 +2568,7 @@ func (x *PerFileEncryptionInfoProto) GetEzKeyVersionName() string {
 	return ""
 }
 
-//*
+// *
 // Encryption information for an encryption
 // zone
 type ZoneEncryptionInfoProto struct {
@@ -2642,7 +2642,7 @@ func (x *ZoneEncryptionInfoProto) GetReencryptionProto() *ReencryptionInfoProto 
 	return nil
 }
 
-//*
+// *
 // Re-encryption information for an encryption zone
 type ReencryptionInfoProto struct {
 	state         protoimpl.MessageState
@@ -2739,7 +2739,7 @@ func (x *ReencryptionInfoProto) GetLastFile() string {
 	return ""
 }
 
-//*
+// *
 // Cipher option
 type CipherOptionProto struct {
 	state         protoimpl.MessageState
@@ -2820,7 +2820,7 @@ func (x *CipherOptionProto) GetOutIv() []byte {
 	return nil
 }
 
-//*
+// *
 // A set of file blocks and their locations.
 type LocatedBlocksProto struct {
 	state         protoimpl.MessageState
@@ -2918,7 +2918,7 @@ func (x *LocatedBlocksProto) GetEcPolicy() *ErasureCodingPolicyProto {
 	return nil
 }
 
-//*
+// *
 // ECSchema options entry
 type ECSchemaOptionEntryProto struct {
 	state         protoimpl.MessageState
@@ -2975,7 +2975,7 @@ func (x *ECSchemaOptionEntryProto) GetValue() string {
 	return ""
 }
 
-//*
+// *
 // ECSchema for erasurecoding
 type ECSchemaProto struct {
 	state         protoimpl.MessageState
@@ -3250,7 +3250,7 @@ func (x *ECTopologyVerifierResultProto) GetIsSupported() bool {
 	return false
 }
 
-//*
+// *
 // Placeholder type for consistent HDFS operations.
 type HdfsPathHandleProto struct {
 	state         protoimpl.MessageState
@@ -3315,7 +3315,7 @@ func (x *HdfsPathHandleProto) GetPath() string {
 	return ""
 }
 
-//*
+// *
 // Status of a file, directory or symlink
 // Optionally includes a file's block locations if requested by client on the rpc call.
 type HdfsFileStatusProto struct {
@@ -3517,7 +3517,7 @@ func (x *HdfsFileStatusProto) GetFlags() uint32 {
 	return Default_HdfsFileStatusProto_Flags
 }
 
-//*
+// *
 // Algorithms/types denoting how block-level checksums are computed using
 // lower-level chunk checksums/CRCs.
 // These options should be kept in sync with
@@ -3586,7 +3586,7 @@ func (x *BlockChecksumOptionsProto) GetStripeLength() uint64 {
 	return 0
 }
 
-//*
+// *
 // HDFS Server Defaults
 type FsServerDefaultsProto struct {
 	state         protoimpl.MessageState
@@ -3715,7 +3715,7 @@ func (x *FsServerDefaultsProto) GetPolicyId() uint32 {
 	return Default_FsServerDefaultsProto_PolicyId
 }
 
-//*
+// *
 // Directory listing
 type DirectoryListingProto struct {
 	state         protoimpl.MessageState
@@ -3891,7 +3891,7 @@ func (x *BatchedDirectoryListingProto) GetException() *RemoteExceptionProto {
 	return nil
 }
 
-//*
+// *
 // Status of a snapshottable directory: besides the normal information for
 // a directory status, also include snapshot quota, number of snapshots, and
 // the full path of the parent directory.
@@ -3967,7 +3967,7 @@ func (x *SnapshottableDirectoryStatusProto) GetParentFullpath() []byte {
 	return nil
 }
 
-//*
+// *
 // Snapshottable directory listing
 type SnapshottableDirectoryListingProto struct {
 	state         protoimpl.MessageState
@@ -4016,7 +4016,7 @@ func (x *SnapshottableDirectoryListingProto) GetSnapshottableDirListing() []*Sna
 	return nil
 }
 
-//*
+// *
 // Snapshot diff report entry
 type SnapshotDiffReportEntryProto struct {
 	state         protoimpl.MessageState
@@ -4081,7 +4081,7 @@ func (x *SnapshotDiffReportEntryProto) GetTargetPath() []byte {
 	return nil
 }
 
-//*
+// *
 // Snapshot diff report
 type SnapshotDiffReportProto struct {
 	state         protoimpl.MessageState
@@ -4155,7 +4155,7 @@ func (x *SnapshotDiffReportProto) GetDiffReportEntries() []*SnapshotDiffReportEn
 	return nil
 }
 
-//*
+// *
 // Snapshot diff report listing entry
 type SnapshotDiffReportListingEntryProto struct {
 	state         protoimpl.MessageState
@@ -4296,7 +4296,7 @@ func (x *SnapshotDiffReportCursorProto) GetIndex() int32 {
 	return Default_SnapshotDiffReportCursorProto_Index
 }
 
-//*
+// *
 // Snapshot diff report listing
 type SnapshotDiffReportListingProto struct {
 	state         protoimpl.MessageState
@@ -4378,7 +4378,7 @@ func (x *SnapshotDiffReportListingProto) GetCursor() *SnapshotDiffReportCursorPr
 	return nil
 }
 
-//*
+// *
 // Block information
 //
 // Please be wary of adding additional fields here, since INodeFiles
@@ -4454,7 +4454,7 @@ func (x *BlockProto) GetNumBytes() uint64 {
 	return Default_BlockProto_NumBytes
 }
 
-//*
+// *
 // Information related to a snapshot
 // TODO: add more information
 type SnapshotInfoProto struct {
@@ -4544,7 +4544,7 @@ func (x *SnapshotInfoProto) GetCreateTime() string {
 	return ""
 }
 
-//*
+// *
 // Rolling upgrade status
 type RollingUpgradeStatusProto struct {
 	state         protoimpl.MessageState
@@ -4606,7 +4606,7 @@ func (x *RollingUpgradeStatusProto) GetFinalized() bool {
 	return Default_RollingUpgradeStatusProto_Finalized
 }
 
-//*
+// *
 // A list of storage IDs.
 type StorageUuidsProto struct {
 	state         protoimpl.MessageState
@@ -4655,7 +4655,7 @@ func (x *StorageUuidsProto) GetStorageUuids() []string {
 	return nil
 }
 
-//*
+// *
 // Secret information for the BlockKeyProto. This is not sent on the wire as
 // such but is used to pack a byte array and encrypted and put in
 // BlockKeyProto.bytes
@@ -5548,73 +5548,75 @@ func file_hdfs_proto_rawDescGZIP() []byte {
 	return file_hdfs_proto_rawDescData
 }
 
-var file_hdfs_proto_enumTypes = make([]protoimpl.EnumInfo, 12)
-var file_hdfs_proto_msgTypes = make([]protoimpl.MessageInfo, 49)
-var file_hdfs_proto_goTypes = []interface{}{
-	(StorageTypeProto)(0),                       // 0: hadoop.hdfs.StorageTypeProto
-	(BlockTypeProto)(0),                         // 1: hadoop.hdfs.BlockTypeProto
-	(CipherSuiteProto)(0),                       // 2: hadoop.hdfs.CipherSuiteProto
-	(CryptoProtocolVersionProto)(0),             // 3: hadoop.hdfs.CryptoProtocolVersionProto
-	(ErasureCodingPolicyState)(0),               // 4: hadoop.hdfs.ErasureCodingPolicyState
-	(ChecksumTypeProto)(0),                      // 5: hadoop.hdfs.ChecksumTypeProto
-	(BlockChecksumTypeProto)(0),                 // 6: hadoop.hdfs.BlockChecksumTypeProto
-	(AccessModeProto)(0),                        // 7: hadoop.hdfs.AccessModeProto
-	(DatanodeInfoProto_AdminState)(0),           // 8: hadoop.hdfs.DatanodeInfoProto.AdminState
-	(DatanodeStorageProto_StorageState)(0),      // 9: hadoop.hdfs.DatanodeStorageProto.StorageState
-	(HdfsFileStatusProto_FileType)(0),           // 10: hadoop.hdfs.HdfsFileStatusProto.FileType
-	(HdfsFileStatusProto_Flags)(0),              // 11: hadoop.hdfs.HdfsFileStatusProto.Flags
-	(*ExtendedBlockProto)(nil),                  // 12: hadoop.hdfs.ExtendedBlockProto
-	(*ProvidedStorageLocationProto)(nil),        // 13: hadoop.hdfs.ProvidedStorageLocationProto
-	(*DatanodeIDProto)(nil),                     // 14: hadoop.hdfs.DatanodeIDProto
-	(*DatanodeLocalInfoProto)(nil),              // 15: hadoop.hdfs.DatanodeLocalInfoProto
-	(*DatanodeVolumeInfoProto)(nil),             // 16: hadoop.hdfs.DatanodeVolumeInfoProto
-	(*DatanodeInfosProto)(nil),                  // 17: hadoop.hdfs.DatanodeInfosProto
-	(*DatanodeInfoProto)(nil),                   // 18: hadoop.hdfs.DatanodeInfoProto
-	(*DatanodeStorageProto)(nil),                // 19: hadoop.hdfs.DatanodeStorageProto
-	(*StorageReportProto)(nil),                  // 20: hadoop.hdfs.StorageReportProto
-	(*ContentSummaryProto)(nil),                 // 21: hadoop.hdfs.ContentSummaryProto
-	(*QuotaUsageProto)(nil),                     // 22: hadoop.hdfs.QuotaUsageProto
-	(*StorageTypeQuotaInfosProto)(nil),          // 23: hadoop.hdfs.StorageTypeQuotaInfosProto
-	(*StorageTypeQuotaInfoProto)(nil),           // 24: hadoop.hdfs.StorageTypeQuotaInfoProto
-	(*CorruptFileBlocksProto)(nil),              // 25: hadoop.hdfs.CorruptFileBlocksProto
-	(*StorageTypesProto)(nil),                   // 26: hadoop.hdfs.StorageTypesProto
-	(*BlockStoragePolicyProto)(nil),             // 27: hadoop.hdfs.BlockStoragePolicyProto
-	(*LocatedBlockProto)(nil),                   // 28: hadoop.hdfs.LocatedBlockProto
-	(*BatchedListingKeyProto)(nil),              // 29: hadoop.hdfs.BatchedListingKeyProto
-	(*DataEncryptionKeyProto)(nil),              // 30: hadoop.hdfs.DataEncryptionKeyProto
-	(*FileEncryptionInfoProto)(nil),             // 31: hadoop.hdfs.FileEncryptionInfoProto
-	(*PerFileEncryptionInfoProto)(nil),          // 32: hadoop.hdfs.PerFileEncryptionInfoProto
-	(*ZoneEncryptionInfoProto)(nil),             // 33: hadoop.hdfs.ZoneEncryptionInfoProto
-	(*ReencryptionInfoProto)(nil),               // 34: hadoop.hdfs.ReencryptionInfoProto
-	(*CipherOptionProto)(nil),                   // 35: hadoop.hdfs.CipherOptionProto
-	(*LocatedBlocksProto)(nil),                  // 36: hadoop.hdfs.LocatedBlocksProto
-	(*ECSchemaOptionEntryProto)(nil),            // 37: hadoop.hdfs.ECSchemaOptionEntryProto
-	(*ECSchemaProto)(nil),                       // 38: hadoop.hdfs.ECSchemaProto
-	(*ErasureCodingPolicyProto)(nil),            // 39: hadoop.hdfs.ErasureCodingPolicyProto
-	(*AddErasureCodingPolicyResponseProto)(nil), // 40: hadoop.hdfs.AddErasureCodingPolicyResponseProto
-	(*ECTopologyVerifierResultProto)(nil),       // 41: hadoop.hdfs.ECTopologyVerifierResultProto
-	(*HdfsPathHandleProto)(nil),                 // 42: hadoop.hdfs.HdfsPathHandleProto
-	(*HdfsFileStatusProto)(nil),                 // 43: hadoop.hdfs.HdfsFileStatusProto
-	(*BlockChecksumOptionsProto)(nil),           // 44: hadoop.hdfs.BlockChecksumOptionsProto
-	(*FsServerDefaultsProto)(nil),               // 45: hadoop.hdfs.FsServerDefaultsProto
-	(*DirectoryListingProto)(nil),               // 46: hadoop.hdfs.DirectoryListingProto
-	(*RemoteExceptionProto)(nil),                // 47: hadoop.hdfs.RemoteExceptionProto
-	(*BatchedDirectoryListingProto)(nil),        // 48: hadoop.hdfs.BatchedDirectoryListingProto
-	(*SnapshottableDirectoryStatusProto)(nil),   // 49: hadoop.hdfs.SnapshottableDirectoryStatusProto
-	(*SnapshottableDirectoryListingProto)(nil),  // 50: hadoop.hdfs.SnapshottableDirectoryListingProto
-	(*SnapshotDiffReportEntryProto)(nil),        // 51: hadoop.hdfs.SnapshotDiffReportEntryProto
-	(*SnapshotDiffReportProto)(nil),             // 52: hadoop.hdfs.SnapshotDiffReportProto
-	(*SnapshotDiffReportListingEntryProto)(nil), // 53: hadoop.hdfs.SnapshotDiffReportListingEntryProto
-	(*SnapshotDiffReportCursorProto)(nil),       // 54: hadoop.hdfs.SnapshotDiffReportCursorProto
-	(*SnapshotDiffReportListingProto)(nil),      // 55: hadoop.hdfs.SnapshotDiffReportListingProto
-	(*BlockProto)(nil),                          // 56: hadoop.hdfs.BlockProto
-	(*SnapshotInfoProto)(nil),                   // 57: hadoop.hdfs.SnapshotInfoProto
-	(*RollingUpgradeStatusProto)(nil),           // 58: hadoop.hdfs.RollingUpgradeStatusProto
-	(*StorageUuidsProto)(nil),                   // 59: hadoop.hdfs.StorageUuidsProto
-	(*BlockTokenSecretProto)(nil),               // 60: hadoop.hdfs.BlockTokenSecretProto
-	(*hadoop_common.TokenProto)(nil),            // 61: hadoop.common.TokenProto
-	(*FsPermissionProto)(nil),                   // 62: hadoop.hdfs.FsPermissionProto
-}
+var (
+	file_hdfs_proto_enumTypes = make([]protoimpl.EnumInfo, 12)
+	file_hdfs_proto_msgTypes  = make([]protoimpl.MessageInfo, 49)
+	file_hdfs_proto_goTypes   = []interface{}{
+		(StorageTypeProto)(0),                       // 0: hadoop.hdfs.StorageTypeProto
+		(BlockTypeProto)(0),                         // 1: hadoop.hdfs.BlockTypeProto
+		(CipherSuiteProto)(0),                       // 2: hadoop.hdfs.CipherSuiteProto
+		(CryptoProtocolVersionProto)(0),             // 3: hadoop.hdfs.CryptoProtocolVersionProto
+		(ErasureCodingPolicyState)(0),               // 4: hadoop.hdfs.ErasureCodingPolicyState
+		(ChecksumTypeProto)(0),                      // 5: hadoop.hdfs.ChecksumTypeProto
+		(BlockChecksumTypeProto)(0),                 // 6: hadoop.hdfs.BlockChecksumTypeProto
+		(AccessModeProto)(0),                        // 7: hadoop.hdfs.AccessModeProto
+		(DatanodeInfoProto_AdminState)(0),           // 8: hadoop.hdfs.DatanodeInfoProto.AdminState
+		(DatanodeStorageProto_StorageState)(0),      // 9: hadoop.hdfs.DatanodeStorageProto.StorageState
+		(HdfsFileStatusProto_FileType)(0),           // 10: hadoop.hdfs.HdfsFileStatusProto.FileType
+		(HdfsFileStatusProto_Flags)(0),              // 11: hadoop.hdfs.HdfsFileStatusProto.Flags
+		(*ExtendedBlockProto)(nil),                  // 12: hadoop.hdfs.ExtendedBlockProto
+		(*ProvidedStorageLocationProto)(nil),        // 13: hadoop.hdfs.ProvidedStorageLocationProto
+		(*DatanodeIDProto)(nil),                     // 14: hadoop.hdfs.DatanodeIDProto
+		(*DatanodeLocalInfoProto)(nil),              // 15: hadoop.hdfs.DatanodeLocalInfoProto
+		(*DatanodeVolumeInfoProto)(nil),             // 16: hadoop.hdfs.DatanodeVolumeInfoProto
+		(*DatanodeInfosProto)(nil),                  // 17: hadoop.hdfs.DatanodeInfosProto
+		(*DatanodeInfoProto)(nil),                   // 18: hadoop.hdfs.DatanodeInfoProto
+		(*DatanodeStorageProto)(nil),                // 19: hadoop.hdfs.DatanodeStorageProto
+		(*StorageReportProto)(nil),                  // 20: hadoop.hdfs.StorageReportProto
+		(*ContentSummaryProto)(nil),                 // 21: hadoop.hdfs.ContentSummaryProto
+		(*QuotaUsageProto)(nil),                     // 22: hadoop.hdfs.QuotaUsageProto
+		(*StorageTypeQuotaInfosProto)(nil),          // 23: hadoop.hdfs.StorageTypeQuotaInfosProto
+		(*StorageTypeQuotaInfoProto)(nil),           // 24: hadoop.hdfs.StorageTypeQuotaInfoProto
+		(*CorruptFileBlocksProto)(nil),              // 25: hadoop.hdfs.CorruptFileBlocksProto
+		(*StorageTypesProto)(nil),                   // 26: hadoop.hdfs.StorageTypesProto
+		(*BlockStoragePolicyProto)(nil),             // 27: hadoop.hdfs.BlockStoragePolicyProto
+		(*LocatedBlockProto)(nil),                   // 28: hadoop.hdfs.LocatedBlockProto
+		(*BatchedListingKeyProto)(nil),              // 29: hadoop.hdfs.BatchedListingKeyProto
+		(*DataEncryptionKeyProto)(nil),              // 30: hadoop.hdfs.DataEncryptionKeyProto
+		(*FileEncryptionInfoProto)(nil),             // 31: hadoop.hdfs.FileEncryptionInfoProto
+		(*PerFileEncryptionInfoProto)(nil),          // 32: hadoop.hdfs.PerFileEncryptionInfoProto
+		(*ZoneEncryptionInfoProto)(nil),             // 33: hadoop.hdfs.ZoneEncryptionInfoProto
+		(*ReencryptionInfoProto)(nil),               // 34: hadoop.hdfs.ReencryptionInfoProto
+		(*CipherOptionProto)(nil),                   // 35: hadoop.hdfs.CipherOptionProto
+		(*LocatedBlocksProto)(nil),                  // 36: hadoop.hdfs.LocatedBlocksProto
+		(*ECSchemaOptionEntryProto)(nil),            // 37: hadoop.hdfs.ECSchemaOptionEntryProto
+		(*ECSchemaProto)(nil),                       // 38: hadoop.hdfs.ECSchemaProto
+		(*ErasureCodingPolicyProto)(nil),            // 39: hadoop.hdfs.ErasureCodingPolicyProto
+		(*AddErasureCodingPolicyResponseProto)(nil), // 40: hadoop.hdfs.AddErasureCodingPolicyResponseProto
+		(*ECTopologyVerifierResultProto)(nil),       // 41: hadoop.hdfs.ECTopologyVerifierResultProto
+		(*HdfsPathHandleProto)(nil),                 // 42: hadoop.hdfs.HdfsPathHandleProto
+		(*HdfsFileStatusProto)(nil),                 // 43: hadoop.hdfs.HdfsFileStatusProto
+		(*BlockChecksumOptionsProto)(nil),           // 44: hadoop.hdfs.BlockChecksumOptionsProto
+		(*FsServerDefaultsProto)(nil),               // 45: hadoop.hdfs.FsServerDefaultsProto
+		(*DirectoryListingProto)(nil),               // 46: hadoop.hdfs.DirectoryListingProto
+		(*RemoteExceptionProto)(nil),                // 47: hadoop.hdfs.RemoteExceptionProto
+		(*BatchedDirectoryListingProto)(nil),        // 48: hadoop.hdfs.BatchedDirectoryListingProto
+		(*SnapshottableDirectoryStatusProto)(nil),   // 49: hadoop.hdfs.SnapshottableDirectoryStatusProto
+		(*SnapshottableDirectoryListingProto)(nil),  // 50: hadoop.hdfs.SnapshottableDirectoryListingProto
+		(*SnapshotDiffReportEntryProto)(nil),        // 51: hadoop.hdfs.SnapshotDiffReportEntryProto
+		(*SnapshotDiffReportProto)(nil),             // 52: hadoop.hdfs.SnapshotDiffReportProto
+		(*SnapshotDiffReportListingEntryProto)(nil), // 53: hadoop.hdfs.SnapshotDiffReportListingEntryProto
+		(*SnapshotDiffReportCursorProto)(nil),       // 54: hadoop.hdfs.SnapshotDiffReportCursorProto
+		(*SnapshotDiffReportListingProto)(nil),      // 55: hadoop.hdfs.SnapshotDiffReportListingProto
+		(*BlockProto)(nil),                          // 56: hadoop.hdfs.BlockProto
+		(*SnapshotInfoProto)(nil),                   // 57: hadoop.hdfs.SnapshotInfoProto
+		(*RollingUpgradeStatusProto)(nil),           // 58: hadoop.hdfs.RollingUpgradeStatusProto
+		(*StorageUuidsProto)(nil),                   // 59: hadoop.hdfs.StorageUuidsProto
+		(*BlockTokenSecretProto)(nil),               // 60: hadoop.hdfs.BlockTokenSecretProto
+		(*hadoop_common.TokenProto)(nil),            // 61: hadoop.common.TokenProto
+		(*FsPermissionProto)(nil),                   // 62: hadoop.hdfs.FsPermissionProto
+	}
+)
 var file_hdfs_proto_depIdxs = []int32{
 	0,  // 0: hadoop.hdfs.DatanodeVolumeInfoProto.storageType:type_name -> hadoop.hdfs.StorageTypeProto
 	18, // 1: hadoop.hdfs.DatanodeInfosProto.datanodes:type_name -> hadoop.hdfs.DatanodeInfoProto

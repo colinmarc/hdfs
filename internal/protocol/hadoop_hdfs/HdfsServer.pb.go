@@ -32,11 +32,12 @@
 package hadoop_hdfs
 
 import (
-	_ "github.com/colinmarc/hdfs/v2/internal/protocol/hadoop_common"
-	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
-	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	reflect "reflect"
 	sync "sync"
+
+	_ "github.com/acceldata-io/gohdfs/internal/protocol/hadoop_common"
+	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
+	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 )
 
 const (
@@ -46,7 +47,7 @@ const (
 	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
 
-//*
+// *
 // State of a block replica at a datanode
 type ReplicaStateProto int32
 
@@ -287,7 +288,7 @@ func (NNHAStatusHeartbeatProto_State) EnumDescriptor() ([]byte, []int) {
 	return file_HdfsServer_proto_rawDescGZIP(), []int{15, 0}
 }
 
-//*
+// *
 // Block access token information
 type BlockKeyProto struct {
 	state         protoimpl.MessageState
@@ -352,7 +353,7 @@ func (x *BlockKeyProto) GetKeyBytes() []byte {
 	return nil
 }
 
-//*
+// *
 // Current key and set of block keys at the namenode.
 type ExportedBlockKeysProto struct {
 	state         protoimpl.MessageState
@@ -433,7 +434,7 @@ func (x *ExportedBlockKeysProto) GetAllKeys() []*BlockKeyProto {
 	return nil
 }
 
-//*
+// *
 // Block and datanodes where is it located
 type BlockWithLocationsProto struct {
 	state         protoimpl.MessageState
@@ -530,7 +531,7 @@ func (x *BlockWithLocationsProto) GetCellSize() uint32 {
 	return 0
 }
 
-//*
+// *
 // List of block with locations
 type BlocksWithLocationsProto struct {
 	state         protoimpl.MessageState
@@ -579,7 +580,7 @@ func (x *BlocksWithLocationsProto) GetBlocks() []*BlockWithLocationsProto {
 	return nil
 }
 
-//*
+// *
 // Editlog information with available transactions
 type RemoteEditLogProto struct {
 	state         protoimpl.MessageState
@@ -649,7 +650,7 @@ func (x *RemoteEditLogProto) GetIsInProgress() bool {
 	return Default_RemoteEditLogProto_IsInProgress
 }
 
-//*
+// *
 // Enumeration of editlogs available on a remote namenode
 type RemoteEditLogManifestProto struct {
 	state         protoimpl.MessageState
@@ -706,7 +707,7 @@ func (x *RemoteEditLogManifestProto) GetCommittedTxnId() uint64 {
 	return 0
 }
 
-//*
+// *
 // Namespace information that describes namespace on a namenode
 type NamespaceInfoProto struct {
 	state         protoimpl.MessageState
@@ -808,7 +809,7 @@ func (x *NamespaceInfoProto) GetState() NNHAStatusHeartbeatProto_State {
 	return NNHAStatusHeartbeatProto_ACTIVE
 }
 
-//*
+// *
 // Block that needs to be recovered with at a given location
 type RecoveringBlockProto struct {
 	state         protoimpl.MessageState
@@ -890,7 +891,7 @@ func (x *RecoveringBlockProto) GetBlockIndices() []byte {
 	return nil
 }
 
-//*
+// *
 // Unique signature to identify checkpoint transactions.
 type CheckpointSignatureProto struct {
 	state         protoimpl.MessageState
@@ -963,7 +964,7 @@ func (x *CheckpointSignatureProto) GetStorageInfo() *StorageInfoProto {
 	return nil
 }
 
-//*
+// *
 // Command returned from primary to checkpointing namenode.
 // This command has checkpoint signature that identifies
 // checkpoint transaction and is needed for further
@@ -1025,7 +1026,7 @@ func (x *CheckpointCommandProto) GetNeedToReturnImage() bool {
 	return false
 }
 
-//*
+// *
 // Command sent from one namenode to another namenode.
 type NamenodeCommandProto struct {
 	state         protoimpl.MessageState
@@ -1090,7 +1091,7 @@ func (x *NamenodeCommandProto) GetCheckpointCmd() *CheckpointCommandProto {
 	return nil
 }
 
-//*
+// *
 // void request
 type VersionRequestProto struct {
 	state         protoimpl.MessageState
@@ -1130,7 +1131,7 @@ func (*VersionRequestProto) Descriptor() ([]byte, []int) {
 	return file_HdfsServer_proto_rawDescGZIP(), []int{11}
 }
 
-//*
+// *
 // Version response from namenode.
 type VersionResponseProto struct {
 	state         protoimpl.MessageState
@@ -1179,7 +1180,7 @@ func (x *VersionResponseProto) GetInfo() *NamespaceInfoProto {
 	return nil
 }
 
-//*
+// *
 // Common node information shared by all the nodes in the cluster
 type StorageInfoProto struct {
 	state         protoimpl.MessageState
@@ -1252,7 +1253,7 @@ func (x *StorageInfoProto) GetCTime() uint64 {
 	return 0
 }
 
-//*
+// *
 // Information sent by a namenode to identify itself to the primary namenode.
 type NamenodeRegistrationProto struct {
 	state         protoimpl.MessageState
@@ -1330,7 +1331,7 @@ func (x *NamenodeRegistrationProto) GetRole() NamenodeRegistrationProto_Namenode
 	return Default_NamenodeRegistrationProto_Role
 }
 
-//*
+// *
 // state - State the NN is in when returning response to the DN
 // txid - Highest transaction ID this NN has seen
 type NNHAStatusHeartbeatProto struct {
@@ -1606,34 +1607,36 @@ func file_HdfsServer_proto_rawDescGZIP() []byte {
 	return file_HdfsServer_proto_rawDescData
 }
 
-var file_HdfsServer_proto_enumTypes = make([]protoimpl.EnumInfo, 4)
-var file_HdfsServer_proto_msgTypes = make([]protoimpl.MessageInfo, 16)
-var file_HdfsServer_proto_goTypes = []interface{}{
-	(ReplicaStateProto)(0),                           // 0: hadoop.hdfs.ReplicaStateProto
-	(NamenodeCommandProto_Type)(0),                   // 1: hadoop.hdfs.NamenodeCommandProto.Type
-	(NamenodeRegistrationProto_NamenodeRoleProto)(0), // 2: hadoop.hdfs.NamenodeRegistrationProto.NamenodeRoleProto
-	(NNHAStatusHeartbeatProto_State)(0),              // 3: hadoop.hdfs.NNHAStatusHeartbeatProto.State
-	(*BlockKeyProto)(nil),                            // 4: hadoop.hdfs.BlockKeyProto
-	(*ExportedBlockKeysProto)(nil),                   // 5: hadoop.hdfs.ExportedBlockKeysProto
-	(*BlockWithLocationsProto)(nil),                  // 6: hadoop.hdfs.BlockWithLocationsProto
-	(*BlocksWithLocationsProto)(nil),                 // 7: hadoop.hdfs.BlocksWithLocationsProto
-	(*RemoteEditLogProto)(nil),                       // 8: hadoop.hdfs.RemoteEditLogProto
-	(*RemoteEditLogManifestProto)(nil),               // 9: hadoop.hdfs.RemoteEditLogManifestProto
-	(*NamespaceInfoProto)(nil),                       // 10: hadoop.hdfs.NamespaceInfoProto
-	(*RecoveringBlockProto)(nil),                     // 11: hadoop.hdfs.RecoveringBlockProto
-	(*CheckpointSignatureProto)(nil),                 // 12: hadoop.hdfs.CheckpointSignatureProto
-	(*CheckpointCommandProto)(nil),                   // 13: hadoop.hdfs.CheckpointCommandProto
-	(*NamenodeCommandProto)(nil),                     // 14: hadoop.hdfs.NamenodeCommandProto
-	(*VersionRequestProto)(nil),                      // 15: hadoop.hdfs.VersionRequestProto
-	(*VersionResponseProto)(nil),                     // 16: hadoop.hdfs.VersionResponseProto
-	(*StorageInfoProto)(nil),                         // 17: hadoop.hdfs.StorageInfoProto
-	(*NamenodeRegistrationProto)(nil),                // 18: hadoop.hdfs.NamenodeRegistrationProto
-	(*NNHAStatusHeartbeatProto)(nil),                 // 19: hadoop.hdfs.NNHAStatusHeartbeatProto
-	(*BlockProto)(nil),                               // 20: hadoop.hdfs.BlockProto
-	(StorageTypeProto)(0),                            // 21: hadoop.hdfs.StorageTypeProto
-	(*LocatedBlockProto)(nil),                        // 22: hadoop.hdfs.LocatedBlockProto
-	(*ErasureCodingPolicyProto)(nil),                 // 23: hadoop.hdfs.ErasureCodingPolicyProto
-}
+var (
+	file_HdfsServer_proto_enumTypes = make([]protoimpl.EnumInfo, 4)
+	file_HdfsServer_proto_msgTypes  = make([]protoimpl.MessageInfo, 16)
+	file_HdfsServer_proto_goTypes   = []interface{}{
+		(ReplicaStateProto)(0),                           // 0: hadoop.hdfs.ReplicaStateProto
+		(NamenodeCommandProto_Type)(0),                   // 1: hadoop.hdfs.NamenodeCommandProto.Type
+		(NamenodeRegistrationProto_NamenodeRoleProto)(0), // 2: hadoop.hdfs.NamenodeRegistrationProto.NamenodeRoleProto
+		(NNHAStatusHeartbeatProto_State)(0),              // 3: hadoop.hdfs.NNHAStatusHeartbeatProto.State
+		(*BlockKeyProto)(nil),                            // 4: hadoop.hdfs.BlockKeyProto
+		(*ExportedBlockKeysProto)(nil),                   // 5: hadoop.hdfs.ExportedBlockKeysProto
+		(*BlockWithLocationsProto)(nil),                  // 6: hadoop.hdfs.BlockWithLocationsProto
+		(*BlocksWithLocationsProto)(nil),                 // 7: hadoop.hdfs.BlocksWithLocationsProto
+		(*RemoteEditLogProto)(nil),                       // 8: hadoop.hdfs.RemoteEditLogProto
+		(*RemoteEditLogManifestProto)(nil),               // 9: hadoop.hdfs.RemoteEditLogManifestProto
+		(*NamespaceInfoProto)(nil),                       // 10: hadoop.hdfs.NamespaceInfoProto
+		(*RecoveringBlockProto)(nil),                     // 11: hadoop.hdfs.RecoveringBlockProto
+		(*CheckpointSignatureProto)(nil),                 // 12: hadoop.hdfs.CheckpointSignatureProto
+		(*CheckpointCommandProto)(nil),                   // 13: hadoop.hdfs.CheckpointCommandProto
+		(*NamenodeCommandProto)(nil),                     // 14: hadoop.hdfs.NamenodeCommandProto
+		(*VersionRequestProto)(nil),                      // 15: hadoop.hdfs.VersionRequestProto
+		(*VersionResponseProto)(nil),                     // 16: hadoop.hdfs.VersionResponseProto
+		(*StorageInfoProto)(nil),                         // 17: hadoop.hdfs.StorageInfoProto
+		(*NamenodeRegistrationProto)(nil),                // 18: hadoop.hdfs.NamenodeRegistrationProto
+		(*NNHAStatusHeartbeatProto)(nil),                 // 19: hadoop.hdfs.NNHAStatusHeartbeatProto
+		(*BlockProto)(nil),                               // 20: hadoop.hdfs.BlockProto
+		(StorageTypeProto)(0),                            // 21: hadoop.hdfs.StorageTypeProto
+		(*LocatedBlockProto)(nil),                        // 22: hadoop.hdfs.LocatedBlockProto
+		(*ErasureCodingPolicyProto)(nil),                 // 23: hadoop.hdfs.ErasureCodingPolicyProto
+	}
+)
 var file_HdfsServer_proto_depIdxs = []int32{
 	4,  // 0: hadoop.hdfs.ExportedBlockKeysProto.currentKey:type_name -> hadoop.hdfs.BlockKeyProto
 	4,  // 1: hadoop.hdfs.ExportedBlockKeysProto.allKeys:type_name -> hadoop.hdfs.BlockKeyProto

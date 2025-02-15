@@ -2,7 +2,7 @@ package hdfs
 
 import (
 	"fmt"
-	"io/ioutil"
+	"io/io"
 	"os"
 	"os/user"
 	"path/filepath"
@@ -169,10 +169,23 @@ func TestReadFile(t *testing.T) {
 	assert.EqualValues(t, "bar\n", string(bytes))
 }
 
+func TestCopy(t *testing.T) {
+	client := getClient(t)
+
+	err := client.Copy("/_test/foo.txt", "/_test/foo2.txt")
+	require.NoError(t, err)
+
+	f, err := client.Open("/_test/foo2.txt")
+	require.NoError(t, err)
+
+	bytes, _ := io.ReadAll(f)
+	assert.EqualValues(t, "bar\n", string(bytes))
+}
+
 func TestCopyToLocal(t *testing.T) {
 	client := getClient(t)
 
-	dir, _ := ioutil.TempDir("", "hdfs-test")
+	dir, _ := io.TempDir("", "hdfs-test")
 	tmpfile := filepath.Join(dir, "foo.txt")
 	err := client.CopyToLocal("/_test/foo.txt", tmpfile)
 	require.NoError(t, err)
@@ -180,7 +193,7 @@ func TestCopyToLocal(t *testing.T) {
 	f, err := os.Open(tmpfile)
 	require.NoError(t, err)
 
-	bytes, _ := ioutil.ReadAll(f)
+	bytes, _ := io.ReadAll(f)
 	assert.EqualValues(t, "bar\n", string(bytes))
 }
 
